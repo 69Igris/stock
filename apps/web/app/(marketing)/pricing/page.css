@@ -1,0 +1,555 @@
+.cycle-tog {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 999px;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  gap: 4px;
+  box-shadow: var(--shadow-soft);
+}
+.cycle-tog button {
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  transition:
+    background 0.12s,
+    color 0.12s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.cycle-tog button.on {
+  background: var(--ink);
+  color: var(--paper);
+}
+.cycle-tog .save {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--pop-2);
+  color: #1d1d1b;
+  font-weight: 700;
+}
+.cycle-tog button.on .save {
+  background: var(--pop-2);
+  color: #1d1d1b;
+}
+.cycle-tog button:not(.on) .save {
+  background: var(--emerald);
+  /* var(--paper) flips: cream on light emerald, deep-ink on dark mode's
+     brighter emerald (fixed cream washed out there). */
+  color: var(--paper);
+}
+
+.price-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  align-items: stretch;
+}
+.pcard {
+  padding: 28px 28px 30px;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  border-radius: 16px;
+  position: relative;
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s;
+  display: flex;
+  flex-direction: column;
+}
+.pcard:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-hard);
+}
+.pcard.feat {
+  background: var(--pop-2);
+  --ink: #1d1d1b;
+  --ink-2: #3a3a35;
+  --ink-3: #6b6b62;
+  color: #1d1d1b;
+  transform: translateY(-8px);
+  box-shadow: 6px 6px 0 #1d1d1b;
+  border-color: #1d1d1b;
+}
+.pcard.feat:hover {
+  transform: translate(-3px, -10px);
+  box-shadow: 8px 10px 0 #1d1d1b;
+}
+.pcard.feat .tier,
+.pcard.feat .price,
+.pcard.feat ul li {
+  color: #1d1d1b;
+}
+.pcard.feat .strike,
+.pcard.feat .per,
+.pcard.feat .period,
+.pcard.feat .tier .blurb {
+  color: #3a3a35;
+}
+.pcard.feat ul li::before {
+  color: #14532d;
+}
+.pcard.feat .pcta {
+  background: #1d1d1b;
+  color: #f7f3e6;
+  border-color: #1d1d1b;
+}
+.pcard.feat .pcta:hover {
+  box-shadow: 3px 3px 0 var(--emerald);
+}
+
+.pcard .badge {
+  position: absolute;
+  top: -12px;
+  right: 16px;
+  padding: 4px 10px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  background: #1d1d1b;
+  color: var(--pop-2);
+  border-radius: 6px;
+  transform: rotate(2deg);
+}
+.pcard .badge.off {
+  background: var(--pop-1);
+  color: var(--paper);
+  top: 16px;
+  left: 16px;
+  right: auto;
+  transform: rotate(-3deg);
+}
+
+.pcard .tier {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--ink-3);
+}
+.pcard.feat .tier {
+  color: var(--ink);
+}
+.pcard .tier .blurb {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-3);
+  margin-top: 4px;
+  font-family: "Inter", sans-serif;
+}
+.pcard.feat .tier .blurb {
+  color: var(--ink-2);
+}
+
+.pcard .price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+.pcard .price {
+  font-size: 52px;
+  font-weight: 800;
+  letter-spacing: -2.5px;
+  line-height: 1;
+  color: var(--ink);
+  font-family: "Inter", sans-serif;
+}
+.pcard .price .ser {
+  font-family: "Instrument Serif", serif;
+  font-weight: 400;
+  font-style: italic;
+}
+.pcard .strike {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--ink-3);
+  text-decoration: line-through;
+}
+.pcard.feat .strike {
+  color: var(--ink-2);
+}
+.pcard .per {
+  font-size: 14px;
+  color: var(--ink-3);
+  font-family: "JetBrains Mono", monospace;
+}
+.pcard.feat .per {
+  color: var(--ink-2);
+}
+.pcard .period {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  color: var(--ink-3);
+  margin-top: 6px;
+}
+.pcard.feat .period {
+  color: var(--ink-2);
+}
+
+.pcard ul {
+  list-style: none;
+  margin: 22px 0 22px;
+  flex: 1;
+  padding: 0;
+}
+.pcard ul li {
+  padding: 7px 0;
+  font-size: 14px;
+  color: var(--ink-2);
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 4px;
+  align-items: baseline;
+}
+.pcard.feat ul li {
+  color: var(--ink);
+}
+.pcard ul li::before {
+  content: "✓";
+  color: var(--emerald);
+  font-weight: 700;
+}
+.pcard ul li.muted {
+  color: var(--ink-3);
+}
+.pcard ul li.muted::before {
+  content: "—";
+  color: var(--ink-3);
+}
+
+.pcard .pcta {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  text-align: center;
+  border: 1.5px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s,
+    background 0.12s;
+}
+.pcard .pcta:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+.pcard.feat .pcta {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.pcard.feat .pcta:hover {
+  box-shadow: 3px 3px 0 var(--emerald);
+}
+
+.ult-note {
+  margin-top: 30px;
+  padding: 22px 28px;
+  border: 2px dashed var(--ink);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  background: var(--paper-3);
+}
+.ult-note .left h5 {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+  color: var(--ink);
+}
+.ult-note .left h5 .ser {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+}
+.ult-note .left p {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--ink-2);
+  max-width: 540px;
+}
+.ult-note .right {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.ult-note .right .num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 16px;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.packs-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+}
+.pack {
+  padding: 22px 18px;
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  background: var(--paper);
+  text-align: center;
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s,
+    background 0.12s;
+}
+.pack:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-hard);
+  background: var(--paper-3);
+}
+.pack .c {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -1.2px;
+  font-family: "Inter", sans-serif;
+}
+.pack .c .ser {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+}
+.pack .l {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  color: var(--ink-3);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.pack .p {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--emerald);
+  margin-top: 12px;
+}
+.pack .pp {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--ink-3);
+  margin-top: 3px;
+}
+.pack .buy {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 6px 14px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  border-radius: 6px;
+  cursor: pointer;
+}
+.pack:hover .buy {
+  background: var(--ink);
+  color: var(--paper);
+}
+.pack.best {
+  background: var(--pop-2);
+  --ink: #1d1d1b;
+  --ink-2: #3a3a35;
+  --ink-3: #6b6b62;
+}
+.pack.best .p,
+.pack.best .l,
+.pack.best .pp {
+  color: #1d1d1b;
+}
+/*
+ * The "popular" pack carries both .yellow-surface and data-bg="yellow",
+ * which trigger the marketing lockdown rule (playful.css:~1490) that pins
+ * --paper: #1d1d1b for static dark-on-yellow text. The hover state above
+ * resolves to background: var(--ink); color: var(--paper) — both
+ * #1d1d1b on a yellow surface → invisible button text.
+ * Force explicit colors here so the hover state survives the lockdown.
+ */
+.pack.best .buy {
+  color: #1d1d1b;
+}
+.pack.best:hover .buy {
+  background: #1d1d1b;
+  color: #f7f3e6;
+}
+
+.ctbl-wrap {
+  overflow-x: auto;
+}
+.ctbl {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+}
+.ctbl thead th {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 14px 16px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-align: center;
+}
+.ctbl thead th:first-child {
+  text-align: left;
+}
+.ctbl thead th.feat-col {
+  color: var(--pop-2);
+}
+.ctbl tbody td {
+  padding: 13px 16px;
+  font-size: 14px;
+  color: var(--ink-2);
+  text-align: center;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.ctbl tbody td:first-child {
+  color: var(--ink);
+  font-weight: 600;
+  text-align: left;
+}
+.ctbl tbody tr:last-child td {
+  border-bottom: 0;
+}
+.ctbl tbody tr:nth-child(even) td {
+  background: var(--rule-softer);
+}
+.ctbl .ok {
+  color: var(--emerald);
+  font-weight: 700;
+}
+.ctbl .no {
+  color: var(--ink-4);
+}
+
+.faq-list {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.faq {
+  border-top: 1.5px solid var(--ink);
+}
+.faq:last-child {
+  border-bottom: 1.5px solid var(--ink);
+}
+.faq summary {
+  list-style: none;
+  padding: 22px 0;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+  line-height: 1.2;
+  color: var(--ink);
+}
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+.faq summary::after {
+  content: "+";
+  font-family: "JetBrains Mono", monospace;
+  font-size: 20px;
+  color: var(--ink);
+  transition: transform 0.2s;
+}
+.faq[open] summary::after {
+  transform: rotate(45deg);
+}
+.faq .ans {
+  padding: 0 0 22px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  max-width: 720px;
+}
+.faq .ans .ser {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+}
+.faq .ans a {
+  color: var(--emerald);
+  text-decoration: underline;
+}
+
+.disclose {
+  margin-top: 28px;
+  padding: 18px 22px;
+  border: 1.5px solid var(--ink);
+  border-radius: 12px;
+  background: var(--paper-3);
+}
+.disclose .lab {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--emerald);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.disclose p {
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.55;
+  margin-top: 4px;
+}
+
+@media (max-width: 1000px) {
+  .price-grid {
+    grid-template-columns: 1fr;
+  }
+  .pcard.feat {
+    transform: none;
+  }
+  .packs-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .ult-note {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Cards go full-width single-column here, so the CTA stretches edge to
+     edge — trim the chunky padding so it doesn't dominate the card. */
+  .pcard .pcta {
+    padding: 11px 16px;
+    font-size: 13.5px;
+    border-radius: 9px;
+  }
+}

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/usemoney-play-design-system-67522a6c-d1c3-4617-97de-fcd968490366/colors_and_type.css">
+  <style>
+    body{margin:0;background:var(--paper);background-image:radial-gradient(var(--dot-fg) 1px,transparent 1.5px);background-size:9px 9px;font-family:var(--font-sans);color:var(--ink)}
+    a{color:var(--emerald-text);text-decoration:none}a:hover{color:var(--ink);text-decoration:underline}
+  </style>
+</helmet>
+<div style="max-width:880px;margin:0 auto;padding:54px 28px 100px">
+  <div style="display:inline-flex;align-items:center;gap:7px;font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--emerald-text);letter-spacing:1.4px;text-transform:uppercase"><span style="width:6px;height:6px;border-radius:99px;background:var(--emerald)"></span>PART 1 · DESIGN SPEC · 2026H2 MODULES</div>
+  <h1 style="font-weight:800;font-size:44px;line-height:1.02;letter-spacing:-2px;margin:14px 0 10px">Eight modules. <span style="font-family:var(--font-serif);font-style:italic;font-weight:400">One spec.</span></h1>
+  <p style="font-size:15px;line-height:1.6;color:var(--ink-2);max-width:660px;margin:0">Web-first (desktop 1280+, responsive to 375), extending the existing shell — fixed sidebar + topbar, paper/ink/emerald tokens. Every module obeys the hard rules: SEBI-safe education framing, computed-or-absent numbers (DataGap states), inline tier/credit gating, chat always present, ₹ primary with $ secondary + FX timestamp, IST market-hours awareness. Persona dashboards (module E) are already designed → <a href="Persona Dashboards.dc.html">Persona Dashboards</a>.</p>
+  <p style="font-size:13px;line-height:1.6;margin:14px 0 0;border:2px solid var(--ink);border-radius:10px;background:var(--pop-2);box-shadow:3px 3px 0 var(--ink);padding:10px 14px;max-width:660px"><b>Partially superseded by <a href="Spec v2 - Core Surfaces.dc.html" style="color:var(--ink)">Spec v2 — Core Surfaces</a>:</b> C's standalone surface, A's Strategy-Lab IA, E's dashboard portion, H's placement. Analytics content and everything else stands.</p>
+
+  <div style="margin-top:26px;border:2px solid var(--ink);border-radius:14px;background:var(--paper-3);box-shadow:4px 4px 0 var(--ink);padding:20px 22px">
+    <div style="font-family:var(--font-mono);font-size:10.5px;font-weight:700;letter-spacing:1.2px;color:var(--ink-3)">NET-NEW COMPONENT INVENTORY — NAMED ONCE, REUSED EVERYWHERE</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px">
+      <span style="font-family:var(--font-mono);font-size:11px;font-weight:700;border:2px solid var(--ink);border-radius:8px;padding:5px 10px;background:var(--pop-2)">CreditChip — cost on action buttons</span>
+      <span style="font-family:var(--font-mono);font-size:11px;font-weight:700;border:2px solid var(--ink);border-radius:8px;padding:5px 10px;background:var(--paper)">ProvenanceChip — source + as-of</span>
+      <span style="font-family:var(--font-mono);font-size:11px;font-weight:700;border:2px solid var(--ink);border-radius:8px;padding:5px 10px;background:var(--paper)">DataGapBanner — degraded source</span>
+      <span style="font-family:var(--font-mono);font-size:11px;font-weight:700;border:2px solid var(--ink);border-radius:8px;padding:5px 10px;background:var(--paper)">GateInline — tier lock, never a modal</span>
+      <span style="font-family:var(--font-mono);font-size:11px;font-weight:700;border:2px solid var(--ink);border-radius:8px;padding:5px 10px;background:var(--paper)">LifecycleBadge — DRAFT→…→RETIRED</span>
+      <span style="font-family:var(--font-mono);font-size:11px;font-weight:700;border:2px solid var(--ink);border-radius:8px;padding:5px 10px;background:var(--paper)">DelayedDataBadge — "EOD · as of Jul 18"</span>
+      <span style="font-family:var(--font-mono);font-size:11px;font-weight:700;border:2px solid var(--ink);border-radius:8px;padding:5px 10px;background:var(--paper)">ConsensusBadge — "verified across 2 models"</span>
+      <span style="font-family:var(--font-mono);font-size:11px;font-weight:700;border:2px solid var(--ink);border-radius:8px;padding:5px 10px;background:var(--paper)">VerdictCard — persona signal + conviction</span>
+      <span style="font-family:var(--font-mono);font-size:11px;font-weight:700;border:2px solid var(--ink);border-radius:8px;padding:5px 10px;background:var(--paper)">DebateTranscript — collapsible rounds</span>
+      <span style="font-family:var(--font-mono);font-size:11px;font-weight:700;border:2px solid var(--ink);border-radius:8px;padding:5px 10px;background:var(--paper)">OverfitBadge — CPCV/PBO + explainer sheet</span>
+      <span style="font-family:var(--font-mono);font-size:11px;font-weight:700;border:2px solid var(--ink);border-radius:8px;padding:5px 10px;background:var(--paper)">DualCurrency — ₹ primary · $ + FX-as-of</span>
+      <span style="font-family:var(--font-mono);font-size:11px;font-weight:700;border:2px solid var(--ink);border-radius:8px;padding:5px 10px;background:var(--paper)">MemoryChip — "remembering: …" + manage</span>
+      <span style="font-family:var(--font-mono);font-size:11px;font-weight:700;border:2px solid var(--ink);border-radius:8px;padding:5px 10px;background:var(--paper)">PersonaPreview — see layout before applying</span>
+      <span style="font-family:var(--font-mono);font-size:11px;font-weight:700;border:2px solid var(--ink);border-radius:8px;padding:5px 10px;background:var(--paper)">EvidenceLink — "from 47 paired trades"</span>
+    </div>
+  </div>
+
+  <!-- A -->
+  <div style="margin-top:26px;border:2px solid var(--ink);border-radius:14px;background:var(--paper-3);box-shadow:4px 4px 0 var(--ink);overflow:hidden">
+    <div style="background:var(--ink);color:var(--paper);padding:12px 20px;display:flex;align-items:baseline;gap:12px"><span style="font-family:var(--font-mono);font-weight:800;font-size:15px;background:var(--pop-2);color:#1d1d1b;border-radius:6px;padding:1px 9px;transform:rotate(-2deg)">A</span><b style="font-size:17px">Strategy Lab</b><span style="font-family:var(--font-mono);font-size:10px;opacity:.7">REBUILDS /STRATEGIES · CREDITS METERED</span></div>
+    <div style="padding:16px 20px;font-size:13.5px;line-height:1.65;color:var(--ink-2)">
+      <b style="color:var(--ink)">Flows.</b> Browse catalog (66 strategies + 12 themes) → detail → backtest config → results. Build-your-own: rule builder → validate → backtest → save → promote to ForwardRun (→ C).<br>
+      <b style="color:var(--ink)">Screens.</b> ① Catalog — filter rail (theme/indicator/risk), cards show REAL computed stats or an explicit <i>"not yet backtested"</i> state (never fake numbers). ② Detail — rules in plain English with a code-view toggle (the typed DSL), historical runs list. ③ Backtest config — period/universe/costs presets, CreditChip on Run, cost estimate line. ④ Results — equity curve vs NIFTY, drawdown chart, metrics table (CAGR · Sharpe · <b>Deflated Sharpe</b> · max DD · win rate · turnover · costs paid), walk-forward panel, <b>OverfitBadge</b> (green/amber/red from CPCV/PBO) opening a beginner-language explainer sheet ("this strategy may look better than it is — here's the test we ran"). ⑤ Builder — left palette (indicators/filters/sizing), center canvas of condition rows (IF RSI(14) &lt; 30 AND …), right live-validation panel; invalid rules block the Run button with the reason inline. ⑥ My strategies — table with LifecycleBadge chips.<br>
+      <b style="color:var(--ink)">States.</b> Loading: skeleton curve + shimmering metrics. Empty: "no strategies yet — start from a theme". Error/partial: DataGapBanner per missing data range. Gated: backtests cost credits (FREE teaser = 1/mo on NIFTY-50 universe only).<br>
+      <b style="color:var(--ink)">Copy.</b> Every result footer: <i>"Historical simulation including costs — not indicative of future returns."</i> Sentence case; verbs not hype ("ran 2,140 trades", never "beats the market").
+    </div>
+  </div>
+
+  <!-- B -->
+  <div style="margin-top:18px;border:2px solid var(--ink);border-radius:14px;background:var(--paper-3);box-shadow:4px 4px 0 var(--ink);overflow:hidden">
+    <div style="background:var(--ink);color:var(--paper);padding:12px 20px;display:flex;align-items:baseline;gap:12px"><span style="font-family:var(--font-mono);font-weight:800;font-size:15px;background:var(--pop-2);color:#1d1d1b;border-radius:6px;padding:1px 9px;transform:rotate(2deg)">B</span><b style="font-size:17px">AI Hedge-Fund Analyst Board</b><span style="font-family:var(--font-mono);font-size:10px;opacity:.7">FLAGSHIP · EDITORIAL MAGAZINE PANEL</span></div>
+    <div style="padding:16px 20px;font-size:13.5px;line-height:1.65;color:var(--ink-2)">
+      <b style="color:var(--ink)">Flows.</b> Pick symbol (search or from holdings) → pick board (default 5: Buffett, Lynch, Burry, Damodaran, Jhunjhunwala; 13 for PRO) → confirm CreditChip → live progress → board view → export/share.<br>
+      <b style="color:var(--ink)">Screens.</b> ① Setup — symbol picker with "you hold this" tag; persona tiles (portrait-style initial tiles, ±3° rotation, one-line philosophy each); locked personas show GateInline. ② Progress — personas "thinking" as a newsroom: each tile flips to "reading annual report…", staggered. ③ Board — masthead ("The INFY Hearing · Jul 20, 9:42 IST"), per-persona VerdictCards (signal bullish/bearish/neutral + conviction 0-100 meter + 2-line thesis in serif italic), <b>bull-vs-bear DebateTranscript</b> (2 rounds, collapsible, speaker-labeled), Risk Manager panel with deterministic numbers only (position-size cap, portfolio-fit vs your concentration), final verdict block with <b>mandatory dissent line</b> ("Burry disagrees: …" — always present, never omitted), share-card export (score + dissent, no personal numbers).<br>
+      <b style="color:var(--ink)">States.</b> FREE teaser = 2 personas / 1 symbol / day with remaining-quota meter. Partial: a persona that failed shows "couldn't finish reading — re-run" not a fabricated verdict. DataGapBanner if filings stale.<br>
+      <b style="color:var(--ink)">Copy.</b> Personas voice <i>presentation</i>, not advice: "Damodaran's framework values this at…", never "buy". Footer: education framing + sources count.
+    </div>
+  </div>
+
+  <!-- C -->
+  <div style="margin-top:18px;border:2px solid var(--ink);border-radius:14px;background:var(--paper-3);box-shadow:4px 4px 0 var(--ink);overflow:hidden">
+    <div style="background:var(--ink);color:var(--paper);padding:12px 20px;display:flex;align-items:baseline;gap:12px"><span style="font-family:var(--font-mono);font-weight:800;font-size:15px;background:var(--pop-2);color:#1d1d1b;border-radius:6px;padding:1px 9px;transform:rotate(-2deg)">C</span><b style="font-size:17px">Signals &amp; ForwardRun</b><span style="font-family:var(--font-mono);font-size:10px;opacity:.7">PAPER-TRADING SUCCESSOR · SIMULATION-EXPLICIT</span></div>
+    <div style="padding:16px 20px;font-size:13.5px;line-height:1.65;color:var(--ink-2)">
+      <b style="color:var(--ink)">Flows.</b> Strategy (from A) → create signal watch → schedule (EOD / intraday, IST) → alert channels; TradingView webhook setup (HMAC URL + test ping); promote strategy → ForwardRun shadow portfolio.<br>
+      <b style="color:var(--ink)">Screens.</b> ① Signals feed — grouped by strategy; status chips NEW / TRIGGERED / EXPIRED; market-hours header ("NSE closes 15:30 · next EOD scan 16:05"). ② Signal detail — price chart with entry marker, the exact rule that fired rendered in plain English + values at trigger. ③ Alert config — per-watch channel toggles, quiet hours. ④ Webhook setup — copy-URL field, HMAC secret reveal, "send test ping" with live green/red result, last-5-pings log (developer-ish but friendly). ⑤ ForwardRun dashboard — hypothetical P&amp;L vs benchmark, per-trade ledger (signal → hypothetical fill incl. costs), <b>divergence-from-backtest indicator</b> (live CAGR vs backtest band; amber outside 1σ). ⑥ ForwardRun list with LifecycleBadges.<br>
+      <b style="color:var(--ink)">States.</b> Empty: "no signals yet — schedule runs tonight 16:05 IST". Missed run: shown as a gap, never interpolated. Execution: a visible seam — "execution: coming later" disabled affordance.<br>
+      <b style="color:var(--ink)">Copy.</b> The word <b>simulation</b> appears on every P&amp;L surface: "hypothetical — no real orders were or can be placed."
+    </div>
+  </div>
+
+  <!-- D -->
+  <div style="margin-top:18px;border:2px solid var(--ink);border-radius:14px;background:var(--paper-3);box-shadow:4px 4px 0 var(--ink);overflow:hidden">
+    <div style="background:var(--ink);color:var(--paper);padding:12px 20px;display:flex;align-items:baseline;gap:12px"><span style="font-family:var(--font-mono);font-weight:800;font-size:15px;background:var(--pop-2);color:#1d1d1b;border-radius:6px;padding:1px 9px;transform:rotate(2deg)">D</span><b style="font-size:17px">US Launch — NRI &amp; LRS</b><span style="font-family:var(--font-mono);font-size:10px;opacity:.7">DUAL CURRENCY · DELAYED-DATA HONESTY</span></div>
+    <div style="padding:16px 20px;font-size:13.5px;line-height:1.65;color:var(--ink-2)">
+      <b style="color:var(--ink)">Flows.</b> NRI onboarding variant (country/persona question in the existing signup wizard) → connect-US-broker placeholder (statement import first) → mixed dashboard. LRS import wizard: upload (Vested/INDmoney/Schwab/CSV) → column-mapping preview → holdings review.<br>
+      <b style="color:var(--ink)">Screens.</b> ① Onboarding step — "Where does your money live?" India / US / both. ② Import wizard, 3 steps, reusing the existing tradebook-import pattern; broker-format tiles + auto-mapped columns with per-column confidence. ③ US stock page — quote with <b>DelayedDataBadge</b> ("EOD · as of Jul 18 close, 01:30 IST"), fundamentals with SEC ProvenanceChips (10-K · filed Mar 14), insider activity table, 13F holders. ④ Mixed dashboard tiles — DualCurrency everywhere (₹ primary, $ toggle, "FX 83.4 as of 09:00 IST"). ⑤ LRS/TCS tracker card — remittance headroom bar vs $250k limit, TCS paid YTD, FY reset note.<br>
+      <b style="color:var(--ink)">States.</b> No US assets: empty tile with import CTA. Un-mapped column: explicit "column skipped" chip, never guessed. FX stale &gt;24h: DataGapBanner.<br>
+      <b style="color:var(--ink)">Copy.</b> US hours in IST ("NASDAQ opens 19:00 IST"); Indian grouping for ₹, US grouping for $.
+    </div>
+  </div>
+
+  <!-- E -->
+  <div style="margin-top:18px;border:2px solid var(--ink);border-radius:14px;background:var(--paper-3);box-shadow:4px 4px 0 var(--pop-2);overflow:hidden">
+    <div style="background:var(--ink);color:var(--paper);padding:12px 20px;display:flex;align-items:baseline;gap:12px"><span style="font-family:var(--font-mono);font-weight:800;font-size:15px;background:var(--pop-2);color:#1d1d1b;border-radius:6px;padding:1px 9px;transform:rotate(-2deg)">E</span><b style="font-size:17px">Personalization — persona engine</b><span style="font-family:var(--font-mono);font-size:10px;opacity:.7">DESIGNED → SEE PERSONA DASHBOARDS FILE</span></div>
+    <div style="padding:16px 20px;font-size:13.5px;line-height:1.65;color:var(--ink-2)">
+      <b style="color:var(--ink)">Three dashboards, same data.</b> Beginner <i>"Guide me"</i> — net worth in words + number, 3 guided actions, top movers, learning nudge; VaR/Greeks vocabulary banned; sidebar 16→9 items. Intermediate <i>"Keep me sharp"</i> — default + tax-preview moat widget + insights feed. Advanced <i>"Get out of my way"</i> — 3-column dense terminal (watchlist rail · portfolio metrics · signals/research rail). Chat persists in all three. <b>Built for web + mobile → <a href="Persona Dashboards.dc.html">open the designs</a>.</b><br>
+      <b style="color:var(--ink)">Plus.</b> 4-question onboarding questionnaire (≤30s, skippable, existing wizard style); Settings persona section — manual override dropdown, "why am I seeing this layout?" transparency note, per-widget visibility overrides; PersonaPreview before applying.<br>
+      <b style="color:var(--ink)">Rule.</b> Persona changes presentation only — same computed numbers, never different recommendations.
+    </div>
+  </div>
+
+  <!-- F -->
+  <div style="margin-top:18px;border:2px solid var(--ink);border-radius:14px;background:var(--paper-3);box-shadow:4px 4px 0 var(--ink);overflow:hidden">
+    <div style="background:var(--ink);color:var(--paper);padding:12px 20px;display:flex;align-items:baseline;gap:12px"><span style="font-family:var(--font-mono);font-weight:800;font-size:15px;background:var(--pop-2);color:#1d1d1b;border-radius:6px;padding:1px 9px;transform:rotate(2deg)">F</span><b style="font-size:17px">Memory &amp; Trading DNA</b><span style="font-family:var(--font-mono);font-size:10px;opacity:.7">INSPECTABLE, NEVER CREEPY · DPDP</span></div>
+    <div style="padding:16px 20px;font-size:13.5px;line-height:1.65;color:var(--ink-2)">
+      <b style="color:var(--ink)">Screens.</b> ① "Your Investing DNA" profile page — deterministic behavioral metrics as cards (win rate by hold-duration/sector/time-of-day, disposition ratio "you hold losers 2.4× longer", revenge-trading flags, streak size-drift), each with an <b>EvidenceLink</b> ("from 47 paired trades" → opens the trades); one LLM coaching paragraph clearly badged AI-GENERATED. ② Memory transparency center (Settings) — remembered facts/preferences/insights, kind-tagged, each editable/pinnable/deletable + "delete all" (DPDP); mobile seam already shipped in v2 Settings. ③ In-chat MemoryChip — "remembering: you prefer long-term, low-churn" + manage link. ④ Research runs — "personalized using your profile" toggle per run.<br>
+      <b style="color:var(--ink)">States.</b> Memory empty: "Sage remembers nothing yet — it learns from chats and trades you make here." &lt;10 paired trades: metrics show "not enough data" (never a weak stat).<br>
+      <b style="color:var(--ink)">Copy.</b> Metrics = plain declaratives with counts; coaching = second person, labeled, deletable.
+    </div>
+  </div>
+
+  <!-- G -->
+  <div style="margin-top:18px;border:2px solid var(--ink);border-radius:14px;background:var(--paper-3);box-shadow:4px 4px 0 var(--ink);overflow:hidden">
+    <div style="background:var(--ink);color:var(--paper);padding:12px 20px;display:flex;align-items:baseline;gap:12px"><span style="font-family:var(--font-mono);font-weight:800;font-size:15px;background:var(--pop-2);color:#1d1d1b;border-radius:6px;padding:1px 9px;transform:rotate(-2deg)">G</span><b style="font-size:17px">Model Picker &amp; Research Upgrades</b><span style="font-family:var(--font-mono);font-size:10px;opacity:.7">CONSENSUS OVER CONFIDENCE</span></div>
+    <div style="padding:16px 20px;font-size:13.5px;line-height:1.65;color:var(--ink-2)">
+      <b style="color:var(--ink)">Screens.</b> ① Composer model selector — Auto default (routes by task), Gemini tiers, Claude/OpenAI rows in allowlist-gated state (visible, locked, "founder allowlist" note), per-model credit-multiplier chips (×0.5/×1/×2); mobile seam shipped in v2. ② <b>ConsensusBadge</b> on high-stakes computed numbers — "verified across 2 models" with popover explaining the checks; disagreement state shows "models disagree — flagged for review" and <b>withholds the number</b>. ③ Report upgrades — per-section ProvenanceChips (Yahoo/NSE/EDGAR/DB-cache + as-of), DataGapBanner when a tool degraded, re-run-section affordance (CreditChip if metered).<br>
+      <b style="color:var(--ink)">Copy.</b> Never "AI is confident"; always what was checked: "extracted from Q1 filing · matched by 2 models".
+    </div>
+  </div>
+
+  <!-- H -->
+  <div style="margin-top:18px;border:2px solid var(--ink);border-radius:14px;background:var(--paper-3);box-shadow:4px 4px 0 var(--ink);overflow:hidden">
+    <div style="background:var(--ink);color:var(--paper);padding:12px 20px;display:flex;align-items:baseline;gap:12px"><span style="font-family:var(--font-mono);font-weight:800;font-size:15px;background:var(--pop-2);color:#1d1d1b;border-radius:6px;padding:1px 9px;transform:rotate(2deg)">H</span><b style="font-size:17px">B2B / MCP Developer Console</b><span style="font-family:var(--font-mono);font-size:10px;opacity:.7">SOBER · COPY-PASTE-FRIENDLY · DENSER</span></div>
+    <div style="padding:16px 20px;font-size:13.5px;line-height:1.65;color:var(--ink-2)">
+      <b style="color:var(--ink)">Screens.</b> ① API keys — create/rotate/revoke, scope checkboxes (portfolio-read · tax · analysis), key shown once with copy button. ② Hosted MCP connect — endpoint URL copy field, OAuth flow explainer (3 numbered steps), setup snippets for Claude/ChatGPT with copy buttons. ③ Usage dashboard — calls, credits, per-tool breakdown table. ④ Plan/billing card. ⑤ <b>Tool catalog with provenance badges</b> — only sellable-provenance tools listed: CONSENTED-BROKER · BHAVCOPY-DERIVED · PURE-COMPUTE · EDGAR; badge system doubles as the trust story. ⑥ Docs link-out.<br>
+      <b style="color:var(--ink)">States.</b> No keys: single-CTA empty state. Rate-limited: banner with reset time. Revoked key rows stay visible (struck) for audit.<br>
+      <b style="color:var(--ink)">Copy.</b> Monospace-forward, exact scopes, no marketing.
+    </div>
+  </div>
+
+  <!-- cross-cutting -->
+  <div style="margin-top:26px;border:2px solid var(--ink);border-radius:14px;background:var(--paper-2);box-shadow:4px 4px 0 var(--ink);padding:20px 22px">
+    <div style="font-family:var(--font-mono);font-size:10.5px;font-weight:700;letter-spacing:1.2px;color:var(--ink-3)">CROSS-CUTTING</div>
+    <div style="font-size:13.5px;line-height:1.7;color:var(--ink-2);margin-top:10px">
+      <b style="color:var(--ink)">Navigation impact (web sidebar).</b> Strategies → <b>Strategy Lab</b> (A); <b>Signals</b> new item under it (C, with ForwardRun tab); <b>Analyst Board</b> launches from stock pages + StockSage composer, plus a Discover entry (B); US surfaces live inside Portfolio/Discover, no new nav (D); persona controls in Settings (E); Investing DNA under Profile (F); model picker inside composers (G); Developer Console = separate `/dev` area behind avatar menu (H). <b>Beginner persona hides:</b> Strategy Lab, Signals, Risk, Analysis — sidebar 16→9.<br>
+      <b style="color:var(--ink)">Mobile mapping.</b> A+C land in Discover (Strategies/Signals segments); B launches from stock page + Sage; D extends Portfolio + import wizard; E = Home variants (designed); F/G extend Settings + Sage (seams already shipped in v2); H is web-only.<br>
+      <b style="color:var(--ink)">Empty-state gallery.</b> No broker → every module offers demo-data mode + connect CTA; no strategies → theme starters; no US assets → import CTA; memory empty → "learns as you go".<br>
+      <b style="color:var(--ink)">Notification touchpoints.</b> Signal triggered (push+in-app), backtest done, ForwardRun divergence &gt;1σ, research/board complete, LRS headroom &gt;80%, memory-derived insight (weekly digest, opt-in).
+    </div>
+  </div>
+
+  <div style="margin-top:30px;border:2px solid var(--ink);border-radius:14px;background:var(--ink);box-shadow:4px 4px 0 var(--pop-2);padding:20px 22px">
+    <div style="font-family:var(--font-mono);font-size:10.5px;font-weight:700;letter-spacing:1.2px;color:var(--pop-2)">PART 2 — INTERACTIVE MOCKUPS · ALL BUILT · REAL SIDENAV FROM Sidebar.tsx (SCANS UNDER SCREENER)</div>
+    <a href="UseMoney Modules A-H.html" style="display:flex;align-items:center;gap:10px;margin-top:14px;padding:14px 16px;border-radius:12px;border:2px solid var(--paper);background:var(--pop-2);color:#1d1d1b;font-weight:800;font-size:15px">✦ One page, everything — the A–H clickable hub <span style="margin-left:auto;font-family:var(--font-mono);font-size:10px;font-weight:800">SWITCHER AT THE BOTTOM →</span></a>
+    <p style="margin:12px 0 0;font-size:12.5px;line-height:1.6;color:var(--paper);opacity:.85"><b>IA correction (UX deep-dive):</b> the repo already ships /strategies with per-strategy backtest + forward routes and a 7-category catalog (Trend · Momentum · Value · Quality · Mean-reversion · Pattern · Custom). So Strategy Lab (A) is an upgrade <i>in place of</i> /strategies — not a new nav item — and Signals/ForwardRun (C) are strategy-scoped children that live <i>inside</i> the same surface as tabs. One strategy, one lifecycle: BROWSE → BACKTEST → VALIDATE → SIGNALS → FORWARDRUN. Signal events reach you via the bell, not via nav. Module A and C links below open that unified surface at the right tab.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:9px;margin-top:14px">
+      <a href="Module A - Strategy Lab.html" style="display:flex;align-items:center;gap:9px;padding:11px 13px;border-radius:10px;border:2px solid var(--paper);background:var(--paper);color:#1d1d1b;font-weight:800;font-size:13px"><span style="font-family:var(--font-mono);background:var(--pop-2);border:1.5px solid #1d1d1b;border-radius:5px;padding:0 7px">A</span>Strategy Lab</a>
+      <a href="Module B - Analyst Board.html" style="display:flex;align-items:center;gap:9px;padding:11px 13px;border-radius:10px;border:2px solid var(--paper);background:var(--paper);color:#1d1d1b;font-weight:800;font-size:13px"><span style="font-family:var(--font-mono);background:var(--pop-2);border:1.5px solid #1d1d1b;border-radius:5px;padding:0 7px">B</span>Analyst Board</a>
+      <a href="Module C - Signals - ForwardRun.html" style="display:flex;align-items:center;gap:9px;padding:11px 13px;border-radius:10px;border:2px solid var(--paper);background:var(--paper);color:#1d1d1b;font-weight:800;font-size:13px"><span style="font-family:var(--font-mono);background:var(--pop-2);border:1.5px solid #1d1d1b;border-radius:5px;padding:0 7px">C</span>Signals &amp; ForwardRun</a>
+      <a href="Module D - US Launch.html" style="display:flex;align-items:center;gap:9px;padding:11px 13px;border-radius:10px;border:2px solid var(--paper);background:var(--paper);color:#1d1d1b;font-weight:800;font-size:13px"><span style="font-family:var(--font-mono);background:var(--pop-2);border:1.5px solid #1d1d1b;border-radius:5px;padding:0 7px">D</span>US Launch — NRI/LRS</a>
+      <a href="Module E - Personalization.html" style="display:flex;align-items:center;gap:9px;padding:11px 13px;border-radius:10px;border:2px solid var(--paper);background:var(--paper);color:#1d1d1b;font-weight:800;font-size:13px"><span style="font-family:var(--font-mono);background:var(--pop-2);border:1.5px solid #1d1d1b;border-radius:5px;padding:0 7px">E</span>Personalization</a>
+      <a href="Module F - Memory - Trading DNA.html" style="display:flex;align-items:center;gap:9px;padding:11px 13px;border-radius:10px;border:2px solid var(--paper);background:var(--paper);color:#1d1d1b;font-weight:800;font-size:13px"><span style="font-family:var(--font-mono);background:var(--pop-2);border:1.5px solid #1d1d1b;border-radius:5px;padding:0 7px">F</span>Memory &amp; DNA</a>
+      <a href="Module G - Model Picker.html" style="display:flex;align-items:center;gap:9px;padding:11px 13px;border-radius:10px;border:2px solid var(--paper);background:var(--paper);color:#1d1d1b;font-weight:800;font-size:13px"><span style="font-family:var(--font-mono);background:var(--pop-2);border:1.5px solid #1d1d1b;border-radius:5px;padding:0 7px">G</span>Model Picker</a>
+      <a href="Module H - Dev Console.html" style="display:flex;align-items:center;gap:9px;padding:11px 13px;border-radius:10px;border:2px solid var(--paper);background:var(--paper);color:#1d1d1b;font-weight:800;font-size:13px"><span style="font-family:var(--font-mono);background:var(--pop-2);border:1.5px solid #1d1d1b;border-radius:5px;padding:0 7px">H</span>Dev Console</a>
+    </div>
+  </div>
+  <div style="margin-top:22px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+    <a href="Persona Dashboards.dc.html" style="display:inline-flex;align-items:center;gap:9px;padding:14px 22px;border-radius:12px;border:2px solid var(--ink);background:var(--ink);color:var(--paper);font-weight:800;font-size:15px;box-shadow:4px 4px 0 var(--emerald)">Persona dashboards (web + mobile) →</a>
+    <a href="UseMoney Mobile.html" style="display:inline-flex;align-items:center;gap:9px;padding:13px 20px;border-radius:12px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);font-weight:700;font-size:14px;box-shadow:3px 3px 0 var(--ink)">Mobile v2 app</a>
+    <a href="Design Review.dc.html" style="display:inline-flex;align-items:center;gap:9px;padding:13px 20px;border-radius:12px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);font-weight:700;font-size:14px;box-shadow:3px 3px 0 var(--ink)">Design review</a>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

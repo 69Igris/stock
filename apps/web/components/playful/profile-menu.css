@@ -1,0 +1,384 @@
+/* ─────────────────────────────────────────────────────────────────────
+   PfUserProfileMenu — playful profile dropdown card (MONEY-489).
+   Scoped to .pf-profile-menu. Tokens from playful-app.css (:root / html.dark).
+   ───────────────────────────────────────────────────────────────────── */
+
+.pf-profile-menu {
+  width: 320px;
+  max-width: calc(
+    100vw - 24px
+  ); /* prevent horizontal scroll on narrow screens */
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 16px;
+  /* Soft popover shadow — the previous hard `6px 6px 0 ink` offset rendered
+     a filled dark wedge at the bottom-right corner against the page (#112). */
+  box-shadow:
+    0 16px 40px -14px rgba(0, 0, 0, 0.34),
+    0 3px 10px rgba(0, 0, 0, 0.12);
+  /* visible (not hidden) so the Settings/Help flyout popover can escape the
+     card to the right; the card's own border-radius still rounds its frame. */
+  overflow: visible;
+  position: relative;
+  font-family: "Inter", sans-serif;
+  color: var(--ink);
+}
+
+/* ── Header ──────────────────────────────────────────────────────────── */
+.pf-pm-header {
+  padding: 16px 16px 14px;
+  border-bottom: 2px solid var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pf-pm-av {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--pop-5), var(--pop-3));
+  border: 1.5px solid var(--ink);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 14px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.pf-pm-av img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 999px;
+}
+
+.pf-pm-user {
+  flex: 1;
+  min-width: 0;
+}
+
+.pf-pm-name {
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: -0.2px;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pf-pm-email {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--ink-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
+
+/* ── Plan strip ──────────────────────────────────────────────────────── */
+.pf-pm-plan {
+  margin: 12px;
+  padding: 10px 12px;
+  background: var(--pop-2);
+  color: #1d1d1b;
+  border: 1.5px solid var(--ink);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+/* FREE/upgrade variant */
+.pf-pm-plan.upgrade {
+  background: var(--rule-softer);
+  color: var(--ink);
+}
+
+.pf-pm-plan-badge {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9.5px;
+  font-weight: 800;
+  padding: 2px 7px;
+  background: #1d1d1b;
+  color: var(--pop-2);
+  border-radius: 4px;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+.pf-pm-plan.upgrade .pf-pm-plan-badge {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.pf-pm-plan-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.pf-pm-plan-name {
+  font-weight: 800;
+  font-size: 12.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pf-pm-plan-meta {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  color: rgba(29, 29, 27, 0.7);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+html.dark .pf-pm-plan-meta {
+  color: rgba(29, 29, 27, 0.85);
+}
+
+/* Loading variant — subscription plan not yet resolved. Neutral strip (no gold
+   upgrade treatment) + shimmer blocks so a paying user never flashes a wrong
+   "Free Plan / Go PRO" while getSubscriptionAction is in flight. */
+.pf-pm-plan.loading {
+  background: var(--rule-softer);
+  color: var(--ink);
+  border-color: var(--rule-soft);
+  box-shadow: none;
+}
+
+.pf-pm-skel {
+  display: block;
+  border-radius: 5px;
+  background: linear-gradient(
+    90deg,
+    var(--rule-soft) 0%,
+    var(--rule-softer) 50%,
+    var(--rule-soft) 100%
+  );
+  background-size: 200% 100%;
+  animation: pf-pm-skel-shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes pf-pm-skel-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ── Menu groups ─────────────────────────────────────────────────────── */
+.pf-pm-group {
+  border-top: 1.5px dashed var(--rule-soft);
+}
+
+/* ── Menu items ──────────────────────────────────────────────────────── */
+.pf-pm-item {
+  width: 100%;
+  padding: 10px 14px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: "Inter", sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  text-align: left;
+  transition: background 0.1s;
+  border-top: 1px dashed var(--rule-soft);
+}
+
+.pf-pm-item:first-child {
+  border-top: 0;
+}
+
+.pf-pm-item:hover {
+  background: var(--rule-softer);
+}
+
+.pf-pm-item-label {
+  flex: 1;
+}
+
+/* ── Icon tile (sticker style) ───────────────────────────────────────── */
+.pf-pm-ic {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  border: 1.5px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  display: grid;
+  place-items: center;
+  transform: rotate(-3deg);
+  flex-shrink: 0;
+}
+
+.pf-pm-ic.emerald {
+  background: var(--emerald);
+  color: #fff;
+}
+
+.pf-pm-ic.coral {
+  background: var(--pop-1);
+  color: #fff;
+}
+
+/* ── Theme row ───────────────────────────────────────────────────────── */
+.pf-pm-theme-row {
+  padding: 9px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-top: 1px dashed var(--rule-soft);
+}
+
+.pf-pm-theme-label {
+  flex: 1;
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--ink);
+}
+
+.pf-pm-theme-seg {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1.5px solid var(--ink);
+  border-radius: 8px;
+  background: var(--paper);
+}
+
+.pf-pm-theme-btn {
+  width: 26px;
+  height: 24px;
+  border-radius: 5px;
+  border: 0;
+  background: transparent;
+  color: var(--ink-3);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition:
+    background 0.1s,
+    color 0.1s;
+}
+
+.pf-pm-theme-btn.active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ── Log out row ─────────────────────────────────────────────────────── */
+.pf-pm-footer {
+  padding: 8px 10px 12px;
+}
+
+.pf-pm-logout {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--rule-softer);
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-family: "Inter", sans-serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  transition: background 0.1s;
+}
+
+.pf-pm-logout:hover {
+  background: rgba(255, 107, 53, 0.08);
+}
+
+html.dark .pf-pm-logout:hover {
+  background: rgba(255, 138, 91, 0.1);
+}
+
+/* ── Settings / Help submenu — right-side flyout popover (#113) ──────────── */
+/* Wrap a chevron row in .pf-pm-item-wrap so the flyout positions relative to
+   the row itself, not the whole card (#122/#123 — must align with the
+   triggering item like the reference design). */
+.pf-pm-item-wrap {
+  position: relative;
+}
+
+.pf-pm-flyout {
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 0;
+  width: 232px;
+  max-width: calc(100vw - 24px);
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  box-shadow:
+    0 16px 40px -14px rgba(0, 0, 0, 0.34),
+    0 3px 10px rgba(0, 0, 0, 0.12);
+  /* Bounded so a long submenu (Settings has 9 items) can't overflow the
+     viewport when anchored to a lower row. Scrolls internally if needed. */
+  max-height: min(70vh, 520px);
+  overflow-y: auto;
+  z-index: 70;
+  padding: 5px 0 7px;
+}
+
+.pf-pm-flyout-head {
+  padding: 7px 14px 7px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 800;
+  border-bottom: 1px dashed var(--rule-soft);
+  margin-bottom: 4px;
+}
+
+.pf-pm-sub {
+  display: flex;
+  flex-direction: column;
+}
+
+.pf-pm-subitem {
+  width: 100%;
+  padding: 8px 14px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: "Inter", sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-2);
+  text-align: left;
+  transition: background 0.1s;
+}
+
+.pf-pm-subitem:hover {
+  background: var(--rule-softer);
+  color: var(--ink);
+}
+
+.pf-pm-sub-ic {
+  flex-shrink: 0;
+  color: var(--ink-3);
+}

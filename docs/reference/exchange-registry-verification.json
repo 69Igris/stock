@@ -1,0 +1,1295 @@
+{
+  "ticket": "MONEY-1096",
+  "startedAt": "2026-08-08T20:41:18.408Z",
+  "finishedAt": "2026-08-08T20:42:20.601Z",
+  "budget": {
+    "max": 90,
+    "used": 63
+  },
+  "pacing": {
+    "minIntervalMs": 1000
+  },
+  "blockedHosts": [],
+  "verdictCounts": {
+    "PRESENT": 39,
+    "ABSENT": 23,
+    "EMPTY": 1,
+    "NO_URL": 1
+  },
+  "findings": [
+    {
+      "group": "registry",
+      "feed": "nse-cm-udiff-bhavcopy",
+      "pattern": "https://nsearchives.nseindia.com/content/cm/BhavCopy_NSE_CM_0_0_0_20260807_F_0000.csv.zip",
+      "answer": "PRESENT — SAFE TO ENABLE (flip `enabled: true` and set provenance)",
+      "evidence": [
+        "registry/nse-cm-udiff-bhavcopy"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-indices-close",
+      "pattern": "https://nsearchives.nseindia.com/content/indices/ind_close_all_07082026.csv",
+      "answer": "PRESENT — SAFE TO ENABLE (flip `enabled: true` and set provenance)",
+      "evidence": [
+        "registry/nse-indices-close"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-fo-udiff-bhavcopy",
+      "pattern": "https://nsearchives.nseindia.com/content/fo/BhavCopy_NSE_FO_0_0_0_20260807_F_0000.csv.zip",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-fo-udiff-bhavcopy"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-sec-bhavdata-full",
+      "pattern": "https://nsearchives.nseindia.com/products/content/sec_bhavdata_full_07082026.csv",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-sec-bhavdata-full"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-mto-delivery",
+      "pattern": "https://nsearchives.nseindia.com/archives/equities/mto/MTO_07082026.DAT",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-mto-delivery"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-cd-udiff-bhavcopy",
+      "pattern": "https://nsearchives.nseindia.com/archives/cd/bhav/BhavCopy_NSE_CD_0_0_0_20260807_F_0000.csv.zip",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-cd-udiff-bhavcopy"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-com-udiff-bhavcopy",
+      "pattern": "https://nsearchives.nseindia.com/content/com/BhavCopy_NSE_CO_0_0_0_20260807_F_0000.csv.zip",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-com-udiff-bhavcopy"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-egr-bhavcopy",
+      "pattern": "https://nsearchives.nseindia.com/archives/egr/EG_BC07082026.DAT",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-egr-bhavcopy"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-52wk-high-low",
+      "pattern": "https://nsearchives.nseindia.com/content/CM_52_wk_High_low_07082026.csv",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-52wk-high-low"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-pe-ratio",
+      "pattern": "https://nsearchives.nseindia.com/content/equities/peDetail/PE_070826.csv",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-pe-ratio"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-eq-band-changes",
+      "pattern": "https://nsearchives.nseindia.com/content/equities/eq_band_changes_07082026.csv",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-eq-band-changes"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-sec-list",
+      "pattern": "https://nsearchives.nseindia.com/content/equities/sec_list_07082026.csv",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-sec-list"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-surveillance-reg",
+      "pattern": "https://nsearchives.nseindia.com/content/equities/REG_IND_07082026.csv",
+      "answer": "404 — this exact path is wrong; stays disabled until a real one is found",
+      "evidence": [
+        "registry/nse-surveillance-reg"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-surveillance-reg1",
+      "pattern": "https://nsearchives.nseindia.com/content/equities/REG1_IND_07082026.csv",
+      "answer": "404 — this exact path is wrong; stays disabled until a real one is found",
+      "evidence": [
+        "registry/nse-surveillance-reg1"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-series-change",
+      "pattern": "https://nsearchives.nseindia.com/content/equities/series_change_07082026.csv",
+      "answer": "404 — this exact path is wrong; stays disabled until a real one is found",
+      "evidence": [
+        "registry/nse-series-change"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-shortselling",
+      "pattern": "https://nsearchives.nseindia.com/archives/equities/shortSelling/shortselling_07082026.csv",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-shortselling"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-stt",
+      "pattern": "https://nsearchives.nseindia.com/archives/equities/stt/C_STT_07082026.csv",
+      "answer": "404 — this exact path is wrong; stays disabled until a real one is found",
+      "evidence": [
+        "registry/nse-stt"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-stt-ind",
+      "pattern": "https://nsearchives.nseindia.com/archives/equities/stt/C_STT_IND_07082026.csv",
+      "answer": "404 — this exact path is wrong; stays disabled until a real one is found",
+      "evidence": [
+        "registry/nse-stt-ind"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-ael",
+      "pattern": "https://nsearchives.nseindia.com/archives/equities/ael/AEL_07082026.csv",
+      "answer": "404 — this exact path is wrong; stays disabled until a real one is found",
+      "evidence": [
+        "registry/nse-ael"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-bulk-deals",
+      "pattern": "https://nsearchives.nseindia.com/content/equities/bulk.csv",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-bulk-deals"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-block-deals",
+      "pattern": "https://nsearchives.nseindia.com/content/equities/block.csv",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-block-deals"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-fo-settlement-price",
+      "pattern": "https://nsearchives.nseindia.com/archives/fo/mkt/FOSett_prce_07082026.csv",
+      "answer": "404 — this exact path is wrong; stays disabled until a real one is found",
+      "evidence": [
+        "registry/nse-fo-settlement-price"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-fo-secban",
+      "pattern": "https://nsearchives.nseindia.com/archives/fo/sec_ban/fo_secban_07082026.csv",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-fo-secban"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-fo-volt",
+      "pattern": "https://nsearchives.nseindia.com/archives/nsccl/volt/FOVOLT_07082026.csv",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-fo-volt"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-cm-volt",
+      "pattern": "https://nsearchives.nseindia.com/archives/nsccl/volt/CMVOLT_07082026.csv",
+      "answer": "404 — this exact path is wrong; stays disabled until a real one is found",
+      "evidence": [
+        "registry/nse-cm-volt"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-nccl-oi",
+      "pattern": "https://nsearchives.nseindia.com/archives/nsccl/mwpl/nccloi_07082026.csv",
+      "answer": "404 — this exact path is wrong; stays disabled until a real one is found",
+      "evidence": [
+        "registry/nse-nccl-oi"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-combine-oi",
+      "pattern": "https://nsearchives.nseindia.com/archives/nsccl/mwpl/combineoi_07082026.csv",
+      "answer": "404 — this exact path is wrong; stays disabled until a real one is found",
+      "evidence": [
+        "registry/nse-combine-oi"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-combine-oi-deleq",
+      "pattern": "https://nsearchives.nseindia.com/archives/nsccl/mwpl/combineoi_deleq_07082026.csv",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-combine-oi-deleq"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-mwpl-cli",
+      "pattern": "https://nsearchives.nseindia.com/archives/nsccl/mwpl/mwpl_cli_07082026.xls",
+      "answer": "404 — this exact path is wrong; stays disabled until a real one is found",
+      "evidence": [
+        "registry/nse-mwpl-cli"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-oi-cli-limit",
+      "pattern": "https://nsearchives.nseindia.com/content/nsccl/oi_cli_limit_07-AUG-2026.lst",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-oi-cli-limit"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-fao-participant-oi",
+      "pattern": "https://nsearchives.nseindia.com/content/nsccl/fao_participant_oi_07082026.csv",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-fao-participant-oi"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-fao-participant-vol",
+      "pattern": "https://nsearchives.nseindia.com/content/nsccl/fao_participant_vol_07082026.csv",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-fao-participant-vol"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-fao-top10cm-to",
+      "pattern": "https://nsearchives.nseindia.com/content/nsccl/fao_top10cm_to_07082026.csv",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-fao-top10cm-to"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-fii-stats",
+      "pattern": "https://nsearchives.nseindia.com/content/fo/fii_stats_07-Aug-2026.xls",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-fii-stats"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-cm-security-master",
+      "pattern": "https://nsearchives.nseindia.com/content/master/NSE_CM_security_07082026.csv.gz",
+      "answer": "404 — this exact path is wrong; stays disabled until a real one is found",
+      "evidence": [
+        "registry/nse-cm-security-master"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-fo-contract-master",
+      "pattern": "https://nsearchives.nseindia.com/content/master/NSE_FO_contract_07082026.csv.gz",
+      "answer": "404 — this exact path is wrong; stays disabled until a real one is found",
+      "evidence": [
+        "registry/nse-fo-contract-master"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-slb-bhavcopy",
+      "pattern": "https://nsearchives.nseindia.com/archives/slbs/bhav/SLBM_BC07082026.csv",
+      "answer": "404 — this exact path is wrong; stays disabled until a real one is found",
+      "evidence": [
+        "registry/nse-slb-bhavcopy"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-slb-openpos",
+      "pattern": "https://nsearchives.nseindia.com/archives/slbs/openpos/slb_openpos_07082026.csv",
+      "answer": "404 — this exact path is wrong; stays disabled until a real one is found",
+      "evidence": [
+        "registry/nse-slb-openpos"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-slb-eligible",
+      "pattern": "https://nsearchives.nseindia.com/content/slbs/SLB_ELG_SEC_07082026.csv",
+      "answer": "404 — this exact path is wrong; stays disabled until a real one is found",
+      "evidence": [
+        "registry/nse-slb-eligible"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-corpbond",
+      "pattern": "https://nsearchives.nseindia.com/archives/equities/corpbond/corpbond_07082026.csv",
+      "answer": "404 — this exact path is wrong; stays disabled until a real one is found",
+      "evidence": [
+        "registry/nse-corpbond"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-wdm-list",
+      "pattern": "https://nsearchives.nseindia.com/content/debt/wdmlist_07082026.csv",
+      "answer": "404 — this exact path is wrong; stays disabled until a real one is found",
+      "evidence": [
+        "registry/nse-wdm-list"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-wdm-daily",
+      "pattern": "https://nsearchives.nseindia.com/archives/wdm/dly/dly070826.zip",
+      "answer": "404 — this exact path is wrong; stays disabled until a real one is found",
+      "evidence": [
+        "registry/nse-wdm-daily"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-cbm-trades",
+      "pattern": "https://nsearchives.nseindia.com/content/debt/cbm_trd_07082026.csv",
+      "answer": "404 — this exact path is wrong; stays disabled until a real one is found",
+      "evidence": [
+        "registry/nse-cbm-trades"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-corporate-bond-report",
+      "pattern": "https://nsearchives.nseindia.com/content/debt/Corporate_bond_report_07082026.csv",
+      "answer": "404 — this exact path is wrong; stays disabled until a real one is found",
+      "evidence": [
+        "registry/nse-corporate-bond-report"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-tri-party-repo",
+      "pattern": "https://nsearchives.nseindia.com/archives/trm/bhav/TRM_BC07082026.csv",
+      "answer": "404 — this exact path is wrong; stays disabled until a real one is found",
+      "evidence": [
+        "registry/nse-tri-party-repo"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-sme-bhavcopy",
+      "pattern": "https://nsearchives.nseindia.com/archives/sme/bhavcopy/sme070826.csv",
+      "answer": "404 — this exact path is wrong; stays disabled until a real one is found",
+      "evidence": [
+        "registry/nse-sme-bhavcopy"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-index-constituents-nifty50",
+      "pattern": "https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-index-constituents-nifty50"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-index-constituents-niftynext50",
+      "pattern": "https://nsearchives.nseindia.com/content/indices/ind_niftynext50list.csv",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-index-constituents-niftynext50"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-index-constituents-nifty100",
+      "pattern": "https://nsearchives.nseindia.com/content/indices/ind_nifty100list.csv",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-index-constituents-nifty100"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-index-constituents-nifty500",
+      "pattern": "https://nsearchives.nseindia.com/content/indices/ind_nifty500list.csv",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-index-constituents-nifty500"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-index-constituents-niftybank",
+      "pattern": "https://nsearchives.nseindia.com/content/indices/ind_niftybanklist.csv",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-index-constituents-niftybank"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-index-constituents-niftyit",
+      "pattern": "https://nsearchives.nseindia.com/content/indices/ind_niftyitlist.csv",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-index-constituents-niftyit"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-index-constituents-niftymidcap100",
+      "pattern": "https://nsearchives.nseindia.com/content/indices/ind_niftymidcap100list.csv",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-index-constituents-niftymidcap100"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-index-constituents-niftysmallcap100",
+      "pattern": "https://nsearchives.nseindia.com/content/indices/ind_niftysmallcap100list.csv",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-index-constituents-niftysmallcap100"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-debt-weekly-reports",
+      "pattern": "https://www.nseindia.com/api/reports?archives=%5B%7B%22name%22%3A%22WDM%20-%20Weekly%20Reports%22%2C%22type%22%3A%22weekly-reports%22%2C%22category%22%3A%22debt%22%2C%22section%22%3A%22debt-segment%22%7D%5D&date=07-Aug-2026&type=debt-segment&mode=single",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-debt-weekly-reports"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-mf-approved-securities",
+      "pattern": "https://www.nseindia.com/api/reports?archives=%5B%7B%22name%22%3A%22Approved%20list%20of%20Securities%20(.zip)%22%2C%22type%22%3A%22monthly-reports%22%2C%22category%22%3A%22capital-market%22%2C%22section%22%3A%22mutual-fund%22%7D%5D&type=mutual-fund&mode=single",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-mf-approved-securities"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-mf-approved-mutual-funds",
+      "pattern": "https://www.nseindia.com/api/reports?archives=%5B%7B%22name%22%3A%22Approved%20list%20of%20Mutual%20Funds%20(.zip)%22%2C%22type%22%3A%22monthly-reports%22%2C%22category%22%3A%22capital-market%22%2C%22section%22%3A%22mutual-fund%22%7D%5D&type=mutual-fund&mode=single",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-mf-approved-mutual-funds"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-mf-approved-corporate-bond",
+      "pattern": "https://www.nseindia.com/api/reports?archives=%5B%7B%22name%22%3A%22Approved%20list%20of%20Corporate%20bond%20(.zip)%22%2C%22type%22%3A%22monthly-reports%22%2C%22category%22%3A%22capital-market%22%2C%22section%22%3A%22mutual-fund%22%7D%5D&type=mutual-fund&mode=single",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-mf-approved-corporate-bond"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "nse-mf-approved-gsec-tbill",
+      "pattern": "https://www.nseindia.com/api/reports?archives=%5B%7B%22name%22%3A%22Approved%20list%20of%20GSEC%20and%20TBILL%20(.zip)%22%2C%22type%22%3A%22monthly-reports%22%2C%22category%22%3A%22capital-market%22%2C%22section%22%3A%22mutual-fund%22%7D%5D&type=mutual-fund&mode=single",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/nse-mf-approved-gsec-tbill"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "bse-cm-udiff-bhavcopy",
+      "pattern": "https://www.bseindia.com/download/BhavCopy/Equity/BhavCopy_BSE_CM_0_0_0_20260807_F_0000.CSV",
+      "answer": "PRESENT — SAFE TO ENABLE (flip `enabled: true` and set provenance)",
+      "evidence": [
+        "registry/bse-cm-udiff-bhavcopy"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "bse-fo-udiff-bhavcopy",
+      "pattern": "https://www.bseindia.com/download/Bhavcopy/Derivative/BhavCopy_BSE_FO_0_0_0_20260807_F_0000.CSV",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/bse-fo-udiff-bhavcopy"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "bse-gross-delivery",
+      "pattern": "https://www.bseindia.com/BSEDATA/gross/2026/SCBSEALL0708.zip",
+      "answer": "PRESENT — enabled, confirmed",
+      "evidence": [
+        "registry/bse-gross-delivery"
+      ]
+    },
+    {
+      "group": "registry",
+      "feed": "bse-index-daily-all",
+      "pattern": "https://api.bseindia.com/BseIndiaAPI/api/IndexArchDailyAll/w?fmdt=07%2F08%2F2026&todt=07%2F08%2F2026",
+      "answer": "EMPTY — the endpoint EXISTS but returned no rows, so the PATH is plausible and the QUERY/params are the problem. Do NOT re-derive the path.",
+      "evidence": [
+        "registry/bse-index-daily-all"
+      ]
+    }
+  ],
+  "probes": [
+    {
+      "id": "registry/nse-cm-udiff-bhavcopy",
+      "group": "registry",
+      "question": "registry row nse-cm-udiff-bhavcopy (existing-code, enabled=false)",
+      "url": "https://nsearchives.nseindia.com/content/cm/BhavCopy_NSE_CM_0_0_0_20260807_F_0000.csv.zip",
+      "status": 200,
+      "contentType": "application/zip",
+      "bytes": 194665,
+      "preview": "hex:504b0304140000000800dd83075d80153db681f702008725090029001c0042686176436f70795f4e53455f434d5f305f305f305f32303236303830375f465f303030302e6373765554090003e9ba756ae9ba756a75780b0001049f13000004c8000000945c4b7bdb46b2ddcfafc0267705f3f6fbb1042948822d811a9252e4ec32f64c265f6c4f3e59dfccf8fefa7baaba1b00454b726781ee2ed0d461a11ea7aa1b393cfcfaf1ecb15dfffe7fb8ee7ffb8ccbc387f6fcf72fc397af8f0f9f0f7fcef3e1633bec87",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-indices-close",
+      "group": "registry",
+      "question": "registry row nse-indices-close (existing-code, enabled=false)",
+      "url": "https://nsearchives.nseindia.com/content/indices/ind_close_all_07082026.csv",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 17122,
+      "preview": "Index Name,Index Date,Open Index Value,High Index Value,Low Index Value,Closing Index Value,Points Change,Change(%),Volume,Turnover (Rs. Cr.),P/E,P/B,Div Yield Nifty 50,07-08-2026,24538.9,24630.4,2452",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-fo-udiff-bhavcopy",
+      "group": "registry",
+      "question": "registry row nse-fo-udiff-bhavcopy (p2-probed, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/content/fo/BhavCopy_NSE_FO_0_0_0_20260807_F_0000.csv.zip",
+      "status": 200,
+      "contentType": "application/zip",
+      "bytes": 1057426,
+      "preview": "hex:504b03041400000008001a96075dd3cc0783aa211000d3925c0029001c0042686176436f70795f4e53455f464f5f305f305f305f32303236303830375f465f303030302e63737655540900033bdb756a3bdb756a75780b0001049f13000004c8000000acfddbd624bb911e08decfb3fcf92f9c0f97ac2d52e20c9bb5a748756b2ed555d36a2d55556bb1b8ba5bf3f403338303f0c0870c788025d11d119e3bd31c61b0e367667ffecb7ffea77ff7d7afbffbafffbf72fdd37ff99772f9cb3f7efdeebffeebeffff5",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-sec-bhavdata-full",
+      "group": "registry",
+      "question": "registry row nse-sec-bhavdata-full (p1-verified, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/products/content/sec_bhavdata_full_07082026.csv",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 374452,
+      "preview": "SYMBOL, SERIES, DATE1, PREV_CLOSE, OPEN_PRICE, HIGH_PRICE, LOW_PRICE, LAST_PRICE, CLOSE_PRICE, AVG_PRICE, TTL_TRD_QNTY, TURNOVER_LACS, NO_OF_TRADES, DELIV_QTY, DELIV_PER 1018GS2026, GS, 07-Aug-2026, 1",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-mto-delivery",
+      "group": "registry",
+      "question": "registry row nse-mto-delivery (p1-verified, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/archives/equities/mto/MTO_07082026.DAT",
+      "status": 200,
+      "contentType": "application/octet-stream",
+      "bytes": 118158,
+      "preview": "Security Wise Delivery Position - Compulsory Rolling Settlement 10,MTO,07082026,1549728086,0003154 Trade Date <07-AUG-2026>,Settlement Type <N> Record Type,Sr No,Name of Security,Quantity Traded,Deliv",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-cd-udiff-bhavcopy",
+      "group": "registry",
+      "question": "registry row nse-cd-udiff-bhavcopy (p1-verified, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/archives/cd/bhav/BhavCopy_NSE_CD_0_0_0_20260807_F_0000.csv.zip",
+      "status": 200,
+      "contentType": "application/zip",
+      "bytes": 189036,
+      "preview": "hex:504b03041400000008009b93075d2fe9248e84e102002a6a1b0029001c0042686176436f70795f4e53455f43445f305f305f305f32303236303830375f465f303030302e63737655540900038ed6756a8ed6756a75780b0001049f13000004c8000000c4fd5b9335396e2588be9fdf9215e6bc938fd2a7cb94acbb2a8f2aab6dfab1479ad1b4b5a4692b95cd4c9f5f7f48dfbe6313c072901981add64365e0cb8b963340109705e0973ffd977ffcab3ffff497fff5ffd7fff70ffff42ffd7ffef40f3ffdcd7ffdd7",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-com-udiff-bhavcopy",
+      "group": "registry",
+      "question": "registry row nse-com-udiff-bhavcopy (p1-verified, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/content/com/BhavCopy_NSE_CO_0_0_0_20260807_F_0000.csv.zip",
+      "status": 200,
+      "contentType": "application/zip",
+      "bytes": 607699,
+      "preview": "hex:504b0304140000000800a004085db4da1198eb4409000d664d0029001c0042686176436f70795f4e53455f434f5f305f305f305f32303236303830375f465f303030302e6373765554090003d32c766ad32c766a75780b0001049f13000004c8000000c4fd5bd366bb712606decf6f2956e07cb8a4284a66073759c383c2e3bbb664cb1d2dc91d24c376cfaf1f606101c8b5f06401b5f38d1e754715f2fd8ab59fca3791c873fee92ffff95ffefe6f5ffeeebffc7fcbaf7ffcd77f2fbffce59fbffcc37ff98fdffc",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-egr-bhavcopy",
+      "group": "registry",
+      "question": "registry row nse-egr-bhavcopy (api-captured, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/archives/egr/EG_BC07082026.DAT",
+      "status": 200,
+      "contentType": "application/octet-stream",
+      "bytes": 195,
+      "preview": "EGR 999 10 GRAM ,GOLD10G99 ,EG,N,0153320.00,0153349.00,0153366.00,0153347.00,0153366.00, , 143, 21929881.00,0155320.00,0147850.00,07-AUG-2026, 112,0153366.00",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-52wk-high-low",
+      "group": "registry",
+      "question": "registry row nse-52wk-high-low (p2-probed, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/content/CM_52_wk_High_low_07082026.csv",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 307542,
+      "preview": "\"Disclaimer - The Data provided in the adjusted 52 week high and adjusted 52 week low columns are adjusted for corporate actions (bonus, splits & rights).For actual (unadjusted) 52 week high & low pr",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-pe-ratio",
+      "group": "registry",
+      "question": "registry row nse-pe-ratio (p2-probed, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/content/equities/peDetail/PE_070826.csv",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 44709,
+      "preview": "SYMBOL,SYMBOL P/E,ADJUSTED P/E THERMAX,80.52,86.88 WHEELS,20.62,20.62 RIIL,94.76,94.76 PREMIERPOL,21.65,21.65 RAYMOND,0.78,0.75 RSWM,15.88,14.13 SHREDIGCEM,59.32,59.32 SESHAPAPER,14.84,14.84 SMLMAH,52",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-eq-band-changes",
+      "group": "registry",
+      "question": "registry row nse-eq-band-changes (p2-probed, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/content/equities/eq_band_changes_07082026.csv",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 8517,
+      "preview": "Sr. No,Symbol,Series,Security Name,From,To 1,ABMINTLLTD,EQ,ABM INTERNATIONAL LIMITED,10,20 2,ACL,EQ,ANDHRA CEMENTS LIMITED,10,20 3,ACMESOLAR,EQ,ACME SOLAR HOLDINGS LIMITED,10,20 4,AEPL,EQ,ARTEMIS ELEC",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-sec-list",
+      "group": "registry",
+      "question": "registry row nse-sec-list (p2-probed, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/content/equities/sec_list_07082026.csv",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 162293,
+      "preview": "Symbol,Series,Security Name,Band,Remarks 21STCENMGM,EQ,21ST CENTURY MANAGEMENT SERVICES LIMITED,2,\"-\" ACCORD,ST,ACCORD SYNERGY LIMITED,2,\"-\" AMANTA,BE,AMANTA HEALTHCARE LIMITED,2,\"-\" ANSALAPI,BZ,ANSAL",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-surveillance-reg",
+      "group": "registry",
+      "question": "registry row nse-surveillance-reg (unverified, enabled=false)",
+      "url": "https://nsearchives.nseindia.com/content/equities/REG_IND_07082026.csv",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "registry/nse-surveillance-reg1",
+      "group": "registry",
+      "question": "registry row nse-surveillance-reg1 (unverified, enabled=false)",
+      "url": "https://nsearchives.nseindia.com/content/equities/REG1_IND_07082026.csv",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "registry/nse-series-change",
+      "group": "registry",
+      "question": "registry row nse-series-change (unverified, enabled=false)",
+      "url": "https://nsearchives.nseindia.com/content/equities/series_change_07082026.csv",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "registry/nse-shortselling",
+      "group": "registry",
+      "question": "registry row nse-shortselling (p2-probed, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/archives/equities/shortSelling/shortselling_07082026.csv",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 4663,
+      "preview": "\"Security Name\",\"Symbol Name\",\"Trade Date\",\"Quantity\" \"YES BANK LIMITED\",\"YESBANK\",\"06-Aug-2026\",\"2100\" \"HIMACHAL FUTURISTIC COMMUNICATIONS LIMITED\",\"HFCL\",\"06-Aug-2026\",\"1\" \"LARSEN & TOUBRO LTD.\",\"LT",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-stt",
+      "group": "registry",
+      "question": "registry row nse-stt (unverified, enabled=false)",
+      "url": "https://nsearchives.nseindia.com/archives/equities/stt/C_STT_07082026.csv",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "registry/nse-stt-ind",
+      "group": "registry",
+      "question": "registry row nse-stt-ind (unverified, enabled=false)",
+      "url": "https://nsearchives.nseindia.com/archives/equities/stt/C_STT_IND_07082026.csv",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "registry/nse-ael",
+      "group": "registry",
+      "question": "registry row nse-ael (unverified, enabled=false)",
+      "url": "https://nsearchives.nseindia.com/archives/equities/ael/AEL_07082026.csv",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "registry/nse-bulk-deals",
+      "group": "registry",
+      "question": "registry row nse-bulk-deals (p2-probed, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/content/equities/bulk.csv",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 10687,
+      "preview": "Date,Symbol,Security Name,Client Name,Buy/Sell,Quantity Traded,Trade Price / Wght. Avg. Price,Remarks 07-AUG-2026,AASTHA,Aastha Spintex Limited,HRTI PRIVATE LIMITED,BUY,523452,76.72,- 07-AUG-2026,AAST",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-block-deals",
+      "group": "registry",
+      "question": "registry row nse-block-deals (p2-probed, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/content/equities/block.csv",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 250,
+      "preview": "Date,Symbol,Security Name,Client Name,Buy/Sell,Quantity Traded,Trade Price / Wght. Avg. Price 07-AUG-2026,TRIDENT,Trident Limited,TRIDENT GROUP LIMITED,BUY,130000000,24.90 07-AUG-2026,TRIDENT,Trident",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-fo-settlement-price",
+      "group": "registry",
+      "question": "registry row nse-fo-settlement-price (unverified, enabled=false)",
+      "url": "https://nsearchives.nseindia.com/archives/fo/mkt/FOSett_prce_07082026.csv",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "registry/nse-fo-secban",
+      "group": "registry",
+      "question": "registry row nse-fo-secban (p2-probed, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/archives/fo/sec_ban/fo_secban_07082026.csv",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 66,
+      "preview": "Securities in Ban For Trade Date 07-AUG-2026: 1,BANDHANBNK 2,LICI",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-fo-volt",
+      "group": "registry",
+      "question": "registry row nse-fo-volt (p2-probed, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/archives/nsccl/volt/FOVOLT_07082026.csv",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 38851,
+      "preview": "Date, Symbol, Underlying Close Price (A), Underlying Previous Day Close Price (B), Underlying Log Returns (C) = LN(A/B), Previous Day Underlying Volatility (D), Current Day Underlying Daily Volatility",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-cm-volt",
+      "group": "registry",
+      "question": "registry row nse-cm-volt (unverified, enabled=false)",
+      "url": "https://nsearchives.nseindia.com/archives/nsccl/volt/CMVOLT_07082026.csv",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "registry/nse-nccl-oi",
+      "group": "registry",
+      "question": "registry row nse-nccl-oi (unverified, enabled=false)",
+      "url": "https://nsearchives.nseindia.com/archives/nsccl/mwpl/nccloi_07082026.csv",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "registry/nse-combine-oi",
+      "group": "registry",
+      "question": "registry row nse-combine-oi (unverified, enabled=false)",
+      "url": "https://nsearchives.nseindia.com/archives/nsccl/mwpl/combineoi_07082026.csv",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "registry/nse-combine-oi-deleq",
+      "group": "registry",
+      "question": "registry row nse-combine-oi-deleq (p2-probed, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/archives/nsccl/mwpl/combineoi_deleq_07082026.csv",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 17073,
+      "preview": "Date,ISIN,Scrip Name,Symbol,Notional Open Interest,Portfolio-wise Futures Equivalent Open Interest 07-08-2026,INE092T01019,IDFC FIRST BANK LIMITED,IDFCFIRSTB,615340600,398349309.74940230 07-08-2026,IN",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-mwpl-cli",
+      "group": "registry",
+      "question": "registry row nse-mwpl-cli (unverified, enabled=false)",
+      "url": "https://nsearchives.nseindia.com/archives/nsccl/mwpl/mwpl_cli_07082026.xls",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3815,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "registry/nse-oi-cli-limit",
+      "group": "registry",
+      "question": "registry row nse-oi-cli-limit (p2-probed, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/content/nsccl/oi_cli_limit_07-AUG-2026.lst",
+      "status": 200,
+      "contentType": null,
+      "bytes": 13112,
+      "preview": "SYMBOL,CLIENT_LIMIT,EXCHANGE 360ONE,5108000,BSE 360ONE,5108000,NSE 360ONE,5108000,MSEI ABB,794625,MSEI ABB,794625,BSE ABB,794625,NSE ABCAPITAL,12369000,MSEI ABCAPITAL,12369000,BSE ABCAPITAL,12369000,N",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-fao-participant-oi",
+      "group": "registry",
+      "question": "registry row nse-fao-participant-oi (p2-probed, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/content/nsccl/fao_participant_oi_07082026.csv",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 969,
+      "preview": "\"\"Participant wise Open Interest (no. of contracts) in Equity Derivatives as on Aug 07, 2026\"\",,,,,,,,,,,,,, Client Type,Future Index Long,Future Index Short,Future Stock Long,Future Stock Short",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-fao-participant-vol",
+      "group": "registry",
+      "question": "registry row nse-fao-participant-vol (p2-probed, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/content/nsccl/fao_participant_vol_07082026.csv",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 972,
+      "preview": "\"\"Participant wise Trading Volume (no. of contracts) in Equity Derivatives as on Aug 07, 2026\"\",,,,,,,,,,,,,, Client Type,Future Index Long,Future Index Short,Future Stock Long,Future Stock Short",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-fao-top10cm-to",
+      "group": "registry",
+      "question": "registry row nse-fao-top10cm-to (p2-probed, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/content/nsccl/fao_top10cm_to_07082026.csv",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 1449,
+      "preview": "\"Volume and Turnover data of top 10 Clearing Members (no. of contracts) in Equity Derivatives as on Aug 07, 2026 (Amounts in Rs. Crore)\",,,,,,,,,, Serial Number,Indx Futures Vol(Contracts),Index Futur",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-fii-stats",
+      "group": "registry",
+      "question": "registry row nse-fii-stats (p2-probed, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/content/fo/fii_stats_07-Aug-2026.xls",
+      "status": 200,
+      "contentType": "application/vnd.ms-excel",
+      "bytes": 9216,
+      "preview": "hex:d0cf11e0a1b11ae1000000000000000000000000000000003b000300feff090006000000000000000000000001000000000000000000000000100000feffffff00000000feffffff0000000001000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-cm-security-master",
+      "group": "registry",
+      "question": "registry row nse-cm-security-master (unverified, enabled=false)",
+      "url": "https://nsearchives.nseindia.com/content/master/NSE_CM_security_07082026.csv.gz",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "registry/nse-fo-contract-master",
+      "group": "registry",
+      "question": "registry row nse-fo-contract-master (unverified, enabled=false)",
+      "url": "https://nsearchives.nseindia.com/content/master/NSE_FO_contract_07082026.csv.gz",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "registry/nse-slb-bhavcopy",
+      "group": "registry",
+      "question": "registry row nse-slb-bhavcopy (unverified, enabled=false)",
+      "url": "https://nsearchives.nseindia.com/archives/slbs/bhav/SLBM_BC07082026.csv",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "registry/nse-slb-openpos",
+      "group": "registry",
+      "question": "registry row nse-slb-openpos (unverified, enabled=false)",
+      "url": "https://nsearchives.nseindia.com/archives/slbs/openpos/slb_openpos_07082026.csv",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "registry/nse-slb-eligible",
+      "group": "registry",
+      "question": "registry row nse-slb-eligible (unverified, enabled=false)",
+      "url": "https://nsearchives.nseindia.com/content/slbs/SLB_ELG_SEC_07082026.csv",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "registry/nse-corpbond",
+      "group": "registry",
+      "question": "registry row nse-corpbond (unverified, enabled=false)",
+      "url": "https://nsearchives.nseindia.com/archives/equities/corpbond/corpbond_07082026.csv",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "registry/nse-wdm-list",
+      "group": "registry",
+      "question": "registry row nse-wdm-list (unverified, enabled=false)",
+      "url": "https://nsearchives.nseindia.com/content/debt/wdmlist_07082026.csv",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "registry/nse-wdm-daily",
+      "group": "registry",
+      "question": "registry row nse-wdm-daily (unverified, enabled=false)",
+      "url": "https://nsearchives.nseindia.com/archives/wdm/dly/dly070826.zip",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3815,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "registry/nse-cbm-trades",
+      "group": "registry",
+      "question": "registry row nse-cbm-trades (unverified, enabled=false)",
+      "url": "https://nsearchives.nseindia.com/content/debt/cbm_trd_07082026.csv",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "registry/nse-corporate-bond-report",
+      "group": "registry",
+      "question": "registry row nse-corporate-bond-report (unverified, enabled=false)",
+      "url": "https://nsearchives.nseindia.com/content/debt/Corporate_bond_report_07082026.csv",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "registry/nse-tri-party-repo",
+      "group": "registry",
+      "question": "registry row nse-tri-party-repo (unverified, enabled=false)",
+      "url": "https://nsearchives.nseindia.com/archives/trm/bhav/TRM_BC07082026.csv",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "registry/nse-sme-bhavcopy",
+      "group": "registry",
+      "question": "registry row nse-sme-bhavcopy (unverified, enabled=false)",
+      "url": "https://nsearchives.nseindia.com/archives/sme/bhavcopy/sme070826.csv",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "registry/nse-index-constituents-nifty50",
+      "group": "registry",
+      "question": "registry row nse-index-constituents-nifty50 (p2-probed, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 3352,
+      "preview": "Company Name,Industry,Symbol,Series,ISIN Code Adani Enterprises Ltd.,Metals & Mining,ADANIENT,EQ,INE423A01024 Adani Ports and Special Economic Zone Ltd.,Services,ADANIPORTS,EQ,INE742F01042 Apollo Hosp",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-index-constituents-niftynext50",
+      "group": "registry",
+      "question": "registry row nse-index-constituents-niftynext50 (p2-probed, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/content/indices/ind_niftynext50list.csv",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 3305,
+      "preview": "Company Name,Industry,Symbol,Series,ISIN Code ABB India Ltd.,Capital Goods,ABB,EQ,INE117A01022 Adani Energy Solutions Ltd.,Power,ADANIENSOL,EQ,INE931S01010 Adani Green Energy Ltd.,Power,ADANIGREEN,EQ,",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-index-constituents-nifty100",
+      "group": "registry",
+      "question": "registry row nse-index-constituents-nifty100 (p2-probed, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/content/indices/ind_nifty100list.csv",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 6611,
+      "preview": "Company Name,Industry,Symbol,Series,ISIN Code ABB India Ltd.,Capital Goods,ABB,EQ,INE117A01022 Adani Energy Solutions Ltd.,Power,ADANIENSOL,EQ,INE931S01010 Adani Enterprises Ltd.,Metals & Mining,ADANI",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-index-constituents-nifty500",
+      "group": "registry",
+      "question": "registry row nse-index-constituents-nifty500 (p2-probed, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/content/indices/ind_nifty500list.csv",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 32766,
+      "preview": "Company Name,Industry,Symbol,Series,ISIN Code 360 ONE WAM Ltd.,Financial Services,360ONE,EQ,INE466L01038 3M India Ltd.,Diversified,3MINDIA,EQ,INE470A01017 ABB India Ltd.,Capital Goods,ABB,EQ,INE117A01",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-index-constituents-niftybank",
+      "group": "registry",
+      "question": "registry row nse-index-constituents-niftybank (p2-probed, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/content/indices/ind_niftybanklist.csv",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 916,
+      "preview": "Company Name,Industry,Symbol,Series,ISIN Code AU Small Finance Bank Ltd.,Financial Services,AUBANK,EQ,INE949L01017 Axis Bank Ltd.,Financial Services,AXISBANK,EQ,INE238A01034 Bank of Baroda,Financial S",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-index-constituents-niftyit",
+      "group": "registry",
+      "question": "registry row nse-index-constituents-niftyit (p2-probed, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/content/indices/ind_niftyitlist.csv",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 696,
+      "preview": "Company Name,Industry,Symbol,Series,ISIN Code Coforge Ltd.,Information Technology,COFORGE,EQ,INE591G01025 HCL Technologies Ltd.,Information Technology,HCLTECH,EQ,INE860A01027 Infosys Ltd.,Information",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-index-constituents-niftymidcap100",
+      "group": "registry",
+      "question": "registry row nse-index-constituents-niftymidcap100 (p2-probed, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/content/indices/ind_niftymidcap100list.csv",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 6516,
+      "preview": "Company Name,Industry,Symbol,Series,ISIN Code 360 ONE WAM Ltd.,Financial Services,360ONE,EQ,INE466L01038 APL Apollo Tubes Ltd.,Capital Goods,APLAPOLLO,EQ,INE702C01027 AU Small Finance Bank Ltd.,Financ",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-index-constituents-niftysmallcap100",
+      "group": "registry",
+      "question": "registry row nse-index-constituents-niftysmallcap100 (p2-probed, enabled=true)",
+      "url": "https://nsearchives.nseindia.com/content/indices/ind_niftysmallcap100list.csv",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 6579,
+      "preview": "Company Name,Industry,Symbol,Series,ISIN Code Aarti Industries Ltd.,Chemicals,AARTIIND,EQ,INE769A01020 Aditya Birla Real Estate Ltd.,Realty,ABREL,EQ,INE055A01016 Aegis Logistics Ltd.,Oil Gas & Consuma",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-debt-weekly-reports",
+      "group": "registry",
+      "question": "registry row nse-debt-weekly-reports (api-captured, enabled=true)",
+      "url": "https://www.nseindia.com/api/reports?archives=%5B%7B%22name%22%3A%22WDM%20-%20Weekly%20Reports%22%2C%22type%22%3A%22weekly-reports%22%2C%22category%22%3A%22debt%22%2C%22section%22%3A%22debt-segment%22%7D%5D&date=07-Aug-2026&type=debt-segment&mode=single",
+      "status": 200,
+      "contentType": "application/zip",
+      "bytes": 39320,
+      "preview": "PK\u0003\u0004 \u0000\u0000\b\u0000\u0000��\u0007]�r�EB\u0016\u0000\u0000B\u0016\u0000\u0000\u0014\u0000\u0000\u0000add20260807_wkly.csv,,,Issues added on 07 August 2026,,,,,,, ST,Security,Issue,Issue Description,Coupon,Issue Date,Maturity Date,Next IP Date,Coupon Freq,Rating,Listed CP",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-mf-approved-securities",
+      "group": "registry",
+      "question": "registry row nse-mf-approved-securities (api-captured, enabled=true)",
+      "url": "https://www.nseindia.com/api/reports?archives=%5B%7B%22name%22%3A%22Approved%20list%20of%20Securities%20(.zip)%22%2C%22type%22%3A%22monthly-reports%22%2C%22category%22%3A%22capital-market%22%2C%22section%22%3A%22mutual-fund%22%7D%5D&type=mutual-fund&mode=single",
+      "status": 200,
+      "contentType": "application/zip",
+      "bytes": 68658,
+      "preview": "hex:504b0304140000000800549fff5c31a048268c0b010078170100100000006e7363636c5f616e6e31392e786c7378ec580553db4116478b43718a160e09525c8abb148a7b8b142d4e7168810087134a717777b74249a140b0e2eec59d060f24e4d2bbb9bbb999fb06773bb3b1d979bbfbde4f5efe3a1a985814684fd070d1d0d098d1ca098f031cd0d1d088b0d1d0c8d17031de2ababb79dbb9795b1a047cb0f332e7f57775795e8485012840c340fbfff89f1e3529a36e7dfc4f956f53ef4912db0dad0f8aaab830",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-mf-approved-mutual-funds",
+      "group": "registry",
+      "question": "registry row nse-mf-approved-mutual-funds (api-captured, enabled=true)",
+      "url": "https://www.nseindia.com/api/reports?archives=%5B%7B%22name%22%3A%22Approved%20list%20of%20Mutual%20Funds%20(.zip)%22%2C%22type%22%3A%22monthly-reports%22%2C%22category%22%3A%22capital-market%22%2C%22section%22%3A%22mutual-fund%22%7D%5D&type=mutual-fund&mode=single",
+      "status": 200,
+      "contentType": "application/zip",
+      "bytes": 402480,
+      "preview": "hex:504b0304140000000800b812015d6e7f68cd8223060029410600140000006e7363636c5f636d5f616e6e5f6d662e786c7378ec597553db6d16c59d4290e29220c5ddad1482172748705aa048710b6ec58a17779760450b147f710a142b56b44871f7021bde9d9d9d9dd96fb0fbfc119b3bf7f75c39e7dc3bd15041452341c240c2424242022295e2edc1de212321e1a32321112361a118ca3a3ab8593ab899eac09c2c5d8db9bcdedbd317a0a1b0e421a120fdfffc4f9fcaa411871e1e42b9abe45b82842f108bdf",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-mf-approved-corporate-bond",
+      "group": "registry",
+      "question": "registry row nse-mf-approved-corporate-bond (api-captured, enabled=true)",
+      "url": "https://www.nseindia.com/api/reports?archives=%5B%7B%22name%22%3A%22Approved%20list%20of%20Corporate%20bond%20(.zip)%22%2C%22type%22%3A%22monthly-reports%22%2C%22category%22%3A%22capital-market%22%2C%22section%22%3A%22mutual-fund%22%7D%5D&type=mutual-fund&mode=single",
+      "status": 200,
+      "contentType": "application/zip",
+      "bytes": 53690,
+      "preview": "hex:504b0304140000000800c29eff5cb9d06e9e12d10000e4df0000110000006e7363636c5f616e6e5f63622e786c7378ec58f55b946116a525a47b900ee9ee94ee066958a419423a05e91c6540409aa124056400e945612809e9466000e950baf6c3ad679f67ff83ddef07629efb5deefbde73ce3d173d4d740c32142c146c141414469490d47ec660541494084c141452146c340b454f0f5f070f5f1ba3a0970e3e56bc81ee6e0c451868ec85286828ff7ffea79fea77431e5ff88994cfd3af08a1cde402befac6e4",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/nse-mf-approved-gsec-tbill",
+      "group": "registry",
+      "question": "registry row nse-mf-approved-gsec-tbill (api-captured, enabled=true)",
+      "url": "https://www.nseindia.com/api/reports?archives=%5B%7B%22name%22%3A%22Approved%20list%20of%20GSEC%20and%20TBILL%20(.zip)%22%2C%22type%22%3A%22monthly-reports%22%2C%22category%22%3A%22capital-market%22%2C%22section%22%3A%22mutual-fund%22%7D%5D&type=mutual-fund&mode=single",
+      "status": 200,
+      "contentType": "application/zip",
+      "bytes": 20925,
+      "preview": "hex:504b0304140000000800f79eff5c2b48768311510000775d0000130000006e7363636c5f616e6e5f677365632e786c7378ec5bf73b5cd116d583108c12bdf72e7a8fe89d5112f3d488326af44ec8442744179dd15bf42e19417446ef4188debbe05daf7eeffbde7ff0defde12af7ccd9fbacbdd6dae7cedcd15147c72041c142c14641416140f1fbf483c1171505251813058518051bed2ff2ce4eee564eee66fa3e6faddc4c78bd1d1de8f330d0d87350d050fe7ffc4f1fe589034e087e42c58ba46b82f8465201",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/bse-cm-udiff-bhavcopy",
+      "group": "registry",
+      "question": "registry row bse-cm-udiff-bhavcopy (existing-code, enabled=false)",
+      "url": "https://www.bseindia.com/download/BhavCopy/Equity/BhavCopy_BSE_CM_0_0_0_20260807_F_0000.CSV",
+      "status": 200,
+      "contentType": "application/octet-stream",
+      "bytes": 845830,
+      "preview": "TradDt,BizDt,Sgmt,Src,FinInstrmTp,FinInstrmId,ISIN,TckrSymb,SctySrs,XpryDt,FininstrmActlXpryDt,StrkPric,OptnTp,FinInstrmNm,OpnPric,HghPric,LwPric,ClsPric,LastPric,PrvsClsgPric,UndrlygPric,SttlmPric,Op",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/bse-fo-udiff-bhavcopy",
+      "group": "registry",
+      "question": "registry row bse-fo-udiff-bhavcopy (p1-verified, enabled=true)",
+      "url": "https://www.bseindia.com/download/Bhavcopy/Derivative/BhavCopy_BSE_FO_0_0_0_20260807_F_0000.CSV",
+      "status": 200,
+      "contentType": "application/octet-stream",
+      "bytes": 141909,
+      "preview": "TradDt,BizDt,Sgmt,Src,FinInstrmTp,FinInstrmId,ISIN,TckrSymb,SctySrs,XpryDt,FininstrmActlXpryDt,StrkPric,OptnTp,FinInstrmNm,OpnPric,HghPric,LwPric,ClsPric,LastPric,PrvsClsgPric,UndrlygPric,SttlmPric,Op",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/bse-gross-delivery",
+      "group": "registry",
+      "question": "registry row bse-gross-delivery (p1-verified, enabled=true)",
+      "url": "https://www.bseindia.com/BSEDATA/gross/2026/SCBSEALL0708.zip",
+      "status": 200,
+      "contentType": "application/x-zip-compressed",
+      "bytes": 98757,
+      "preview": "hex:504b03041400000008004d9f075ddde0c8404381010046ef0600100000005343425345414c4c303730382e5458548cbdcd8e34bb7224b81f60de41bbd915c2ddf9bb145a77d18066d4a3ee16a077b90fdf6e8cd2973423eb9e3ab81074f278312319a4ff9a9bffcb3fffafbffdfd7ffeb77fffefffe39ffedbbffdcbdffefe2f7ffbd7fffe1f7ffbf7fffca7ffff7ffde7e75ffee39ffff5effff2cffff9fffccf7ffa8f7ffbd7fffdfffeedfb5ffed7fffef7ffefdf520082fff1f54fffe36ffffef57fff5f4f7f",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "registry/bse-index-daily-all",
+      "group": "registry",
+      "question": "registry row bse-index-daily-all (unverified, enabled=false)",
+      "url": "https://api.bseindia.com/BseIndiaAPI/api/IndexArchDailyAll/w?fmdt=07%2F08%2F2026&todt=07%2F08%2F2026",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "bytes": 2,
+      "preview": "{}",
+      "verdict": "EMPTY"
+    },
+    {
+      "id": "registry/bse-egr",
+      "group": "registry",
+      "question": "registry row bse-egr",
+      "url": "(buildUrl returned null)",
+      "verdict": "NO_URL",
+      "status": null,
+      "contentType": null,
+      "bytes": null,
+      "preview": null,
+      "note": "deliberately unfetchable — TODO — endpoint unknown. This entry exists because P1 established a NEGATIVE that would otherwise be assumed away: it scanned 4,939 rows of the BSE CM UDiFF file and found NO EGR segment or 18xxxx scrip rows, so BSE EGR does NOT ride the cash bhavcopy and needs its own source. Discover via the BSE EGR streamer/DevTools. buildUrl returns null until then."
+    }
+  ]
+}

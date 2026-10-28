@@ -1,0 +1,145 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Local env files — secrets must NEVER be committed (MONEY-592).
+# `.env*` covers every variant (.env, .env.local, .env.production, .env.qa, ...);
+# `*.bak` / `*.backup` catch editor/manual backups (the .env.local.bak leak).
+# Keep the committed template via the !.env.example exceptions.
+.env
+.env*
+*.bak
+*.backup
+!.env.example
+!.env.*.example
+
+# Testing
+coverage
+
+# Turbo
+.turbo
+
+# Vercel
+.vercel
+
+# Build Outputs
+.next/
+out/
+build
+# MONEY-1256: the bare `build` above matches ANY directory named "build" at any
+# depth, which silently swallowed the Next.js route
+# apps/web/app/strategies/build/. Its page.tsx + client.tsx are in the repo only
+# because they predate the rule — every NEW file added there was dropped with no
+# warning, which is how a loading.tsx passed locally and would have failed CI.
+# Negated narrowly rather than rewriting the rule, so `build` keeps ignoring real
+# build output everywhere else.
+!apps/web/app/strategies/build/
+!apps/web/app/strategies/build/**
+dist
+
+# TradingView UDF datafeed adapter - bundled output is force-tracked because
+# Vercel doesn't run rollup for this submodule and the chart loads it via
+# <script src="/datafeeds/udf/dist/bundle.js">. Was deleted by a stray
+# `git rm` in commit d84e660; this exception prevents recurrence. See MONEY-218.
+!apps/web/public/datafeeds/udf/dist/
+!apps/web/public/datafeeds/udf/dist/bundle.js
+
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Misc
+.DS_Store
+*.pem
+
+# GCP service account keys
+*-key.json
+*.key.json
+*.log
+seed*.log
+nohup.out
+firebase-debug.log
+
+# Claude Code session transcripts (accidentally committed in past)
+conversation-*.txt
+
+# Claude Code per-project memory — never commit
+.claude/projects/
+
+# Pre-push verification marker (per-machine state written by yarn verify:push)
+.claude/.verify-ok
+
+# Eval run transcripts — regenerated each run; the graded baseline captures them.
+evals/results/
+
+# Rollback journals written by scripts/ops/repair-stock-ratios-links.ts —
+# per-run DB id snapshots, machine/environment specific, never shared.
+stock-ratios-repair-rollback-*.json
+# MONEY-1093 — rollback snapshots from the instrument/sector/price repair
+# scripts. Same reason as above: `git clean -fdx` after a run would destroy the
+# ONLY documented recovery path, and `git add -A` would commit a prod cluster
+# hostname.
+#
+# MONEY-1204 — their canonical home is now `scripts/data/rollbacks/`, next to a
+# committed README.md that records what each artefact reverses. They USED to be
+# written to the cwd "so the operator sees them", which in practice meant the
+# repo root: an untracked, unexplained pile that a routine tidy cleared and the
+# next `--apply` silently re-created. The patterns below are FILENAME-based (no
+# `/`), so they keep matching under that subdirectory — verified with
+# `git check-ignore -v`. The directory's own README.md is NOT matched by any of
+# them and is committed.
+reclassify-rollback-*.json
+resector-rollback-*.json
+# MONEY-1205 — repair-instrument-names.ts. The STAGED name needs its own
+# pattern: `*-rollback-*.applied.json` only covers the file AFTER a
+# successful run, and a run that aborts at the prompt (or throws mid-write)
+# leaves the staged file behind carrying the masked prod cluster host.
+repair-names-rollback-*.json
+*-rollback-*.applied.json
+purge-orphans-rollback-*.json
+.claude/tmp/
+
+# ── Python services (MONEY-979, services/*) ──────────────────────────────────
+# This repo was pure Node until services/us-fundamentals arrived, so none of
+# these had ever been needed. The first one is the dangerous one: a virtualenv
+# inside the tree is hundreds of MB of third-party binaries, and `git add
+# services/` would take all of it.
+#
+# NOTE what is deliberately NOT ignored: services/*/tests/fixtures/** holds the
+# captured SEC filings the parser tests assert against. They are gzipped test
+# DATA, they are the reason those tests are not shadows, and they must be
+# committed.
+.venv/
+venv/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pytype/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+.python-version
+pip-wheel-metadata/
+# edgartools writes its HTTP cache and local storage under EDGAR_LOCAL_DATA_DIR;
+# the default is ~/.edgar but a misconfigured run lands it in the cwd.
+.edgar/
+
+# graphify knowledge graph (MONEY-1386). The WIKI is tracked — it is markdown,
+# it diffs cleanly, and clustering is seeded (cluster.py seed=42) so unchanged
+# code produces identical community IDs. Everything else here is a derived blob:
+# graph.json is 40MB across both graphs, git cannot delta minified JSON, and it
+# rebuilds from source in minutes. .husky/post-commit keeps it fresh locally.
+**/graphify-out/*
+!**/graphify-out/wiki/

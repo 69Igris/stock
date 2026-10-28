@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/usemoney-play-design-system-67522a6c-d1c3-4617-97de-fcd968490366/colors_and_type.css">
+  <link rel="stylesheet" href="_ds/usemoney-play-design-system-67522a6c-d1c3-4617-97de-fcd968490366/styles/playful-app.css">
+  <script src="_ds/usemoney-play-design-system-67522a6c-d1c3-4617-97de-fcd968490366/_ds_bundle.js"></script>
+  <script src="app/data.js"></script>
+  <script src="web/wdata.js"></script>
+  <script src="web/v2data.js"></script>
+  <style>
+    html,body{margin:0;padding:0}
+    :root{--gain-text:#0f7a34;--loss-text:#b91c1c}
+    html.dark{--gain-text:#34d399;--loss-text:#ff6b35}
+    body{background:var(--paper);font-family:var(--font-sans);color:var(--ink)}
+    a{color:var(--emerald-text);text-decoration:none}a:hover{color:var(--ink)}
+    textarea{font-family:inherit}
+  </style>
+</helmet>
+<div style="display:flex;min-height:100vh;background:var(--paper);background-image:radial-gradient(var(--dot-fg) 1px,transparent 1.5px),radial-gradient(var(--dot-fg-2) 1px,transparent 1.5px);background-size:7px 7px,11px 11px;color:var(--ink);font-family:var(--font-sans)">
+  <sc-if value="{{ isDesk }}" hint-placeholder-val="{{ true }}">
+    <div style="width:236px;flex-shrink:0;border-right:2px solid var(--ink);background:var(--paper-3);display:flex;flex-direction:column;height:100vh;position:sticky;top:0">
+      <a href="UseMoney v2 Hub.dc.html" style="padding:15px 18px 13px;border-bottom:1.5px solid var(--rule-soft);display:flex;align-items:center;gap:10px;color:var(--ink)">
+        <span style="width:28px;height:28px;border-radius:7px;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-family:var(--font-mono);font-weight:800;font-size:14px;transform:rotate(-3deg)">U</span>
+        <span style="font-weight:800;font-size:15px;letter-spacing:-0.3px">UseMoney<span style="color:var(--emerald-text)"> AI</span></span>
+      </a>
+      <div style="flex:1;overflow-y:auto;padding:4px 14px 10px">
+        <sc-for list="{{ nav }}" as="sec" hint-placeholder-count="4">
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;padding:12px 3px 5px"><span style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:1.6px;color:var(--ink-3)">{{ sec.label }}</span><span style="flex:1;height:1.5px;background:var(--ink);opacity:0.18"></span></div>
+            <sc-for list="{{ sec.items }}" as="it" hint-placeholder-count="4">
+              <a href="{{ it.href }}" title="{{ it.tip }}" style="{{ it.rowStyle }}">
+                <span style="{{ it.icStyle }}"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="{{ it.icStroke }}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ it.d }}"></path></svg></span>
+                <span style="font-size:12.5px">{{ it.label }}</span>
+                <sc-if value="{{ it.badge }}" hint-placeholder-val="{{ false }}"><span style="margin-left:auto;font-family:var(--font-mono);font-size:8px;font-weight:800;letter-spacing:0.6px;background:{{ it.badgeBg }};color:#0b0b09;border:1.5px solid var(--ink);border-radius:5px;padding:1px 5px">{{ it.badge }}</span></sc-if>
+              </a>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+      <div style="flex-shrink:0;border-top:1.5px solid var(--rule-soft);padding:10px 14px;display:flex;align-items:center;gap:9px">
+        <span style="width:28px;height:28px;border-radius:9px;background:var(--pop-2);border:2px solid var(--ink);display:grid;place-items:center;font-family:var(--font-mono);font-weight:800;font-size:11px;transform:rotate(-3deg);color:#1d1d1b">RV</span>
+        <div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:800">Rahul Verma</div><div style="font-family:var(--font-mono);font-size:8.5px;color:var(--ink-3)">FREE · ⚡ 2 CREDITS</div></div>
+      </div>
+    </div>
+  </sc-if>
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+    <div style="border-bottom:2px solid var(--ink);background:var(--paper);padding:12px 22px 11px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;position:sticky;top:0;z-index:40">
+      <div style="min-width:0">
+        <div style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:1.4px;color:var(--emerald-text)">● DISCOVER / STRATEGIES</div>
+        <div style="font-weight:800;font-size:21px;letter-spacing:-0.7px;margin-top:2px">Strategies <span style="font-family:var(--font-serif);font-style:italic;font-weight:400;color:var(--ink-2)">does it make money over time.</span></div>
+      </div>
+      <div style="position:relative">
+        <button onClick="{{ toggleViewMenu }}" style="display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:10px;font-weight:800;letter-spacing:0.8px;border:2px solid var(--ink);border-radius:8px;background:var(--paper);color:var(--ink);padding:6px 10px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)">VIEW: {{ viewLabel }} ▾</button>
+        <sc-if value="{{ viewOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;top:38px;left:0;z-index:60;width:250px;border:2px solid var(--ink);border-radius:11px;background:var(--paper);box-shadow:4px 4px 0 var(--ink);overflow:hidden">
+            <sc-for list="{{ viewOpts }}" as="v" hint-placeholder-count="3"><div onClick="{{ v.on }}" style="{{ v.style }}"><div style="font-weight:800;font-size:12.5px">{{ v.name }}</div><div style="font-size:11px;opacity:0.75;margin-top:1px">{{ v.desc }}</div></div></sc-for>
+            <div style="padding:8px 12px;font-family:var(--font-mono);font-size:8.5px;color:var(--ink-3);border-top:1.5px solid var(--rule-soft)">MANUAL PRESET — PERSONA ENGINE TAKES OVER LATER</div>
+          </div>
+        </sc-if>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:9px;flex-shrink:0">
+        <span style="font-family:var(--font-mono);font-size:10px;color:var(--ink-3)">NSE OPEN · 09:42 IST</span>
+        <button onClick="{{ toggleDark }}" title="Toggle dark mode" style="width:34px;height:34px;border-radius:10px;border:2px solid var(--ink);background:var(--paper-3);display:grid;place-items:center;cursor:pointer;box-shadow:2px 2px 0 var(--ink);color:var(--ink)"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="{{ darkIcon }}"></path></svg></button>
+        <span style="display:inline-flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:10px;font-weight:800;border:2px solid var(--ink);border-radius:99px;background:var(--pop-2);color:#1d1d1b;padding:5px 11px;box-shadow:2px 2px 0 var(--ink)">⚡ 2</span>
+      </div>
+    </div>
+    <div style="flex:1;padding:20px 22px 90px;max-width:1240px;width:100%;box-sizing:border-box">
+      <sc-if value="{{ listMode }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+          <div style="display:inline-flex;border:2px solid var(--ink);border-radius:11px;overflow:hidden;background:var(--paper-3);box-shadow:3px 3px 0 var(--ink)">
+            <sc-for list="{{ topTabs }}" as="t" hint-placeholder-count="3"><button onClick="{{ t.on }}" style="{{ t.style }}">{{ t.label }}<sc-if value="{{ t.badge }}" hint-placeholder-val="{{ false }}"><span style="margin-left:7px;font-family:var(--font-mono);font-size:8.5px;font-weight:800;background:var(--pop-2);color:#1d1d1b;border-radius:4px;padding:1px 5px;border:1.5px solid var(--ink)">{{ t.badge }}</span></sc-if></button></sc-for>
+          </div>
+          <sc-if value="{{ begBanner }}" hint-placeholder-val="{{ false }}"><span style="font-family:var(--font-serif);font-style:italic;font-size:13px;color:var(--ink-2)">Rules that trade on autopilot — watch them work before you trust them.</span></sc-if>
+        </div>
+        <sc-if value="{{ catShow }}" hint-placeholder-val="{{ true }}">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin-top:16px">
+            <sc-for list="{{ cards }}" as="c" hint-placeholder-count="6">
+              <div onClick="{{ c.on }}" style="border:2px solid var(--ink);border-radius:13px;background:var(--paper);box-shadow:3px 3px 0 var(--ink);padding:14px 16px;cursor:pointer;display:flex;flex-direction:column;gap:9px" style-hover="transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)">
+                <div style="display:flex;align-items:center;gap:7px"><span style="font-family:var(--font-mono);font-size:8.5px;font-weight:800;letter-spacing:0.8px;background:{{ c.lifeBg }};color:#1d1d1b;border:1.5px solid var(--ink);border-radius:6px;padding:3px 8px">{{ c.status }}</span><span style="font-family:var(--font-mono);font-size:8.5px;font-weight:700;border:1.5px solid var(--rule-soft);border-radius:5px;padding:2px 7px;color:var(--ink-3)">{{ c.theme }}</span></div>
+                <div style="font-weight:800;font-size:15.5px;letter-spacing:-0.4px;line-height:1.2">{{ c.name }}</div>
+                <sc-if value="{{ c.hasStats }}" hint-placeholder-val="{{ true }}">
+                  <svg viewBox="0 0 100 26" style="width:100%;height:26px" preserveAspectRatio="none"><path d="{{ c.spark }}" fill="none" stroke="var(--emerald)" stroke-width="2"></path></svg>
+                  <div style="display:flex;gap:16px"><span><span style="font-family:var(--font-mono);font-size:15px;font-weight:800">{{ c.s1 }}</span><span style="display:block;font-family:var(--font-mono);font-size:8px;color:var(--ink-3);letter-spacing:0.8px">{{ c.s1l }}</span></span><span><span style="font-family:var(--font-mono);font-size:15px;font-weight:800;color:{{ c.s2c }}">{{ c.s2 }}</span><span style="display:block;font-family:var(--font-mono);font-size:8px;color:var(--ink-3);letter-spacing:0.8px">{{ c.s2l }}</span></span></div>
+                </sc-if>
+                <sc-if value="{{ c.noStats }}" hint-placeholder-val="{{ false }}">
+                  <div style="border:2px dashed var(--rule-soft);border-radius:9px;padding:10px 12px;font-size:12px;color:var(--ink-3)">Not yet backtested — <b style="color:var(--ink)">run it</b> to see real numbers. Never fake ones.</div>
+                  <button style="align-self:flex-start;display:inline-flex;align-items:center;gap:6px;border:2px solid var(--ink);border-radius:8px;background:var(--ink);color:var(--paper);font-weight:800;font-size:11.5px;padding:7px 12px;cursor:pointer">Run backtest <span style="font-family:var(--font-mono);font-size:8.5px;background:var(--pop-2);color:#1d1d1b;border-radius:4px;padding:1px 5px">⚡ 1</span></button>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ customShow }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:16px">
+            <div style="border:2px solid var(--ink);border-radius:13px;background:var(--paper);box-shadow:3px 3px 0 var(--ink);padding:16px 18px">
+              <div style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">BUILD CUSTOM — RULE BY RULE</div>
+              <div style="margin-top:11px;display:flex;flex-direction:column;gap:7px">
+                <span style="font-family:var(--font-mono);font-size:10.5px;border:1.5px solid var(--ink);border-radius:7px;padding:6px 9px;background:var(--paper-2)">IF&nbsp; RSI(14) &lt; 30</span>
+                <span style="font-family:var(--font-mono);font-size:10.5px;border:1.5px solid var(--ink);border-radius:7px;padding:6px 9px;background:var(--paper-2)">AND&nbsp; close &gt; 200-DMA</span>
+                <span style="font-family:var(--font-mono);font-size:10.5px;border:1.5px dashed var(--rule-soft);border-radius:7px;padding:6px 9px;color:var(--ink-3);cursor:pointer">+ add condition</span>
+              </div>
+              <button style="margin-top:12px;border:2px solid var(--ink);border-radius:9px;background:var(--paper);color:var(--ink);font-weight:800;font-size:12px;padding:8px 14px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)">Open the builder →</button>
+            </div>
+            <div style="border:2px solid var(--ink);border-radius:13px;background:var(--ink);color:var(--paper);box-shadow:3px 3px 0 var(--emerald);padding:16px 18px">
+              <div style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1.2px;color:var(--emerald)">CREATE AI — DESCRIBE IT IN WORDS</div>
+              <textarea placeholder="e.g. buy quality midcaps on dips, exit at +8% or 30 days…" style="margin-top:11px;width:100%;box-sizing:border-box;height:74px;border:2px solid var(--paper);border-radius:9px;background:transparent;color:var(--paper);padding:9px 11px;font-size:12.5px;outline:0;resize:none"></textarea>
+              <button style="margin-top:10px;display:inline-flex;align-items:center;gap:6px;border:2px solid var(--paper);border-radius:9px;background:var(--pop-2);color:#1d1d1b;font-weight:800;font-size:12px;padding:8px 14px;cursor:pointer">Generate strategy <span style="font-family:var(--font-mono);font-size:8.5px;border:1.5px solid #1d1d1b;border-radius:4px;padding:1px 5px">⚡ 1</span></button>
+            </div>
+          </div>
+          <div style="border:2px solid var(--ink);border-radius:13px;background:var(--paper);box-shadow:3px 3px 0 var(--ink);margin-top:14px;overflow:hidden">
+            <div style="padding:10px 16px;border-bottom:2px solid var(--ink);background:var(--paper-3);font-family:var(--font-mono);font-size:10px;font-weight:800;letter-spacing:1.2px">MY STRATEGIES</div>
+            <sc-for list="{{ mine }}" as="m" hint-placeholder-count="2">
+              <div onClick="{{ m.on }}" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:11px 16px;border-bottom:1.5px solid var(--rule-soft);cursor:pointer" style-hover="background:var(--paper-3)">
+                <b style="font-size:13px;min-width:200px">{{ m.name }}</b>
+                <span style="font-family:var(--font-mono);font-size:8.5px;font-weight:800;letter-spacing:0.8px;background:{{ m.lifeBg }};color:#1d1d1b;border:1.5px solid var(--ink);border-radius:6px;padding:3px 8px">{{ m.status }}</span>
+                <span style="font-size:11.5px;color:var(--ink-3);flex:1;min-width:160px">{{ m.line }}</span>
+                <span style="font-family:var(--font-mono);font-size:10px;font-weight:800;color:var(--emerald-text)">OPEN →</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ feedShow }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:16px">
+            <span style="font-family:var(--font-mono);font-size:9.5px;color:var(--ink-3)">NSE CLOSES 15:30 · NEXT EOD SCAN 16:05 IST</span>
+            <div style="margin-left:auto;display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ feedChips }}" as="fc" hint-placeholder-count="3"><button onClick="{{ fc.on }}" style="{{ fc.style }}">{{ fc.label }}</button></sc-for></div>
+          </div>
+          <div style="border:2px solid var(--ink);border-radius:13px;background:var(--paper);box-shadow:4px 4px 0 var(--ink);margin-top:12px;overflow:hidden">
+            <sc-for list="{{ feed }}" as="f" hint-placeholder-count="4">
+              <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px 16px;border-bottom:1.5px solid var(--rule-soft)" style-hover="background:var(--paper-3)">
+                <span style="{{ f.stStyle }}">{{ f.status }}</span>
+                <b style="font-family:var(--font-mono);font-size:13px;min-width:96px">{{ f.sym }}</b>
+                <span style="flex:1;min-width:200px"><span style="font-size:12px;font-weight:600">{{ f.rule }}</span><span style="display:block;font-family:var(--font-mono);font-size:9px;color:var(--ink-3);margin-top:2px">{{ f.strat }} · {{ f.at }}</span></span>
+                <svg viewBox="0 0 100 26" style="width:80px;height:24px;flex-shrink:0" preserveAspectRatio="none"><path d="{{ f.spark }}" fill="none" stroke="var(--emerald)" stroke-width="2"></path></svg>
+                <span style="font-family:var(--font-mono);font-size:12px;font-weight:700;min-width:70px;text-align:right">₹{{ f.px }}</span>
+              </div>
+            </sc-for>
+            <div style="padding:9px 16px;font-family:var(--font-mono);font-size:9px;color:var(--ink-3);background:var(--paper-3);border-top:2px solid var(--ink)">SIGNALS ARE RESEARCH OUTPUT, NOT ADVICE · NO ORDERS ARE OR CAN BE PLACED</div>
+          </div>
+        </sc-if>
+      </sc-if>
+
+      <sc-if value="{{ detailMode }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ backToList }}" style="display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:10px;font-weight:800;color:var(--ink-3);cursor:pointer;letter-spacing:0.8px">← ALL STRATEGIES</div>
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:10px">
+          <div style="font-weight:800;font-size:26px;letter-spacing:-1px">{{ dName }}</div>
+          <span style="font-family:var(--font-mono);font-size:9px;font-weight:800;letter-spacing:0.8px;background:{{ dLifeBg }};color:#1d1d1b;border:1.5px solid var(--ink);border-radius:6px;padding:3px 9px">{{ dStatus }}</span>
+          <span style="font-family:var(--font-mono);font-size:9px;font-weight:700;border:1.5px solid var(--rule-soft);border-radius:5px;padding:2px 7px;color:var(--ink-3)">{{ dTheme }}</span>
+          <a href="v2 Screener.dc.html" style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;border:2px solid var(--ink);border-radius:9px;background:var(--paper);color:var(--ink);font-weight:800;font-size:12px;padding:8px 13px;box-shadow:2px 2px 0 var(--ink)" style-hover="transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink)">See current matches →</a>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:12px">
+          <sc-for list="{{ lifeSteps }}" as="ls" hint-placeholder-count="5"><span style="{{ ls.style }}">{{ ls.label }}</span><sc-if value="{{ ls.arrow }}" hint-placeholder-val="{{ true }}"><span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-3)">→</span></sc-if></sc-for>
+        </div>
+        <div style="display:inline-flex;border:2px solid var(--ink);border-radius:11px;overflow:hidden;background:var(--paper-3);box-shadow:3px 3px 0 var(--ink);margin-top:14px;flex-wrap:wrap">
+          <sc-for list="{{ dTabs }}" as="t" hint-placeholder-count="4"><button onClick="{{ t.on }}" style="{{ t.style }}">{{ t.label }}<sc-if value="{{ t.sub }}" hint-placeholder-val="{{ false }}"><span style="display:block;font-size:8.5px;font-weight:600;opacity:0.65;margin-top:1px">{{ t.sub }}</span></sc-if></button></sc-for>
+        </div>
+
+        <sc-if value="{{ tOverview }}" hint-placeholder-val="{{ true }}">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:16px;align-items:start">
+            <div style="border:2px solid var(--ink);border-radius:13px;background:var(--paper);box-shadow:3px 3px 0 var(--ink);padding:16px 18px">
+              <div style="display:flex;align-items:center"><span style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">THE RULES — PLAIN ENGLISH</span><sc-if value="{{ dslBtn }}" hint-placeholder-val="{{ false }}"><span onClick="{{ toggleDsl }}" style="margin-left:auto;font-family:var(--font-mono);font-size:9px;font-weight:800;color:var(--emerald-text);cursor:pointer">{{ dslLabel }}</span></sc-if></div>
+              <sc-if value="{{ dslOff }}" hint-placeholder-val="{{ true }}"><div style="font-size:14px;line-height:1.6;margin-top:9px">{{ dDesc }}</div></sc-if>
+              <sc-if value="{{ dslOn }}" hint-placeholder-val="{{ false }}"><code style="display:block;margin-top:9px;font-family:var(--font-mono);font-size:11px;line-height:1.7;background:var(--ink);color:var(--paper);border-radius:9px;padding:11px 13px;white-space:pre-wrap">{{ dDsl }}</code></sc-if>
+              <div style="margin-top:11px;font-family:var(--font-mono);font-size:9px;color:var(--ink-3)">{{ dRunsLine }}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <sc-if value="{{ dHasStats }}" hint-placeholder-val="{{ true }}">
+                <div style="border:2px solid var(--ink);border-radius:13px;background:var(--paper);box-shadow:3px 3px 0 var(--ink);padding:16px 18px">
+                  <div style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">LATEST NUMBERS</div>
+                  <div style="display:flex;flex-wrap:wrap;gap:18px;margin-top:10px">
+                    <sc-for list="{{ dStats }}" as="st" hint-placeholder-count="3"><span><span style="font-family:var(--font-mono);font-size:19px;font-weight:800;color:{{ st.c }}">{{ st.v }}</span><span style="display:block;font-family:var(--font-mono);font-size:8px;color:var(--ink-3);letter-spacing:0.8px;margin-top:2px">{{ st.l }}</span></span></sc-for>
+                  </div>
+                  <sc-if value="{{ overfitShow }}" hint-placeholder-val="{{ true }}"><div style="margin-top:11px"><span style="{{ overfitStyle }}">{{ overfitLabel }}</span></div></sc-if>
+                </div>
+              </sc-if>
+              <sc-if value="{{ dNoStats }}" hint-placeholder-val="{{ false }}">
+                <div style="border:2px dashed var(--ink);border-radius:13px;background:var(--paper-3);padding:16px 18px;font-size:13px;color:var(--ink-2)"><b style="color:var(--ink)">No numbers yet.</b> This strategy hasn’t been backtested — run it once and every tab lights up with real, cost-inclusive results.</div>
+              </sc-if>
+              <button style="align-self:flex-start;display:inline-flex;align-items:center;gap:7px;border:2px solid var(--ink);border-radius:10px;background:var(--ink);color:var(--paper);font-weight:800;font-size:13px;padding:10px 16px;cursor:pointer;box-shadow:3px 3px 0 var(--emerald)">{{ runLabel }} <span style="font-family:var(--font-mono);font-size:9px;background:var(--pop-2);color:#1d1d1b;border-radius:4px;padding:1px 6px">⚡ 1</span></button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tBacktest }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ btHas }}" hint-placeholder-val="{{ true }}">
+            <div style="border:2px solid var(--ink);border-radius:13px;background:var(--paper);box-shadow:4px 4px 0 var(--ink);margin-top:16px;overflow:hidden">
+              <div style="display:flex;flex-wrap:wrap;align-items:center;gap:9px;padding:11px 16px;border-bottom:2px solid var(--ink);background:var(--paper-3)">
+                <span style="font-family:var(--font-mono);font-size:10px;font-weight:800;letter-spacing:1.2px">BACKTEST — {{ btPeriod }}</span>
+                <span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-3)">{{ btUniverse }} · COSTS INCLUDED</span>
+                <span style="margin-left:auto;display:inline-flex;gap:12px;font-family:var(--font-mono);font-size:9px;font-weight:700"><span style="color:var(--emerald-text)">— STRATEGY</span><span style="color:var(--ink-3)">— NIFTY</span></span>
+              </div>
+              <svg viewBox="0 0 600 150" style="width:100%;height:170px;display:block" preserveAspectRatio="none">
+                <path d="{{ btBenchPath }}" fill="none" stroke="var(--ink-3)" stroke-width="1.5" stroke-dasharray="4 3"></path>
+                <path d="{{ btCurvePath }}" fill="none" stroke="var(--emerald)" stroke-width="2.5"></path>
+              </svg>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));border-top:2px solid var(--ink)">
+                <sc-for list="{{ btMetrics }}" as="m" hint-placeholder-count="6">
+                  <div style="padding:11px 14px;border-right:1.5px solid var(--rule-soft);border-bottom:1.5px solid var(--rule-soft)"><div style="font-family:var(--font-mono);font-size:8px;font-weight:700;letter-spacing:0.8px;color:var(--ink-3)">{{ m.l }}</div><div style="font-family:var(--font-mono);font-size:16px;font-weight:800;margin-top:3px">{{ m.v }}</div></div>
+                </sc-for>
+              </div>
+              <sc-if value="{{ walkShow }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:12px 16px;border-top:2px solid var(--ink)">
+                  <span style="font-family:var(--font-mono);font-size:9px;font-weight:800;letter-spacing:1px;color:var(--ink-3)">WALK-FORWARD</span>
+                  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px"><sc-for list="{{ walk }}" as="w" hint-placeholder-count="4"><span style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;border:1.5px solid var(--ink);border-radius:6px;padding:4px 8px;background:var(--paper-2)">{{ w.k }} <b style="color:var(--gain-text)">{{ w.v }}</b></span></sc-for></div>
+                </div>
+              </sc-if>
+              <div style="padding:9px 16px;font-family:var(--font-mono);font-size:9px;color:var(--ink-3);background:var(--paper-3);border-top:2px solid var(--ink)">HISTORICAL SIMULATION INCLUDING COSTS — NOT INDICATIVE OF FUTURE RETURNS</div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ btEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="border:2px dashed var(--ink);border-radius:13px;background:var(--paper-3);margin-top:16px;padding:34px 24px;text-align:center">
+              <div style="font-family:var(--font-mono);font-size:10px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">STEP 1 OF THE LIFECYCLE</div>
+              <div style="font-weight:800;font-size:20px;letter-spacing:-0.5px;margin-top:8px">Backtest it first. <span style="font-family:var(--font-serif);font-style:italic;font-weight:400">Everything else unlocks from here.</span></div>
+              <div style="font-size:12.5px;color:var(--ink-3);margin-top:6px;max-width:420px;margin-left:auto;margin-right:auto">Pick a period and universe, and we run it against real prices with costs included. FREE tier: 1 backtest/month on NIFTY 50.</div>
+              <button style="margin-top:14px;display:inline-flex;align-items:center;gap:7px;border:2px solid var(--ink);border-radius:10px;background:var(--ink);color:var(--paper);font-weight:800;font-size:13px;padding:10px 18px;cursor:pointer;box-shadow:3px 3px 0 var(--emerald)">Run backtest <span style="font-family:var(--font-mono);font-size:9px;background:var(--pop-2);color:#1d1d1b;border-radius:4px;padding:1px 6px">⚡ 1</span></button>
+            </div>
+          </sc-if>
+        </sc-if>
+
+        <sc-if value="{{ tSignals }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ sigUnlocked }}" hint-placeholder-val="{{ true }}">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px;margin-top:16px;align-items:start">
+              <div style="border:2px solid var(--ink);border-radius:13px;background:var(--paper);box-shadow:3px 3px 0 var(--ink);padding:15px 17px">
+                <div style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">SCHEDULE &amp; ALERTS</div>
+                <div style="display:flex;align-items:center;gap:9px;margin-top:11px"><span style="font-family:var(--font-mono);font-size:10px;font-weight:800;border:2px solid var(--ink);border-radius:99px;padding:4px 11px;background:var(--ink);color:var(--paper)">EOD · 16:05 IST</span><span style="font-family:var(--font-mono);font-size:10px;font-weight:800;border:2px solid var(--ink);border-radius:99px;padding:4px 11px;background:var(--paper);color:var(--ink-3)">INTRADAY <span style="background:var(--pop-2);color:#1d1d1b;border-radius:3px;padding:0 4px;font-size:8px">PRO</span></span></div>
+                <sc-for list="{{ channels }}" as="ch" hint-placeholder-count="3">
+                  <div style="display:flex;align-items:center;gap:9px;margin-top:11px"><span style="font-size:12.5px;font-weight:700;flex:1">{{ ch.label }}</span><sc-if value="{{ ch.pro }}" hint-placeholder-val="{{ false }}"><span style="font-family:var(--font-mono);font-size:8px;font-weight:800;background:var(--pop-2);color:#1d1d1b;border:1.5px solid var(--ink);border-radius:4px;padding:1px 5px">PRO</span></sc-if><span onClick="{{ ch.on }}" style="{{ ch.style }}"><span style="{{ ch.knob }}"></span></span></div>
+                </sc-for>
+              </div>
+              <div style="border:2px solid var(--ink);border-radius:13px;background:var(--paper);box-shadow:3px 3px 0 var(--ink);overflow:hidden">
+                <div style="padding:10px 15px;border-bottom:2px solid var(--ink);background:var(--paper-3);font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1.2px">RECENT SIGNALS</div>
+                <sc-for list="{{ dSignals }}" as="f" hint-placeholder-count="2">
+                  <div style="display:flex;align-items:center;gap:10px;padding:11px 15px;border-bottom:1.5px solid var(--rule-soft)">
+                    <span style="{{ f.stStyle }}">{{ f.status }}</span>
+                    <span style="flex:1;min-width:0"><b style="font-family:var(--font-mono);font-size:12.5px">{{ f.sym }}</b><span style="display:block;font-size:11px;color:var(--ink-3);margin-top:1px">{{ f.rule }}</span></span>
+                    <svg viewBox="0 0 100 26" style="width:70px;height:22px;flex-shrink:0" preserveAspectRatio="none"><path d="{{ f.spark }}" fill="none" stroke="var(--emerald)" stroke-width="2"></path></svg>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ dSigEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:18px 15px;font-size:12px;color:var(--ink-3)">No signals yet — first scheduled run is tonight, 16:05 IST.</div></sc-if>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ sigLocked }}" hint-placeholder-val="{{ false }}">
+            <div style="border:2px dashed var(--ink);border-radius:13px;background:var(--paper-3);margin-top:16px;padding:34px 24px;text-align:center">
+              <div style="font-weight:800;font-size:20px;letter-spacing:-0.5px">Backtest this strategy to unlock Signals.</div>
+              <div style="font-size:12.5px;color:var(--ink-3);margin-top:6px">Signals watch the market for your rules — but first prove the rules on history.</div>
+            </div>
+          </sc-if>
+        </sc-if>
+
+        <sc-if value="{{ tForward }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ fwdHas }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:16px">
+              <div style="flex:2;min-width:300px;border:2px solid var(--ink);border-radius:13px;background:var(--paper);box-shadow:4px 4px 0 var(--ink);overflow:hidden">
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:9px;padding:11px 16px;border-bottom:2px solid var(--ink);background:var(--paper-3)">
+                  <span style="font-family:var(--font-mono);font-size:10px;font-weight:800;letter-spacing:1.2px">SHADOW PORTFOLIO — SINCE {{ fwdSince }}</span>
+                  <span style="margin-left:auto;font-family:var(--font-mono);font-size:9px;font-weight:700;border:1.5px solid var(--ink);background:var(--pop-2);color:#1d1d1b;border-radius:6px;padding:3px 8px">SIMULATION — NO REAL ORDERS</span>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:18px;padding:14px 16px 4px">
+                  <span><span style="font-family:var(--font-mono);font-size:22px;font-weight:800;color:var(--gain-text)">{{ fwdPnl }}</span><span style="display:block;font-family:var(--font-mono);font-size:8px;color:var(--ink-3);letter-spacing:0.8px;margin-top:2px">HYPOTHETICAL P&amp;L</span></span>
+                  <span><span style="font-family:var(--font-mono);font-size:22px;font-weight:800;color:var(--ink-2)">{{ fwdBench }}</span><span style="display:block;font-family:var(--font-mono);font-size:8px;color:var(--ink-3);letter-spacing:0.8px;margin-top:2px">NIFTY SAME PERIOD</span></span>
+                  <span style="margin-left:auto"><span style="{{ divStyle }}">{{ divLabel }}</span><span style="display:block;font-family:var(--font-mono);font-size:8px;color:var(--ink-3);letter-spacing:0.8px;margin-top:4px">VS BACKTEST BAND {{ fwdBand }}</span></span>
+                </div>
+                <svg viewBox="0 0 600 130" style="width:100%;height:150px;display:block" preserveAspectRatio="none">
+                  <path d="{{ fwdBenchPath }}" fill="none" stroke="var(--ink-3)" stroke-width="1.5" stroke-dasharray="4 3"></path>
+                  <path d="{{ fwdCurvePath }}" fill="none" stroke="var(--emerald)" stroke-width="2.5"></path>
+                </svg>
+              </div>
+              <div style="flex:1.4;min-width:280px;border:2px solid var(--ink);border-radius:13px;background:var(--paper);box-shadow:3px 3px 0 var(--ink);overflow:hidden;align-self:flex-start">
+                <div style="padding:10px 15px;border-bottom:2px solid var(--ink);background:var(--paper-3);font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1.2px">LEDGER — HYPOTHETICAL FILLS, COSTS IN</div>
+                <sc-for list="{{ ledger }}" as="l" hint-placeholder-count="4">
+                  <div style="display:flex;align-items:center;gap:9px;padding:10px 15px;border-bottom:1.5px solid var(--rule-soft)">
+                    <b style="font-family:var(--font-mono);font-size:12px;min-width:82px">{{ l.sym }}</b>
+                    <span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-3);flex:1">{{ l.line }}</span>
+                    <span style="font-family:var(--font-mono);font-size:11.5px;font-weight:800;color:{{ l.c }}">{{ l.pnl }}</span>
+                    <sc-if value="{{ l.open }}" hint-placeholder-val="{{ false }}"><span style="font-family:var(--font-mono);font-size:7.5px;font-weight:800;border:1.5px solid var(--ink);border-radius:4px;padding:1px 4px;background:var(--pop-3);color:#1d1d1b">OPEN</span></sc-if>
+                  </div>
+                </sc-for>
+                <div style="padding:9px 15px;font-family:var(--font-mono);font-size:8.5px;color:var(--ink-3);background:var(--paper-3);border-top:2px solid var(--ink)">HYPOTHETICAL — NO REAL ORDERS WERE OR CAN BE PLACED</div>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ fwdEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="border:2px dashed var(--ink);border-radius:13px;background:var(--paper-3);margin-top:16px;padding:34px 24px;text-align:center">
+              <div style="font-weight:800;font-size:20px;letter-spacing:-0.5px">Watch it work before you trust it.</div>
+              <div style="font-size:12.5px;color:var(--ink-3);margin-top:6px;max-width:440px;margin-left:auto;margin-right:auto">Forward Run trades this strategy in a shadow portfolio — real prices, fake money. Run signals for a couple of weeks first, then promote it here.</div>
+            </div>
+          </sc-if>
+        </sc-if>
+      </sc-if>
+    </div>
+  </div>
+  <sc-if value="{{ isMob }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;left:0;right:0;bottom:0;z-index:70;display:flex;background:var(--paper);border-top:2px solid var(--ink);padding-bottom:env(safe-area-inset-bottom,0px)">
+      <a href="v2 Dashboard.dc.html" style="flex:1;text-align:center;padding:9px 0 7px;color:var(--ink-3);font-family:var(--font-mono);font-size:8.5px;font-weight:800">HOME</a>
+      <a href="v2 Screener.dc.html" style="flex:1;text-align:center;padding:9px 0 7px;color:var(--ink-3);font-family:var(--font-mono);font-size:8.5px;font-weight:800">SCREENER</a>
+      <a href="#" style="flex:1;text-align:center;padding:9px 0 7px;color:var(--paper);background:var(--ink);font-family:var(--font-mono);font-size:8.5px;font-weight:800">STRATEGIES</a>
+      <a href="#" style="flex:1;text-align:center;padding:9px 0 7px;color:var(--ink-3);font-family:var(--font-mono);font-size:8.5px;font-weight:800">SAGE</a>
+      <a href="v2 Settings Developer.dc.html" style="flex:1;text-align:center;padding:9px 0 7px;color:var(--ink-3);font-family:var(--font-mono);font-size:8.5px;font-weight:800">YOU</a>
+    </div>
+  </sc-if>
+  <sc-if value="{{ isDesk }}" hint-placeholder-val="{{ true }}">
+    <div style="position:fixed;right:22px;bottom:20px;z-index:60;display:inline-flex;align-items:center;gap:8px;border:2px solid var(--ink);border-radius:99px;background:var(--ink);color:var(--paper);padding:12px 19px;font-weight:800;font-size:13.5px;box-shadow:3px 3px 0 var(--emerald);cursor:pointer">✦ Ask Sage</div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { ready: false, isDesk: true, dark: false, view: "advanced", viewOpen: false, topTab: "catalog", stratId: null, dtab: "overview", dsl: false, sigFilter: "", ch: { push: true, email: false, wa: false } };
+  componentDidMount() {
+    try {
+      const d = localStorage.getItem("um-v2-dark") === "1";
+      document.documentElement.classList.toggle("dark", d);
+      this.setState({ dark: d, view: localStorage.getItem("um-v2-view-strategies") || "advanced" });
+    } catch (e) {}
+    this.mq = window.matchMedia("(min-width: 1024px)");
+    const sync = () => this.setState({ isDesk: this.mq.matches });
+    this.mq.addEventListener("change", sync); sync();
+    this.poll = setInterval(() => { if (window.STRATS && window.V2) { clearInterval(this.poll); this.setState({ ready: true }); } }, 60);
+    window.addEventListener("storage", this.onStore = (e) => { if (e.key === "um-v2-dark") { const d = e.newValue === "1"; document.documentElement.classList.toggle("dark", d); this.setState({ dark: d }); } });
+  }
+  componentWillUnmount() { clearInterval(this.poll); window.removeEventListener("storage", this.onStore); }
+  spark(series, w, h) {
+    if (!series || !series.length) return "";
+    const mn = Math.min(...series), mx = Math.max(...series), rg = mx - mn || 1;
+    return series.map((v, i) => (i ? "L" : "M") + (i / (series.length - 1) * w).toFixed(1) + " " + (h - 2 - (v - mn) / rg * (h - 4)).toFixed(1)).join("");
+  }
+  setView(v) { try { localStorage.setItem("um-v2-view-strategies", v); } catch (e) {} this.setState({ view: v, viewOpen: false, topTab: "catalog", dsl: false }); }
+  renderVals() {
+    const S = this.state, STRATS = window.STRATS || [], V2 = window.V2 || {}, BT = window.BT_RESULT, FW = window.FWDRUN, FEED = window.SIGNALS_FEED || [];
+    const mono = "font-family:var(--font-mono);";
+    const isBeg = S.view === "beginner", isInt = S.view === "intermediate", isAdv = S.view === "advanced";
+    const LIFE = { DRAFT: "var(--paper-2)", BACKTESTED: "var(--pop-3)", VALIDATED: "var(--emerald)", FORWARD: "var(--pop-2)", RETIRED: "var(--pop-1)" };
+    const ORDER = ["DRAFT", "BACKTESTED", "VALIDATED", "FORWARD", "RETIRED"];
+    // nav (same shell as screener, active=strategies)
+    const IC = { grid: "M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z", spark: "M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2z", pie: "M21 12A9 9 0 1 1 12 3v9z", eye: "M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z", book: "M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5zM4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5", flame: "M12 22c4 0 7-2.7 7-7 0-3-2-5.5-3.5-7C14 6 13 4 13 2c-3 2-4 5-4 7-1-1-1.5-2-1.5-3.5C5.5 7.5 5 9.8 5 12c0 6 3.4 10 7 10z", act: "M22 12h-4l-3 9L9 3l-3 9H2", search: "M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM21 21l-4.3-4.3", zap: "M13 2 3 14h7l-1 8 11-12h-8l1-8z", brain: "M12 4a3 3 0 0 0-3 3v10a3 3 0 1 0 6 0V7a3 3 0 0 0-3-3zM6 9a3 3 0 0 0 0 6M18 9a3 3 0 0 1 0 6", news: "M4 22h16a2 2 0 0 0 2-2V4H6v16a2 2 0 0 1-4 0V9h4M10 8h8M10 12h8M10 16h5", target: "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12zM12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z", calc: "M5 2h14a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zM8 6h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h8", shield: "M12 22s8-3.5 8-10V5l-8-3-8 3v7c0 6.5 8 10 8 10z", receipt: "M4 2v20l2-1.5L8 22l2-1.5L12 22l2-1.5L16 22l2-1.5L20 22V2l-2 1.5L16 2l-2 1.5L12 2l-2 1.5L8 2 6 3.5zM8 8h8M8 12h8M8 16h5", link: "M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7", cog: "M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19 12a7 7 0 0 1-.1 1.2l2 1.6-2 3.4-2.4-1a7 7 0 0 1-2 1.2L14 21h-4l-.4-2.6a7 7 0 0 1-2-1.2l-2.4 1-2-3.4 2-1.6A7 7 0 0 1 5 12a7 7 0 0 1 .1-1.2l-2-1.6 2-3.4 2.4 1a7 7 0 0 1 2-1.2L10 3h4l.4 2.6a7 7 0 0 1 2 1.2l2.4-1 2 3.4-2 1.6c.1.4.2.8.2 1.2z", bell: "M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M10.3 21a2 2 0 0 0 3.4 0" };
+    const NC = { emerald: "var(--emerald)", pink: "var(--pop-4)", blue: "var(--pop-3)", coral: "var(--pop-1)", gold: "var(--pop-2)" };
+    const mk = (id, label, ic, tint, badge, href) => {
+      const act = id === "strategies";
+      return { label, badge: badge || false, badgeBg: badge === "AI" ? "var(--emerald)" : "var(--pop-2)", d: IC[ic], href: href || "#", tip: href ? "" : "Not part of this mockup",
+        rowStyle: "display:flex;align-items:center;gap:10px;padding:6.5px 9px;border-radius:9px;cursor:pointer;margin-bottom:1px;text-decoration:none;font-weight:" + (act ? 800 : 650) + ";background:" + (act ? "var(--ink)" : "transparent") + ";color:" + (act ? "var(--paper)" : "var(--ink-2)"),
+        icStyle: "width:22px;height:22px;border-radius:6px;border:1.5px solid " + (act ? "var(--paper)" : "var(--ink)") + ";background:" + (tint ? NC[tint] : (act ? "var(--ink)" : "var(--paper)")) + ";display:grid;place-items:center;flex-shrink:0",
+        icStroke: tint ? "#1d1d1b" : (act ? "var(--paper)" : "var(--ink-2)") };
+    };
+    const nav = [
+      { label: "WORKSPACE", items: [mk("dashboard", "Dashboard", "grid", null, null, "v2 Dashboard.dc.html"), mk("stocksage", "StockSage", "spark", "emerald", "AI"), mk("holdings", "Holdings", "pie"), mk("watchlists", "Watchlists", "eye"), mk("tradebook", "Tradebook", "book"), mk("roast", "Portfolio Roast", "flame", "pink")] },
+      { label: "DISCOVER", items: [mk("markets", "Markets", "act", "blue"), mk("screener", "Screener", "search", null, null, "v2 Screener.dc.html"), mk("strategies", "Strategies", "zap", "gold", "LAB", "v2 Strategies.dc.html"), mk("research", "Research List", "brain"), mk("news", "News & Events", "news")] },
+      { label: "TOOLS", items: [mk("fire", "FIRE Calculator", "target", "coral"), mk("calculators", "Calculators", "calc"), mk("risk", "Risk Report", "shield"), mk("tax", "Tax Report", "receipt")] },
+      { label: "ACCOUNT", items: [mk("brokers", "Brokers", "link"), mk("settings", "Settings", "cog", null, null, "v2 Settings Developer.dc.html"), mk("notifications", "Notifications", "bell")] },
+    ];
+    const viewOpts = [["advanced", "Advanced", "Every metric — DSR, PBO, walk-forward, DSL view."], ["intermediate", "Intermediate", "CAGR / Sharpe / MaxDD, tabs with subtitles."], ["beginner", "Beginner", "Catalog only, plain language, growth of ₹10,000."]].map(([k, name, desc]) => ({ name, desc, on: () => this.setView(k), style: "padding:10px 13px;border-bottom:1.5px solid var(--rule-soft);cursor:pointer;background:" + (S.view === k ? "var(--ink)" : "var(--paper)") + ";color:" + (S.view === k ? "var(--paper)" : "var(--ink)") }));
+    // top tabs
+    const tabDefs = isBeg ? [["catalog", "Catalog"]] : [["catalog", "Catalog"], ["custom", "Custom"], ["signals", "Signals"]];
+    const tStyle = (on, i) => "padding:9px 16px;border:0;border-left:" + (i ? "2px solid var(--ink)" : "0") + ";background:" + (on ? "var(--ink)" : "transparent") + ";color:" + (on ? "var(--paper)" : "var(--ink-2)") + ";font-family:var(--font-sans);font-weight:" + (on ? 800 : 650) + ";font-size:12.5px;cursor:pointer";
+    const topTabs = tabDefs.map(([k, label], i) => ({ label, badge: k === "signals" ? String(FEED.length) : false, style: tStyle(S.topTab === k, i), on: () => this.setState({ topTab: k, viewOpen: false }) }));
+    // catalog cards
+    const g10 = (cagr) => { const v = Math.round(10000 * Math.pow(1 + cagr / 100, 5)); return "₹" + v.toLocaleString("en-IN"); };
+    const cards = STRATS.filter(s => !isBeg || (s.status !== "RETIRED" && s.theme !== "Custom")).map(s => {
+      const has = s.cagr !== null;
+      return { name: s.name, theme: s.theme.toUpperCase(), status: s.status, lifeBg: LIFE[s.status], hasStats: has, noStats: !has,
+        spark: this.spark(s.curve, 100, 26),
+        s1: has ? (isBeg ? g10(s.cagr) : String(s.sharpe)) : "", s1l: isBeg ? "₹10,000 → 5 YRS" : "SHARPE",
+        s2: has ? (isBeg ? s.dd + "%" : s.dd + "%") : "", s2l: isBeg ? "WORST FALL" : "MAX DRAWDOWN", s2c: "var(--loss-text, #b91c1c)",
+        on: () => this.setState({ stratId: s.id, dtab: "overview", dsl: false }) };
+    });
+    const mine = STRATS.filter(s => s.theme === "Custom" || s.status === "RETIRED").map(s => ({ name: s.name, status: s.status, lifeBg: LIFE[s.status], line: s.desc, on: () => this.setState({ stratId: s.id, dtab: "overview" }) }));
+    // global feed
+    const strats = [...new Set(FEED.map(f => f.strat))];
+    const feedChips = [{ label: "ALL", k: "" }, ...strats.map(n => ({ label: n.toUpperCase().slice(0, 18), k: n }))].map(c => ({ label: c.label, on: () => this.setState({ sigFilter: c.k }), style: mono + "font-size:8.5px;font-weight:800;border:2px solid var(--ink);border-radius:99px;padding:3px 9px;cursor:pointer;background:" + (S.sigFilter === c.k ? "var(--ink)" : "var(--paper)") + ";color:" + (S.sigFilter === c.k ? "var(--paper)" : "var(--ink)") }));
+    const stStyleF = (st) => mono + "font-size:8px;font-weight:800;letter-spacing:0.6px;border:1.5px solid var(--ink);border-radius:5px;padding:2px 6px;color:#1d1d1b;background:" + (st === "TRIGGERED" ? "var(--emerald)" : st === "NEW" ? "var(--pop-3)" : "var(--paper-2)");
+    const feed = FEED.filter(f => !S.sigFilter || f.strat === S.sigFilter).map((f, i) => ({ sym: f.sym, rule: f.rule, strat: f.strat.toUpperCase(), at: f.at, px: f.px.toLocaleString("en-IN"), status: f.status, stStyle: stStyleF(f.status), spark: this.spark(window.genSeries ? window.genSeries(i * 7 + 3, 20, 0.002, 0.04, 100) : null, 100, 26) }));
+    // detail
+    const d = STRATS.find(s => s.id === S.stratId) || STRATS[0] || {};
+    const idx = ORDER.indexOf(d.status || "DRAFT");
+    const lifeSteps = ORDER.map((k, i) => ({ label: k, arrow: i < ORDER.length - 1, style: mono + "font-size:8.5px;font-weight:800;letter-spacing:0.6px;border:1.5px solid var(--ink);border-radius:6px;padding:3px 8px;color:#1d1d1b;background:" + (i === idx ? LIFE[k] : "var(--paper)") + (i === idx ? "" : ";opacity:0.45") }));
+    const dtabsDef = [["overview", "Overview", "the rules & status"], ["backtest", "Backtest", "prove it on history"], ["signals", "Signals", "watch it live"], ["forward", "Forward Run", "shadow money"]];
+    const dTabs = dtabsDef.map(([k, label, sub], i) => ({ label, sub: isInt || isBeg ? sub : false, style: tStyle(S.dtab === k, i) + ";text-align:left", on: () => this.setState({ dtab: k }) }));
+    const hasBT = d.cagr !== null && d.status !== "DRAFT";
+    const sigOk = idx >= 1 && idx <= 3 && hasBT;
+    const fwdOk = d.status === "FORWARD" && FW;
+    const dStats = hasBT ? (isAdv ? [{ v: d.cagr + "%", l: "CAGR", c: "var(--gain-text)" }, { v: String(d.sharpe), l: "SHARPE", c: "var(--ink)" }, { v: String(d.dsharpe), l: "DEFLATED SHARPE", c: "var(--ink)" }, { v: d.dd + "%", l: "MAX DD", c: "var(--loss-text, #b91c1c)" }, { v: d.win + "%", l: "WIN RATE", c: "var(--ink)" }] : isInt ? [{ v: d.cagr + "%", l: "CAGR", c: "var(--gain-text)" }, { v: String(d.sharpe), l: "SHARPE", c: "var(--ink)" }, { v: d.dd + "%", l: "MAX DD", c: "var(--loss-text, #b91c1c)" }] : [{ v: g10(d.cagr), l: "₹10,000 → 5 YRS", c: "var(--gain-text)" }, { v: d.dd + "%", l: "WORST FALL", c: "var(--loss-text, #b91c1c)" }]) : [];
+    const ovColors = { low: "var(--emerald)", medium: "var(--pop-2)", high: "var(--pop-1)" };
+    const btm = BT ? BT.metrics : [];
+    const btMetrics = (isAdv ? btm : btm.filter(m => ["CAGR", "Sharpe", "Max drawdown", "Win rate", "Trades", "Costs paid"].includes(m[0]))).map(m => ({ l: m[0].toUpperCase(), v: m[1] }));
+    const chDef = [["push", "Push notification"], ["email", "Email digest"], ["wa", "WhatsApp", true]];
+    const channels = chDef.map(([k, label, pro]) => { const on = S.ch[k]; return { label, pro: !!pro, on: () => this.setState({ ch: { ...S.ch, [k]: !on } }), style: "width:38px;height:22px;border:2px solid var(--ink);border-radius:99px;background:" + (on ? "var(--emerald)" : "var(--paper-2)") + ";position:relative;cursor:pointer;display:inline-block;flex-shrink:0", knob: "position:absolute;top:1px;" + (on ? "right:1px" : "left:1px") + ";width:16px;height:16px;border-radius:99px;background:var(--paper);border:1.5px solid var(--ink);display:block" }; });
+    const dSignals = feed.filter(f => f.strat === (d.name || "").toUpperCase());
+    const liveAnn = FW ? Math.round((Math.pow(1 + FW.pnl / 100, 12 / 2.3) - 1) * 100) : 0;
+    const liveIn = FW && FW.backtest && liveAnn >= FW.backtest[0] && liveAnn <= FW.backtest[1];
+    return {
+      isDesk: S.isDesk, isMob: !S.isDesk, nav,
+      viewLabel: S.view.toUpperCase(), viewOpen: S.viewOpen, viewOpts, toggleViewMenu: () => this.setState({ viewOpen: !S.viewOpen }),
+      toggleDark: () => { const dark = !S.dark; document.documentElement.classList.toggle("dark", dark); try { localStorage.setItem("um-v2-dark", dark ? "1" : "0"); } catch (e) {} this.setState({ dark }); },
+      darkIcon: S.dark ? "M12 3v2M12 19v2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M3 12h2M19 12h2M5.2 18.8l1.4-1.4M17.4 6.6l1.4-1.4M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10z" : "M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z",
+      listMode: !S.stratId, detailMode: !!S.stratId, backToList: () => this.setState({ stratId: null }),
+      topTabs, begBanner: isBeg,
+      catShow: S.topTab === "catalog", customShow: S.topTab === "custom" && !isBeg, feedShow: S.topTab === "signals" && !isBeg,
+      cards, mine, feedChips, feed,
+      dName: d.name || "", dStatus: d.status || "", dLifeBg: LIFE[d.status] || "var(--paper-2)", dTheme: (d.theme || "").toUpperCase(),
+      lifeSteps, dTabs,
+      tOverview: S.dtab === "overview", tBacktest: S.dtab === "backtest", tSignals: S.dtab === "signals", tForward: S.dtab === "forward",
+      dDesc: d.desc || "", dslBtn: isAdv, toggleDsl: () => this.setState({ dsl: !S.dsl }), dslLabel: S.dsl ? "PLAIN ENGLISH" : "VIEW DSL", dslOff: !S.dsl, dslOn: S.dsl,
+      dDsl: "entry:\n  rsi(14) < 30\n  close > sma(200)\nexit:\n  rsi(14) > 55 or gain >= 5%\nsize: equal_weight, max 10",
+      dRunsLine: (d.runs || 0) + " BACKTEST RUNS · AVG HOLD " + (d.hold || "—") + " · UNIVERSE NIFTY 100",
+      dHasStats: hasBT, dNoStats: !hasBT, dStats,
+      overfitShow: hasBT && isAdv && d.overfit, overfitLabel: "OVERFIT RISK: " + String(d.overfit || "").toUpperCase() + " (CPCV/PBO) — WHAT'S THIS?",
+      overfitStyle: mono + "font-size:8.5px;font-weight:800;letter-spacing:0.6px;border:1.5px solid var(--ink);border-radius:6px;padding:3px 8px;color:#1d1d1b;cursor:pointer;background:" + (ovColors[d.overfit] || "var(--paper-2)"),
+      runLabel: hasBT ? "Re-run backtest" : "Run first backtest",
+      btHas: S.dtab === "backtest" && hasBT && !!BT, btEmpty: S.dtab === "backtest" && !hasBT,
+      btPeriod: BT ? BT.period.toUpperCase() : "", btUniverse: BT ? BT.universe.toUpperCase() : "",
+      btCurvePath: BT ? this.spark(BT.curve, 600, 150) : "", btBenchPath: BT ? this.spark(BT.bench, 600, 150) : "",
+      btMetrics, walkShow: isAdv && !!BT, walk: BT ? BT.walk.map(w => ({ k: w[0].toUpperCase(), v: w[1] })) : [],
+      sigUnlocked: sigOk, sigLocked: !sigOk, channels, dSignals, dSigEmpty: sigOk && dSignals.length === 0,
+      fwdHas: fwdOk, fwdEmpty: !fwdOk,
+      fwdSince: FW ? FW.since.toUpperCase() : "", fwdPnl: FW ? "+" + FW.pnl + "%" : "", fwdBench: FW ? "+" + FW.bench + "%" : "",
+      fwdBand: FW ? FW.backtest[0] + "–" + FW.backtest[1] + "% CAGR" : "",
+      divLabel: liveIn ? "WITHIN BACKTEST BAND" : "RUNNING HOT — TOO EARLY TO TRUST", divStyle: mono + "font-size:9px;font-weight:800;letter-spacing:0.6px;border:1.5px solid var(--ink);border-radius:6px;padding:4px 9px;color:#1d1d1b;background:" + (liveIn ? "var(--emerald)" : "var(--pop-2)"),
+      fwdCurvePath: FW ? this.spark(FW.curve, 600, 130) : "", fwdBenchPath: FW ? this.spark(FW.benchCurve, 600, 130) : "",
+      ledger: FW ? FW.ledger.map(l => ({ sym: l.sym, line: l.side + " " + l.qty + " @ ₹" + l.in + (l.out !== "—" ? " → ₹" + l.out : ""), pnl: (l.pnl >= 0 ? "+₹" : "−₹") + Math.abs(l.pnl).toLocaleString("en-IN"), c: l.pnl >= 0 ? "var(--gain-text)" : "var(--loss-text, #b91c1c)", open: l.open })) : [],
+    };
+  }
+}
+</script>
+</body>
+</html>

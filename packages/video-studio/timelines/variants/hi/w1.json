@@ -1,0 +1,87 @@
+{
+  "title": "W1 What do you actually own",
+  "aspect": "9:16",
+  "fps": 30,
+  "brandTheme": "cream",
+  "music": {
+    "track": "corporate-lofi",
+    "gainDb": -22,
+    "duckUnderVoiceover": true
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "type": "hook",
+      "durationSec": 4,
+      "kicker": "Portfolio blindness",
+      "headline": "What do you ==actually own==?",
+      "motion": "rise",
+      "voiceover": {
+        "text": "एक सवाल — क्या आप सच में जानते हैं, आपके पास असल में क्या है?",
+        "lang": "hi-IN"
+      }
+    },
+    {
+      "id": "p1",
+      "type": "point",
+      "durationSec": 4.5,
+      "headline": "30 stocks. *1 bet?*",
+      "subtext": "Owning many is not the same as diversified.",
+      "motion": "kenburns-in",
+      "disclaimer": true,
+      "voiceover": {
+        "text": "तीस स्टॉक्स रखने का मतलब हमेशा विविधता नहीं होता।",
+        "lang": "hi-IN"
+      }
+    },
+    {
+      "id": "p2",
+      "type": "point",
+      "durationSec": 4.5,
+      "headline": "The same stock — ==3 times==",
+      "subtext": "Hidden across funds you already hold.",
+      "motion": "rise",
+      "disclaimer": true,
+      "voiceover": {
+        "text": "एक ही कंपनी अक्सर कई फंड्स में छुपी होती है।",
+        "lang": "hi-IN"
+      }
+    },
+    {
+      "id": "broll",
+      "type": "veo",
+      "durationSec": 6,
+      "veoPrompt": "abstract slow-flowing ribbons of soft emerald-green and warm cream light gently drawing together over a dark background, premium minimal fintech motion graphics, calm, elegant, shallow depth of field, no text, no logos, no people",
+      "motion": "static",
+      "voiceover": {
+        "text": "बिखरे हुए निवेश एक साफ़ तस्वीर में आने चाहिए।",
+        "lang": "hi-IN"
+      }
+    },
+    {
+      "id": "p3",
+      "type": "point",
+      "durationSec": 4.5,
+      "headline": "Start with ==awareness==",
+      "subtext": "Your real exposure, in one clear view.",
+      "motion": "rise",
+      "disclaimer": true,
+      "voiceover": {
+        "text": "पहला कदम — अपनी असली पकड़ को एक ही जगह देखना।",
+        "lang": "hi-IN"
+      }
+    },
+    {
+      "id": "cta",
+      "type": "cta",
+      "durationSec": 3.5,
+      "headline": "Awareness first. *Decisions later.*",
+      "subtext": "Education only · UseMoney AI (my product)",
+      "motion": "pop",
+      "voiceover": {
+        "text": "जागरूकता पहले, फ़ैसले बाद में। यूज़मनी एआई के साथ।",
+        "lang": "hi-IN"
+      }
+    }
+  ]
+}

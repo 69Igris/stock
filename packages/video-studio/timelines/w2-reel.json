@@ -1,0 +1,91 @@
+{
+  "title": "W2 The fees you cant see",
+  "aspect": "9:16",
+  "fps": 30,
+  "brandTheme": "cream",
+  "music": {
+    "track": "corporate-lofi",
+    "gainDb": -22,
+    "duckUnderVoiceover": true
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "type": "hook",
+      "durationSec": 4,
+      "kicker": "Hidden costs",
+      "headline": "The fees you ==can't see==",
+      "motion": "rise",
+      "voiceover": {
+        "text": "जो फ़ीस आपको दिखती नहीं — अक्सर वही सबसे ज़्यादा चुभती है।",
+        "lang": "hi-IN"
+      }
+    },
+    {
+      "id": "cards",
+      "type": "cards",
+      "durationSec": 5.5,
+      "headline": "3 fees you forgot",
+      "bullets": [
+        "Exit load on early sells",
+        "Regular-plan commission",
+        "Dormant account charges"
+      ],
+      "motion": "rise",
+      "disclaimer": true,
+      "voiceover": {
+        "text": "तीन फ़ीस जो अक्सर भूल जाते हैं — एग्ज़िट लोड, रेगुलर प्लान कमीशन, और निष्क्रिय खाते का चार्ज।",
+        "lang": "hi-IN"
+      }
+    },
+    {
+      "id": "p1",
+      "type": "point",
+      "durationSec": 4.5,
+      "headline": "==Regular== vs Direct",
+      "subtext": "Commission quietly rides along, every year.",
+      "motion": "kenburns-in",
+      "disclaimer": true,
+      "voiceover": {
+        "text": "रेगुलर प्लान में कमीशन हर साल चुपचाप जुड़ता रहता है।",
+        "lang": "hi-IN"
+      }
+    },
+    {
+      "id": "broll",
+      "type": "veo",
+      "durationSec": 6,
+      "veoPrompt": "abstract soft golden light and gentle bokeh slowly drifting and fading into a calm dark cream haze, premium minimal fintech motion graphics, elegant, shallow depth of field, no text, no logos, no people",
+      "motion": "static",
+      "voiceover": {
+        "text": "छोटी-छोटी फ़ीस सालों में बड़ी रकम बन जाती है।",
+        "lang": "hi-IN"
+      }
+    },
+    {
+      "id": "p2",
+      "type": "point",
+      "durationSec": 4.5,
+      "headline": "Audit your fees in *15 min*",
+      "subtext": "List → flag regular → note exit loads → one number.",
+      "motion": "rise",
+      "disclaimer": true,
+      "voiceover": {
+        "text": "पंद्रह मिनट में अपनी फ़ीस जाँचें और एक साफ़ नंबर तक पहुँचें।",
+        "lang": "hi-IN"
+      }
+    },
+    {
+      "id": "cta",
+      "type": "cta",
+      "durationSec": 3.5,
+      "headline": "Costs are ==knowable==.",
+      "subtext": "Education only · UseMoney AI (my product)",
+      "motion": "pop",
+      "voiceover": {
+        "text": "फ़ीस को समझा जा सकता है। यूज़मनी एआई के साथ।",
+        "lang": "hi-IN"
+      }
+    }
+  ]
+}

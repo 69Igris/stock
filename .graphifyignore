@@ -1,0 +1,9 @@
+# Root graph = the backend/data engine: packages/ + workers/ + scripts/ + services/.
+# apps/ has its OWN graph (apps/web/graphify-out/), and the post-commit hook
+# rebuilds from git-changed files rather than from the original scope — without
+# this, any touched apps/ file silently accretes into the backend graph and the
+# two-graph split erodes. Measured 2026-09-08: one commit pulled in 129 nodes
+# from apps/web/docs/.
+apps/
+vendor/
+graphify-out/

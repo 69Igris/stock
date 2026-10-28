@@ -1,0 +1,89 @@
+{
+  "name": "usemoney-monorepo",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "type-check": "turbo run type-check && yarn type-check:scripts",
+    "type-check:scripts": "node --import tsx scripts/ops/typecheck-scripts.ts",
+    "db:generate": "turbo run db:generate",
+    "db:push": "turbo run db:push",
+    "db:migrate": "turbo run db:migrate",
+    "db:studio": "cd packages/database && yarn db:studio",
+    "test": "turbo run test",
+    "test:smoke": "node --import tsx scripts/run-smoke.ts",
+    "evals": "node --import tsx evals/run.ts",
+    "test:scorers": "node --import tsx --test evals/run-scorers.ts",
+    "test:coverage": "turbo run test:coverage",
+    "test:coverage:web": "yarn workspace @usemoney/web test:coverage",
+    "test:coverage:packages": "yarn workspaces run test:coverage 2>/dev/null || true",
+    "test:integration": "RUN_INTEGRATION_TESTS=true node --import tsx --test --test-timeout=30000 tests/integration/**/*.test.ts",
+    "test:integration:db": "RUN_INTEGRATION_TESTS=true node --import tsx --test --test-timeout=30000 tests/integration/db/**/*.test.ts",
+    "test:integration:cache": "RUN_INTEGRATION_TESTS=true node --import tsx --test --test-timeout=30000 tests/integration/cache/**/*.test.ts",
+    "test:integration:workers": "RUN_INTEGRATION_TESTS=true node --import tsx --test --test-timeout=30000 tests/integration/workers/**/*.test.ts",
+    "test:full": "yarn test && yarn test:integration",
+    "test:coverage-check": "node --import tsx scripts/gen-test-coverage.ts --check",
+    "data:reclassify": "node --import tsx scripts/data/reclassify-instruments.ts",
+    "data:repair-names": "node --import tsx scripts/data/repair-instrument-names.ts",
+    "data:purge-orphans": "node --import tsx scripts/data/purge-orphan-price-rows.ts",
+    "data:resector": "node --import tsx scripts/data/resector-real-estate.ts",
+    "data:resector-noncanonical": "node --import tsx scripts/data/resector-noncanonical.ts",
+    "docs:claude-index": "node --import tsx scripts/gen-claude-md-index.ts",
+    "verify:push": "sh .claude/hooks/run-verify.sh",
+    "npm-clean": "find . -name \"node_modules\" -type d -prune -exec rm -rf '{}' +",
+    "dist-clean": "bash scripts/ops/dist-clean.sh",
+    "turbo-clean": "rm -rf .turbo apps/*/.turbo packages/*/.turbo workers/.turbo",
+    "next-clean": "rm -rf .next apps/*/.next",
+    "full-clean": "yarn npm-clean && yarn dist-clean && yarn turbo-clean && yarn next-clean",
+    "postinstall": "[ \"${SYNC_CHARTING_LIBRARY:-0}\" = \"1\" ] && [ -f scripts/ops/sync-charting-library.sh ] && sh scripts/ops/sync-charting-library.sh || true",
+    "sync:chart": "SYNC_CHARTING_LIBRARY=1 sh scripts/ops/sync-charting-library.sh",
+    "prepare": "husky",
+    "content:dev": "yarn workspace @usemoney/content dev",
+    "content:build": "yarn workspace @usemoney/content build",
+    "test:python": "bash scripts/run-python-tests.sh"
+  },
+  "devDependencies": {
+    "c8": "^10.1.3",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "mongodb": "^7.1.0",
+    "prettier": "^3.7.4",
+    "turbo": "^2.7.4",
+    "typescript": "5.9.2"
+  },
+  "lint-staged": {
+    "apps/**/*.{js,jsx,ts,tsx}": [
+      "prettier --write"
+    ],
+    "packages/**/*.{js,jsx,ts,tsx}": [
+      "prettier --write"
+    ],
+    "workers/**/*.{js,jsx,ts,tsx}": [
+      "prettier --write"
+    ],
+    "*.{json,css,scss,md}": [
+      "prettier --write"
+    ]
+  },
+  "engines": {
+    "node": "^20.19.0 || ^22.13.0 || >=24.0.0"
+  },
+  "packageManager": "yarn@1.22.22",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "workers"
+  ],
+  "dependencies": {
+    "node-abort-controller": "^3.1.1"
+  },
+  "resolutions": {
+    "prosemirror-view": "1.33.11",
+    "protobufjs": "^7.5.8",
+    "fast-xml-parser": "^4.5.5",
+    "js-cookie": "^3.0.7",
+    "minimatch": "^9.0.7"
+  }
+}

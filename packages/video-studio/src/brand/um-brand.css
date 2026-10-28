@@ -1,0 +1,271 @@
+/* UseMoney AI — video scene system (cream-paper v3 + Terminal Luxe dark).
+   Fonts are injected at render time via @fontsource (see scene.ts). */
+:root {
+  --paper: #f7f3e6;
+  --paper-2: #efe7d0;
+  --ink: #1d1d1b;
+  --ink-2: #3a3a35;
+  --ink-3: #6b6b62;
+  --emerald: #16a34a;
+  --gold: #fbbf24;
+  --orange: #ff6b35;
+  --dot: rgba(29, 29, 27, 0.05);
+  --dot2: rgba(29, 29, 27, 0.03);
+  --shadow: 6px 6px 0 var(--ink);
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+.scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--paper);
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-family: "Inter", system-ui, sans-serif;
+}
+.scene.dark {
+  --paper: #060b18;
+  --ink: #f1f5f9;
+  --ink-3: #94a3b8;
+  --emerald: #34d399;
+  background: var(--paper);
+  color: var(--ink);
+}
+.scene .grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(var(--dot) 1.6px, transparent 2px),
+    radial-gradient(var(--dot2) 1px, transparent 1.5px);
+  background-size:
+    14px 14px,
+    24px 24px;
+  background-position:
+    0 0,
+    7px 7px;
+}
+.scene > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* top bar */
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+}
+.brand-mark {
+  width: 1.7em;
+  height: 1.7em;
+  background: var(--ink);
+  color: var(--paper);
+  display: grid;
+  place-items: center;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 800;
+  border-radius: 0.4em;
+  transform: rotate(-3deg);
+  line-height: 1;
+}
+.scene.dark .brand-mark {
+  background: var(--paper);
+  color: #060b18;
+}
+.wordmark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4em;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+}
+.wordmark .ai {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 700;
+  color: var(--emerald);
+  font-size: 0.5em;
+  text-transform: uppercase;
+}
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 600;
+  color: var(--emerald);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.eyebrow .d {
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* body */
+.body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.6em;
+}
+.kicker {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 600;
+  color: var(--ink-3);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.h {
+  font-family: "Inter", sans-serif;
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -1.5px;
+}
+.sub {
+  font-weight: 500;
+  color: var(--ink-2);
+  line-height: 1.4;
+}
+.scene.dark .sub {
+  color: var(--ink-3);
+}
+.ser {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+}
+.hl {
+  background: var(--gold);
+  color: var(--ink);
+  padding: 0 0.15em;
+  border-radius: 0.12em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.num-big {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -4px;
+}
+.num-big .em {
+  color: var(--emerald);
+}
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+.card {
+  border: 0.12em solid var(--ink);
+  border-radius: 0.4em;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+  padding: 0.5em 0.7em;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+.card .n {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 800;
+  color: var(--emerald);
+}
+.card.gold {
+  background: var(--gold);
+}
+
+/* footer */
+.foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1em;
+}
+.fine {
+  color: var(--ink-3);
+  line-height: 1.4;
+  max-width: 64%;
+}
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.4em 0.8em;
+  border-radius: 999px;
+  border: 0.12em solid var(--ink);
+  background: var(--gold);
+  color: var(--ink);
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 700;
+  box-shadow: var(--shadow);
+  white-space: nowrap;
+}
+.watermark {
+  position: absolute;
+  z-index: 2;
+  right: 3%;
+  bottom: 2.5%;
+  opacity: 0.5;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 700;
+  color: var(--ink-3);
+}
+
+/* animation keyframes (used when rendering animated frame sequences) */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.anim-rise > .body > * {
+  animation: rise 0.6s var(--ease, cubic-bezier(0.22, 0.61, 0.36, 1)) both;
+}
+.anim-pop > .body > * {
+  animation: pop 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+.anim-rise > .body > *:nth-child(2) {
+  animation-delay: 0.12s;
+}
+.anim-rise > .body > *:nth-child(3) {
+  animation-delay: 0.24s;
+}

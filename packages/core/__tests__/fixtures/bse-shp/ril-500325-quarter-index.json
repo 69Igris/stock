@@ -1,0 +1,88 @@
+{
+ "Table": [
+  {
+   "yr": "2026 - 2027",
+   "qtrid": 130,
+   "qtr": "June 2026",
+   "status": "New",
+   "filing_date_time": "2026-07-16T19:24:36.37",
+   "revised_date_time": null,
+   "XbrlFile": "500325_1672026192434_SHP.xml",
+   "revised_reson": "",
+   "xbrlurl": "/XBRLFILES/SHPXBRLDataXML/500325_1672026192434_SP.html",
+   "seourl": "/stock-share-price/reliance-industries-ltd/reliance/500325/",
+   "navigateurl": "/stock-share-price/reliance-industries-ltd/reliance/500325/qtrid/130.00/shareholding-pattern/Jun-2026/",
+   "navigateurldebt": "/stock-share-price/debt-other/scripcode/500325/qtrid/130.00/shareholding-pattern/Jun-2026/"
+  },
+  {
+   "yr": "2025 - 2026",
+   "qtrid": 129,
+   "qtr": "March 2026",
+   "status": "New",
+   "filing_date_time": "2026-04-21T13:16:58.457",
+   "revised_date_time": null,
+   "XbrlFile": "500325_2142026131656_SHP.xml",
+   "revised_reson": "",
+   "xbrlurl": "/XBRLFILES/SHPXBRLDataXML/500325_2142026131656_SP.html",
+   "seourl": "/stock-share-price/reliance-industries-ltd/reliance/500325/",
+   "navigateurl": "/stock-share-price/reliance-industries-ltd/reliance/500325/qtrid/129.00/shareholding-pattern/Mar-2026/",
+   "navigateurldebt": "/stock-share-price/debt-other/scripcode/500325/qtrid/129.00/shareholding-pattern/Mar-2026/"
+  },
+  {
+   "yr": "2025 - 2026",
+   "qtrid": 128,
+   "qtr": "December 2025",
+   "status": "New",
+   "filing_date_time": "2026-01-21T19:13:13.847",
+   "revised_date_time": null,
+   "XbrlFile": "500325_2112026191312_SHP.xml",
+   "revised_reson": "",
+   "xbrlurl": "/XBRLFILES/SHPXBRLDataXML/500325_2112026191312_SP.html",
+   "seourl": "/stock-share-price/reliance-industries-ltd/reliance/500325/",
+   "navigateurl": "/stock-share-price/reliance-industries-ltd/reliance/500325/qtrid/128.00/shareholding-pattern/Dec-2025/",
+   "navigateurldebt": "/stock-share-price/debt-other/scripcode/500325/qtrid/128.00/shareholding-pattern/Dec-2025/"
+  },
+  {
+   "yr": "2025 - 2026",
+   "qtrid": 127,
+   "qtr": "September 2025",
+   "status": "New",
+   "filing_date_time": "2025-10-17T20:15:48.013",
+   "revised_date_time": null,
+   "XbrlFile": "500325_17102025201546_SHP.xml",
+   "revised_reson": "",
+   "xbrlurl": "/XBRLFILES/SHPXBRLDataXML/500325_17102025201546_SP.html",
+   "seourl": "/stock-share-price/reliance-industries-ltd/reliance/500325/",
+   "navigateurl": "/stock-share-price/reliance-industries-ltd/reliance/500325/qtrid/127.00/shareholding-pattern/Sep-2025/",
+   "navigateurldebt": "/stock-share-price/debt-other/scripcode/500325/qtrid/127.00/shareholding-pattern/Sep-2025/"
+  },
+  {
+   "yr": "2025 - 2026",
+   "qtrid": 126,
+   "qtr": "June 2025",
+   "status": "New",
+   "filing_date_time": "2025-07-22T11:01:11.64",
+   "revised_date_time": null,
+   "XbrlFile": "500325_227202511110_SHP.xml",
+   "revised_reson": "",
+   "xbrlurl": "/XBRLFILES/SHPXBRLDataXML/500325_227202511110_SP.html",
+   "seourl": "/stock-share-price/reliance-industries-ltd/reliance/500325/",
+   "navigateurl": "/stock-share-price/reliance-industries-ltd/reliance/500325/qtrid/126.00/shareholding-pattern/Jun-2025/",
+   "navigateurldebt": "/stock-share-price/debt-other/scripcode/500325/qtrid/126.00/shareholding-pattern/Jun-2025/"
+  },
+  {
+   "yr": "2024 - 2025",
+   "qtrid": 125,
+   "qtr": "March 2025",
+   "status": "New",
+   "filing_date_time": "2025-04-21T15:52:35.55",
+   "revised_date_time": null,
+   "XbrlFile": "500325_2142025155227_SHP.xml",
+   "revised_reson": "",
+   "xbrlurl": "/XBRL1/500325_2142025155227_SHP.xml",
+   "seourl": "/stock-share-price/reliance-industries-ltd/reliance/500325/",
+   "navigateurl": "/stock-share-price/reliance-industries-ltd/reliance/500325/qtrid/125.00/shareholding-pattern/Mar-2025/",
+   "navigateurldebt": "/stock-share-price/debt-other/scripcode/500325/qtrid/125.00/shareholding-pattern/Mar-2025/"
+  }
+ ]
+}

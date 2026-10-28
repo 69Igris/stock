@@ -1,0 +1,2593 @@
+{
+  "projectName": "UseMoney",
+  "description": "AI-powered trading portfolio management platform for Indian stock markets. Connects 10 brokers (Zerodha, Upstox, Angel One, Groww, Dhan, Fyers, HDFC, ICICI, Interactive Brokers), provides portfolio analytics, FIFO trade pairing, paper trading, FIRE planning, AI chat with deep research (StockSage), portfolio roast, risk analysis, and a learning surface. Built as a Turborepo monorepo of 4 Next.js/Hono apps, 24 shared packages, a worker service running 59 Pub/Sub job processors, and a Python us-fundamentals service that ingests SEC EDGAR. Web is hosted on Vercel; the API server and workers run on GCP Cloud Run.",
+  "techStack": {
+    "frontend": [
+      "Next.js 16.2 App Router",
+      "React 18",
+      "TypeScript 5.9",
+      "Tailwind CSS",
+      "shadcn/ui",
+      "Recharts",
+      "Radix UI"
+    ],
+    "backend": [
+      "Next.js Server Actions",
+      "Next.js Route Handlers",
+      "tRPC",
+      "Hono (apps/api, workers)",
+      "Prisma ORM",
+      "Zod",
+      "FastAPI + edgartools (services/us-fundamentals)"
+    ],
+    "database": [
+      "MongoDB Atlas (prod)",
+      "DigitalOcean MongoDB (qa, dev)",
+      "MongoDB Atlas Search (prod-only)",
+      "MongoDB Atlas Vector Search",
+      "Redis (DigitalOcean managed)"
+    ],
+    "services": [
+      "Clerk (auth)",
+      "Dodo Payments",
+      "Google Gemini 2.5 Pro + Flash",
+      "Vercel AI Gateway",
+      "Resend (transactional + newsletter)",
+      "PostHog (analytics + flags)",
+      "Datadog (APM / RUM / Logs / Metrics)"
+    ],
+    "infrastructure": [
+      "Turborepo + Yarn workspaces",
+      "Vercel (web + admin + content + api)",
+      "GCP Cloud Run (workers + api)",
+      "GCP Cloud Pub/Sub",
+      "GCP Cloud Storage",
+      "GCP Cloud Scheduler",
+      "GCP Secret Manager",
+      "GCP Cloud Build",
+      "Husky pre-push hooks",
+      "GitHub Actions CI",
+      "GCP Cloud Run Jobs"
+    ],
+    "external": [
+      "Zerodha Kite",
+      "Upstox",
+      "Angel One SmartAPI",
+      "Groww",
+      "Dhan",
+      "Fyers",
+      "HDFC Securities",
+      "ICICI Direct",
+      "Interactive Brokers",
+      "NSE",
+      "BSE",
+      "AMFI NAV feed",
+      "Yahoo Finance",
+      "Screener.in",
+      "Chartink",
+      "RBI macro data",
+      "SEC EDGAR",
+      "OpenFIGI",
+      "Tiingo"
+    ]
+  },
+  "layers": [
+    "client",
+    "api",
+    "functions",
+    "storage",
+    "build-pipeline",
+    "distribution",
+    "external-services"
+  ],
+  "nodes": [
+    {
+      "id": "web-app",
+      "label": "Web App",
+      "type": "frontend",
+      "layer": "client",
+      "technology": "Next.js 16 App Router",
+      "description": "Main user-facing product. Dashboard, holdings, tradebook, paper trading, FIRE, AI chat, roast, risk, discover, learning, settings.",
+      "filePaths": ["apps/web/app/", "apps/web/components/", "apps/web/lib/"],
+      "responsibilities": [
+        "Render 66 pages of the product UI",
+        "Invoke server actions for mutations",
+        "Stream chat & research responses",
+        "Host the chat orchestrator",
+        "Render content blocks (:::block:TYPE)"
+      ]
+    },
+    {
+      "id": "admin-app",
+      "label": "Admin App",
+      "type": "frontend",
+      "layer": "client",
+      "technology": "Next.js 16",
+      "description": "Internal admin dashboard.",
+      "filePaths": ["apps/admin/"],
+      "responsibilities": [
+        "Internal moderation & operations",
+        "User/subscription management"
+      ]
+    },
+    {
+      "id": "content-app",
+      "label": "Content App",
+      "type": "frontend",
+      "layer": "client",
+      "technology": "Next.js 16",
+      "description": "Content authoring app for lessons, courses, quizzes, posts.",
+      "filePaths": ["apps/content/"],
+      "responsibilities": [
+        "Authoring environment for editorial team",
+        "Drafts → publish to learning surface"
+      ]
+    },
+    {
+      "id": "mobile-client",
+      "label": "Mobile Client",
+      "type": "frontend",
+      "layer": "client",
+      "technology": "Native / React Native (consumer of apps/api)",
+      "description": "Mobile app that consumes the Hono REST + tRPC API.",
+      "filePaths": [],
+      "responsibilities": [
+        "Mobile-first views of portfolio + chat",
+        "Authenticates against Clerk",
+        "Calls apps/api endpoints"
+      ]
+    },
+    {
+      "id": "server-actions",
+      "label": "Server Actions",
+      "type": "backend",
+      "layer": "api",
+      "technology": "Next.js Server Actions",
+      "description": "Canonical write path for the web app. 65 actions one-per-domain.",
+      "filePaths": ["apps/web/lib/actions/"],
+      "responsibilities": [
+        "Authenticate via Clerk",
+        "Validate via @usemoney/validation",
+        "Call into @usemoney/services",
+        "Never query Prisma directly",
+        "Sanitize errors before returning"
+      ]
+    },
+    {
+      "id": "web-api-routes",
+      "label": "Web API Routes",
+      "type": "backend",
+      "layer": "api",
+      "technology": "Next.js Route Handlers",
+      "description": "35 HTTP route handlers - webhooks, OAuth callbacks, streaming, tRPC catch-all, market data endpoints.",
+      "filePaths": ["apps/web/app/api/"],
+      "responsibilities": [
+        "Verify webhook signatures (Clerk, Dodo)",
+        "Handle broker OAuth callbacks",
+        "Stream market data & chat responses",
+        "Publish to Pub/Sub",
+        "Expose /api/jobs/[jobId] polling"
+      ]
+    },
+    {
+      "id": "api-server",
+      "label": "API Server (Hono)",
+      "type": "backend",
+      "layer": "api",
+      "technology": "Hono on Cloud Run",
+      "description": "Standalone REST + tRPC API serving the mobile client. Mirrors server actions surface.",
+      "filePaths": ["apps/api/src/"],
+      "responsibilities": [
+        "Auth + rate limit middleware",
+        "v1 routes for every domain (dashboard, holdings, trades, paired, fire, risk, research, tax, watchlist, notifications, subscription)",
+        "tRPC adapter"
+      ]
+    },
+    {
+      "id": "trpc-router",
+      "label": "tRPC Router",
+      "type": "backend",
+      "layer": "api",
+      "technology": "tRPC v10",
+      "description": "Shared procedure definitions consumed by web and api.",
+      "filePaths": ["packages/trpc/src/"],
+      "responsibilities": ["Type-safe RPC surface", "Reused by mobile + web"]
+    },
+    {
+      "id": "chat-orchestrator",
+      "label": "Chat Orchestrator",
+      "type": "function",
+      "layer": "functions",
+      "technology": "TypeScript",
+      "description": "Tier classifier + tool registry + executor + dual validators. Decides whether to flash-respond, navigate, or dispatch a tool.",
+      "filePaths": ["apps/web/lib/chat-tools/", "apps/web/lib/chat/"],
+      "responsibilities": [
+        "Tier-classify intent",
+        "Two-layer guardrails (input & output)",
+        "Map intent → tool → server action",
+        "Emit ContentBlocks (:::block:TYPE)",
+        "Persist LearnedPattern feedback"
+      ]
+    },
+    {
+      "id": "services-layer",
+      "label": "Services Layer",
+      "type": "function",
+      "layer": "functions",
+      "technology": "@usemoney/services (TypeScript)",
+      "description": "Only place product code touches Prisma. One service per domain - ~30 services total.",
+      "filePaths": ["packages/services/src/"],
+      "responsibilities": [
+        "Encapsulate DB access via Prisma",
+        "Apply business rules & demo-mode handling",
+        "Reused by web, api, workers"
+      ]
+    },
+    {
+      "id": "core-domain",
+      "label": "Core Domain",
+      "type": "function",
+      "layer": "functions",
+      "technology": "@usemoney/core (TypeScript)",
+      "description": "Heart of the product: brokers (clients + adapters for 10 brokers), FIFO pairing, market data, screener, Gemini wrappers, calc, currency, analytics, subscription, payments, import.",
+      "filePaths": ["packages/core/src/"],
+      "responsibilities": [
+        "Broker client + adapter for each integration",
+        "FIFO trade pairing algorithm",
+        "Market-data fetching",
+        "Screener logic",
+        "Currency conversion",
+        "Subscription tier enforcement"
+      ]
+    },
+    {
+      "id": "research-agent",
+      "label": "Research Agent (StockSage)",
+      "type": "function",
+      "layer": "functions",
+      "technology": "@usemoney/research (TypeScript)",
+      "description": "Autonomous planner → executor → loop-controller agent. 20 skills, 82 compute tools, multiple data sources, streaming results.",
+      "filePaths": ["packages/research/src/"],
+      "responsibilities": [
+        "Plan a research strategy from user query",
+        "Execute tools (compute-* and data-source wrappers)",
+        "Stream partial results",
+        "Decide when to stop"
+      ]
+    },
+    {
+      "id": "roast-agent",
+      "label": "Roast Agent",
+      "type": "function",
+      "layer": "functions",
+      "technology": "@usemoney/roast (TypeScript)",
+      "description": "Async multi-step portfolio roast: fetch → analyze-stocks → analyze-mf → generate-scores → generate-roast → assemble.",
+      "filePaths": ["packages/roast/src/"],
+      "responsibilities": [
+        "Pipeline portfolio data through Gemini",
+        "Generate scores per holding",
+        "Emit roast narrative",
+        "Assemble final RoastReport"
+      ]
+    },
+    {
+      "id": "content-engine",
+      "label": "Content Engine",
+      "type": "function",
+      "layer": "functions",
+      "technology": "@usemoney/content-engine",
+      "description": "AI-driven lesson, course, and quiz generation.",
+      "filePaths": ["packages/content-engine/src/"],
+      "responsibilities": [
+        "Generate lesson drafts from source material",
+        "Produce quizzes & glossary terms",
+        "Persist via ContentGeneration"
+      ]
+    },
+    {
+      "id": "security",
+      "label": "Security",
+      "type": "function",
+      "layer": "functions",
+      "technology": "@usemoney/security",
+      "description": "Crypto primitives - AES-256-GCM encryption for broker tokens, HMAC-signed demo cookies, token utilities.",
+      "filePaths": ["packages/security/src/"],
+      "responsibilities": [
+        "Encrypt/decrypt broker tokens",
+        "Sign and verify demo session cookies",
+        "Manage per-user encryption keys"
+      ]
+    },
+    {
+      "id": "cache-layer",
+      "label": "Cache Layer",
+      "type": "function",
+      "layer": "functions",
+      "technology": "@usemoney/cache",
+      "description": "3-tier cache: L1 in-memory (10s) · L2 Redis (5min) · L3 stale-while-revalidate.",
+      "filePaths": ["packages/cache/src/"],
+      "responsibilities": [
+        "Memoize expensive computations",
+        "Invalidate keys on writes",
+        "Avoid Atlas Search retries with availability flag"
+      ]
+    },
+    {
+      "id": "validation",
+      "label": "Validation",
+      "type": "function",
+      "layer": "functions",
+      "technology": "Zod via @usemoney/validation",
+      "description": "Shared Zod schemas for chat blocks, content, documents, FIRE, holdings, MFs, paper, trades, feedback.",
+      "filePaths": ["packages/validation/src/"],
+      "responsibilities": [
+        "Validate all external input (actions, routes, mobile)",
+        "Define ContentBlock contract for chat blocks"
+      ]
+    },
+    {
+      "id": "prisma",
+      "label": "Prisma ORM",
+      "type": "function",
+      "layer": "functions",
+      "technology": "Prisma 5 (MongoDB driver)",
+      "description": "ORM layer. 93 models defined in schema.prisma. Generated client used by services.",
+      "filePaths": [
+        "packages/database/prisma/schema.prisma",
+        "packages/database/index.ts"
+      ],
+      "responsibilities": [
+        "Provide type-safe CRUD",
+        "Define indexes (Atlas-compatible)",
+        "Generate types consumed by services + types package"
+      ]
+    },
+    {
+      "id": "workers-service",
+      "label": "Workers Service",
+      "type": "backend",
+      "layer": "functions",
+      "technology": "Hono on Cloud Run",
+      "description": "Background processor service. 59 processors receiving Pub/Sub push messages and Cloud Scheduler triggers, mounted as /jobs/* routes alongside /health.",
+      "filePaths": [
+        "workers/src/",
+        "workers/Dockerfile",
+        "workers/cloudbuild.prod.yaml"
+      ],
+      "responsibilities": [
+        "Trade pairing",
+        "Broker / instrument / MF / price sync",
+        "Async portfolio roast & deep research",
+        "Document processing & embedding",
+        "Strategy scans",
+        "Newsletter publish"
+      ]
+    },
+    {
+      "id": "us-fundamentals",
+      "label": "US Fundamentals Service",
+      "type": "backend",
+      "layer": "functions",
+      "technology": "FastAPI (Python 3.12) on Cloud Run",
+      "description": "The SEC EDGAR engine (MONEY-979). A separate deployable rather than a package because it shares no runtime with the TypeScript workers: the seam between them is MongoDB and Pub/Sub, never an import, and a test enforces that. Seven Pub/Sub push routes under /jobs/*, plus five Cloud Run Jobs for work that cannot fit the 600s ack deadline (the two bulk zips are 1.4 GB and 1.6 GB). Only PROD talks to sec.gov — SEC's 10 req/s fair-access ceiling is per REQUESTER, so QA ships SEC_EGRESS=off, reads prod's edgar/ archive and receives the eleven us_* tables by copy.",
+      "filePaths": [
+        "services/us-fundamentals/app/",
+        "services/us-fundamentals/Dockerfile",
+        "services/us-fundamentals/cloudbuild.prod.yaml",
+        "scripts/ops/setup-us-fundamentals-jobs.sh",
+        "docs/reference/edgar-engine.md"
+      ],
+      "responsibilities": [
+        "Detect new filings (getcurrent Atom every minute + hourly EFTS reconcile)",
+        "Parse ownership / 13F / 13D-G / 8-K / financials, one topic per form class",
+        "Nightly bulk submissions.zip + companyfacts.zip ingest (Cloud Run Jobs)",
+        "Resolve CUSIP -> ticker across four tiers, OpenFIGI last",
+        "Evict 13F holdings to GCS cold shards, deleting only what a re-read proves",
+        "Hold the fleet to a shared 9 req/s SEC budget in Redis, fail-closed"
+      ]
+    },
+    {
+      "id": "pubsub",
+      "label": "Pub/Sub",
+      "type": "service",
+      "layer": "functions",
+      "technology": "GCP Cloud Pub/Sub",
+      "description": "Async message bus. 69 topics suffixed -qa / -prod (62 worker + 7 EDGAR), plus a dead-letter topic. OIDC-authenticated push subscriptions. The two groups differ in exactly one field and it is the one that matters: the EDGAR group's push endpoint and audience point at us-fundamentals-{env}, not at stockbook-workers-{env}.",
+      "filePaths": ["workers/scripts/setup-pubsub.sh"],
+      "responsibilities": [
+        "Decouple long-running work from request path",
+        "At-least-once delivery",
+        "Push to workers-service with OIDC auth",
+        "Push the 7 EDGAR topics to us-fundamentals with OIDC auth"
+      ]
+    },
+    {
+      "id": "cloud-scheduler",
+      "label": "Cloud Scheduler",
+      "type": "service",
+      "layer": "functions",
+      "technology": "GCP Cloud Scheduler",
+      "description": "Cron triggers for daily syncs (instrument master, MF NAV, prices, news, document sync, XBRL sync → projection → ratios). Retired jobs are listed in OLD_SCHEDULER_PREFIXES so the next run deletes the live job — dropping a definition only stops it being re-created.",
+      "filePaths": ["scripts/ops/setup-scheduler.sh"],
+      "responsibilities": [
+        "Fire scheduled Pub/Sub messages",
+        "Drive idempotent daily sync pipelines"
+      ]
+    },
+    {
+      "id": "mongodb-atlas",
+      "label": "MongoDB Atlas",
+      "type": "database",
+      "layer": "storage",
+      "technology": "MongoDB Atlas (DigitalOcean Mongo in dev/qa)",
+      "description": "Primary data store. 141 Prisma models covering identity, broker data, portfolio, AI, content, market data, strategies, news, GST, and the eleven us_* SEC EDGAR collections (us_filers, us_filings, us_fundamentals, us_company_facts, us_insider_transactions, us_13f_filings, us_13f_holdings, us_beneficial_ownership, us_filing_documents, us_cusip_map, us_edgar_cursor). Prisma is the schema of record for those eleven even though their only writer is Python — a collection with two independent notions of its own shape is how MONEY-1234/1235 happened.",
+      "filePaths": [],
+      "responsibilities": [
+        "Source of truth for all user + market data",
+        "Powers Atlas Search & Vector Search in prod"
+      ]
+    },
+    {
+      "id": "atlas-search",
+      "label": "Atlas Search",
+      "type": "database",
+      "layer": "storage",
+      "technology": "MongoDB Atlas Search + Vector Search",
+      "description": "Full-text and vector search. Prod-only - dev/qa fall through to regex.",
+      "filePaths": ["docs/setup/atlas-search-setup.md"],
+      "responsibilities": [
+        "Stock & MF discovery search",
+        "RAG retrieval over DocumentEmbedding"
+      ]
+    },
+    {
+      "id": "redis",
+      "label": "Redis",
+      "type": "database",
+      "layer": "storage",
+      "technology": "DigitalOcean managed Redis",
+      "description": "Hot-data cache (5-minute TTL) used by the cache layer L2.",
+      "filePaths": [],
+      "responsibilities": [
+        "Cache expensive computations + Atlas results",
+        "Hold short-lived market data quotes"
+      ]
+    },
+    {
+      "id": "gcs",
+      "label": "Cloud Storage",
+      "type": "service",
+      "layer": "storage",
+      "technology": "GCP Cloud Storage",
+      "description": "Object storage for learning content (HLS), uploaded documents, scraped annual reports + concalls for RAG, the raw exchange-feed archive (feeds/), the US candle cold shards (candles/) and the SEC EDGAR archive (edgar/). Bucket: stockbook-content-{env}. edgar/ sits deliberately OUTSIDE feeds/, whose entire prefix the prod->QA mirror rsyncs twice daily, because raw filings grow ~330 GB/yr.",
+      "filePaths": ["packages/storage/src/", "scripts/ops/gcs-lifecycle.json"],
+      "responsibilities": [
+        "Signed-URL uploads/downloads",
+        "Hold raw documents prior to embedding",
+        "Hold edgar/bulk (deleted @30d), edgar/filings (-> Nearline @30d), edgar/text, edgar/facts and edgar/13f gz-JSONL shards"
+      ]
+    },
+    {
+      "id": "turborepo",
+      "label": "Turborepo",
+      "type": "pipeline",
+      "layer": "build-pipeline",
+      "technology": "Turborepo + Yarn workspaces",
+      "description": "Build orchestrator. 17 concurrent tasks across 4 apps, 22 packages, 1 worker service.",
+      "filePaths": ["turbo.json", "package.json"],
+      "responsibilities": [
+        "Parallel builds with caching",
+        "Coordinate db:generate before build",
+        "Distinguish persistent (dev) from build tasks"
+      ]
+    },
+    {
+      "id": "vercel-build",
+      "label": "Vercel Build",
+      "type": "pipeline",
+      "layer": "build-pipeline",
+      "technology": "Vercel CI",
+      "description": "Builds web, admin, content (and api in Vercel mode).",
+      "filePaths": ["apps/web/next.config.js"],
+      "responsibilities": [
+        "Per-PR preview builds",
+        "Production build on main",
+        "Auto env-var injection"
+      ]
+    },
+    {
+      "id": "cloud-build",
+      "label": "Cloud Build",
+      "type": "pipeline",
+      "layer": "build-pipeline",
+      "technology": "GCP Cloud Build",
+      "description": "Builds Docker images for the two Cloud Run deployables: workers-service and us-fundamentals (and apps/api when run on Cloud Run). Four triggers, two per deployable, on ^main$ (qa) and ^release$ (prod). The us-fundamentals pair is filtered to services/us-fundamentals/** — a trigger with no includedFiles rebuilds on EVERY push to its branch.",
+      "filePaths": [
+        "workers/cloudbuild.prod.yaml",
+        "workers/cloudbuild.qa.yaml",
+        "workers/Dockerfile",
+        "services/us-fundamentals/cloudbuild.prod.yaml",
+        "services/us-fundamentals/cloudbuild.qa.yaml",
+        "services/us-fundamentals/Dockerfile",
+        "scripts/ops/setup-cloudbuild-triggers.sh"
+      ],
+      "responsibilities": [
+        "Build + push Docker images",
+        "Tag with COMMIT_SHA (becomes DD_VERSION)",
+        "Re-pin the EDGAR Cloud Run Jobs to the image it just built"
+      ]
+    },
+    {
+      "id": "vercel-hosting",
+      "label": "Vercel Hosting",
+      "type": "pipeline",
+      "layer": "distribution",
+      "technology": "Vercel",
+      "description": "Hosts web, admin, content. Edge runtime for streaming routes.",
+      "filePaths": [],
+      "responsibilities": [
+        "Serve Next.js apps with edge cache",
+        "Preview deployments per PR",
+        "Auto-deploy main → prod"
+      ]
+    },
+    {
+      "id": "cloud-run",
+      "label": "Cloud Run",
+      "type": "pipeline",
+      "layer": "distribution",
+      "technology": "GCP Cloud Run",
+      "description": "Hosts workers-service, api-server and us-fundamentals. Datadog Agent runs as a sidecar container for APM. Also runs the Cloud Run JOBS — the Tiingo backfills and the five EDGAR bulk/backfill jobs — which pin their image at PROVISION time, so deploying a service does not move them.",
+      "filePaths": [],
+      "responsibilities": [
+        "Autoscale workers + api containers",
+        "Provide DD_TRACE_AGENT_URL=http://localhost:8126 via sidecar",
+        "Run Cloud Run Jobs whose work exceeds the 600s Pub/Sub ack deadline"
+      ]
+    },
+    {
+      "id": "clerk",
+      "label": "Clerk",
+      "type": "external",
+      "layer": "external-services",
+      "technology": "Clerk Auth",
+      "description": "Identity provider. Manages sign-up, sign-in, MFA. Webhook syncs to internal User.",
+      "filePaths": ["packages/auth/src/", "apps/web/app/api/webhooks/clerk/"],
+      "responsibilities": [
+        "Authenticate users",
+        "Send signed user.* webhooks to web-api-routes"
+      ]
+    },
+    {
+      "id": "gemini",
+      "label": "Google Gemini",
+      "type": "external",
+      "layer": "external-services",
+      "technology": "Gemini 2.5 Pro + 2.5 Flash via Vercel AI Gateway",
+      "description": "LLM provider for chat, research, roast, content generation. Pro for deep reasoning, Flash for low-latency.",
+      "filePaths": ["packages/core/src/gemini/"],
+      "responsibilities": [
+        "Generate chat responses",
+        "Drive research tools",
+        "Score & roast portfolios",
+        "Generate embeddings (text-004)"
+      ]
+    },
+    {
+      "id": "dodo-payments",
+      "label": "Dodo Payments",
+      "type": "external",
+      "layer": "external-services",
+      "technology": "Dodo Payments API + Webhooks",
+      "description": "Subscription billing. Hosted checkout + signed webhooks.",
+      "filePaths": [
+        "packages/core/src/payments/",
+        "apps/web/app/api/payments/",
+        "apps/web/app/api/webhooks/dodo/"
+      ],
+      "responsibilities": [
+        "Create checkout sessions",
+        "Send signed payment.* + subscription.* webhooks",
+        "Drive Subscription tier transitions"
+      ]
+    },
+    {
+      "id": "datadog",
+      "label": "Datadog",
+      "type": "external",
+      "layer": "external-services",
+      "technology": "Datadog APM / RUM / Logs / Metrics",
+      "description": "Observability. APM via Cloud Run sidecar agent; RUM + Logs + Metrics via HTTP from Vercel.",
+      "filePaths": ["packages/datadog/src/"],
+      "responsibilities": [
+        "Trace workers + api requests",
+        "Collect browser RUM",
+        "Aggregate logs & metrics"
+      ]
+    },
+    {
+      "id": "posthog",
+      "label": "PostHog",
+      "type": "external",
+      "layer": "external-services",
+      "technology": "PostHog product analytics + feature flags",
+      "description": "Event tracking, funnels, session replay, feature flag rollout.",
+      "filePaths": ["apps/web/lib/posthog.ts"],
+      "responsibilities": [
+        "Capture product events",
+        "Gate features (e.g. US stocks for select emails)"
+      ]
+    },
+    {
+      "id": "resend",
+      "label": "Resend",
+      "type": "external",
+      "layer": "external-services",
+      "technology": "Resend Email API",
+      "description": "Transactional + newsletter email delivery.",
+      "filePaths": ["packages/email/src/"],
+      "responsibilities": [
+        "Send receipt + auth emails",
+        "Batch newsletter sends",
+        "Sync subscribers from DB"
+      ]
+    },
+    {
+      "id": "broker-apis",
+      "label": "Broker APIs (10)",
+      "type": "external",
+      "layer": "external-services",
+      "technology": "OAuth-based broker integrations",
+      "description": "Zerodha Kite, Upstox, Angel One SmartAPI, Groww, Dhan, Fyers, HDFC Securities, ICICI Direct, Interactive Brokers.",
+      "filePaths": ["packages/core/src/brokers/", "apps/web/app/api/brokers/"],
+      "responsibilities": [
+        "OAuth issuance + refresh",
+        "Holdings, positions, trades, MF (only Zerodha has MF)",
+        "Order placement (where supported)"
+      ]
+    },
+    {
+      "id": "data-providers",
+      "label": "Market Data Providers",
+      "type": "external",
+      "layer": "external-services",
+      "technology": "NSE, BSE, AMFI, Yahoo Finance, Screener.in, Chartink, RBI",
+      "description": "Public + scraped sources for prices, NAVs, screens, macro. Company financials are NOT among them any more: they are projected nightly from our own archive of NSE XBRL filings. Tickertape was the financials source until MONEY-1220, when api.tickertape.in began returning 403 to our Cloud Run egress (200 from a laptop) — a permanent, silent block, so it was removed from every scheduled path.",
+      "filePaths": [
+        "packages/core/src/market-data/",
+        "packages/research/src/data-sources/",
+        "workers/src/processors/"
+      ],
+      "responsibilities": [
+        "Provide daily + intraday quotes",
+        "Deliver NAVs, screens & macro series",
+        "Supply the raw XBRL filings financials are derived from"
+      ]
+    },
+    {
+      "id": "sec-edgar",
+      "label": "SEC EDGAR",
+      "type": "external",
+      "layer": "external-services",
+      "technology": "sec.gov / data.sec.gov / efts.sec.gov, plus api.openfigi.com",
+      "description": "The US filing system, used only through documented public interfaces: bulk zips, per-company JSON, full submission bundles, the getcurrent Atom feed, full-text search, daily indexes and the fails-to-deliver files. There is NO 429 and no documented Retry-After — an undeclared or rate-violating client gets a 403 WITH A BODY, so responses are classified on body text, never on status. OpenFIGI (Bloomberg) is the last CUSIP-resolution tier; its identifiers are a public-domain dedication.",
+      "filePaths": [
+        "services/us-fundamentals/app/sec/",
+        "services/us-fundamentals/app/openfigi.py"
+      ],
+      "responsibilities": [
+        "Publish filings within ~1s of acceptance",
+        "Enforce a per-requester 10 req/s fair-access limit",
+        "Serve the archive we reparse from when a mapping changes"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "web-app",
+      "to": "server-actions",
+      "label": "RSC mutation",
+      "type": "api"
+    },
+    {
+      "from": "web-app",
+      "to": "web-api-routes",
+      "label": "HTTP / streaming",
+      "type": "api"
+    },
+    {
+      "from": "web-app",
+      "to": "clerk",
+      "label": "Sign-in / session",
+      "type": "auth"
+    },
+    {
+      "from": "web-app",
+      "to": "posthog",
+      "label": "Events",
+      "type": "data"
+    },
+    {
+      "from": "web-app",
+      "to": "datadog",
+      "label": "RUM",
+      "type": "data"
+    },
+    {
+      "from": "admin-app",
+      "to": "web-api-routes",
+      "label": "Admin ops",
+      "type": "api"
+    },
+    {
+      "from": "content-app",
+      "to": "web-api-routes",
+      "label": "Authoring",
+      "type": "api"
+    },
+    {
+      "from": "mobile-client",
+      "to": "api-server",
+      "label": "REST / tRPC",
+      "type": "api"
+    },
+    {
+      "from": "mobile-client",
+      "to": "clerk",
+      "label": "Auth",
+      "type": "auth"
+    },
+    {
+      "from": "server-actions",
+      "to": "validation",
+      "label": "Zod parse",
+      "type": "data"
+    },
+    {
+      "from": "server-actions",
+      "to": "services-layer",
+      "label": "Service call",
+      "type": "api"
+    },
+    {
+      "from": "server-actions",
+      "to": "pubsub",
+      "label": "Publish job",
+      "type": "event"
+    },
+    {
+      "from": "web-api-routes",
+      "to": "services-layer",
+      "label": "Service call",
+      "type": "api"
+    },
+    {
+      "from": "web-api-routes",
+      "to": "chat-orchestrator",
+      "label": "/api/chat",
+      "type": "api"
+    },
+    {
+      "from": "web-api-routes",
+      "to": "trpc-router",
+      "label": "tRPC catch-all",
+      "type": "api"
+    },
+    {
+      "from": "web-api-routes",
+      "to": "pubsub",
+      "label": "Publish job",
+      "type": "event"
+    },
+    {
+      "from": "web-api-routes",
+      "to": "security",
+      "label": "Encrypt tokens",
+      "type": "data"
+    },
+    {
+      "from": "web-api-routes",
+      "to": "dodo-payments",
+      "label": "Create checkout",
+      "type": "api"
+    },
+    {
+      "from": "dodo-payments",
+      "to": "web-api-routes",
+      "label": "Webhook",
+      "type": "event"
+    },
+    {
+      "from": "clerk",
+      "to": "web-api-routes",
+      "label": "user.* webhook",
+      "type": "event"
+    },
+    {
+      "from": "broker-apis",
+      "to": "web-api-routes",
+      "label": "OAuth callback",
+      "type": "auth"
+    },
+    {
+      "from": "api-server",
+      "to": "services-layer",
+      "label": "Service call",
+      "type": "api"
+    },
+    {
+      "from": "api-server",
+      "to": "trpc-router",
+      "label": "tRPC adapter",
+      "type": "api"
+    },
+    {
+      "from": "api-server",
+      "to": "datadog",
+      "label": "APM (sidecar)",
+      "type": "data"
+    },
+    {
+      "from": "chat-orchestrator",
+      "to": "services-layer",
+      "label": "Tool dispatch",
+      "type": "api"
+    },
+    {
+      "from": "chat-orchestrator",
+      "to": "research-agent",
+      "label": "Deep research",
+      "type": "api"
+    },
+    {
+      "from": "chat-orchestrator",
+      "to": "roast-agent",
+      "label": "Trigger roast",
+      "type": "api"
+    },
+    {
+      "from": "chat-orchestrator",
+      "to": "gemini",
+      "label": "Flash classify / respond",
+      "type": "api"
+    },
+    {
+      "from": "chat-orchestrator",
+      "to": "validation",
+      "label": "Block parse",
+      "type": "data"
+    },
+    {
+      "from": "services-layer",
+      "to": "prisma",
+      "label": "CRUD",
+      "type": "data"
+    },
+    {
+      "from": "services-layer",
+      "to": "cache-layer",
+      "label": "Memoize",
+      "type": "data"
+    },
+    {
+      "from": "services-layer",
+      "to": "core-domain",
+      "label": "Domain logic",
+      "type": "api"
+    },
+    {
+      "from": "services-layer",
+      "to": "gcs",
+      "label": "Signed URL",
+      "type": "data"
+    },
+    {
+      "from": "services-layer",
+      "to": "resend",
+      "label": "Email send",
+      "type": "api"
+    },
+    {
+      "from": "core-domain",
+      "to": "security",
+      "label": "Encrypt",
+      "type": "data"
+    },
+    {
+      "from": "core-domain",
+      "to": "broker-apis",
+      "label": "Sync calls",
+      "type": "api"
+    },
+    {
+      "from": "core-domain",
+      "to": "data-providers",
+      "label": "Fetch market data",
+      "type": "api"
+    },
+    {
+      "from": "core-domain",
+      "to": "gemini",
+      "label": "AI helpers",
+      "type": "api"
+    },
+    {
+      "from": "research-agent",
+      "to": "core-domain",
+      "label": "Compute tools",
+      "type": "api"
+    },
+    {
+      "from": "research-agent",
+      "to": "data-providers",
+      "label": "Fundamentals + scrape",
+      "type": "api"
+    },
+    {
+      "from": "research-agent",
+      "to": "gemini",
+      "label": "Reason + generate",
+      "type": "api"
+    },
+    {
+      "from": "research-agent",
+      "to": "cache-layer",
+      "label": "Memoize results",
+      "type": "data"
+    },
+    {
+      "from": "research-agent",
+      "to": "atlas-search",
+      "label": "RAG retrieval",
+      "type": "data"
+    },
+    {
+      "from": "roast-agent",
+      "to": "services-layer",
+      "label": "Fetch portfolio",
+      "type": "api"
+    },
+    {
+      "from": "roast-agent",
+      "to": "gemini",
+      "label": "Analyze & score",
+      "type": "api"
+    },
+    {
+      "from": "content-engine",
+      "to": "gemini",
+      "label": "Generate content",
+      "type": "api"
+    },
+    {
+      "from": "content-engine",
+      "to": "gcs",
+      "label": "Persist assets",
+      "type": "data"
+    },
+    {
+      "from": "cache-layer",
+      "to": "redis",
+      "label": "L2 cache",
+      "type": "data"
+    },
+    {
+      "from": "prisma",
+      "to": "mongodb-atlas",
+      "label": "Driver",
+      "type": "data"
+    },
+    {
+      "from": "prisma",
+      "to": "atlas-search",
+      "label": "$search aggregation",
+      "type": "data"
+    },
+    {
+      "from": "cloud-scheduler",
+      "to": "pubsub",
+      "label": "Cron trigger",
+      "type": "trigger"
+    },
+    {
+      "from": "pubsub",
+      "to": "workers-service",
+      "label": "Push (OIDC)",
+      "type": "event"
+    },
+    {
+      "from": "workers-service",
+      "to": "services-layer",
+      "label": "Write results",
+      "type": "api"
+    },
+    {
+      "from": "workers-service",
+      "to": "core-domain",
+      "label": "Domain calls",
+      "type": "api"
+    },
+    {
+      "from": "workers-service",
+      "to": "research-agent",
+      "label": "Run research",
+      "type": "api"
+    },
+    {
+      "from": "workers-service",
+      "to": "roast-agent",
+      "label": "Run roast pipeline",
+      "type": "api"
+    },
+    {
+      "from": "workers-service",
+      "to": "content-engine",
+      "label": "Generate content",
+      "type": "api"
+    },
+    {
+      "from": "workers-service",
+      "to": "data-providers",
+      "label": "Bulk sync",
+      "type": "api"
+    },
+    {
+      "from": "workers-service",
+      "to": "broker-apis",
+      "label": "Broker sync",
+      "type": "api"
+    },
+    {
+      "from": "workers-service",
+      "to": "gcs",
+      "label": "Store documents",
+      "type": "data"
+    },
+    {
+      "from": "workers-service",
+      "to": "datadog",
+      "label": "APM (sidecar)",
+      "type": "data"
+    },
+    {
+      "from": "workers-service",
+      "to": "resend",
+      "label": "Newsletter send",
+      "type": "api"
+    },
+    {
+      "from": "turborepo",
+      "to": "vercel-build",
+      "label": "build",
+      "type": "build"
+    },
+    {
+      "from": "turborepo",
+      "to": "cloud-build",
+      "label": "build",
+      "type": "build"
+    },
+    {
+      "from": "vercel-build",
+      "to": "vercel-hosting",
+      "label": "deploy",
+      "type": "deployment"
+    },
+    {
+      "from": "cloud-build",
+      "to": "cloud-run",
+      "label": "deploy image",
+      "type": "deployment"
+    },
+    {
+      "from": "vercel-hosting",
+      "to": "web-app",
+      "label": "host",
+      "type": "deployment"
+    },
+    {
+      "from": "vercel-hosting",
+      "to": "admin-app",
+      "label": "host",
+      "type": "deployment"
+    },
+    {
+      "from": "vercel-hosting",
+      "to": "content-app",
+      "label": "host",
+      "type": "deployment"
+    },
+    {
+      "from": "cloud-run",
+      "to": "api-server",
+      "label": "host",
+      "type": "deployment"
+    },
+    {
+      "from": "cloud-run",
+      "to": "workers-service",
+      "label": "host",
+      "type": "deployment"
+    },
+    {
+      "from": "cloud-scheduler",
+      "to": "us-fundamentals",
+      "label": "Cloud Run job trigger (edgar-bulk-*)",
+      "type": "trigger"
+    },
+    {
+      "from": "pubsub",
+      "to": "us-fundamentals",
+      "label": "Push (OIDC) /jobs/edgar-*",
+      "type": "event"
+    },
+    {
+      "from": "us-fundamentals",
+      "to": "sec-edgar",
+      "label": "Fetch filings (9 req/s, prod only)",
+      "type": "api"
+    },
+    {
+      "from": "us-fundamentals",
+      "to": "mongodb-atlas",
+      "label": "Write 11 us_* collections (pymongo)",
+      "type": "data"
+    },
+    {
+      "from": "us-fundamentals",
+      "to": "gcs",
+      "label": "Archive edgar/ + cold shards",
+      "type": "data"
+    },
+    {
+      "from": "us-fundamentals",
+      "to": "redis",
+      "label": "Shared SEC rate-limit bucket",
+      "type": "data"
+    },
+    {
+      "from": "us-fundamentals",
+      "to": "pubsub",
+      "label": "Fan out to parser topics",
+      "type": "event"
+    },
+    {
+      "from": "us-fundamentals",
+      "to": "datadog",
+      "label": "APM (sidecar) + job outcomes",
+      "type": "data"
+    },
+    {
+      "from": "cloud-run",
+      "to": "us-fundamentals",
+      "label": "host",
+      "type": "deployment"
+    },
+    {
+      "from": "core-domain",
+      "to": "gcs",
+      "label": "Read edgar/13f cold shards",
+      "type": "data"
+    }
+  ],
+  "keyFlows": [
+    {
+      "id": "user-signup",
+      "name": "User Signup & Onboarding",
+      "description": "First-time user creates an account via Clerk and is synced into the internal MongoDB User collection.",
+      "path": [
+        "web-app",
+        "clerk",
+        "web-api-routes",
+        "services-layer",
+        "prisma",
+        "mongodb-atlas"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "node": "web-app",
+          "description": "User lands on /sign-up. Clerk's hosted UI is rendered inside the Next.js app."
+        },
+        {
+          "step": 2,
+          "node": "clerk",
+          "description": "Clerk performs email/social sign-up, issues a session, and fires a signed user.created webhook."
+        },
+        {
+          "step": 3,
+          "node": "web-api-routes",
+          "description": "/api/webhooks/clerk verifies the svix signature and dispatches to user.service."
+        },
+        {
+          "step": 4,
+          "node": "services-layer",
+          "description": "user.service.upsertFromClerk maps Clerk userId → internal User, normalizes profile fields, applies invite tokens if present."
+        },
+        {
+          "step": 5,
+          "node": "prisma",
+          "description": "Prisma writes the User document and any default Subscription (FREE)."
+        },
+        {
+          "step": 6,
+          "node": "mongodb-atlas",
+          "description": "MongoDB Atlas persists the User. Future requests resolve to this canonical record."
+        }
+      ],
+      "category": "user"
+    },
+    {
+      "id": "broker-sync",
+      "name": "Broker Connection & Trade Sync",
+      "description": "User connects a broker via OAuth, tokens are encrypted, and the first sync writes Trades, Holdings, and Paired Trade views asynchronously.",
+      "path": [
+        "web-app",
+        "broker-apis",
+        "web-api-routes",
+        "security",
+        "prisma",
+        "mongodb-atlas",
+        "pubsub",
+        "workers-service",
+        "core-domain",
+        "services-layer"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "node": "web-app",
+          "description": "User clicks 'Connect Zerodha' on /brokers. The app redirects to Zerodha's OAuth consent screen."
+        },
+        {
+          "step": 2,
+          "node": "broker-apis",
+          "description": "Zerodha authenticates the user and redirects back with an authorization code."
+        },
+        {
+          "step": 3,
+          "node": "web-api-routes",
+          "description": "/api/brokers/zerodha/callback exchanges the code for access + refresh tokens."
+        },
+        {
+          "step": 4,
+          "node": "security",
+          "description": "Tokens are encrypted with AES-256-GCM using a per-user key from @usemoney/security."
+        },
+        {
+          "step": 5,
+          "node": "prisma",
+          "description": "Encrypted BrokerConnection row is written via the broker-connection.service."
+        },
+        {
+          "step": 6,
+          "node": "mongodb-atlas",
+          "description": "MongoDB persists the connection. UI shows 'Connected'."
+        },
+        {
+          "step": 7,
+          "node": "pubsub",
+          "description": "Route publishes a broker-sync message to the broker-sync-{env} topic."
+        },
+        {
+          "step": 8,
+          "node": "workers-service",
+          "description": "Cloud Run worker receives the push (OIDC-verified) and routes to broker-sync processor."
+        },
+        {
+          "step": 9,
+          "node": "core-domain",
+          "description": "The Zerodha adapter in packages/core/src/brokers calls Kite for holdings, positions, trades, and mutual funds."
+        },
+        {
+          "step": 10,
+          "node": "services-layer",
+          "description": "trades.service / holdings.service write rows via Prisma, then publish trade-pairing for FIFO matching."
+        }
+      ],
+      "category": "user"
+    },
+    {
+      "id": "chat-tool",
+      "name": "AI Chat - Tool Call",
+      "description": "User asks a portfolio question in chat. The orchestrator classifies intent, picks a tool, executes a server-action equivalent, and streams blocks back.",
+      "path": [
+        "web-app",
+        "web-api-routes",
+        "chat-orchestrator",
+        "gemini",
+        "services-layer",
+        "prisma",
+        "mongodb-atlas"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "node": "web-app",
+          "description": "User types 'show my top losers this month' in the embedded chat panel."
+        },
+        {
+          "step": 2,
+          "node": "web-api-routes",
+          "description": "POST /api/chat receives the message + thread context."
+        },
+        {
+          "step": 3,
+          "node": "chat-orchestrator",
+          "description": "tier-classifier decides this is a tool call (vs. flash-response or navigate). input-validator scrubs the prompt."
+        },
+        {
+          "step": 4,
+          "node": "gemini",
+          "description": "Flash classifies intent → tool 'top-losers'. The registry maps it to the holdings.service surface."
+        },
+        {
+          "step": 5,
+          "node": "services-layer",
+          "description": "holdings.service fetches holdings, computes per-position P&L, and returns a structured block."
+        },
+        {
+          "step": 6,
+          "node": "prisma",
+          "description": "Prisma queries the Holding + LatestQuote collections; cache-layer memoizes the result for 60s."
+        },
+        {
+          "step": 7,
+          "node": "mongodb-atlas",
+          "description": "Atlas returns the documents. The orchestrator wraps the result in a :::block:TABLE block and streams it back to the UI."
+        }
+      ],
+      "category": "user"
+    },
+    {
+      "id": "deep-research",
+      "name": "Deep Research - StockSage",
+      "description": "User asks for a deep analysis. The chat orchestrator hands off to the async research agent in workers, which plans, runs tools, calls Gemini, and streams results back.",
+      "path": [
+        "web-app",
+        "web-api-routes",
+        "chat-orchestrator",
+        "pubsub",
+        "workers-service",
+        "research-agent",
+        "data-providers",
+        "gemini",
+        "atlas-search",
+        "services-layer",
+        "prisma",
+        "mongodb-atlas"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "node": "web-app",
+          "description": "User asks 'do a deep dive on RELIANCE'."
+        },
+        {
+          "step": 2,
+          "node": "web-api-routes",
+          "description": "/api/chat receives the message, ResearchSession is created via services."
+        },
+        {
+          "step": 3,
+          "node": "chat-orchestrator",
+          "description": "Tier classifier detects deep-research intent and emits a 'Researching…' streaming placeholder block."
+        },
+        {
+          "step": 4,
+          "node": "pubsub",
+          "description": "A stock-research message is published with sessionId, query, and user context."
+        },
+        {
+          "step": 5,
+          "node": "workers-service",
+          "description": "research processor picks up the message and instantiates the agent."
+        },
+        {
+          "step": 6,
+          "node": "research-agent",
+          "description": "Planner produces an ordered plan of skills + tools. Loop-controller runs the executor."
+        },
+        {
+          "step": 7,
+          "node": "data-providers",
+          "description": "Tools read our own StockFinancials / StockRatios first, then fall back to live fetches from Screener.in (statements, shareholding, peers), Yahoo (prices), NSE and AMFI. Tickertape is out of the financials chain — it 403s our Cloud Run egress."
+        },
+        {
+          "step": 8,
+          "node": "gemini",
+          "description": "Per-skill reasoning calls to Gemini Pro produce structured analysis."
+        },
+        {
+          "step": 9,
+          "node": "atlas-search",
+          "description": "Vector search retrieves relevant filings + concalls from DocumentEmbedding for RAG context."
+        },
+        {
+          "step": 10,
+          "node": "services-layer",
+          "description": "Research deltas are streamed and persisted to ChatHistory + ResearchSession."
+        },
+        {
+          "step": 11,
+          "node": "prisma",
+          "description": "Prisma writes incremental result chunks."
+        },
+        {
+          "step": 12,
+          "node": "mongodb-atlas",
+          "description": "Atlas stores the final session; the UI renders the streaming ResearchStreamBlock."
+        }
+      ],
+      "category": "user"
+    },
+    {
+      "id": "portfolio-roast",
+      "name": "Portfolio Roast",
+      "description": "User triggers a roast. A job is enqueued, the workers run the multi-step roast pipeline against Gemini, and the result is polled.",
+      "path": [
+        "web-app",
+        "server-actions",
+        "services-layer",
+        "pubsub",
+        "workers-service",
+        "roast-agent",
+        "gemini",
+        "prisma",
+        "mongodb-atlas",
+        "web-api-routes"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "node": "web-app",
+          "description": "User clicks 'Roast my portfolio' on /roast."
+        },
+        {
+          "step": 2,
+          "node": "server-actions",
+          "description": "roast action creates a job via roast.service.startJob."
+        },
+        {
+          "step": 3,
+          "node": "services-layer",
+          "description": "Service writes a PortfolioRoast row with status=PENDING and publishes a portfolio-roast message."
+        },
+        {
+          "step": 4,
+          "node": "pubsub",
+          "description": "portfolio-roast topic delivers to workers via push."
+        },
+        {
+          "step": 5,
+          "node": "workers-service",
+          "description": "roast processor invokes the roast-agent pipeline."
+        },
+        {
+          "step": 6,
+          "node": "roast-agent",
+          "description": "Steps run in sequence: fetch-portfolio → analyze-stocks → analyze-mf → generate-scores → generate-roast → assemble-result."
+        },
+        {
+          "step": 7,
+          "node": "gemini",
+          "description": "Each analysis step calls Gemini Pro with the relevant portfolio slice."
+        },
+        {
+          "step": 8,
+          "node": "prisma",
+          "description": "Workers update PortfolioRoast with intermediate results and final status=COMPLETE."
+        },
+        {
+          "step": 9,
+          "node": "mongodb-atlas",
+          "description": "Atlas stores the assembled roast report."
+        },
+        {
+          "step": 10,
+          "node": "web-api-routes",
+          "description": "Front-end polls /api/jobs/[jobId]; when status=COMPLETE the roast UI renders the report."
+        }
+      ],
+      "category": "user"
+    },
+    {
+      "id": "subscription",
+      "name": "Subscription Upgrade",
+      "description": "User upgrades from FREE → PREMIUM via Dodo Payments; webhook updates the Subscription and triggers a receipt email.",
+      "path": [
+        "web-app",
+        "web-api-routes",
+        "dodo-payments",
+        "services-layer",
+        "prisma",
+        "mongodb-atlas",
+        "resend"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "node": "web-app",
+          "description": "User selects a plan on /pricing."
+        },
+        {
+          "step": 2,
+          "node": "web-api-routes",
+          "description": "/api/payments/create-checkout calls Dodo to create a hosted checkout session and returns the redirect URL."
+        },
+        {
+          "step": 3,
+          "node": "dodo-payments",
+          "description": "User completes payment on Dodo's hosted page; on success Dodo POSTs a signed subscription.created webhook."
+        },
+        {
+          "step": 4,
+          "node": "web-api-routes",
+          "description": "/api/webhooks/dodo verifies the signature and dispatches to subscription.service."
+        },
+        {
+          "step": 5,
+          "node": "services-layer",
+          "description": "subscription.service.activate upserts Subscription tier, billing cycle, and renewal date."
+        },
+        {
+          "step": 6,
+          "node": "prisma",
+          "description": "Prisma writes Subscription + Payment rows."
+        },
+        {
+          "step": 7,
+          "node": "mongodb-atlas",
+          "description": "Atlas persists. FeatureGate reads tier on next request and unlocks PREMIUM features."
+        },
+        {
+          "step": 8,
+          "node": "resend",
+          "description": "services/email.service sends a receipt + welcome email via Resend."
+        }
+      ],
+      "category": "user"
+    },
+    {
+      "id": "daily-sync",
+      "name": "Daily Market Data Sync (Cron)",
+      "description": "Cloud Scheduler fans out to multiple Pub/Sub topics each evening; workers fetch from data providers and bulk-write to the DB.",
+      "path": [
+        "cloud-scheduler",
+        "pubsub",
+        "workers-service",
+        "data-providers",
+        "services-layer",
+        "prisma",
+        "mongodb-atlas",
+        "cache-layer",
+        "redis"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "node": "cloud-scheduler",
+          "description": "Scheduler fires at 6:00pm IST (post-market). Multiple jobs run in parallel (price-sync, mf-sync, sector-enrichment, etc.)."
+        },
+        {
+          "step": 2,
+          "node": "pubsub",
+          "description": "Each cron emits to its topic (price-sync-prod, mf-sync-prod, etc.). Push subscriptions deliver to workers."
+        },
+        {
+          "step": 3,
+          "node": "workers-service",
+          "description": "The matching processor (price-sync.ts / mf-sync.ts) authenticates and runs."
+        },
+        {
+          "step": 4,
+          "node": "data-providers",
+          "description": "Workers pull from Yahoo Finance (prices), the NSE/BSE bhavcopies (closes), the AMFI feed (NAVs) and Screener.in (documents + corporate actions). Financials are no longer fetched here — they are projected from our own archived XBRL filings by the xbrl-projection / xbrl-ratios jobs."
+        },
+        {
+          "step": 5,
+          "node": "services-layer",
+          "description": "Sector-enrichment and idempotency checks ensure repeated runs don't duplicate work."
+        },
+        {
+          "step": 6,
+          "node": "prisma",
+          "description": "Bulk writes to DailyPrice, MfNavHistory, MutualFundMaster, StockFinancials, etc."
+        },
+        {
+          "step": 7,
+          "node": "mongodb-atlas",
+          "description": "Atlas persists. MarketDataSyncLog records sync status for ops monitoring."
+        },
+        {
+          "step": 8,
+          "node": "cache-layer",
+          "description": "Cache layer invalidates affected keys so the next request fetches fresh data."
+        },
+        {
+          "step": 9,
+          "node": "redis",
+          "description": "Stale Redis keys are evicted; new keys populate lazily on read."
+        }
+      ],
+      "category": "system"
+    },
+    {
+      "id": "build-deploy",
+      "name": "Build & Release",
+      "description": "Push to main triggers parallel deployments - Vercel builds the Next.js apps, Cloud Build packages Docker images for the workers/api, Datadog gets a new DD_VERSION tag.",
+      "path": [
+        "turborepo",
+        "vercel-build",
+        "vercel-hosting",
+        "web-app",
+        "cloud-build",
+        "cloud-run",
+        "workers-service",
+        "datadog"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "node": "turborepo",
+          "description": "GitHub push to main triggers Turborepo. Per turbo.json, build depends on ^build and db:generate; tasks run with concurrency=17."
+        },
+        {
+          "step": 2,
+          "node": "vercel-build",
+          "description": "Vercel builds web, admin, and content via next build; env vars are injected per environment."
+        },
+        {
+          "step": 3,
+          "node": "vercel-hosting",
+          "description": "Vercel promotes the build to production behind the custom domain."
+        },
+        {
+          "step": 4,
+          "node": "web-app",
+          "description": "New web app version is live; Edge cache is rebuilt on first request."
+        },
+        {
+          "step": 5,
+          "node": "cloud-build",
+          "description": "GCP Cloud Build runs in parallel - builds workers-service and api-server Docker images tagged with COMMIT_SHA."
+        },
+        {
+          "step": 6,
+          "node": "cloud-run",
+          "description": "Cloud Run deploys new revisions with revision-based traffic split; Datadog sidecar agent restarts."
+        },
+        {
+          "step": 7,
+          "node": "workers-service",
+          "description": "Workers warm up; in-flight Pub/Sub messages drain to the previous revision before the new one takes over."
+        },
+        {
+          "step": 8,
+          "node": "datadog",
+          "description": "DD_VERSION=<COMMIT_SHA> tags new spans and metrics, enabling version-by-version regression tracking."
+        }
+      ],
+      "category": "system"
+    },
+    {
+      "id": "doc-upload-rag",
+      "name": "Document Upload & RAG Indexing",
+      "description": "User uploads a PDF (annual report, concall). The file lands in GCS, workers extract text, Gemini generates embeddings, and the vectors are indexed by Atlas Vector Search for the research agent's RAG retrieval.",
+      "path": [
+        "web-app",
+        "web-api-routes",
+        "services-layer",
+        "gcs",
+        "prisma",
+        "mongodb-atlas",
+        "pubsub",
+        "workers-service",
+        "gemini",
+        "atlas-search"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "node": "web-app",
+          "description": "User picks a PDF on /documents. The app requests a signed upload URL so the browser can stream the file directly to GCS."
+        },
+        {
+          "step": 2,
+          "node": "web-api-routes",
+          "description": "/api/storage validates the user and forwards the request to documents.service for a signed URL."
+        },
+        {
+          "step": 3,
+          "node": "services-layer",
+          "description": "documents.service asks @usemoney/storage for a signed PUT URL pointing into stockbook-content-{env}/users/{userId}/uploads/…"
+        },
+        {
+          "step": 4,
+          "node": "gcs",
+          "description": "The browser PUTs the file directly to GCS, bypassing app memory. On success, the client calls back to register the upload."
+        },
+        {
+          "step": 5,
+          "node": "prisma",
+          "description": "documents.service inserts a UserDocument row with status=PENDING and the gcsPath."
+        },
+        {
+          "step": 6,
+          "node": "mongodb-atlas",
+          "description": "Atlas persists the UserDocument record."
+        },
+        {
+          "step": 7,
+          "node": "pubsub",
+          "description": "A document-process-{env} message is published with documentId + gcsPath."
+        },
+        {
+          "step": 8,
+          "node": "workers-service",
+          "description": "document-process processor downloads the file from GCS, extracts text (pdf-parse), and chunks into ~800-token spans."
+        },
+        {
+          "step": 9,
+          "node": "gemini",
+          "description": "Each chunk is embedded via Gemini text-embedding-004 (768-dim)."
+        },
+        {
+          "step": 10,
+          "node": "atlas-search",
+          "description": "Vectors are written to DocumentEmbedding rows; Atlas Vector Search indexes them so the research agent can retrieve relevant excerpts via top-k similarity."
+        }
+      ],
+      "category": "user"
+    },
+    {
+      "id": "csv-import",
+      "name": "CSV Trade Import",
+      "description": "User uploads a broker CSV (Zerodha/Upstox/etc). Workers auto-detect the broker format, deduplicate against existing trades, write rows, then publish a pairing job that produces the PairedTradeView.",
+      "path": [
+        "web-app",
+        "web-api-routes",
+        "services-layer",
+        "gcs",
+        "prisma",
+        "pubsub",
+        "workers-service",
+        "core-domain",
+        "mongodb-atlas"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "node": "web-app",
+          "description": "User drops a CSV on /tradebook/import. The web app requests a signed upload URL."
+        },
+        {
+          "step": 2,
+          "node": "web-api-routes",
+          "description": "/api/storage issues a GCS signed URL via @usemoney/storage."
+        },
+        {
+          "step": 3,
+          "node": "services-layer",
+          "description": "trade-import.service creates an ImportLog row (status=PENDING) tied to the user."
+        },
+        {
+          "step": 4,
+          "node": "gcs",
+          "description": "Browser streams the CSV directly to GCS so the app never holds the file in memory."
+        },
+        {
+          "step": 5,
+          "node": "prisma",
+          "description": "ImportLog is persisted; the route is freed to respond to the user with a job id."
+        },
+        {
+          "step": 6,
+          "node": "pubsub",
+          "description": "A csv-import-{env} message is published with importLogId + gcsPath."
+        },
+        {
+          "step": 7,
+          "node": "workers-service",
+          "description": "import processor downloads the CSV and detects the broker format by column signature."
+        },
+        {
+          "step": 8,
+          "node": "core-domain",
+          "description": "The broker-specific parser normalizes rows into Trade shape. Duplicate detection runs against existing SYNCED + IMPORTED trades. A trade-pairing message is then published; the pairing processor runs FIFO matching."
+        },
+        {
+          "step": 9,
+          "node": "mongodb-atlas",
+          "description": "Trades + PairedTradeView are bulk-written; ImportLog flips to COMPLETE."
+        }
+      ],
+      "category": "user"
+    },
+    {
+      "id": "watchlist-alert",
+      "name": "Watchlist Alert Fires",
+      "description": "A scheduled price sync writes a new LatestQuote that crosses a user's alert threshold. The alert-evaluator worker matches active Alerts, sends an email via Resend, and writes an in-app notification.",
+      "path": [
+        "data-providers",
+        "workers-service",
+        "prisma",
+        "pubsub",
+        "services-layer",
+        "mongodb-atlas",
+        "resend",
+        "web-app"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "node": "data-providers",
+          "description": "Yahoo / NSE / BSE returns a fresh quote during the scheduled price-sync window."
+        },
+        {
+          "step": 2,
+          "node": "workers-service",
+          "description": "price-sync processor writes LatestQuote, then publishes an alert-evaluator trigger for any symbol whose price moved meaningfully."
+        },
+        {
+          "step": 3,
+          "node": "prisma",
+          "description": "LatestQuote row is upserted; the previous price is preserved on the row so threshold crossings can be detected."
+        },
+        {
+          "step": 4,
+          "node": "pubsub",
+          "description": "alert-evaluator-{env} topic delivers the trigger to the workers."
+        },
+        {
+          "step": 5,
+          "node": "services-layer",
+          "description": "alert.service queries active Alerts for the symbol and evaluates threshold crossings (above / below / pct-change)."
+        },
+        {
+          "step": 6,
+          "node": "mongodb-atlas",
+          "description": "On a hit, the Alert state advances to TRIGGERED and a Notification row is inserted (type=ALERT)."
+        },
+        {
+          "step": 7,
+          "node": "resend",
+          "description": "If the user has email alerts enabled, a transactional email is sent via Resend with the symbol, threshold, and current quote."
+        },
+        {
+          "step": 8,
+          "node": "web-app",
+          "description": "On the next request, /api/notifications returns the new in-app notification - the bell badge in the topbar updates with the unread count."
+        }
+      ],
+      "category": "system"
+    },
+    {
+      "id": "dashboard-load",
+      "category": "user",
+      "name": "Dashboard Load",
+      "description": "First page after login. Server action aggregates holdings + positions + P&L; the cache layer serves the hot path so the dashboard renders in ~100ms.",
+      "path": [
+        "web-app",
+        "server-actions",
+        "services-layer",
+        "cache-layer",
+        "redis",
+        "prisma",
+        "mongodb-atlas"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "node": "web-app",
+          "description": "User lands on /dashboard. The page is a React Server Component that calls getDashboardStatsAction(isDemo)."
+        },
+        {
+          "step": 2,
+          "node": "server-actions",
+          "description": "dashboard.ts action authenticates via Clerk and forwards to dashboard.service."
+        },
+        {
+          "step": 3,
+          "node": "services-layer",
+          "description": "dashboard.service.getStats orchestrates parallel reads across Holding, Position, PairedTradeView, LatestQuote."
+        },
+        {
+          "step": 4,
+          "node": "cache-layer",
+          "description": "L1 in-memory cache (10s TTL) is checked first; on miss the L2 Redis key dashboard:{userId} is consulted (5-min TTL)."
+        },
+        {
+          "step": 5,
+          "node": "redis",
+          "description": "Cache hit returns the pre-aggregated stats. On full miss the service falls through to Prisma."
+        },
+        {
+          "step": 6,
+          "node": "prisma",
+          "description": "Prisma constructs the aggregation pipeline (sums + joins to LatestQuote)."
+        },
+        {
+          "step": 7,
+          "node": "mongodb-atlas",
+          "description": "Atlas returns documents. The result is written back into L1 + L2 so subsequent loads are sub-10ms."
+        }
+      ]
+    },
+    {
+      "id": "holdings-view",
+      "category": "user",
+      "name": "Holdings Page View",
+      "description": "User views /holdings. Server action fetches the user's stock holdings with live P&L per row, joined with LatestQuote and filtered by broker / sector / exchange.",
+      "path": [
+        "web-app",
+        "server-actions",
+        "validation",
+        "services-layer",
+        "prisma",
+        "mongodb-atlas"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "node": "web-app",
+          "description": "User opens /holdings. The page calls getHoldingsAction({broker, sector, exchange})."
+        },
+        {
+          "step": 2,
+          "node": "server-actions",
+          "description": "holdings.ts action receives the filter object."
+        },
+        {
+          "step": 3,
+          "node": "validation",
+          "description": "Zod parses the filter — empty strings become undefined; enum-style fields are constrained."
+        },
+        {
+          "step": 4,
+          "node": "services-layer",
+          "description": "holdings.service.list runs a Prisma find on Holding with the user's filters, then joins to LatestQuote for live P&L."
+        },
+        {
+          "step": 5,
+          "node": "prisma",
+          "description": "Prisma constructs the query; compound indexes on [userId, broker], [userId, sector], [userId, exchange] keep it under 50ms."
+        },
+        {
+          "step": 6,
+          "node": "mongodb-atlas",
+          "description": "Atlas returns documents. The UI groups by broker / sector and renders cards with sparklines."
+        }
+      ]
+    },
+    {
+      "id": "tradebook-paired",
+      "category": "user",
+      "name": "Tradebook — Paired Trade View",
+      "description": "User opens /tradebook. The FIFO-paired view (entry + exit matched) renders with realized P&L per pair, grouped by symbol + broker.",
+      "path": [
+        "web-app",
+        "server-actions",
+        "services-layer",
+        "prisma",
+        "mongodb-atlas"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "node": "web-app",
+          "description": "User opens /tradebook. The page calls getTradesAction({skip, limit, symbol?, broker?, tradeType?}) plus a paired-view fetch."
+        },
+        {
+          "step": 2,
+          "node": "server-actions",
+          "description": "trades.ts validates pagination + filters and forwards to trades.service."
+        },
+        {
+          "step": 3,
+          "node": "services-layer",
+          "description": "trades.service.getPaired reads PairedTradeView (pre-computed by the FIFO pairing worker) for fast pagination."
+        },
+        {
+          "step": 4,
+          "node": "prisma",
+          "description": "Prisma queries PairedTradeView with $facet to return total count + paged rows in one round-trip."
+        },
+        {
+          "step": 5,
+          "node": "mongodb-atlas",
+          "description": "Atlas returns the page. Re-pairing happens asynchronously when new trades arrive — the view here is always consistent with the last sync."
+        }
+      ]
+    },
+    {
+      "id": "manual-broker-sync",
+      "category": "user",
+      "name": "Manual Broker Refresh",
+      "description": "User clicks 'Refresh' on a connected broker. The encrypted refresh token is decrypted, the broker API returns fresh data, and the workers re-pair trades in the background.",
+      "path": [
+        "web-app",
+        "server-actions",
+        "services-layer",
+        "security",
+        "core-domain",
+        "broker-apis",
+        "pubsub",
+        "workers-service",
+        "prisma",
+        "mongodb-atlas"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "node": "web-app",
+          "description": "User clicks 'Refresh' on a broker card in /brokers."
+        },
+        {
+          "step": 2,
+          "node": "server-actions",
+          "description": "broker-status.ts action authenticates the user and confirms ownership of the BrokerConnection."
+        },
+        {
+          "step": 3,
+          "node": "services-layer",
+          "description": "broker-connection.service.refresh loads the encrypted token via Prisma."
+        },
+        {
+          "step": 4,
+          "node": "security",
+          "description": "@usemoney/security AES-256-GCM decrypts the access token with the per-user key."
+        },
+        {
+          "step": 5,
+          "node": "core-domain",
+          "description": "The broker adapter (Zerodha/Upstox/…) is loaded; if the access token is expired, the refresh token mints a new one."
+        },
+        {
+          "step": 6,
+          "node": "broker-apis",
+          "description": "Live calls fetch Holdings, Positions, Trades, MF; broker-specific endpoints respond with current portfolio."
+        },
+        {
+          "step": 7,
+          "node": "pubsub",
+          "description": "A broker-sync-{env} message is published so heavy diffing + writes happen off the request path."
+        },
+        {
+          "step": 8,
+          "node": "workers-service",
+          "description": "Worker diffs incoming vs. stored Trades, upserts deltas, then publishes a trade-pairing job."
+        },
+        {
+          "step": 9,
+          "node": "prisma",
+          "description": "Trades, Holdings, Positions, PairedTradeView are upserted. SyncLog records the run."
+        },
+        {
+          "step": 10,
+          "node": "mongodb-atlas",
+          "description": "Atlas persists. The UI's 'last synced' badge updates on the next render."
+        }
+      ]
+    },
+    {
+      "id": "paper-trade",
+      "category": "user",
+      "name": "Paper Trade — Virtual Buy / Sell",
+      "description": "User practices trading with virtual money. A buy creates a PaperPosition tied to the user's PaperPortfolio at the current live quote.",
+      "path": [
+        "web-app",
+        "server-actions",
+        "validation",
+        "services-layer",
+        "data-providers",
+        "prisma",
+        "mongodb-atlas"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "node": "web-app",
+          "description": "User opens /paper-trading, picks a symbol, sets quantity, clicks Buy."
+        },
+        {
+          "step": 2,
+          "node": "server-actions",
+          "description": "paper.ts createPaperPositionAction receives { symbol, quantity, side, type }."
+        },
+        {
+          "step": 3,
+          "node": "validation",
+          "description": "Zod parses inputs — quantity bounds, side ∈ {BUY, SELL}, type ∈ {MARKET, LIMIT}."
+        },
+        {
+          "step": 4,
+          "node": "services-layer",
+          "description": "paper.service confirms the PaperPortfolio has sufficient cash for BUY (or open lots for SELL)."
+        },
+        {
+          "step": 5,
+          "node": "data-providers",
+          "description": "Yahoo Finance returns the latest quote so the position is opened at a fair price."
+        },
+        {
+          "step": 6,
+          "node": "prisma",
+          "description": "PaperOrder + PaperPosition rows are created (or partially closed if SELL)."
+        },
+        {
+          "step": 7,
+          "node": "mongodb-atlas",
+          "description": "Atlas persists. The UI refetches and renders the new position."
+        }
+      ]
+    },
+    {
+      "id": "fire-scenario",
+      "category": "user",
+      "name": "FIRE Scenario Save",
+      "description": "User fills the FIRE calculator. The form input is validated, projections are computed in pure JS, and the scenario is persisted so they can revisit it later.",
+      "path": [
+        "web-app",
+        "server-actions",
+        "validation",
+        "services-layer",
+        "core-domain",
+        "prisma",
+        "mongodb-atlas"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "node": "web-app",
+          "description": "User completes the FIRE form on /fire (current age, target age, monthly SIP, expected return, withdrawal rate)."
+        },
+        {
+          "step": 2,
+          "node": "server-actions",
+          "description": "saveFireScenarioAction is called with the form payload."
+        },
+        {
+          "step": 3,
+          "node": "validation",
+          "description": "Zod ensures all numerics are positive and the timeline is sensible (target age > current age)."
+        },
+        {
+          "step": 4,
+          "node": "services-layer",
+          "description": "fire.service builds the projection request."
+        },
+        {
+          "step": 5,
+          "node": "core-domain",
+          "description": "calc/fire computes year-by-year corpus growth, inflation-adjusted withdrawal, and the FI date."
+        },
+        {
+          "step": 6,
+          "node": "prisma",
+          "description": "FireScenario row is upserted with inputs + computed projection JSON."
+        },
+        {
+          "step": 7,
+          "node": "mongodb-atlas",
+          "description": "Atlas persists. The chart re-renders; the scenario appears under 'Saved scenarios'."
+        }
+      ]
+    },
+    {
+      "id": "demo-mode",
+      "category": "user",
+      "name": "Demo Mode — Try Without Signup",
+      "description": "Visitor clicks 'Try Demo'. An HMAC-signed cookie identifies them as a demo user; all reads return curated demo data; writes are no-ops.",
+      "path": [
+        "web-app",
+        "web-api-routes",
+        "security",
+        "services-layer",
+        "prisma",
+        "mongodb-atlas"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "node": "web-app",
+          "description": "Visitor clicks 'Try Demo'. The handler uses window.location.href + sets tradebook_demo_mode in localStorage."
+        },
+        {
+          "step": 2,
+          "node": "web-api-routes",
+          "description": "/api/demo/start initializes the session. Intentionally unauthenticated — anyone can demo."
+        },
+        {
+          "step": 3,
+          "node": "security",
+          "description": "@usemoney/security HMAC-signs a demo payload with the server secret; the cookie is httpOnly + SameSite=Lax."
+        },
+        {
+          "step": 4,
+          "node": "services-layer",
+          "description": "demo.service ensures a curated demo User exists with seeded Holdings/Trades/MFs (idempotent)."
+        },
+        {
+          "step": 5,
+          "node": "prisma",
+          "description": "If the demo user is missing, Prisma seeds it; otherwise the existing record is reused."
+        },
+        {
+          "step": 6,
+          "node": "mongodb-atlas",
+          "description": "Atlas serves the demo data on subsequent reads. A persistent banner reminds the user that nothing they do is saved."
+        }
+      ]
+    },
+    {
+      "id": "stock-detail",
+      "category": "user",
+      "name": "Stock Detail Page",
+      "description": "User opens /stock/RELIANCE. The page lazily loads description, key ratios, peers, news, and shareholding — each section is its own server action so above-the-fold content paints fast.",
+      "path": [
+        "web-app",
+        "server-actions",
+        "services-layer",
+        "cache-layer",
+        "prisma",
+        "mongodb-atlas",
+        "atlas-search"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "node": "web-app",
+          "description": "User opens /stock/RELIANCE. The page Server Component fires getStockDescriptionAction + getStockTabsAction in parallel."
+        },
+        {
+          "step": 2,
+          "node": "server-actions",
+          "description": "stock-description, stock-tabs, stock-sector actions stream their results to the client as they resolve."
+        },
+        {
+          "step": 3,
+          "node": "services-layer",
+          "description": "discover.service + research.service compose data from StockFinancials, StockRatios, StockPeers, StockShareholding, StockNews, StockProfile."
+        },
+        {
+          "step": 4,
+          "node": "cache-layer",
+          "description": "L1 + L2 cache memoize by { symbol, exchange } — repeat visits resolve from Redis in <10ms."
+        },
+        {
+          "step": 5,
+          "node": "prisma",
+          "description": "On cache miss Prisma issues fan-out queries for each section."
+        },
+        {
+          "step": 6,
+          "node": "mongodb-atlas",
+          "description": "Atlas returns documents; sections render progressively."
+        },
+        {
+          "step": 7,
+          "node": "atlas-search",
+          "description": "Peer-by-name and sector-sibling lookups use Atlas Search for fast text matching when no explicit symbol mapping exists."
+        }
+      ]
+    },
+    {
+      "id": "strategy-backtest",
+      "category": "user",
+      "name": "Strategy Backtest",
+      "description": "User picks a pre-built strategy (e.g. Golden Crossover) or a custom indicator stack and runs a backtest. /api/backtest runs synchronously and streams the equity curve back.",
+      "path": [
+        "web-app",
+        "web-api-routes",
+        "services-layer",
+        "core-domain",
+        "data-providers",
+        "cache-layer",
+        "redis"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "node": "web-app",
+          "description": "User configures a strategy on /strategies and clicks Run."
+        },
+        {
+          "step": 2,
+          "node": "web-api-routes",
+          "description": "/api/backtest receives the strategy definition + symbols + date range."
+        },
+        {
+          "step": 3,
+          "node": "services-layer",
+          "description": "strategy.service validates the strategy and prepares the run."
+        },
+        {
+          "step": 4,
+          "node": "core-domain",
+          "description": "@usemoney/core/screener and the shared indicator library evaluate the 60+ built-in indicators (SMA, RSI, MACD, etc.) per bar."
+        },
+        {
+          "step": 5,
+          "node": "data-providers",
+          "description": "Historical OHLCV is fetched (DailyPrice cache → Yahoo on miss)."
+        },
+        {
+          "step": 6,
+          "node": "cache-layer",
+          "description": "Per-strategy results are cached by (strategyId, symbol, dateRange) to avoid re-running identical scans."
+        },
+        {
+          "step": 7,
+          "node": "redis",
+          "description": "Equity curve + trade list are streamed back to the UI for charting."
+        }
+      ]
+    },
+    {
+      "id": "login-briefing",
+      "category": "system",
+      "name": "Login Briefing — Personalized Day Summary",
+      "description": "When the user logs in, a personalized briefing summarizes overnight market moves relevant to their portfolio. Briefings are pre-computed by a daily worker so the read is instant.",
+      "path": [
+        "cloud-scheduler",
+        "pubsub",
+        "workers-service",
+        "services-layer",
+        "gemini",
+        "prisma",
+        "mongodb-atlas",
+        "web-app"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "node": "cloud-scheduler",
+          "description": "Cron fires login-briefing-{env} at 8:00am IST per active user."
+        },
+        {
+          "step": 2,
+          "node": "pubsub",
+          "description": "One message per user is published; workers consume in parallel."
+        },
+        {
+          "step": 3,
+          "node": "workers-service",
+          "description": "login-briefing processor loads the user's holdings + watchlist + news for the day."
+        },
+        {
+          "step": 4,
+          "node": "services-layer",
+          "description": "briefing.service composes a structured brief with bullet points and links."
+        },
+        {
+          "step": 5,
+          "node": "gemini",
+          "description": "Gemini Flash generates the natural-language briefing from the structured context."
+        },
+        {
+          "step": 6,
+          "node": "prisma",
+          "description": "LoginBriefing is upserted with the generated text + sourceLinks."
+        },
+        {
+          "step": 7,
+          "node": "mongodb-atlas",
+          "description": "Atlas persists. The briefing is now ready before the user opens the app."
+        },
+        {
+          "step": 8,
+          "node": "web-app",
+          "description": "On login, the dashboard renders the LoginBriefing card — already pre-computed, so it appears instantly."
+        }
+      ]
+    },
+    {
+      "id": "discover-search",
+      "category": "user",
+      "name": "Stock Discovery Search (Atlas Search)",
+      "description": "User types in the global instrument search. Atlas Search (prod) or regex (dev/qa) returns ranked matches across NSE/BSE stocks and 14k mutual funds.",
+      "path": [
+        "web-app",
+        "server-actions",
+        "services-layer",
+        "cache-layer",
+        "atlas-search",
+        "mongodb-atlas"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "node": "web-app",
+          "description": "User types in the instrument autocomplete on /discover or the global search palette."
+        },
+        {
+          "step": 2,
+          "node": "server-actions",
+          "description": "discover.ts action receives the (debounced) query."
+        },
+        {
+          "step": 3,
+          "node": "services-layer",
+          "description": "discover.service decides which backend to use — Atlas Search in prod, regex fallback elsewhere (env-aware dual path)."
+        },
+        {
+          "step": 4,
+          "node": "cache-layer",
+          "description": "Hot queries are memoized by (query, type) for 60s so popular searches don't re-hit Atlas."
+        },
+        {
+          "step": 5,
+          "node": "atlas-search",
+          "description": "In prod, $search with the instrument_search index returns relevance-ranked hits across InstrumentMapping + MutualFundMaster."
+        },
+        {
+          "step": 6,
+          "node": "mongodb-atlas",
+          "description": "Hits are enriched with latest price + sector and returned. A 5-minute availability flag degrades to regex if Atlas errors."
+        }
+      ]
+    },
+    {
+      "id": "newsletter-subscribe",
+      "category": "user",
+      "name": "Newsletter Subscribe — Double Opt-in",
+      "description": "Visitor submits an email. We email a verification link via Resend; only after the user clicks do we add them to the published list. Resend contact sync follows asynchronously.",
+      "path": [
+        "web-app",
+        "web-api-routes",
+        "services-layer",
+        "prisma",
+        "mongodb-atlas",
+        "resend",
+        "pubsub",
+        "workers-service"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "node": "web-app",
+          "description": "Visitor enters their email in the newsletter footer on a public page."
+        },
+        {
+          "step": 2,
+          "node": "web-api-routes",
+          "description": "/api/newsletter/subscribe receives the email."
+        },
+        {
+          "step": 3,
+          "node": "services-layer",
+          "description": "newsletter.service creates a NewsletterSubscriber with status=PENDING and a verification token."
+        },
+        {
+          "step": 4,
+          "node": "prisma",
+          "description": "Row is persisted."
+        },
+        {
+          "step": 5,
+          "node": "mongodb-atlas",
+          "description": "Atlas stores the subscriber pending verification."
+        },
+        {
+          "step": 6,
+          "node": "resend",
+          "description": "Resend sends a verification email with a one-time link → /api/newsletter/verify?token=…"
+        },
+        {
+          "step": 7,
+          "node": "pubsub",
+          "description": "After the user clicks verify, a resend-contact-sync message is published."
+        },
+        {
+          "step": 8,
+          "node": "workers-service",
+          "description": "resend-contact-sync processor adds/updates the contact in Resend's audience list; subscriber status flips to CONFIRMED."
+        }
+      ]
+    },
+    {
+      "id": "xbrl-financials",
+      "name": "Company Financials from NSE XBRL (Nightly)",
+      "description": "Company financials and ratios are derived from our own archive of NSE XBRL results filings, not bought or scraped from a data vendor. Three schedulers run in order each night: xbrl-sync archives the filings, xbrl-projection turns them into StockFinancials rows, and xbrl-ratios derives 23 of StockRatios' 25 columns. This replaced financial-data-sync in MONEY-1220, after api.tickertape.in began 403ing our Cloud Run egress and that job spent five months reporting success while writing zero rows.",
+      "path": [
+        "cloud-scheduler",
+        "pubsub",
+        "workers-service",
+        "data-providers",
+        "core-domain",
+        "prisma",
+        "mongodb-atlas"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "node": "cloud-scheduler",
+          "description": "xbrl-sync-daily fires at 23:15 IST, xbrl-projection-daily at 23:45 IST, and xbrl-ratios-daily at 22:00 IST Mon-Fri (after the 21:00 bhavcopy has landed the close). All three are PROD_ONLY — QA receives the collections through sync-prod-to-qa."
+        },
+        {
+          "step": 2,
+          "node": "pubsub",
+          "description": "Each cron publishes to its own topic: xbrl-sync, xbrl-projection, xbrl-ratios."
+        },
+        {
+          "step": 3,
+          "node": "workers-service",
+          "description": "Push subscriptions deliver to /jobs/xbrl-sync, /jobs/xbrl-projection and /jobs/xbrl-ratios. The projection and ratios jobs only WRITE when XBRL_PROJECTION_APPLY=true is set on the service; a message can narrow that, never arm it."
+        },
+        {
+          "step": 4,
+          "node": "data-providers",
+          "description": "xbrl-sync is the only leg with egress: it walks NSE's results index over a trailing 7-day window and downloads each filing's XML into XbrlFiling. Older history comes from the xbrl-backfill Cloud Run job, sharded by financial year and run manually — it deliberately has no scheduler trigger, because re-walking eight years of filings nightly would get our egress throttled off nseindia.com."
+        },
+        {
+          "step": 5,
+          "node": "core-domain",
+          "description": "@usemoney/core/market-data does the work: xbrl-projection maps stored filings onto ANNUAL + QUARTERLY StockFinancials rows, and xbrl-ratios derives margins, CAGR, beta and the rest via ratio-derivations.ts, reading dividends from CorporateAction and price series from DailyPrice + IndexClose. FINANCIALS_AUTHORITY ranks NSE_XBRL above TICKERTAPE, SCREENER and YAHOO, which is what lets the projection displace the legacy vendor-sourced rows still in both tables."
+        },
+        {
+          "step": 6,
+          "node": "prisma",
+          "description": "The workers write through Prisma directly, with no service layer in between. StockFinancials is upserted per period — one-way, because its unique key carries no source, so the F3 reconcile (scripts/data/xbrl-reconcile.ts) has to pass BEFORE the jobs are armed. StockRatios is PARTIAL-updated, so a column this filing cannot support keeps its incumbent value; targetPrice and recommendation are never written, being sell-side analyst opinion that appears in no filing and no price series."
+        },
+        {
+          "step": 7,
+          "node": "mongodb-atlas",
+          "description": "stock_financials and stock_ratios are persisted; the stock detail page reads them directly, and getOrFetchFinancials now serves a stale stored row rather than reaching for a vendor that would 403 — the refresher is this nightly job, not anything a request can trigger."
+        }
+      ],
+      "category": "system"
+    },
+    {
+      "id": "edgar-detect",
+      "name": "US Filing Detected & Parsed (SEC EDGAR)",
+      "description": "A company files with SEC; the row is in MongoDB under five minutes at p95. Four overlapping nets find filings — a minutely getcurrent Atom walk, an hourly EFTS reconcile, the nightly submissions.zip ledger and the weekly full-index rebuild — because the Atom window is ROLLING and finite (100 entries = 49 filings), so a slow minute drops filings off the end of it permanently.",
+      "path": [
+        "cloud-scheduler",
+        "pubsub",
+        "us-fundamentals",
+        "sec-edgar",
+        "gcs",
+        "mongodb-atlas"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "node": "cloud-scheduler",
+          "description": "edgar-detect-minutely fires every minute and edgar-reconcile-hourly at :10 past. Both are PROD_ONLY: QA ships SEC_EGRESS=off, so a QA detect job would fail 1,440 times a day and a permanently-red job is a job whose alerts get muted."
+        },
+        {
+          "step": 2,
+          "node": "pubsub",
+          "description": "The cron publishes to edgar-detect-{env}; the push subscription delivers to https://us-fundamentals-{env}/jobs/edgar-detect with an OIDC token. PROD ships EDGAR_DETECT=on, so the route does real work on deploy; QA ships it off (no SEC egress there) and answers instantly, reporting 0 selected / 0 written."
+        },
+        {
+          "step": 3,
+          "node": "us-fundamentals",
+          "description": "The handler walks the Atom feed, dedupes on the accession in <id> (one entry per filer ROLE, so 100 entries are 49 filings), classifies each new filing by form and claims it in Mongo. A claim that loses to another run is NOT republished — a second message for a filing whose first is still in flight is how one 13F becomes two parses."
+        },
+        {
+          "step": 4,
+          "node": "sec-edgar",
+          "description": "The full submission bundle is fetched through the shared 9 req/s Redis bucket, which edgartools' own per-process InMemoryBucket is replaced with. Fail-closed: if Redis is unreachable the run raises rather than falling back, because N instances x 9 req/s is precisely how an IP gets blocked."
+        },
+        {
+          "step": 5,
+          "node": "gcs",
+          "description": "The raw bundle is archived under edgar/filings/{cik10}/{accession}/, which is what makes a mapping fix or a library upgrade cost zero SEC requests later. It transitions to Nearline at 30 days; the nightly bulk zips under edgar/bulk/ are deleted at 30 days because they are superseded every night."
+        },
+        {
+          "step": 6,
+          "node": "pubsub",
+          "description": "The filing is published to its form class's own topic — edgar-parse-ownership / -13f / -13dg / -8k / -financials. Five topics rather than one with a discriminator, so a poison 13F cannot stall Form 4 ingestion and each class gets its own backlog and dead-letter accounting."
+        },
+        {
+          "step": 7,
+          "node": "mongodb-atlas",
+          "description": "The parser writes its us_* collection and stamps stockbook.edgar.detect_latency_seconds from acceptedAt (never filedAt — a filing accepted 21:53 ET is DATED the next business day, so a filedAt latency would be negative most evenings). The p95 monitor alerts over 300s."
+        }
+      ],
+      "category": "system"
+    }
+  ]
+}

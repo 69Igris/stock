@@ -1,0 +1,161 @@
+{
+  "_ticket": "MONEY-1361",
+  "_why": [
+    "The whole US stack on one board — ingest jobs, the SEC service and the",
+    "realtime socket holder — because they fail as a unit and are scheduled on",
+    "the US clock rather than ours (11:00 IST for a 4pm ET close).",
+    "The seven job ids are the literal `job:` tag values their reporters emit:",
+    "us-eod-sync.ts:1007, us-instrument-master-sync.ts:396,",
+    "tiingo-news-poll.ts:117, detect.py:159, ftd.py:112 and common.py:120-121.",
+    "Spelled out one series per job rather than a set filter: a `job:` value",
+    "that does not exist renders as a missing line, which on a board of seven",
+    "lines is far easier to miss than a whole empty graph."
+  ],
+  "title": "UseMoney — US market stack",
+  "description": "managed-by:apply-dashboards — edit the file, not the UI",
+  "layout_type": "ordered",
+  "template_variables": [
+    {
+      "name": "env",
+      "prefix": "env",
+      "default": "production"
+    }
+  ],
+  "widgets": [
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "US jobs: rows written",
+        "requests": [
+          {
+            "q": "sum:stockbook.job.written{$env,job:us-eod-sync}.as_count(), sum:stockbook.job.written{$env,job:us-instrument-master-sync}.as_count(), sum:stockbook.job.written{$env,job:tiingo-news-poll}.as_count(), sum:stockbook.job.written{$env,job:edgar-detect}.as_count(), sum:stockbook.job.written{$env,job:edgar-bulk-ftd}.as_count(), sum:stockbook.job.written{$env,job:edgar-bulk-submissions}.as_count(), sum:stockbook.job.written{$env,job:edgar-bulk-companyfacts}.as_count()",
+            "display_type": "bars"
+          }
+        ],
+        "time": {
+          "live_span": "1w"
+        }
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "US jobs: upstream (transport) failures",
+        "_why": "SEC answers a block with a 403 and a BODY, and Tiingo with a 429 — neither is a row that failed to persist, so neither shows up in `job.failed`. This is the only series on the board that can see an egress block.",
+        "requests": [
+          {
+            "q": "sum:stockbook.job.transport_failures{$env,job:us-eod-sync}.as_count(), sum:stockbook.job.transport_failures{$env,job:us-instrument-master-sync}.as_count(), sum:stockbook.job.transport_failures{$env,job:tiingo-news-poll}.as_count(), sum:stockbook.job.transport_failures{$env,job:edgar-detect}.as_count(), sum:stockbook.job.transport_failures{$env,job:edgar-bulk-ftd}.as_count(), sum:stockbook.job.transport_failures{$env,job:edgar-bulk-submissions}.as_count(), sum:stockbook.job.transport_failures{$env,job:edgar-bulk-companyfacts}.as_count()",
+            "display_type": "bars"
+          }
+        ],
+        "time": {
+          "live_span": "1w"
+        }
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "EDGAR detection latency p95 (s)",
+        "_why": "The MONEY-979 acceptance gate is p95 < 300s. A DogStatsD histogram, so the sidecar produces the .95percentile sub-series; the base name carries no points.",
+        "requests": [
+          {
+            "q": "avg:stockbook.edgar.detect_latency_seconds.95percentile{$env}",
+            "display_type": "line"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Realtime: healthy and leader",
+        "_why": "Both are gauges emitted on every flush tick. A Redis leader lock at maxScale 1 is still required because Cloud Run overlaps revisions on deploy, so `rt.leader` briefly reading 0 during a rollout is normal and reading 0 for minutes is not.",
+        "requests": [
+          {
+            "q": "min:stockbook.rt.health_ok{$env}, max:stockbook.rt.leader{$env}",
+            "display_type": "line"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Symbols subscribed",
+        "requests": [
+          {
+            "q": "max:stockbook.rt.subscribed{$env}",
+            "aggregator": "last"
+          }
+        ],
+        "precision": 0,
+        "time": {
+          "live_span": "4h"
+        }
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Bars closed",
+        "requests": [
+          {
+            "q": "sum:stockbook.rt.bars_closed{$env}.as_count()",
+            "display_type": "bars"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Candles written vs refused (mixed source)",
+        "_why": "A refusal is CORRECT behaviour, not an error: one (symbol, timeframe, UTC day) may hold only one source, so a quote-derived realtime bar must not land beside a trade-derived EOD bar. A refusal count that goes to zero mid-session is the thing to look at.",
+        "requests": [
+          {
+            "q": "sum:stockbook.rt.candles_written{$env}.as_count(), sum:stockbook.rt.refused_mixed_source{$env}.as_count()",
+            "display_type": "bars"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Quote write failures",
+        "requests": [
+          {
+            "q": "sum:stockbook.rt.quote_write_failures{$env}.as_count()",
+            "display_type": "bars"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "us-fundamentals: hits vs errors",
+        "requests": [
+          {
+            "q": "sum:trace.fastapi.request.hits{service:us-fundamentals,$env}.as_count(), sum:trace.fastapi.request.errors{service:us-fundamentals,$env}.as_count()",
+            "display_type": "bars"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "tiingo-realtime: hits vs errors",
+        "_why": "Its own service rather than stockbook-workers, even though it ships in the same image: one long-lived process holding one socket, versus a request-driven pool. Blending them makes every percentile a mix of two workloads that fail in unrelated ways. `web.request` is dd-trace-js's SERVER span on the v0 attribute schema (`server.http.opName` in node_modules/dd-trace/packages/dd-trace/src/service-naming/schemas/v0/web.js) — here the /health liveness probe, on a bare node:http server with no framework plugin to rename it, declared in DD_SERVER_SPAN (packages/datadog/src/constants.ts; measured 2026-09-23, 2,876 hits in 24h). `http.request` is the CLIENT span, which charted this service's outbound Tiingo REST calls instead.",
+        "requests": [
+          {
+            "q": "sum:trace.web.request.hits{service:tiingo-realtime,$env}.as_count(), sum:trace.web.request.errors{service:tiingo-realtime,$env}.as_count()",
+            "display_type": "bars"
+          }
+        ]
+      }
+    }
+  ]
+}

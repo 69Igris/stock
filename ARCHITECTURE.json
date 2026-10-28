@@ -1,0 +1,1131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "meta": {
+    "name": "UseMoney Architecture Map",
+    "version": "1.0.0",
+    "generatedAt": "2026-08-19",
+    "purpose": "Machine-readable architecture map for AI agents working on this codebase. Read this BEFORE exploring with grep/find - it will tell you where almost everything lives. Verify with the actual file system before recommending paths the user will act on (files may have moved).",
+    "humanCompanion": "ARCHITECTURE.html",
+    "sourcesOfTruth": {
+      "projectMemory": "CLAUDE.md",
+      "testInventory": "TEST-COVERAGE.md",
+      "envVars": "docs/env-vars-reference.md",
+      "agentMemory": ".claude/projects/-Users-deepshaswat-Developer-dis-digital-stockbook-monorepo/memory/MEMORY.md"
+    }
+  },
+  "project": {
+    "name": "UseMoney",
+    "website": "https://usemoney.ai",
+    "description": "AI-powered trading portfolio management platform for Indian stock markets. Multi-broker integration, portfolio analytics, paper trading, FIRE planning, AI research, portfolio roast.",
+    "tiers": ["FREE", "PREMIUM", "PRO"],
+    "techStack": {
+      "frontend": "Next.js 16.2 + React 18 + TypeScript + Tailwind + shadcn/ui",
+      "backend": "Next.js API Routes + tRPC + Hono (apps/api)",
+      "database": "MongoDB Atlas via Prisma ORM (DigitalOcean Mongo in dev/QA - no Atlas Search)",
+      "cache": "Redis (DigitalOcean) with 3-layer cache (L1 in-memory · L2 Redis · L3 SWR)",
+      "auth": "Clerk (plus HMAC-signed cookie for demo mode)",
+      "ai": "Google Gemini 2.5 Pro + 2.5 Flash via Vercel AI Gateway",
+      "payments": "Dodo Payments",
+      "storage": "Google Cloud Storage (GCS) - bucket stockbook-content-{env}",
+      "queue": "Google Cloud Pub/Sub (57 topics + dead-letter, suffix -qa/-prod)",
+      "observability": "Datadog APM (Cloud Run only) + RUM + Logs + Metrics + PostHog",
+      "deployment": "Vercel (web, admin, content) + GCP Cloud Run (workers, apps/api)",
+      "monorepo": "Turborepo + Yarn workspaces (node >=18, TypeScript 5.9.2)"
+    },
+    "counts": {
+      "apps": 4,
+      "packages": 24,
+      "workerProcessors": 59,
+      "prismaModels": 122,
+      "serverActions": 89,
+      "webApiRoutes": 63,
+      "appPages": 96,
+      "brokerAdapters": 10,
+      "researchTools": 122,
+      "researchSkills": 38,
+      "testFiles": 1089,
+      "testCases": 26438
+    }
+  },
+  "topology": {
+    "request": [
+      "Browser/Mobile → Vercel Edge → Clerk auth → apps/web (Next.js)",
+      "apps/web → @usemoney/services (service layer) → Prisma → MongoDB Atlas",
+      "apps/web → Pub/Sub (publish) → workers (Cloud Run) → process job → DB",
+      "Mobile client → apps/api (Hono, Cloud Run) → @usemoney/services → DB"
+    ],
+    "writePath": "Components and routes NEVER call Prisma directly. The chain is: Component → Server Action (apps/web/lib/actions/*) → Service (packages/services/*.service.ts) → Prisma. The api app mirrors this for the mobile client at apps/api/src/routes/v1/*.",
+    "asyncPath": "Long-running jobs (broker sync, CSV import, pairing, roast, research, embedding, fund composition) publish to Pub/Sub. Workers consume via push subscriptions with OIDC auth and update BackgroundJob/SyncLog for progress polling."
+  },
+  "apps": {
+    "web": {
+      "path": "apps/web",
+      "framework": "Next.js 14 App Router",
+      "purpose": "Main product surface - dashboard, holdings, tradebook, paper, FIRE, AI chat, roast, risk, discover, learning, settings.",
+      "entry": "apps/web/app/layout.tsx",
+      "deploy": "Vercel",
+      "keyDirs": {
+        "app/": "Routes (66 page.tsx + 35 route.ts).MONEY-1204 (P14) added three routes under /discover: `ipo` (UpcomingIpo, tabbed upcoming/current/recently-listed, with 'current' decided on the IST calendar day — a UTC boundary would drop a closing IPO ~5.5h early); `circulars` (NseCircular by department; circNumber is NOT unique because NSE re-issues one circular per department, so the read keys on the model's own unique, and the SURV symbol match is a labelled string heuristic); and `indices/[slug]` (decision D2 — the first index-detail route: constituents + weightage, membership history from IndexMembership's open interval, IndexClose sparkline; pe/pb/divYield are NULLABLE and null means NOT REPORTED, since a volatility index has no basket to value). All three sit under the existing `/discover(.*)` matcher in proxy-routes.ts, so no gating change was needed — verified, not assumed.",
+        "lib/actions/": "65 server actions - canonical write path.",
+        "lib/services/": "Web-only helpers - most domain logic lives in packages/services.",
+        "lib/chat-tools/": "Chat orchestrator (tier-classifier, registry, executor, validators).",
+        "lib/chat/": "Message parsing + slash commands + research blocks.",
+        "lib/brokers/": "Web-facing broker glue (most logic in @usemoney/core).",
+        "components/": "61 product components (organized by feature)."
+      },
+      "specialRoutes": [
+        "/api/webhooks/{clerk,dodo,dodopayments}",
+        "/api/brokers/<broker>/callback",
+        "/api/demo/{start,end}",
+        "/api/jobs/[jobId]",
+        "/api/market/stream",
+        "/api/chat",
+        "/api/chat/execute-tool"
+      ]
+    },
+    "api": {
+      "path": "apps/api",
+      "framework": "Hono",
+      "purpose": "Standalone REST + tRPC API for the mobile client.",
+      "entry": "apps/api/src/index.ts",
+      "deploy": "GCP Cloud Run",
+      "keyDirs": {
+        "src/routes/v1/": "38 domain route families (mobile-parity, MONEY-1062 / MONEY-402): dashboard, holdings, positions, trades, paired, paper, fire, mutualfunds, watchlists, notifications, research, risk, tax, subscription, brokers, jobs, market (delayed, delayed:true flag), discover, me, roast, documents, learning, credits, chat-history, quizzes, feedback, alerts, consent, imports, compare, analysis, stocks, news, result-feedback, screener, scans, strategies, saved-screens. Canonical list = exported V1_ENDPOINTS in index.ts. Auth resolves Clerk sub -> Mongo _id once; list endpoints support opt-in cursor pagination; X-Request-Id on every response. MONEY-1204 (P14) added six SUB-PATHS to the existing /v1/stocks family -- flags, delivery, derivatives, shareholding-pattern, insider-activity, deals -- all mounted via the mountStockSection helper and all returning the shared withProvenance envelope {data, source, asOf, empty, fallback?}. The family COUNT is unchanged by those.",
+        "src/middleware/": "auth.ts, ratelimit.ts.",
+        "src/routes/trpc.ts": "tRPC adapter."
+      },
+      "convention": "Whenever a server action with mobile relevance is added or changed in apps/web/lib/actions/, mirror it here. See feedback_api_sync.md."
+    },
+    "admin": {
+      "path": "apps/admin",
+      "framework": "Next.js",
+      "purpose": "Internal admin dashboard.",
+      "selfDocumented": "apps/admin/ARCHITECTURE.md"
+    },
+    "content": {
+      "path": "apps/content",
+      "framework": "Next.js",
+      "purpose": "Content authoring app for lessons, courses, quizzes, posts.",
+      "selfDocumented": "apps/content/ARCHITECTURE.md"
+    }
+  },
+  "packages": {
+    "@usemoney/core": {
+      "path": "packages/core",
+      "role": "domain-logic",
+      "purpose": "Heart of the product. Brokers, FIFO pairing, market data, screener, Gemini wrappers, calculations, currency, analytics, subscriptions, payments, imports.",
+      "subdirs": [
+        "brokers/clients",
+        "brokers/adapters",
+        "pairing",
+        "market-data/prices",
+        "market-data/instruments",
+        "screener",
+        "gemini",
+        "calc",
+        "content",
+        "currency",
+        "analytics",
+        "subscription",
+        "payments",
+        "import",
+        "ops",
+        "auth",
+        "cache",
+        "db"
+      ],
+      "mostImportedBy": "Everywhere - apps/web, apps/api, workers."
+    },
+    "@usemoney/services": {
+      "path": "packages/services",
+      "role": "service-layer",
+      "purpose": "Shared services. ONLY place that touches Prisma in product code. One service per domain.",
+      "naming": "<domain>.service.ts",
+      "examples": [
+        "dashboard.service.ts",
+        "holdings.service.ts",
+        "positions.service.ts",
+        "trades.service.ts",
+        "paper.service.ts",
+        "fire.service.ts",
+        "risk.service.ts",
+        "tax.service.ts",
+        "watchlist.service.ts",
+        "documents.service.ts",
+        "notifications.service.ts",
+        "learning.service.ts",
+        "research.service.ts",
+        "roast.service.ts",
+        "strategy.service.ts",
+        "discover.service.ts",
+        "sparkline.service.ts",
+        "user.service.ts",
+        "subscription.service.ts",
+        "credit.service.ts",
+        "credit-reservation.service.ts",
+        "platform-config.service.ts",
+        "fund-composition.service.ts",
+        "fund-comparison.service.ts",
+        "mutualfunds.service.ts",
+        "trade-import.service.ts",
+        "content.service.ts",
+        "broker-connection.service.ts",
+        "chat-history.service.ts",
+        "news-ingest.ts",
+        "risk-stress-test.ts",
+        "analytics.ts",
+        "mappings.ts"
+      ]
+    },
+    "@usemoney/research": {
+      "path": "packages/research",
+      "role": "ai-agent",
+      "purpose": "StockSage autonomous financial research agent. Planner → executor → loop-controller.",
+      "subdirs": [
+        "skills (20)",
+        "tools (82)",
+        "strategies",
+        "data-sources",
+        "lib"
+      ],
+      "skillsList": [
+        "stock-analysis",
+        "mf-analysis",
+        "sector-analysis",
+        "sector-deep-dive",
+        "macro-analysis",
+        "investment-thesis",
+        "portfolio-analysis",
+        "portfolio-risk-analysis",
+        "portfolio-optimization",
+        "tax-analysis",
+        "stock-screener",
+        "peer-comparison",
+        "multi-comparison",
+        "global-fund-comparison",
+        "dcf-valuation",
+        "earnings-analysis",
+        "financial-deep-dive",
+        "strategy-analysis"
+      ],
+      "toolNamingPattern": "compute-<thing>.ts"
+    },
+    "@usemoney/roast": {
+      "path": "packages/roast",
+      "role": "ai-agent",
+      "purpose": "Async multi-step portfolio roast.",
+      "pipeline": [
+        "fetch-portfolio",
+        "analyze-stocks",
+        "analyze-mf",
+        "generate-scores",
+        "generate-roast",
+        "assemble-result"
+      ]
+    },
+    "@usemoney/content-engine": {
+      "path": "packages/content-engine",
+      "role": "ai",
+      "purpose": "Learning content + quiz generation."
+    },
+    "@usemoney/database": {
+      "path": "packages/database",
+      "role": "data",
+      "purpose": "Prisma schema + generated client.",
+      "schema": "packages/database/prisma/schema.prisma",
+      "modelCount": 93,
+      "generateCmd": "yarn workspace @usemoney/database prisma generate"
+    },
+    "@usemoney/types": {
+      "path": "packages/types",
+      "role": "data",
+      "purpose": "Shared TypeScript types (no runtime)."
+    },
+    "@usemoney/validation": {
+      "path": "packages/validation",
+      "role": "data",
+      "purpose": "Zod schemas - chat-blocks, content, document, feedback, fire, holding, mutual-fund, paper, trade, common."
+    },
+    "@usemoney/cache": {
+      "path": "packages/cache",
+      "role": "infra",
+      "purpose": "3-tier caching: L1 memory (10s) · L2 Redis (5min) · L3 SWR."
+    },
+    "@usemoney/auth": {
+      "path": "packages/auth",
+      "role": "infra",
+      "purpose": "Clerk wrappers. Maps Clerk userId → internal MongoDB User."
+    },
+    "@usemoney/security": {
+      "path": "packages/security",
+      "role": "infra",
+      "purpose": "AES-256-GCM encryption (broker tokens), rate limiting (/rate-limit), cron-request auth (/cron-auth). Consolidated from apps/web/lib/security in MONEY-1062."
+    },
+    "@usemoney/pubsub": {
+      "path": "packages/pubsub",
+      "role": "infra",
+      "purpose": "Shared Google Cloud Pub/Sub client + 13 job publishers (client.ts + publish.ts). Extracted in MONEY-1062 by reconciling apps/web/lib/pubsub with the workers copy into ONE. Credentials via @usemoney/core/gemini/credentials; projectId pinned from GCP_PROJECT_ID. Consumed by apps/web + @usemoney/services."
+    },
+    "@usemoney/storage": {
+      "path": "packages/storage",
+      "role": "infra",
+      "purpose": "GCS client. Bucket stockbook-content-{env}.",
+      "tip": "Use { resumable: false, validation: false } when uploading from Cloud Run (see MEMORY.md project_financial_rag_pipeline)."
+    },
+    "@usemoney/datadog": {
+      "path": "packages/datadog",
+      "role": "infra",
+      "purpose": "Datadog APM, RUM, metrics, logs.",
+      "caveat": "APM only works where a Datadog Agent is reachable. Cloud Run uses a sidecar. Vercel: APM is OFF - use RUM/Logs/Metrics via HTTP API."
+    },
+    "@usemoney/email": {
+      "path": "packages/email",
+      "role": "infra",
+      "purpose": "Email sending wrappers (Resend)."
+    },
+    "@usemoney/api-utils": {
+      "path": "packages/api-utils",
+      "role": "cross-cutting",
+      "purpose": "Shared HTTP / fetch helpers."
+    },
+    "@usemoney/trpc": {
+      "path": "packages/trpc",
+      "role": "cross-cutting",
+      "purpose": "tRPC router definitions - shared between web and api."
+    },
+    "@usemoney/logger": {
+      "path": "packages/logger",
+      "role": "cross-cutting",
+      "purpose": "Structured logger (JSON prod, pretty dev)."
+    },
+    "@usemoney/utils": {
+      "path": "packages/utils",
+      "role": "cross-cutting",
+      "purpose": "Generic helpers - be conservative when adding."
+    },
+    "@usemoney/ui": {
+      "path": "packages/ui",
+      "role": "ui",
+      "purpose": "Shared shadcn/ui primitives (accordion, alert, button, card, dialog, form, etc.)."
+    },
+    "@usemoney/eslint-config": {
+      "path": "packages/eslint-config",
+      "role": "config",
+      "purpose": "Shared ESLint config."
+    },
+    "@usemoney/typescript-config": {
+      "path": "packages/typescript-config",
+      "role": "config",
+      "purpose": "Shared tsconfig presets."
+    }
+  },
+  "workers": {
+    "path": "workers",
+    "framework": "Hono",
+    "deploy": "GCP Cloud Run",
+    "topology": "Pub/Sub publishes → Hono route accepts push (OIDC verify) → dispatches to processor in workers/src/processors/<name>.ts",
+    "topicNaming": "<topic>-<env> where env is qa or prod (see workers/scripts/setup-pubsub.sh)",
+    "pubsubTopics": [
+      "trade-pairing",
+      "csv-import",
+      "broker-sync",
+      "instrument-sync",
+      "price-sync",
+      "sector-enrichment",
+      "mf-sync",
+      "mf-metadata-sync",
+      "stock-research",
+      "document-process",
+      "portfolio-roast"
+    ],
+    "processors": {
+      "instrument-sync": "Sync NSE/BSE instrument master.",
+      "us-instrument-sync": "NASDAQ/NYSE/AMEX seed.",
+      "price-sync": "Daily close prices.",
+      "intraday-sync": "Intraday bars (5/15-min).",
+      "sparkline-sync": "Sparkline series for discover/dashboard cards.",
+      "mf-sync": "AMFI NAV feed.",
+      "mf-metadata-sync": "Fund metadata.",
+      "etf-expense-enrichment": "RETIRED (MONEY-1404). The processor is deleted; the route survives and answers 200 {retired:true}, same reason as financial-data-sync - Pub/Sub ACKs only on 2xx, so a 410 or a deleted route's 404 NACKs and burns five delivery attempts plus a dead-letter per message until setup-scheduler.sh prod removes the live weekly trigger. It could never write: fetchKuveraMetadata returns null unless MF_METADATA_PROVIDER === 'kuvera' and both specs set 'amfi'. expenseRatio now comes from AMFI's own monthly TER file via mf-metadata-sync.",
+      "sector-enrichment": "Sector tagging.",
+      "filings-sync": "Regulatory filings + corporate actions.",
+      "financial-data-sync": "RETIRED (MONEY-1220). Its only source was Tickertape, which now 403s our Cloud Run egress. The route survives and answers 200 {retired:true} rather than 410/404, because Pub/Sub ACKs only on 2xx - any other status NACKs and burns five delivery attempts per message until the live scheduler is deleted.",
+      "xbrl-sync": "Archive NSE XBRL results filings -> XbrlFiling (23:15 IST daily, trailing 7-day window). The only leg with egress.",
+      "xbrl-projection": "Project archived filings -> StockFinancials, ANNUAL + QUARTERLY (23:45 IST daily). Writes only when XBRL_PROJECTION_APPLY=true.",
+      "xbrl-ratios": "Derive 23 of StockRatios' 25 columns from those filings + our own price history (22:00 IST Mon-Fri, after the 21:00 bhavcopy). targetPrice and recommendation are analyst opinion and are never written.",
+      "index-constituent-sync": "Index constituents.",
+      "news-sync": "Stock-specific news.",
+      "news-rss-sync": "RSS feeds.",
+      "pairing": "FIFO trade pairing.",
+      "import": "CSV import with broker-format detection.",
+      "roast": "Async portfolio roast.",
+      "research": "StockSage execution.",
+      "l3-analysis": "L3 12-segment comprehensive analysis.",
+      "preview-plan": "Research plan preview without execution.",
+      "login-briefing": "Personalized briefing on login.",
+      "document-process": "PDF/document ingest + extraction.",
+      "stock-document-sync": "Annual reports + concalls → GCS.",
+      "stock-document-embed": "Chunk + Gemini embeddings → RAG.",
+      "chartink-strategy-sync": "Chartink scan sync.",
+      "strategy-scan": "Run custom strategies → ScanResult.",
+      "strategy-stats-sync": "Backfill strategy historical stats.",
+      "alert-evaluator": "Watchlist Alert evaluation on price ticks.",
+      "intent-learning": "Chat classifier → LearnedPattern feedback loop.",
+      "resend-contact-sync": "Sync newsletter contacts to Resend.",
+      "newsletter-publish": "Send newsletter batches."
+    }
+  },
+  "database": {
+    "engine": "MongoDB Atlas (prod) / DigitalOcean Mongo (dev, QA)",
+    "orm": "Prisma",
+    "schemaFile": "packages/database/prisma/schema.prisma",
+    "atlasSearch": {
+      "prodOnly": true,
+      "indexes": [
+        "instrument_search",
+        "mf_search",
+        "document_embeddings_vector_index"
+      ],
+      "fallback": "atlas-search.ts has a 5-minute availability flag - after first SearchNotEnabled error it skips Atlas for that window.",
+      "setupDoc": "docs/setup/atlas-search-setup.md"
+    },
+    "modelsByDomain": {
+      "identityAndBilling": [
+        "User",
+        "Subscription",
+        "Payment",
+        "Coupon",
+        "CouponRedemption",
+        "DodoProduct",
+        "PlatformConfig",
+        "InviteToken",
+        "CreditReservation",
+        "CreditUsage"
+      ],
+      "brokerData": [
+        "BrokerConnection",
+        "Trade",
+        "PairedTradeView",
+        "Holding",
+        "Position",
+        "Order",
+        "MutualFund",
+        "SyncLog",
+        "ImportLog",
+        "BackgroundJob"
+      ],
+      "portfolio": [
+        "PaperPortfolio",
+        "PaperOrder",
+        "PaperPosition",
+        "FireScenario",
+        "AnalysisReport",
+        "DailyJournal",
+        "WatchList",
+        "WatchlistItem",
+        "Alert"
+      ],
+      "aiAndChat": [
+        "ChatHistory",
+        "ResearchSession",
+        "AnalysisSession",
+        "LoginBriefing",
+        "TokenUsage",
+        "DocumentEmbedding",
+        "PortfolioRoast",
+        "ClassificationLog",
+        "LearnedPattern"
+      ],
+      "content": [
+        "LearningModule",
+        "Lesson",
+        "LessonProgress",
+        "Course",
+        "Chapter",
+        "CourseLesson",
+        "CourseLessonProgress",
+        "Quiz",
+        "Enrollment",
+        "GlossaryTerm",
+        "ContentGeneration",
+        "ContentAuthor",
+        "ContentInvite",
+        "Post",
+        "Tag",
+        "TagOnPost"
+      ],
+      "marketData": [
+        "InstrumentMapping",
+        "DailyPrice",
+        "IntradayBar",
+        "LatestQuote",
+        "MutualFundMaster",
+        "MfNavHistory",
+        "StockFinancials",
+        "StockRatios",
+        "StockPeers",
+        "StockShareholding",
+        "StockNews",
+        "StockProfile",
+        "StockDocument",
+        "FundHolding",
+        "FundCompositionMeta",
+        "MarketDataSyncLog",
+        "IndexConstituent"
+      ],
+      "strategiesScreener": [
+        "CustomStrategy",
+        "CustomIndicator",
+        "ScanResult",
+        "ScreenerSnapshot",
+        "ScreenerValidation",
+        "SavedScreen"
+      ],
+      "newsAndNotifications": [
+        "Notification",
+        "NewsArticle",
+        "NewsFeed",
+        "UpcomingEvent",
+        "UserDocument",
+        "Feedback",
+        "FeedbackReply",
+        "Idea",
+        "NewsletterSubscriber",
+        "EmailLog"
+      ],
+      "gstCompliance": [
+        "GstInvoice",
+        "GstCreditNote",
+        "GstInvoiceCounter",
+        "GstAuditLog",
+        "DodoPayoutStaging"
+      ]
+    }
+  },
+  "brokers": {
+    "interface": "packages/core/src/brokers/adapters/index.ts",
+    "clients": "packages/core/src/brokers/clients/<broker>.ts",
+    "adapters": "packages/core/src/brokers/adapters/<broker>.ts",
+    "oauthCallback": "apps/web/app/api/brokers/<broker>/callback/route.ts",
+    "supported": {
+      "zerodha": {
+        "features": ["holdings", "positions", "trades", "mutualfunds"],
+        "note": "Only broker with MF API."
+      },
+      "upstox": {
+        "features": ["holdings", "positions", "trades"],
+        "note": "1-year token."
+      },
+      "angel-one": {
+        "features": ["holdings", "positions", "trades"],
+        "note": "Midnight token + refreshable (SmartAPI)."
+      },
+      "groww": {
+        "features": ["holdings", "positions", "trades"],
+        "note": "API key + SHA256, paid; no US."
+      },
+      "dhan": {
+        "features": ["holdings", "positions", "trades"],
+        "note": "Daily token, equity only."
+      },
+      "fyers": {
+        "features": ["holdings", "positions", "trades"],
+        "note": "Daily token + 15-day refresh."
+      },
+      "hdfc": {
+        "features": ["holdings", "positions", "trades"]
+      },
+      "icici": {
+        "features": ["holdings", "positions", "trades"]
+      },
+      "interactive-brokers": {
+        "features": ["holdings", "positions", "trades"],
+        "note": "Global / US trading (Phase 5)."
+      }
+    }
+  },
+  "ai": {
+    "chatOrchestrator": {
+      "purpose": "Receive chat messages → classify intent → dispatch (Flash response, navigate, or tool call) → emit ContentBlocks.",
+      "files": {
+        "tierClassifier": "apps/web/lib/chat-tools/tier-classifier.ts",
+        "registry": "apps/web/lib/chat-tools/registry.ts",
+        "inputValidator": "apps/web/lib/chat-tools/input-validator.ts",
+        "outputValidator": "apps/web/lib/chat-tools/output-validator.ts",
+        "executor": "apps/web/lib/chat-tools/executor.ts",
+        "flashResponder": "apps/web/lib/chat-tools/flash-responder.ts",
+        "intentMapper": "apps/web/lib/chat-tools/intent-mapper.ts",
+        "paramExtractor": "apps/web/lib/chat-tools/param-extractor.ts",
+        "learnedPatterns": "apps/web/lib/chat-tools/learned-patterns.ts",
+        "classificationLogger": "apps/web/lib/chat-tools/classification-logger.ts"
+      },
+      "blockProtocol": ":::block:TYPE - defined in packages/validation/src/chat-blocks.ts",
+      "rendererFolder": "apps/web/components/chat/"
+    },
+    "researchAgent": {
+      "package": "@usemoney/research",
+      "loop": [
+        "planner.ts → produce plan of skills + tools",
+        "executor.ts → run tools, persist results to scratchpad",
+        "loop-controller.ts → decide whether to continue or finalize",
+        "validator.ts → validate output"
+      ],
+      "skillsCount": 20,
+      "toolsCount": 82,
+      "streamingPath": "apps/web/components/chat - ResearchStreamBlock consumes plan.tasks[i].result (NOT scratchpad)."
+    },
+    "roastAgent": {
+      "package": "@usemoney/roast",
+      "stepFiles": [
+        "fetch-portfolio.ts",
+        "analyze-stocks.ts",
+        "analyze-mf.ts",
+        "generate-scores.ts",
+        "generate-roast.ts",
+        "assemble-result.ts"
+      ],
+      "dbModel": "PortfolioRoast"
+    },
+    "analysisTiers": {
+      "L1": "Quick Flash analysis",
+      "L2": "Deep Dive (1-2 credits)",
+      "L3": "Comprehensive 6-segment (4 credits)",
+      "L4": "Advanced 12-segment (8 credits, 60+ strategies, chart/candlestick patterns, macro)"
+    },
+    "creditSystem": {
+      "models": ["CreditReservation", "CreditUsage"],
+      "service": "packages/services/src/credit.service.ts + credit-reservation.service.ts"
+    }
+  },
+  "features": {
+    "dashboard": {
+      "page": "apps/web/app/dashboard",
+      "action": "apps/web/lib/actions/dashboard.ts",
+      "service": "packages/services/src/dashboard.service.ts"
+    },
+    "holdings": {
+      "page": "apps/web/app/holdings",
+      "action": "apps/web/lib/actions/holdings.ts",
+      "service": "packages/services/src/holdings.service.ts"
+    },
+    "positions": {
+      "page": "apps/web/app/positions",
+      "action": "apps/web/lib/actions/positions.ts",
+      "service": "packages/services/src/positions.service.ts"
+    },
+    "tradebook": {
+      "page": "apps/web/app/tradebook",
+      "action": "apps/web/lib/actions/trades.ts",
+      "service": "packages/services/src/trades.service.ts",
+      "logic": "packages/core/src/pairing"
+    },
+    "mutualFunds": {
+      "page": "apps/web/app/mf",
+      "action": "apps/web/lib/actions/discover-mf.ts",
+      "service": "packages/services/src/mutualfunds.service.ts"
+    },
+    "paperTrading": {
+      "page": "apps/web/app/paper-trading",
+      "action": "apps/web/lib/actions/paper.ts",
+      "service": "packages/services/src/paper.service.ts"
+    },
+    "fire": {
+      "page": "apps/web/app/fire",
+      "service": "packages/services/src/fire.service.ts",
+      "calc": "packages/core/src/calc"
+    },
+    "chat": {
+      "page": "apps/web/app/chat-history",
+      "componentRoot": "apps/web/components/chat",
+      "orchestrator": "apps/web/lib/chat-tools"
+    },
+    "roast": {
+      "page": "apps/web/app/roast",
+      "action": "apps/web/lib/actions/roast.ts",
+      "service": "packages/services/src/roast.service.ts",
+      "agent": "packages/roast"
+    },
+    "risk": {
+      "page": "apps/web/app/risk",
+      "action": "apps/web/lib/actions/risk.ts",
+      "service": "packages/services/src/risk.service.ts"
+    },
+    "watchlist": {
+      "page": "apps/web/app/watchlist",
+      "action": "apps/web/lib/actions/watchlist.ts",
+      "service": "packages/services/src/watchlist.service.ts"
+    },
+    "notifications": {
+      "page": "apps/web/app/notifications",
+      "action": "apps/web/lib/actions/notifications.ts",
+      "service": "packages/services/src/notifications.service.ts"
+    },
+    "discover": {
+      "page": "apps/web/app/discover",
+      "action": "apps/web/lib/actions/discover.ts",
+      "service": "packages/services/src/discover.service.ts"
+    },
+    "stockDetail": {
+      "page": "apps/web/app/stock/[symbol]",
+      "actions": [
+        "apps/web/lib/actions/stock-description.ts",
+        "apps/web/lib/actions/stock-tabs.ts",
+        "apps/web/lib/actions/stock-sector.ts"
+      ]
+    },
+    "strategies": {
+      "page": "apps/web/app/strategies",
+      "action": "apps/web/lib/actions/strategy.ts",
+      "service": "packages/services/src/strategy.service.ts"
+    },
+    "savedScreens": {
+      "action": "apps/web/lib/actions/saved-screens.ts"
+    },
+    "tax": {
+      "page": "apps/web/app/tax",
+      "action": "apps/web/lib/actions/tax-ledgers.ts",
+      "service": "packages/services/src/tax.service.ts"
+    },
+    "documents": {
+      "page": "apps/web/app/documents",
+      "action": "apps/web/lib/actions/documents.ts",
+      "service": "packages/services/src/documents.service.ts"
+    },
+    "brokers": {
+      "page": "apps/web/app/brokers",
+      "core": "packages/core/src/brokers",
+      "callback": "apps/web/app/api/brokers/<broker>/callback"
+    },
+    "pricing": {
+      "page": "apps/web/app/pricing",
+      "service": "packages/services/src/subscription.service.ts",
+      "core": "packages/core/src/payments"
+    },
+    "learning": {
+      "page": "apps/web/app/learning",
+      "service": "packages/services/src/learning.service.ts"
+    },
+    "quizzes": {
+      "page": "apps/web/app/quizzes"
+    },
+    "sageTutor": {
+      "page": "apps/web/app/sage-tutor",
+      "engine": "packages/content-engine"
+    },
+    "demo": {
+      "api": ["/api/demo/start", "/api/demo/end"],
+      "lib": "apps/web/lib/demo",
+      "component": "apps/web/components/DemoBanner.tsx"
+    },
+    "settings": {
+      "page": "apps/web/app/settings",
+      "action": "apps/web/lib/actions/preferences.ts"
+    },
+    "public": {
+      "page": "apps/web/app/(public)",
+      "subroutes": [
+        "blog",
+        "alternatives",
+        "docs",
+        "glossary",
+        "newsletter",
+        "legal",
+        "privacy",
+        "terms",
+        "subprocessors",
+        "data-usage"
+      ]
+    }
+  },
+  "serverActions": {
+    "directory": "apps/web/lib/actions",
+    "files": [
+      "billing-flags.ts",
+      "briefing.ts",
+      "broker-status.ts",
+      "chat-history.ts",
+      "content.ts",
+      "coupon.ts",
+      "credits.ts",
+      "dashboard.ts",
+      "discover-heatmap.ts",
+      "discover-indices.ts",
+      "discover-mf.ts",
+      "discover-sectors.ts",
+      "discover.ts",
+      "documents.ts",
+      "email-preferences.ts",
+      "feature-flags.ts",
+      "gst-profile.ts",
+      "holdings.ts",
+      "learning.ts",
+      "mf-description.ts",
+      "news.ts",
+      "notifications.ts",
+      "paper.ts",
+      "positions.ts",
+      "preferences.ts",
+      "risk.ts",
+      "roast-history.ts",
+      "roast.ts",
+      "saved-screens.ts",
+      "sector-heatmap.ts",
+      "sectors.ts",
+      "sparklines.ts",
+      "stock-description.ts",
+      "stock-sector.ts",
+      "stock-tabs.ts",
+      "strategy.ts",
+      "tax-ledgers.ts",
+      "trades.ts",
+      "walkthrough.ts",
+      "watchlist.ts"
+    ]
+  },
+  "webApiRoutes": {
+    "directory": "apps/web/app/api",
+    "categories": {
+      "core": [
+        "/api/chat",
+        "/api/chat/execute-tool",
+        "/api/research/preview-plan",
+        "/api/backtest",
+        "/api/[[...path]] (tRPC catch-all)"
+      ],
+      "market": [
+        "/api/market/indices",
+        "/api/market/autocomplete",
+        "/api/market/quote",
+        "/api/market/stream",
+        "/api/market/search",
+        "/api/market/historical",
+        "/api/market/mf-historical",
+        "/api/market/fund-composition",
+        "/api/market/broker-status"
+      ],
+      "trades": ["/api/trades/paired"],
+      "cache": ["/api/cache/clear", "/api/cache/stats"],
+      "admin": ["/api/admin/fix-mf-pairing", "/api/admin/sync-products"],
+      "content": ["/api/content/docs"],
+      "feedback": ["/api/feedback/upload"],
+      "subscription": ["/api/subscription/access"],
+      "newsletter": [
+        "/api/newsletter/subscribe",
+        "/api/newsletter/verify",
+        "/api/newsletter/unsubscribe"
+      ],
+      "jobs": ["/api/jobs/[jobId]"],
+      "webhooks": [
+        "/api/webhooks/clerk",
+        "/api/webhooks/dodo",
+        "/api/webhooks/dodopayments"
+      ],
+      "brokerCallbacks": [
+        "/api/brokers/zerodha/callback",
+        "/api/brokers/upstox/callback",
+        "/api/brokers/angel-one/callback",
+        "/api/brokers/groww/callback",
+        "/api/brokers/dhan/callback",
+        "/api/brokers/fyers/callback",
+        "/api/brokers/hdfc/callback",
+        "/api/brokers/icici/callback",
+        "/api/brokers/interactive-brokers/callback"
+      ],
+      "payments": ["/api/payments/create-checkout", "/api/payments/callback"],
+      "demo": ["/api/demo/start", "/api/demo/end"],
+      "cron": ["/api/cron/sync-products"],
+      "infra": [
+        "/api/email",
+        "/api/storage",
+        "/api/invite",
+        "/api/debug/clear-ff-cache"
+      ]
+    }
+  },
+  "wheresMyX": {
+    "DB model definition": "packages/database/prisma/schema.prisma",
+    "DB query / mutation": "packages/services/src/<domain>.service.ts (NEVER from a component or action directly)",
+    "Server action (web mutation)": "apps/web/lib/actions/<domain>.ts",
+    "Mobile API route": "apps/api/src/routes/v1/<domain>.ts (mirror the server action)",
+    "Webhook handler": "apps/web/app/api/webhooks/<provider>/route.ts",
+    "OAuth callback": "apps/web/app/api/brokers/<broker>/callback/route.ts",
+    "Background worker": "workers/src/processors/<name>.ts + workers/src/routes/<name>.ts",
+    "Pub/Sub topic registration": "workers/scripts/setup-pubsub.sh",
+    "Cron / Cloud Scheduler job": "scripts/ops/setup-scheduler.sh",
+    "Seed script": "scripts/seed/ (entry: scripts/seed-env.sh)",
+    "Broker logic": "packages/core/src/brokers/{clients,adapters}/<broker>.ts",
+    "Trade pairing algorithm": "packages/core/src/pairing",
+    "Market data fetch": "packages/core/src/market-data",
+    "Screener logic": "packages/core/src/screener",
+    "Cache helper": "packages/cache/src",
+    "Encryption / signing": "packages/security/src",
+    "GCS client": "packages/storage/src",
+    "Datadog wrappers": "packages/datadog/src",
+    "Logger": "packages/logger/src",
+    "Zod schema": "packages/validation/src/<domain>/<name>.ts",
+    "Shared type": "packages/types/src",
+    "Chat block validator": "packages/validation/src/chat-blocks.ts",
+    "Chat message parser": "apps/web/lib/chat/message-parser.ts",
+    "Chat tool registry": "apps/web/lib/chat-tools/registry.ts",
+    "Chat block renderer": "apps/web/components/chat/",
+    "Research skill": "packages/research/src/skills/<skill>.ts",
+    "Research tool": "packages/research/src/tools/compute-<thing>.ts",
+    "Roast step": "packages/roast/src/steps/<step>.ts",
+    "Tier classifier (chat)": "apps/web/lib/chat-tools/tier-classifier.ts",
+    "Subscription enforcement": "packages/services/src/subscription.service.ts + apps/web/components/FeatureGate.tsx",
+    "Demo mode detection": "apps/web/lib/demo + tradebook_demo_mode localStorage flag",
+    "Atlas Search setup": "docs/setup/atlas-search-setup.md",
+    "Env variable reference": "docs/env-vars-reference.md",
+    "Test inventory": "TEST-COVERAGE.md",
+    "Project memory": "CLAUDE.md (also apps/admin/CLAUDE.md, apps/content/CLAUDE.md, workers/CLAUDE.md)"
+  },
+  "howToAddX": {
+    "newBroker": {
+      "files": [
+        "packages/core/src/brokers/clients/<broker>.ts",
+        "packages/core/src/brokers/adapters/<broker>.ts",
+        "register in packages/core/src/brokers/adapters/index.ts",
+        "apps/web/app/api/brokers/<broker>/callback/route.ts",
+        "UI under apps/web/app/brokers"
+      ],
+      "checklist": [
+        "Conform adapter to the existing holdings/positions/trades/[mf] interface",
+        "Encrypt tokens via @usemoney/security - never store plaintext",
+        "Document API quirks in a feature/project memory file",
+        "Add to documentation in docs/ if user-facing"
+      ]
+    },
+    "newServerAction": {
+      "file": "apps/web/lib/actions/<name>.ts",
+      "template": [
+        "'use server' directive on line 1",
+        "Auth check (Clerk auth(), demo mode if relevant)",
+        "Validate input via Zod from @usemoney/validation",
+        "Call into packages/services/src/<domain>.service.ts",
+        "NEVER call Prisma from this file",
+        "Sanitize errors before returning",
+        "Mirror to apps/api/src/routes/v1/<domain>.ts for mobile parity",
+        "Add tests + update TEST-COVERAGE.md"
+      ]
+    },
+    "newDbModel": {
+      "files": [
+        "packages/database/prisma/schema.prisma",
+        "packages/services/src/<domain>.service.ts"
+      ],
+      "commands": [
+        "yarn workspace @usemoney/database prisma generate",
+        "yarn workspace @usemoney/database prisma db push"
+      ],
+      "checklist": [
+        "Follow naming/index patterns of nearby models",
+        "If Atlas Search/Vector Search needed, update docs/setup/atlas-search-setup.md",
+        "Create a service as the only Prisma touchpoint",
+        "If seed data is needed, add to scripts/seed/ and update scripts/README.md"
+      ]
+    },
+    "newWorker": {
+      "files": [
+        "workers/src/processors/<name>.ts",
+        "workers/src/routes/<name>.ts",
+        "register in workers/src/app.ts"
+      ],
+      "ops": [
+        "Add topic to workers/scripts/setup-pubsub.sh (+ dead-letter)",
+        "Optional: add Cloud Scheduler job in scripts/ops/setup-scheduler.sh"
+      ],
+      "note": "OIDC auth is required on the push route. Tracing is automatic via the Cloud Run sidecar."
+    },
+    "newResearchTool": {
+      "file": "packages/research/src/tools/compute-<thing>.ts",
+      "register": "packages/research/src/tools/index.ts",
+      "skill": "Map skill ↔ tool in packages/research/src/skills/skill-tool-map.ts",
+      "external": "If pulling from a new source, add a wrapper in packages/research/src/data-sources/"
+    },
+    "newResearchSkill": {
+      "file": "packages/research/src/skills/<skill>.ts",
+      "register": "packages/research/src/skills/index.ts",
+      "planner": "Add intent recognition to packages/research/src/planner.ts as needed"
+    },
+    "newChatBlock": {
+      "files": [
+        "packages/validation/src/chat-blocks.ts (Zod schema)",
+        "apps/web/lib/chat/message-parser.ts (parser case)",
+        "apps/web/components/chat/blocks/<Block>.tsx (renderer)",
+        "If executable: apps/web/lib/chat-tools/registry.ts"
+      ]
+    },
+    "newWebhook": {
+      "file": "apps/web/app/api/webhooks/<provider>/route.ts",
+      "checklist": [
+        "Verify signature first",
+        "Return 200 to acknowledge, even on validation failure (to avoid retries)",
+        "Persist event idempotency key",
+        "Process async via Pub/Sub if work is long-running"
+      ]
+    },
+    "newUiPrimitive": {
+      "file": "packages/ui/src/<component>.tsx"
+    },
+    "newFeatureComponent": {
+      "file": "apps/web/components/<feature>/<Name>.tsx"
+    }
+  },
+  "conventions": {
+    "branchNaming": {
+      "rule": "{type}/MONEY-{number} only - NO text suffix. Examples: feat/MONEY-85, fix/MONEY-108.",
+      "enforced": "Husky pre-push + GitHub Actions pr-branch-check",
+      "exempt": ["main", "release", "develop", "dependabot/**"],
+      "types": [
+        "feat",
+        "fix",
+        "test",
+        "chore",
+        "docs",
+        "refactor",
+        "perf",
+        "ci",
+        "build",
+        "style",
+        "hotfix"
+      ]
+    },
+    "git": {
+      "neverCommitUnlessAsked": true,
+      "neverPushUnlessAsked": true,
+      "createNewCommitsNotAmend": true,
+      "verifyOnly": true,
+      "everyPrLinkedToLinearTicket": "Team key MONEY"
+    },
+    "buildAndType": {
+      "yarnBuildOnSourceChange": "Required before commit when source code changes. Next.js build catches type errors tsc --noEmit misses.",
+      "tscNoEmit": "Insufficient on its own - does not catch webpack/Next.js client-bundle errors."
+    },
+    "dataAccess": {
+      "noDirectPrisma": "Components, server actions, and API routes never touch Prisma. They call into @usemoney/services.",
+      "atlasSearch": "Prod-only. Dual-path: Atlas in prod, regex in QA/dev (see project_screener_search_dual_path memory).",
+      "noFreshnessGates": "Don't gate user-facing queries on lastSyncedAt/navDate. Trust upstream isActive; do cleanup in sync layer."
+    },
+    "uiAndTheme": {
+      "themeAware": "Never hardcode dark RGBA. Use CSS vars or dark: prefix. Test both themes.",
+      "demoFlow": "Try Demo CTA must survive landing/hero redesigns. Use window.location.href + tradebook_demo_mode localStorage flag."
+    },
+    "ai": {
+      "chatDegradesGracefully": "Credit/quota walls return 200 + ErrorBlock + NavigationBlock upgrade CTA, not bare 403. Flash chat ungated for FREE.",
+      "classifierCollapse": "User-clickable surfaces use deterministic dispatch, not prompt fallthrough (avoids classifier collapse onto wrong tool)."
+    },
+    "ops": {
+      "scriptsReadme": "Any change in scripts/ (add/rename/remove/flag) requires same-PR README row update.",
+      "testCoverageDoc": "Any test add/remove/modify updates TEST-COVERAGE.md in the same PR.",
+      "distClean": "yarn dist-clean walks each dist/ and skips ones with git-tracked files (UDF bundle.js is tracked).",
+      "chartingSync": "postinstall is gated behind SYNC_CHARTING_LIBRARY=1. Bare yarn install must be a no-op for charting."
+    },
+    "observability": {
+      "datadogApm": "Cloud Run only (sidecar). Vercel: DD_TRACE_ENABLED=false - use RUM + HTTP logs/metrics.",
+      "requiredEnvVars": {
+        "cloudRunWorkers": [
+          "DD_TRACE_ENABLED=true",
+          "DD_API_KEY",
+          "DD_SERVICE=stockbook-workers",
+          "DD_ENV",
+          "DD_VERSION",
+          "DD_TRACE_AGENT_URL=http://localhost:8126"
+        ],
+        "vercelWeb": [
+          "DD_TRACE_ENABLED=false",
+          "DD_API_KEY",
+          "DD_SERVICE=stockbook-web",
+          "DD_ENV",
+          "NEXT_PUBLIC_DD_APPLICATION_ID",
+          "NEXT_PUBLIC_DD_CLIENT_TOKEN",
+          "NEXT_PUBLIC_DD_ENV"
+        ],
+        "vercelApi": [
+          "DD_TRACE_ENABLED=false",
+          "DD_API_KEY",
+          "DD_SERVICE=stockbook-api",
+          "DD_ENV"
+        ]
+      }
+    }
+  },
+  "externalIntegrations": {
+    "Clerk": "Auth + user management (apps/web, apps/api).",
+    "DodoPayments": "Subscriptions + payments. Webhook: /api/webhooks/dodo.",
+    "GoogleGemini": "AI: 2.5 Pro (deep reasoning) + 2.5 Flash (low-latency).",
+    "VercelAiGateway": "Routes/AI provider switching.",
+    "GoogleCloudStorage": "Documents, learning content, RAG sources. Bucket stockbook-content-{env}.",
+    "GoogleCloudPubSub": "Job queue. 12 topics suffixed -qa/-prod.",
+    "GoogleCloudScheduler": "Cron jobs (instrument sync, MF NAV, prices, bhavcopy, XBRL sync -> projection -> ratios, etc.). Retired jobs go in OLD_SCHEDULER_PREFIXES in scripts/ops/setup-scheduler.sh - deleting a definition only stops it being re-created, it does not take the live job down. NOTE the array name is misleading: delete_old_schedulers builds ${PREFIX}-${ENV} and deletes THAT EXACT NAME, so it is not a prefix match - a family of jobs needs every full name listed, or the unlisted ones keep firing forever (MONEY-1314). scheduler-retirement-contract.test.ts ratchets this: a name that leaves SCHEDULER_DEFS without appearing here fails the suite.",
+    "Datadog": "APM (Cloud Run) + RUM (web) + Logs + Metrics.",
+    "PostHog": "Product analytics + feature flags. Project usemoney-web (272942).",
+    "Resend": "Transactional + newsletter email.",
+    "Sentry": "Error tracking (where configured).",
+    "BrokerApis": "Zerodha (Kite), Upstox, Angel One (SmartAPI), Groww, Dhan, Fyers, HDFC Securities, ICICI Direct, Interactive Brokers.",
+    "DataProviders": "Yahoo Finance, AMFI NAV feed, NSE/BSE, Screener.in (scrape), Chartink, RBI. Company financials and ratios are NOT bought or scraped - they are projected from our own archive of NSE XBRL filings. Tickertape was the financials source until MONEY-1220, when api.tickertape.in began returning 403 to our Cloud Run egress (200 from a laptop): a permanent, silent block, so it was removed from every scheduled path."
+  },
+  "scripts": {
+    "directory": "scripts/",
+    "readme": "scripts/README.md (must stay in sync with directory changes)",
+    "common": {
+      "seed": "./scripts/seed-env.sh {qa|prod|all} [--step N] [--from N]",
+      "scheduler": "./scripts/ops/setup-scheduler.sh {qa|prod|all}",
+      "pubsub": "./workers/scripts/setup-pubsub.sh {qa|prod}",
+      "distClean": "yarn dist-clean (safe - skips git-tracked dist/)",
+      "syncChart": "yarn sync:chart (explicit - postinstall does NOT do this)"
+    },
+    "seedPipeline": ["instruments → MF → sectors → MF metadata → prices"]
+  },
+  "knownGotchas": [
+    {
+      "issue": "Atlas Search throws SearchNotEnabled in non-prod environments.",
+      "fix": "atlas-search.ts uses an in-memory 5-minute availability flag - after first failure, skips Atlas. Dev/QA falls through to regex (services/discover.service.ts dual path)."
+    },
+    {
+      "issue": "Datadog APM (dd-trace) requires a local Datadog Agent on localhost:8126.",
+      "fix": "Cloud Run has a sidecar agent. Vercel does not - keep DD_TRACE_ENABLED=false there and rely on HTTP-based RUM/Logs/Metrics."
+    },
+    {
+      "issue": "Workspace packages export raw .ts; bundling externals confuses tsup.",
+      "fix": "tsup config uses noExternal: [/@stockbook\\/.*/] AND an esbuild onResolve plugin externalizing everything except @stockbook/*. See Docker/GCP build memory."
+    },
+    {
+      "issue": "Prisma needs openssl on Alpine for correct engine binary detection.",
+      "fix": "Dockerfile installs openssl. COPY packages ./packages beats individual manifest copies."
+    },
+    {
+      "issue": "GCS uploads from Cloud Run fail with resumable=true + validation=true.",
+      "fix": "Always upload with { resumable: false, validation: false }."
+    },
+    {
+      "issue": "Chat classifier collapse - free-text prompts with shared vocab collapse to wrong tool.",
+      "fix": "User-clickable surfaces (buttons, tabs) use deterministic tool/navigate dispatch, not prompt fallthrough."
+    },
+    {
+      "issue": "TradingView UDF bundle.js is git-tracked but lives in dist/.",
+      "fix": "yarn dist-clean walks each dist/ and skips directories with git-tracked files."
+    },
+    {
+      "issue": "Screener data zeroed in dev when gated on lastSyncedAt/navDate.",
+      "fix": "Don't gate user-facing queries on freshness fields. Trust upstream isActive; do cleanup in sync layer."
+    },
+    {
+      "issue": "Merged is not wired. MONEY-1115 shipped a complete, tested projection engine with no route, no topic, no scheduler and no job, so it wrote nothing for months while nothing errored.",
+      "fix": "A feature is wired only when you can name its entry point AND show observed data through it. Grep the topic constant in packages/types/src/pubsub.ts, the route mount in workers/src/index.ts, and the SCHEDULER_DEFS line in scripts/ops/setup-scheduler.sh - all three, not one."
+    },
+    {
+      "issue": "A Cloud Run JOB pins its container image at provision time, so redeploying the SERVICE does not move it.",
+      "fix": "Re-run the job's setup script (e.g. scripts/ops/setup-xbrl-backfill-job.sh) after the image changes, or the job keeps executing the code it was created with."
+    }
+  ],
+  "agentTips": [
+    "Read CLAUDE.md and this file BEFORE exploring. They tell you the conventions and where things live.",
+    "When you read MEMORY.md, paths like packages/core/src/brokers are claims about the codebase at a point in time - verify the file still exists if you intend to recommend an action on it.",
+    "Server actions (apps/web/lib/actions/*) are the canonical write path on web. Don't add Prisma calls anywhere else.",
+    "If you're tempted to add a util to packages/utils, check if a more specific package exists first.",
+    "Branch names MUST be {type}/MONEY-{number}. Husky and CI will reject anything else.",
+    "Never run git commit / push / yarn build / yarn install without the user asking, except where memory feedback rules explicitly permit it.",
+    "When making mobile-relevant changes, mirror server actions in apps/api/src/routes/v1.",
+    "Run yarn build before committing any source-code change in a bundle - tsc --noEmit alone misses Next.js client bundle errors."
+  ]
+}

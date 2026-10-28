@@ -1,0 +1,168 @@
+config {
+  type: "assertion",
+  schema: datasets.gold(),
+  name: "assert_no_double_adjustment_witness",
+  description: "No bar and corporate_action both witness one event. OVERLAP: a bar's own columns describe an action corporate_action also describes. DISCARD: the view overruled a corporate_action row because the bar stated something else. The precedence resolves both silently; this makes them loud the day they first appear.",
+  tags: ["gold", "bars"]
+}
+
+/*
+ * THE HAZARD THIS WATCHES FOR IS NOT REACHABLE TODAY, AND THAT IS THE POINT
+ *
+ * `includes/adjustment.js` takes each factor from ONE witness —
+ * `COALESCE(bar_column, action_row)` — so double application is unrepresentable
+ * in the SQL. The bar wins; an action row can only fill a NULL.
+ *
+ * India bars carry NULL in both columns, so today every India factor comes from
+ * the action table and this returns ZERO rows (verified on prod 2026-09-23).
+ * US bars are the opposite: `Candle.divCash` is `Float @default(0)` and
+ * `Candle.splitFactor` is `Float @default(1)`, so a US bar arrives carrying a
+ * concrete number and the COALESCE can never fall through — an action row is
+ * unreachable there rather than merely out-ranked.
+ *
+ * Which is exactly why this assertion is worth its scan. The moment BOTH
+ * witnesses exist for one event, the SQL keeps working and silently discards
+ * one of them, with nothing in any counter to say a second description of that
+ * split was ever loaded. That is not a defect in the precedence — it is the
+ * precedence doing its job — but it is a decision somebody should make
+ * deliberately per market rather than inherit from a COALESCE.
+ *
+ * IT IS DELIBERATELY NOT A REFUSAL IN THE VIEW. `adjusted_bar_d1` is a VIEW
+ * computed at read time: refusing there would take a whole market dark because
+ * one listing acquired a second witness. An assertion names the listings and
+ * leaves gold readable.
+ *
+ * THE WINDOW IS ±3 SESSIONS' WORTH OF CALENDAR DAYS, not an exact date match,
+ * and it STAYS that way now that the ex-date shift is fixed.
+ *
+ * It was written when `corporate_action.ex_date` was one calendar day early
+ * for most of the corpus (6,857 SUNDAY ex-dates against 4,048 Friday — a UTC
+ * round-trip of an IST-midnight Date), so two witnesses of one event routinely
+ * sat a day or two apart. MONEY-1516 part (a) fixed that at the source and the
+ * table was reloaded, so THAT particular reason is gone.
+ *
+ * DO NOT NARROW IT TO AN EXACT JOIN on the strength of that. The shift was one
+ * way for two witnesses to disagree about a date; it was never the only one. A
+ * bar's `split_factor` is stamped by the VENDOR on the session it considers ex,
+ * and a vendor that decides a half-day or a suspension differently is a
+ * one-session disagreement with no defect anywhere. An exact join would report
+ * clean while the overlap was real, which is the one outcome this assertion
+ * exists to prevent — and it would do so silently, because a double adjustment
+ * produces a plausible price rather than an error.
+ *
+ * TRIVIAL VALUES ARE EXCLUDED BY VALUE, not by nullness: `splitFactor` 1 and
+ * `divCash` 0 are what a US bar carries on an ordinary day and describe no
+ * event at all. Including them would make this permanently red for every US
+ * listing with any corporate-action history — which is how an assertion gets
+ * muted, and a muted assertion is worse than none.
+ *
+ * ## THE SECOND HALF SEES WHAT THAT FILTER HIDES — MONEY-1528 (D)
+ *
+ * The value filter is right for a ±3-day window of ordinary sessions and blind
+ * to exactly one thing: a bar stating 1 or 0 on the SAME session an action row
+ * names. There the COALESCE keeps the bar and throws the action away, and the
+ * filter excludes the very values that did it — so the first half saw the
+ * redundant overlap and never the discard. When MONEY-1513's US bars land, a
+ * US action row whose carrier bar carries `Candle.splitFactor`'s 1 or
+ * `divCash`'s 0 would have been ignored while this returned zero rows.
+ *
+ * The view keeps discarding it, deliberately (includes/adjustment.js, "WHAT A
+ * BAR STATES"): a 0 or 1 is how the vendor says "nothing happened", and letting
+ * an action fill it turns a one-session date disagreement into a squared
+ * adjustment. What changes is that the discard is REPORTED. The DISCARD rows
+ * come from `adjustment.discardedActionSql`, which runs the view's OWN chain —
+ * latest observation, allowlist, suppression, composition — and names each bar
+ * where the resolved action factor lost to a DIFFERENT stated bar value. It
+ * looks at the action's carrier bar only, not at a window, which is why the 1
+ * and the 0 can be included here without making every quiet session red.
+ *
+ * Zero DISCARD rows on prod today, measured 2026-09-23: every bar is India's,
+ * NULL in both columns, so every action is applied rather than overruled.
+ */
+
+SELECT
+  'OVERLAP' AS finding,
+  b.market,
+  b.listing_id,
+  b.session_date,
+  b.split_factor AS bar_split_factor,
+  b.div_cash AS bar_div_cash,
+  b.source AS bar_source,
+  a.action_type,
+  a.ex_date,
+  a.ratio AS action_ratio,
+  a.cash AS action_cash,
+  a.source AS action_source
+FROM ${ref("price_bar_d1")} b
+JOIN ${ref("corporate_action")} a
+  ON a.market = b.market
+ AND a.listing_id = b.listing_id
+ -- ONLY THE TYPES THE ADJUSTMENT ACTUALLY READS -- MONEY-1528. Unfiltered,
+ -- this joined ~9,500 prod rows of types action_latest never admits
+ -- (INTEREST_PAYMENT 3,754, OTHER 3,330, RIGHTS 1,250, REDEMPTION 386,
+ -- DEMERGER 804). The list is rendered FROM the include's exported constants,
+ -- so it cannot drift from what the view reads.
+ --
+ -- THE US JUSTIFICATION FIRST GIVEN FOR THIS WAS WRONG, and is corrected here
+ -- rather than deleted so it is not re-argued: it claimed the filter stops US
+ -- bars matching those types. It cannot, because CORP_ACTION_VENUE_MARKET maps
+ -- only NSE/BSE to "IN", so a US bar matches ZERO action rows on
+ -- a.market = b.market whatever the type. The filter's real value is the India
+ -- noise above.
+ --
+ -- AND IT IS STILL NOT THE VIEW'S RESOLVED SET. This joins the RAW table,
+ -- so three populations the view provably never reads still reach it:
+ -- SUPERSEDED observations (the table is append-only and obs_rank = 1 keeps
+ -- one), rows whose ratio is NULL or non-positive (scored as factor 1 -- no
+ -- witness at all), and rows the `suppressed` CTE removes (the DERIVED twin,
+ -- the same-type near-duplicate). Each is a false positive waiting for a
+ -- market whose bars carry a real split_factor, and this file's own header
+ -- says that is how an assertion gets muted. Joining action_latest needs it
+ -- exposed as a view rather than a CTE -- tracked, not done here.
+ AND a.ex_date BETWEEN DATE_SUB(b.session_date, INTERVAL 3 DAY)
+                   AND DATE_ADD(b.session_date, INTERVAL 3 DAY)
+-- CORRELATED, not a flat allowlist. A bar's witness kind has to match the
+-- ACTION's kind or the join reports a fourth false-positive class the type
+-- filter itself creates: a bar carrying a real split_factor matched a DIVIDEND
+-- row +/-3 days away -- routine, since companies declare dividends near splits
+-- -- and symmetrically a div_cash bar matched a SPLIT. Two disjuncts, each
+-- pairing one bar column with the types that can witness it.
+--
+-- The lists are rendered through `adjustment.typeListSql`, the SAME function
+-- the view itself uses, rather than re-implemented here. The re-implementation
+-- it replaces was the only nested backtick inside a ${} in any .sqlx in the
+-- repo, and nothing in CI compiles Dataform -- a lexer failure would first
+-- surface at a scheduled workflow.
+WHERE (
+       b.split_factor IS NOT NULL
+   AND b.split_factor <> 1
+   AND a.action_type IN (${adjustment.typeListSql(adjustment.PRICE_BASIS_ACTION_TYPES)})
+     )
+   OR (
+       b.div_cash IS NOT NULL
+   AND b.div_cash > 0
+   AND a.action_type IN (${adjustment.typeListSql(adjustment.CASH_ACTION_TYPES)})
+     )
+
+UNION ALL
+
+-- THE DISCARD -- MONEY-1528 (D). One row per carrier bar where the view
+-- overruled the action table. The action side is COMPOSED here (every action
+-- on that bar, after suppression), so it has no single type, ex_date or
+-- source to name; action_ratio carries the composed split factor.
+SELECT
+  'DISCARD' AS finding,
+  d.market,
+  d.listing_id,
+  d.session_date,
+  d.bar_split_factor,
+  d.bar_div_cash,
+  d.bar_source,
+  CAST(NULL AS STRING) AS action_type,
+  CAST(NULL AS DATE) AS ex_date,
+  d.action_split AS action_ratio,
+  d.action_cash,
+  CAST(NULL AS STRING) AS action_source
+FROM (
+${adjustment.discardedActionSql(ref("price_bar_d1"), ref("corporate_action"))}
+) d

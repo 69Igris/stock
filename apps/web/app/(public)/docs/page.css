@@ -1,0 +1,297 @@
+/* Docs index — playful aesthetic */
+.doc-search {
+  margin-top: 30px;
+  padding: 18px 22px;
+  border-radius: 12px;
+  border: 2px solid var(--ink);
+  background: var(--paper-3);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.doc-search svg {
+  color: var(--ink-3);
+  flex-shrink: 0;
+}
+.doc-search input {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 15px;
+  outline: 0;
+}
+.doc-search input::placeholder {
+  color: var(--ink-3);
+}
+.doc-search .kbd {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--ink-3);
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: var(--rule-softer);
+  border: 1.5px solid var(--rule-soft);
+}
+
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+.cat {
+  padding: 24px 26px;
+  border-radius: 14px;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s,
+    background 0.12s;
+  display: flex;
+  flex-direction: column;
+  color: var(--ink);
+}
+.cat:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-hard);
+  background: var(--paper-3);
+}
+.cat-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.cat .ic {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1.5px solid var(--ink);
+  display: grid;
+  place-items: center;
+  color: #1d1d1b;
+  transform: rotate(-3deg);
+  flex-shrink: 0;
+}
+.cat:nth-child(6n + 1) .ic {
+  background: var(--pop-2);
+}
+/* var(--paper) flips with the theme so the glyphs stay legible on the pop
+   fills, which get LIGHTER in dark mode (fixed cream washed out there). */
+.cat:nth-child(6n + 2) .ic {
+  background: var(--pop-4);
+  color: var(--paper);
+}
+.cat:nth-child(6n + 3) .ic {
+  background: var(--pop-3);
+  color: var(--paper);
+}
+.cat:nth-child(6n + 4) .ic {
+  background: var(--pop-1);
+  color: var(--paper);
+}
+.cat:nth-child(6n + 5) .ic {
+  background: var(--pop-5);
+  color: var(--paper);
+}
+.cat:nth-child(6n) .ic {
+  background: var(--emerald);
+  color: var(--paper);
+}
+.cat h3 {
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+  color: var(--ink);
+  line-height: 1.1;
+}
+.cat h3 .ser {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+}
+.cat p {
+  margin-top: 12px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.cat ul {
+  list-style: none;
+  margin-top: 12px;
+  padding: 0;
+}
+.cat ul li {
+  padding: 4px 0;
+  font-size: 13px;
+  color: var(--ink-3);
+  display: flex;
+  gap: 8px;
+}
+.cat ul li::before {
+  content: "→";
+  color: var(--emerald);
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 600;
+}
+.cat ul li:hover {
+  color: var(--ink);
+}
+.cat .count {
+  margin-top: auto;
+  padding-top: 14px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--ink-3);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+.cat .soon {
+  margin-top: auto;
+  padding-top: 14px;
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+.ql-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.ql {
+  padding: 18px 22px;
+  border-radius: 12px;
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s,
+    background 0.12s;
+  color: var(--ink);
+  display: block;
+}
+.ql:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow-soft);
+  background: var(--paper-3);
+}
+.ql .kicker {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  color: var(--emerald);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.ql h4 {
+  margin-top: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.3px;
+  line-height: 1.2;
+}
+.ql h4 .ser {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+}
+.ql p {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--ink-3);
+  line-height: 1.45;
+}
+
+.recent {
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.recent-row {
+  display: grid;
+  grid-template-columns: 130px 1fr 120px;
+  gap: 18px;
+  padding: 14px 22px;
+  align-items: center;
+  border-bottom: 1px dashed var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  transition: background 0.12s;
+}
+.recent-row:last-child {
+  border-bottom: 0;
+}
+.recent-row:hover {
+  background: var(--paper-3);
+}
+.recent-row .date {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  color: var(--ink-3);
+}
+.recent-row .t {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.recent-row .t .ser {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+}
+.recent-row .s {
+  font-size: 13px;
+  color: var(--ink-3);
+  margin-top: 2px;
+}
+.recent-row .cat-tag {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  color: var(--emerald);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  font-weight: 700;
+  text-align: right;
+}
+
+.docs-empty {
+  margin: 0 auto;
+  padding: 50px 40px;
+  max-width: 560px;
+  text-align: center;
+  border: 2px dashed var(--ink);
+  border-radius: 14px;
+  background: var(--paper-3);
+}
+.docs-empty p {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-size: 20px;
+  color: var(--ink-2);
+}
+.docs-empty .sub {
+  margin-top: 12px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+@media (max-width: 1000px) {
+  .cat-grid {
+    grid-template-columns: 1fr;
+  }
+  .ql-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .recent-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .recent-row .cat-tag {
+    text-align: left;
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "title": "Studio Smoke Test",
+  "aspect": "9:16",
+  "fps": 30,
+  "brandTheme": "cream",
+  "music": {
+    "track": "corporate-lofi",
+    "gainDb": -22,
+    "duckUnderVoiceover": true
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "type": "hook",
+      "durationSec": 3.5,
+      "kicker": "Portfolio awareness",
+      "headline": "What do you ==actually own==?",
+      "motion": "rise",
+      "voiceover": {
+        "text": "एक सवाल — क्या आप जानते हैं, आपके पास असल में क्या है?",
+        "lang": "hi-IN"
+      }
+    },
+    {
+      "id": "stat",
+      "type": "stat",
+      "durationSec": 3.5,
+      "stat": {
+        "kicker": "The first step",
+        "value": "Awareness",
+        "label": "Know your real exposure."
+      },
+      "motion": "kenburns-in",
+      "disclaimer": true,
+      "voiceover": {
+        "text": "बिखरा हुआ पोर्टफोलियो आपकी असली पकड़ छुपा देता है।",
+        "lang": "hi-IN"
+      }
+    },
+    {
+      "id": "cta",
+      "type": "cta",
+      "durationSec": 3,
+      "headline": "Awareness first. *Decisions later.*",
+      "subtext": "Education only · UseMoney AI",
+      "motion": "pop",
+      "voiceover": {
+        "text": "जागरूकता पहले, फ़ैसले बाद में। यूज़मनी एआई के साथ।",
+        "lang": "hi-IN"
+      }
+    }
+  ]
+}

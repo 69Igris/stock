@@ -1,0 +1,81 @@
+/* ── UseMoney authenticated-app primitives (ported from kit, html.dark) ── */
+.pf-page { padding: 16px 18px 20px; display: flex; flex-direction: column; gap: 0; }
+
+/* Page heading */
+.pf-ph { margin-bottom: 18px; }
+.pf-ph .eyebrow { display: inline-flex; align-items: center; gap: 7px; font-family: var(--font-mono); font-size: 10.5px; font-weight: 700; color: var(--emerald-text); letter-spacing: 1.2px; text-transform: uppercase; }
+.pf-ph .eyebrow .d { width: 6px; height: 6px; border-radius: 50%; background: var(--emerald); animation: ph-pulse 1.6s infinite; }
+@keyframes ph-pulse { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
+.pf-ph h1 { font-size: 30px; line-height: 1.0; letter-spacing: -1.4px; font-weight: 800; color: var(--ink); margin: 11px 0 0; }
+.pf-ph h1 .ser { font-family: var(--font-serif); font-style: italic; font-weight: 400; letter-spacing: -1px; }
+.pf-ph h1 .hl { background: var(--pop-2); color: #1d1d1b; padding: 0 6px; border-radius: 4px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.pf-ph .sub { margin-top: 9px; font-family: var(--font-serif); font-style: italic; font-size: 16px; color: var(--ink-2); line-height: 1.35; }
+
+/* Section header */
+.pf-sec-h { display: flex; align-items: center; gap: 11px; margin: 22px 0 12px; }
+.pf-sec-h .n { font-family: var(--font-mono); font-size: 10px; font-weight: 700; color: var(--ink); letter-spacing: 1.2px; padding: 3px 7px; border: 1.5px solid var(--ink); border-radius: 5px; background: var(--paper); transform: rotate(-1.2deg); }
+.pf-sec-h h3 { font-size: 18px; font-weight: 800; letter-spacing: -.4px; color: var(--ink); }
+.pf-sec-h h3 .ser { font-family: var(--font-serif); font-style: italic; font-weight: 400; }
+.pf-sec-h .rule { flex: 1; height: 1.5px; background: var(--ink); opacity: 0.14; }
+.pf-sec-h .meta { font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-3); letter-spacing: 0.4px; }
+
+/* Cards */
+.pf-card { background: var(--paper-3); border: 2px solid var(--ink); border-radius: 14px; box-shadow: 3px 3px 0 var(--ink); padding: 16px; }
+.pf-card.flat { box-shadow: none; }
+.pf-card.tilt-l { transform: rotate(-0.6deg); }
+.pf-card.tilt-r { transform: rotate(0.6deg); }
+.pf-card .ttl { font-family: var(--font-mono); font-size: 10.5px; font-weight: 700; color: var(--ink-3); letter-spacing: 1.3px; text-transform: uppercase; }
+
+/* Stat tile */
+.pf-stat { padding: 14px 15px; }
+.pf-stat .l { font-family: var(--font-mono); font-size: 10px; color: var(--ink-3); letter-spacing: 1px; text-transform: uppercase; }
+.pf-stat .v { font-family: var(--font-mono); font-size: 23px; font-weight: 700; color: var(--ink); letter-spacing: -0.5px; margin-top: 5px; font-variant-numeric: tabular-nums; }
+.pf-stat .d { font-family: var(--font-mono); font-size: 11.5px; margin-top: 4px; font-variant-numeric: tabular-nums; font-weight: 700; }
+.pf-stat .d.pos { color: var(--emerald-text); }
+.pf-stat .d.neg { color: var(--loss); }
+
+/* Pills */
+.pf-pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 999px; font-family: var(--font-mono); font-size: 10px; font-weight: 700; border: 1.5px solid var(--ink); color: var(--ink); background: var(--paper); letter-spacing: 0.4px; white-space: nowrap; }
+.pf-pill.gold { background: var(--pop-2); color: #1d1d1b; }
+.pf-pill.coral { background: var(--pop-1); color: #fff; }
+.pf-pill.blue { background: var(--pop-3); color: #fff; }
+.pf-pill.pink { background: var(--pop-4); color: #fff; }
+.pf-pill.violet { background: var(--pop-5); color: #fff; }
+.pf-pill.emerald { background: var(--emerald); color: #fff; }
+.pf-pill.outline { background: transparent; }
+
+/* Tables */
+.pf-tbl { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12.5px; }
+.pf-tbl thead th { font-family: var(--font-mono); font-size: 9.5px; font-weight: 700; color: var(--ink-3); letter-spacing: 1px; text-transform: uppercase; text-align: left; padding: 8px 10px; border-bottom: 1.5px solid var(--rule-soft); }
+.pf-tbl tbody td { padding: 11px 10px; border-bottom: 1px dashed var(--rule-soft); font-variant-numeric: tabular-nums; color: var(--ink-2); }
+.pf-tbl tbody td .tk { font-family: var(--font-mono); font-weight: 700; color: var(--ink); }
+.pf-tbl tbody td .nm { color: var(--ink-3); font-size: 11px; }
+.pf-tbl tbody td.num { font-family: var(--font-mono); font-weight: 600; text-align: right; color: var(--ink); }
+.pf-tbl tbody td.pos { color: var(--emerald-text); }
+.pf-tbl tbody td.neg { color: var(--loss); }
+.pf-tbl tbody tr:last-child td { border-bottom: 0; }
+
+/* Inputs */
+.pf-input { width: 100%; padding: 11px 12px; border-radius: 9px; border: 2px solid var(--ink); background: var(--paper-3); color: var(--ink); font-size: 14px; font-family: inherit; }
+.pf-input::placeholder { color: var(--ink-3); }
+.pf-input:focus { outline: none; box-shadow: 3px 3px 0 var(--ink); transform: translate(-1px,-1px); }
+
+/* Toggle */
+.pf-toggle { width: 42px; height: 24px; border-radius: 999px; border: 2px solid var(--ink); background: var(--paper); position: relative; cursor: pointer; flex-shrink: 0; transition: background .15s; }
+.pf-toggle::after { content: ""; position: absolute; top: 1px; left: 1px; width: 18px; height: 18px; border-radius: 50%; background: var(--ink); transition: transform .15s; }
+.pf-toggle.on { background: var(--emerald); }
+.pf-toggle.on::after { transform: translateX(18px); background: #fff; }
+
+/* Segmented tabs */
+.pf-seg { display: flex; gap: 0; border: 2px solid var(--ink); border-radius: 10px; overflow: hidden; background: var(--paper-3); }
+.pf-seg button { flex: 1; padding: 9px 6px; border: 0; background: transparent; font-family: var(--font-mono); font-size: 11px; font-weight: 700; letter-spacing: 0.5px; color: var(--ink-3); cursor: pointer; border-right: 1.5px solid var(--rule-soft); text-transform: uppercase; }
+.pf-seg button:last-child { border-right: 0; }
+.pf-seg button.on { background: var(--ink); color: var(--paper); }
+
+/* List row */
+.pf-row { display: flex; align-items: center; gap: 12px; padding: 13px; background: var(--paper-3); border: 2px solid var(--ink); border-radius: 12px; box-shadow: 3px 3px 0 var(--ink); }
+.pf-row .ic { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; flex-shrink: 0; border: 2px solid var(--ink); }
+
+/* Code block */
+.pf-code { display: block; padding: 11px 13px; border-radius: 9px; background: #1d1d1b; color: #f4ede0; font-family: var(--font-mono); font-size: 11px; line-height: 1.6; }
+.pf-code .em { color: #34d399; } .pf-code .gold { color: #ffd86b; } .pf-code .dim { color: #a09a8d; }

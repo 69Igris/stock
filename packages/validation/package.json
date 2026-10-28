@@ -1,0 +1,29 @@
+{
+  "name": "@usemoney/validation",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./trade": "./src/trade/index.ts",
+    "./holding": "./src/holding/index.ts",
+    "./mutual-fund": "./src/mutual-fund/index.ts",
+    "./fire": "./src/fire/index.ts",
+    "./common": "./src/common/index.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0",
+    "test": "node --import tsx ../../scripts/test-timeout.ts --import tsx --test --test-timeout=30000 \"__tests__/**/*.test.ts\""
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@usemoney/typescript-config": "*",
+    "typescript": "5.9.2"
+  }
+}

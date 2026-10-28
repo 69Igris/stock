@@ -1,0 +1,29 @@
+{
+  "name": "@usemoney/database",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "scripts": {
+    "db:generate": "prisma generate",
+    "db:push": "dotenv -e ../../.env -- prisma db push",
+    "db:push:qa": "dotenv -e ../../.env.qa -- prisma db push",
+    "db:push:prod": "dotenv -e ../../.env.prod -- prisma db push",
+    "db:migrate": "dotenv -e ../../.env -- prisma migrate dev",
+    "db:studio": "dotenv -e ../../.env -- prisma studio",
+    "migrate:roast-async": "../../packages/database/scripts/migrate-roast-async.sh",
+    "migrate:roast-async:qa": "../../packages/database/scripts/migrate-roast-async.sh qa",
+    "migrate:roast-async:prod": "../../packages/database/scripts/migrate-roast-async.sh prod"
+  },
+  "dependencies": {
+    "@prisma/client": "5.22.0",
+    "prisma": "5.22.0"
+  },
+  "devDependencies": {
+    "dotenv-cli": "^11.0.0"
+  }
+}

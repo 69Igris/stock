@@ -1,0 +1,100 @@
+{
+  "name": "[{{env}}] {{job}} has not reported a run in {{window}}",
+  "type": "query alert",
+  "query": "sum(last_{{window}}):default_zero(count_not_null(sum:{{selected_metric}}{job:{{job}},env:{{env}}}.as_count())) < 1",
+  "message": "{{job}} has not reported a run in the last {{window}}.\n\nThis is the ABSENCE case for a SPARSE job \u2014 one whose `selected` counter is legitimately 0 on most runs, because a checkpoint or a novelty gate means a caught-up run finds nothing to do. So this query counts SUBMISSIONS rather than work: `count_not_null` asks only whether the job reported at all, and a run that honestly reported `selected: 0` counts as a run.\n\nTHERE IS THEREFORE ONE CAUSE: THE JOB DID NOT RUN.\n\n  1. PUSH-SUBSCRIPTION JOB. Check Cloud Scheduler for the trigger's last attempt and Cloud Run for 5xx/409 on POST /jobs/{{job}}. A 503 that leaves a pubsub-dedupe lease held answers 409 for the next hour, so one transient error can look like a dead schedule (MONEY-1293: news-sync lost ~62h this way on 2026-08-28, and nothing paged).\n  2. CLOUD RUN JOB. Check `gcloud run jobs executions list`, then read the EXECUTION's env rather than the job spec. An execution carrying no DD_API_KEY / DD_METRICS_TRANSPORT takes the DogStatsD branch, posts every counter into a port with no sidecar listening, logs `Connection refused`, and reports NOTHING while exiting 0 (MONEY-1278; edgar-bulk-ftd lost `selected: 13255` exactly this way on 2026-09-03).\n\nWHAT THIS VARIANT DELIBERATELY DOES NOT ASK is whether the selection gate has broken. For a sparse job `selected: 0` IS the designed steady state, and the zero-write monitor reads 0/0 as idle by design \u2014 so a permanently empty selection is unalarmed here, on purpose. The STANDING variant (monitor-job-absence.json) makes the opposite call for jobs whose population always has rows, where a zero IS the defect (MONEY-1215).\n\n@{{notify}}",
+  "tags": [
+    "managed-by:apply-monitors",
+    "money:1293",
+    "money:1399",
+    "job:{{job}}",
+    "env:{{env}}"
+  ],
+  "options": {
+    "notify_no_data": "{{notify_no_data}}",
+    "no_data_timeframe": "{{no_data_minutes}}",
+    "renotify_interval": 0,
+    "thresholds": {
+      "critical": 1
+    },
+    "require_full_window": false,
+    "include_tags": true
+  },
+  "_notify_no_data_rationale": [
+    "TRUE, and it is a backstop rather than the mechanism. default_zero() makes",
+    "the query itself evaluate on silence, so in the normal case this monitor",
+    "alerts from its own threshold and never reaches NO DATA. The one case",
+    "default_zero cannot cover is a tag combination that has never existed \u2014",
+    "a renamed job id, a changed env tag \u2014 where there is no series to fill with",
+    "zeros. notify_no_data catches that at 3x the window.",
+    "",
+    "This is the opposite call from monitor-latency-p95.json, and deliberately:",
+    "that series is empty in states we ship on purpose, so absence there is not",
+    "a signal. Here absence IS the signal."
+  ],
+  "_threshold_rationale": [
+    "`< 1` on a COUNT OF SUBMISSIONS, not on a sum of work. `count_not_null`",
+    "returns the number of points that actually exist in the window, so a run",
+    "that reported `selected: 0` contributes 1 and a window with no run at all",
+    "contributes nothing.",
+    "",
+    "THE DISTINCTION IS REAL IN THE DATA, AND THE STANDING QUERY THROWS IT AWAY.",
+    "Measured 2026-09-13 against the live org: edgar-bulk-ftd's 2026-09-10",
+    "13:30Z run left ONE non-null point whose value is 0.0, while",
+    "resend-contact-sync over the same window has NO SERIES AT ALL.",
+    "`default_zero(sum:...)` fills the gaps with zeros and makes those two",
+    "states identical \u2014 which is why that monitor was created 2026-09-06,",
+    "went to Alert 11 seconds later, and had never once been OK, while the",
+    "table it feeds (us_cusip_map.SEC_FTD, 23,406 rows) was being filled",
+    "correctly the whole time.",
+    "",
+    "`.as_count()` for the reason the zero-write template gives: sum() of a",
+    "counter without it is a rate average, which can round a single small run",
+    "toward zero and page for a run that happened."
+  ],
+  "_placeholders": [
+    "{{job}}              stable job id (matches reportJobOutcome's `job` field)",
+    "{{env}}              Datadog env TAG value \u2014 production | qa",
+    "{{selected_metric}}  EMITTED_JOB_METRICS.selected (prefix included)",
+    "{{window}}           alert window \u2014 must exceed the MAX GAP BETWEEN RUNS.",
+    "                     For a SPARSE row that is the ONLY constraint, because",
+    "                     this query ignores the VALUE: the longest legitimate",
+    "                     stretch of `selected == 0` does not size it. See the",
+    "                     two-constraint block in apply-monitors.sh.",
+    "{{no_data_minutes}}  3x the window, in minutes",
+    "{{notify}}           notification handle"
+  ],
+  "_no_data_ceiling_rationale": [
+    "DATADOG CAPS no_data_timeframe AT 4320 MINUTES (72h). Measured, not read:",
+    "35 of 37 monitors were refused 400 \"No data timeframe must be <= 4320\" on",
+    "the first live apply. Everything below follows from that ceiling.",
+    "",
+    "notify_no_data only means something when its timeframe EXCEEDS the job's",
+    "legitimate maximum gap. Otherwise it fires on a healthy schedule, gets",
+    "muted, and the monitor is worse than absent - which is MONEY-1238.",
+    "",
+    "The WINDOW is already sized to exceed that gap (a week-long cron",
+    "simulation sets it). So:",
+    "  window < 4320 min -> no_data = min(3x window, 4320), notify TRUE.",
+    "                       72h still exceeds a sub-72h gap, so clamping is safe.",
+    "  window >= 4320 min -> the gap is at or past Datadog's ceiling and NO",
+    "                       valid timeframe exists. notify FALSE, deliberately.",
+    "",
+    "The 96h jobs are the ones this decides: Fri->Mon is a 72h legitimate gap,",
+    "so a 72h no-data alarm would fire EVERY WEEKEND. That is exactly how",
+    "bhavcopy-sync's monitor got muted."
+  ],
+  "_why_default_zero_stays": [
+    "LOAD-BEARING, and not obviously so \u2014 it looks like the thing this",
+    "variant exists to remove. `count_not_null` ALONE returns NO SERIES on a",
+    "window with no points (measured against the live org over edgar-bulk-ftd's",
+    "silent 2026-09-04..09-09 stretch), so the threshold would never evaluate",
+    "and the monitor would sit grey instead of alerting \u2014 the exact state",
+    "MONEY-1359 finding 10 is about. Wrapped in default_zero() the same window",
+    "evaluates to a real 0 and `< 1` fires.",
+    "",
+    "Confirmed by a natural experiment already in the estate: on 2026-09-12",
+    "resend-contact-sync's ABSENCE monitor (default_zero) read Alert while its",
+    "ZERO-WRITE monitor (no default_zero) read No Data on the very same silence."
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "Data": [
+    {
+      "Id": "d92559ee-7efb-4dc6-b375-00b69c0fdd27",
+      "Title": "Portfolio Details as on 31st July 2026 for Mirae Asset Small Cap Fund",
+      "URL": "/docs/default-source/portfolios/mascf-july2026.xlsx",
+      "PublishDate": "\/Date(1786320000000)\/",
+      "ImageURL": null,
+      "Description": null
+    },
+    {
+      "Id": "d3a1f8ef-8395-4875-bb27-022313423231",
+      "Title": "Portfolio Details as on 31st July 2026 for Mirae Asset Nifty EV and New Age Automotive ETF",
+      "URL": "/docs/default-source/portfolios/evetf-july2026.xlsx",
+      "PublishDate": "\/Date(1786320000000)\/",
+      "ImageURL": null,
+      "Description": null
+    },
+    {
+      "Id": "5f0794bb-6798-4eb4-b9e1-1b78e6bb11df",
+      "Title": "Portfolio Details as on 31st July 2026 for Mirae Asset Nifty200 Momentum 30 Plus 8-13 yr G-Sec 50:50 ETF",
+      "URL": "/docs/default-source/portfolios/hybetf-july2026.xlsx",
+      "PublishDate": "\/Date(1786320000000)\/",
+      "ImageURL": null,
+      "Description": null
+    },
+    {
+      "Id": "4afcc1d4-b333-4212-8ba5-8b429cc74f9e",
+      "Title": "Portfolio Details as on 31st July 2026 for Mirae Asset Nifty200 Momentum 30 Plus 8-13yr G-Sec 75:25 Index Fund",
+      "URL": "/docs/default-source/portfolios/hybif-july2026.xlsx",
+      "PublishDate": "\/Date(1786320000000)\/",
+      "ImageURL": null,
+      "Description": null
+    },
+    {
+      "Id": "47110a5e-07b5-4584-9945-02a56cdef99c",
+      "Title": "Portfolio Details as on 31st July 2026 for Mirae Asset Nifty 200 Alpha 30 ETF",
+      "URL": "/docs/default-source/portfolios/alpha-july2026.xlsx",
+      "PublishDate": "\/Date(1786320000000)\/",
+      "ImageURL": null,
+      "Description": null
+    },
+    {
+      "Id": "a64f628b-3674-42f0-b3ee-ef66864cb9dd",
+      "Title": "Portfolio Details as on 30th June 2026 for Mirae Asset Small Cap Fund",
+      "URL": "/docs/default-source/portfolios/mascf-june2026.xlsx",
+      "PublishDate": "\/Date(1783641600000)\/",
+      "ImageURL": null,
+      "Description": null
+    },
+    {
+      "Id": "38c92f59-35b6-4d48-bcc6-1eb58aeee0e9",
+      "Title": "Portfolio Details as on 31st December 2024 for Mirae Asset Corporate Bond Fund",
+      "URL": "/docs/default-source/portfolios/macbf_dec2024.xlsx?sfvrsn=7bf3bc41_2",
+      "PublishDate": "\/Date(1736380800000)\/",
+      "ImageURL": null,
+      "Description": null
+    },
+    {
+      "Id": "8056487b-b087-4bee-a4e9-282303a1e3e3",
+      "Title": "Portfolio Details as on 30th September 2024 for Mirae Asset Aggressive Hybrid Fund\t\t\t\t\t\t",
+      "URL": "/docs/default-source/portfolios/maipf_sept2024.xlsx?sfvrsn=eb1e810a_2",
+      "PublishDate": "\/Date(1727654400000)\/",
+      "ImageURL": null,
+      "Description": null
+    },
+    {
+      "Id": "0acd67ba-59c8-4b32-9c0b-057065230610",
+      "Title": "Portfolio Details as on 31st August 2024 for Mirae Asset Nifty Bank ETF",
+      "URL": "/docs/default-source/portfolios/manbt_31aug2024.xlsx?sfvrsn=87cd5806_2",
+      "PublishDate": "\/Date(1725840000000)\/",
+      "ImageURL": null,
+      "Description": null
+    },
+    {
+      "Id": "36692b2c-6d3e-4779-bb89-f2969bdcd143",
+      "Title": "Portfolio Details as on 31st May 2026 for Mirae Asset Nifty200 Alpha 30 ETF Fund of Fund",
+      "URL": "/docs/default-source/portfolios/alphafof.xlsx",
+      "PublishDate": "\/Date(1781049600000)\/",
+      "ImageURL": null,
+      "Description": null
+    },
+    {
+      "Id": "a877594b-0fc5-4625-b875-da74231bae1a",
+      "Title": "Portfolio Details as on 31st March 2026 for Mirae Asset Nifty PSU Bank ETF",
+      "URL": "docs/default-source/portfolios/psubetf_march2026.xlsx",
+      "PublishDate": "\/Date(1775692800000)\/",
+      "ImageURL": null,
+      "Description": null
+    },
+    {
+      "Id": "5d164384-a686-4aa2-b730-9fa64d9fc2a8",
+      "Title": "Portfolio Details as on 31st August 2025 for Mirae Asset Nifty Metal ETF",
+      "URL": "https://miraeassetlivepr.azurewebsites.net/docs/default-source/portfolios/metaletf_aug2025.xlsx",
+      "PublishDate": "\/Date(1757462400000)\/",
+      "ImageURL": null,
+      "Description": null
+    },
+    {
+      "Id": "d1097e53-808c-4673-8666-fa664bc30e4e",
+      "Title": "Portfolio Details as on 31st December 2024 for Mirae Asset Nifty EV and New Age Automotive ETF",
+      "URL": "docs/default-source/portfolios/evetf_dec2024.xlsx",
+      "PublishDate": "\/Date(1736380800000)\/",
+      "ImageURL": null,
+      "Description": null
+    },
+    {
+      "Id": "2edfe602-0196-462c-82c7-0591039aec53",
+      "Title": "Portfolio Details - October 2019",
+      "URL": "https://www.miraeassetmf.co.in/docs/default-source/portfolios/mirae-asset-full-portfolio---october-2019-(2).xls",
+      "PublishDate": "\/Date(1572307200000)\/",
+      "ImageURL": null,
+      "Description": null
+    }
+  ],
+  "DataCount": 3616,
+  "access_token": null,
+  "token_type": null,
+  "expires_in": null,
+  "ReturnCode": "0",
+  "ReturnMsg": "success",
+  "ErrorMsg": null
+}

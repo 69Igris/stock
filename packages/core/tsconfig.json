@@ -1,0 +1,22 @@
+{
+  "extends": "@usemoney/typescript-config/base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "declaration": true,
+    "declarationMap": true,
+    // MONEY-1157: drop the DOM libs inherited from base.json. base.json must
+    // keep them (react-library.json / nextjs.json extend it), but @usemoney/core
+    // is server-side business logic with no DOM globals, and the DOM lib types
+    // `Response.json()` as `any` — which silently laundered unvalidated broker
+    // payloads into the OAuth token-exchange paths. Consumers that resolve core
+    // via its `src` entry points (e.g. apps/api, which sets lib ES2022) were the
+    // only ones catching it. Matching them here makes core's own `tsc --noEmit`
+    // an honest gate instead of a false clean bill of health.
+    "lib": ["ES2022"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

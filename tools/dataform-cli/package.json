@@ -1,0 +1,8 @@
+{
+  "name": "usemoney-dataform-cli",
+  "private": true,
+  "description": "MONEY-1611: the Dataform CLI the lake-gold job runs, installed in workers/Dockerfile with `npm ci` from the lockfile beside this. NOT a yarn workspace (root workspaces are apps/*, packages/*, workers). The version must equal dataformCoreVersion in dataform/workflow_settings.yaml; lake-gold-job.test.ts holds them together.",
+  "dependencies": {
+    "@dataform/cli": "3.0.0"
+  }
+}

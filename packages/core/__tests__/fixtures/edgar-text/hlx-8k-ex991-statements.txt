@@ -1,0 +1,125 @@
+                                          current industry and economic         
+                                          trends. We involved our tax           
+                                          professionals to                      
+                                          ensure appropriate application and    
+                                          interpretation of foreign tax laws    
+                                          to the calculation of foreign tax     
+                                          expense and evaluating                
+                                          communications with tax authorities.  
+                                          In addition, we evaluated the         
+                                          Company’s disclosure in relation to   
+                                          these matters                         
+                                          included in Note 14 to the financial  
+                                          statements                            
+                                                                                
+/s/ Ernst & Young LLP We have served as the Company’s auditors since 2002. New
+Orleans, Louisiana March 24, 2026 3
+
+HORNBECK OFFSHORE SERVICES, INC. AND SUBSIDIARIES CONSOLIDATED BALANCE SHEETS
+(in thousands, except per share data)
+                                                                                
+                                         December 31,          December 31,     
+                                                 2025                  2024     
+ ────────────────────────────────────────────────────────────────────────────── 
+  ASSETS                                                                        
+  Current assets:                                                               
+  Cash and cash equivalents           $        54,167       $        80,803     
+  Accounts receivable, net of                                                   
+  allowance for credit losses of              164,695               145,527     
+  $7,511 and $7,929,                                                            
+  respectively                                                                  
+  Prepaid expenses                              4,941                 4,490     
+  Taxes receivable                             19,026                13,755     
+  Other current assets                         14,180                12,376     
+  Total current assets                        257,009               256,951     
+  Property, plant and equipment,              754,135               674,729     
+  net                                                                           
+  Restricted cash                                   —                   765     
+  Deferred charges, net                        97,234                72,075     
+  Deferred tax assets, net                     16,034                     —     
+  Operating lease                              17,802                20,748     
+  right-of-use assets                                                           
+  Finance lease                                10,516                 1,142     
+  right-of-use assets                                                           
+  Other assets                                     57                    57     
+  Total assets                        $     1,152,787       $     1,026,467     
+  LIABILITIES AND STOCKHOLDERS’                                                 
+  EQUITY                                                                        
+  Current liabilities:                                                          
+  Accounts payable                    $        58,251       $        71,092     
+  Accrued interest                              3,571                   578     
+  Accrued payroll and benefits                 24,429                22,267     
+  Current maturities of long-term                                               
+  debt, net of original issue                                                   
+  discount of $1,021 and $0, and               30,259                     —     
+  deferred financing costs of $334                                              
+  and $0, respectively                                                          
+  Operating lease liabilities                   3,532                 5,037     
+  Finance lease liabilities                     4,809                   457     
+  Accrued taxes payable                         9,363                 9,914     
+  Deferred revenue                              3,918                 6,694     
+  Other current liabilities                     4,137                 1,962     
+  Total current liabilities                   142,269               118,001     
+  Long-term debt, net of original                                               
+  issue discount of $4,742 and                                                  
+  $6,750, and deferred financing              410,352               441,231     
+  costs                                                                         
+  of $1,618 and $2,019,                                                         
+  respectively                                                                  
+  Deferred tax liabilities, net                     —                 6,049     
+  Operating lease liabilities                  17,245                18,861     
+  Financing lease liabilities                   6,195                   589     
+  Other long-term liabilities                   8,364                 7,594     
+  Total long-term liabilities                 442,156               474,324     
+  Total liabilities                           584,425               592,325     
+  STOCKHOLDERS’ EQUITY:                                                         
+  Common stock: $0.00001 par                                                    
+  value; 50,000 shares authorized;                                              
+  5,232 and 5,367 shares issued                     —                     —     
+  and                                                                           
+  outstanding, respectively                                                     
+  Additional paid-in capital                  259,166               264,869     
+  Retained earnings                           311,337               176,761     
+  Accumulated other comprehensive              (2,141  )             (7,488  )  
+  loss                                                                          
+  Total stockholders’ equity                  568,362               434,142     
+  Liabilities and stockholders’       $     1,152,787       $     1,026,467     
+  equity                                                                        
+                                                                                
+The accompanying notes are an integral part of these consolidated financial
+statements. 4
+
+HORNBECK OFFSHORE SERVICES, INC. AND SUBSIDIARIES CONSOLIDATED STATEMENTS OF
+OPERATIONS (in thousands, except per share data)
+                                                                                
+                  Year ended                                                    
+                  December 31,       2025             2024             2023     
+ ────────────────────────────────────────────────────────────────────────────── 
+  Revenues:                                                                     
+  Vessel          $               669,004       $  592,246       $  528,780     
+  revenues                                                                      
+  Non-vessel                       50,826           48,605           44,669     
+  revenues                                                                      
+                                  719,830          640,851          573,449     
+  Costs and                                                                     
+  expenses:                                                                     
+  Operating                       376,291          364,584          305,463     
+  expense                                                                       
+  Depreciation                     41,554           37,812           26,355     
+  expense                                                                       
+  Amortization                     43,815           26,734           21,496     
+  expense                                                                       
+  General and                                                                   
+  administrat…                     74,461           71,110           66,108     
+  expense                                                                       
+  Stock-based                                                                   
+  compensation                      7,723            9,384           19,097     
+  expense                                                                       
+                                  543,844          509,624          438,519     
+  Gain on sale                     13,222               42            2,702     
+  of assets                                                                     
+  Operating                       189,208          131,269          137,632     
+  income                                                                        
+  Interest                         32,559           26,382           39,802     
+  expense                                                                       
+  Interest                          6,518            5,763            9,755     

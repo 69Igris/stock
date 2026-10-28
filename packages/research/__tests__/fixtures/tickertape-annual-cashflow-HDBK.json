@@ -1,0 +1,75 @@
+{
+  "success": true,
+  "data": [
+    {
+      "displayPeriod": "FY 2022",
+      "endDate": "2022-03-31T00:00:00.000Z",
+      "reporting": "consolidated",
+      "cafCiwc": -82740.12000000001,
+      "cafCfoa": -11959.57,
+      "cafCexp": 2236.24,
+      "cafCfia": -2051.23,
+      "cafTcdp": 3592.4,
+      "cafCffa": 48124.02,
+      "cafFee": null,
+      "cafNcic": 34113.22,
+      "cafFcf": -14195.81
+    },
+    {
+      "displayPeriod": "FY 2023",
+      "endDate": "2023-03-31T00:00:00.000Z",
+      "reporting": "consolidated",
+      "cafCiwc": -58908.68000000001,
+      "cafCfoa": 20813.7,
+      "cafCexp": 3466.57,
+      "cafCfia": -2992.18,
+      "cafTcdp": 8604.52,
+      "cafCffa": 23940.56,
+      "cafFee": null,
+      "cafNcic": 41762.08,
+      "cafFcf": 17347.13
+    },
+    {
+      "displayPeriod": "FY 2024",
+      "endDate": "2024-03-31T00:00:00.000Z",
+      "reporting": "consolidated",
+      "cafCiwc": -72549.06,
+      "cafCfoa": 19069.34,
+      "cafCexp": 4286.72,
+      "cafCfia": 16600.42,
+      "cafTcdp": 8404.42,
+      "cafCffa": -3983.06,
+      "cafFee": null,
+      "cafNcic": 31686.699999999993,
+      "cafFcf": 14782.619999999999
+    },
+    {
+      "displayPeriod": "FY 2025",
+      "endDate": "2025-03-31T00:00:00.000Z",
+      "reporting": "consolidated",
+      "cafCiwc": 9599.68,
+      "cafCfoa": 127241.84,
+      "cafCexp": 4075.89,
+      "cafCfia": -3650.91,
+      "cafTcdp": 14826.19,
+      "cafCffa": -102477.54,
+      "cafFee": null,
+      "cafNcic": 21113.39,
+      "cafFcf": 123165.95
+    },
+    {
+      "displayPeriod": "FY 2026",
+      "endDate": "2026-03-31T00:00:00.000Z",
+      "reporting": "consolidated",
+      "cafCiwc": -20038.94999999997,
+      "cafCfoa": 113506.38,
+      "cafCexp": 3889.97,
+      "cafCfia": 7476.62,
+      "cafTcdp": 20705.98,
+      "cafCffa": -59004.85,
+      "cafFee": null,
+      "cafNcic": 61978.15,
+      "cafFcf": 109616.41
+    }
+  ]
+}

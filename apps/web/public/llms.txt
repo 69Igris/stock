@@ -1,0 +1,59 @@
+# UseMoney - AI/LLM Crawler Guidance
+# https://usemoney.ai
+
+## About
+UseMoney is an AI-powered trading portfolio management platform for Indian stock markets.
+It provides multi-broker integration, portfolio analytics, paper trading, FIRE planning tools,
+and educational content for retail investors in India.
+
+## Contact
+Website: https://usemoney.ai
+Support: support@usemoney.ai
+
+## Public Content (Crawlable)
+
+### Static Pages
+- https://usemoney.ai/ - Landing page
+- https://usemoney.ai/pricing - Subscription plans and pricing
+- https://usemoney.ai/privacy - Privacy policy
+- https://usemoney.ai/terms - Terms of service
+
+### Blog
+- https://usemoney.ai/blog - Blog listing (investing, trading strategies, portfolio management)
+- https://usemoney.ai/blog/{slug} - Individual blog posts
+
+### Newsletter
+- https://usemoney.ai/newsletter - Newsletter archive (market insights, trading strategies)
+- https://usemoney.ai/newsletter/{slug} - Individual newsletter issues
+
+### Financial Glossary
+- https://usemoney.ai/glossary - Financial terms glossary (stock market, trading, investment terminology)
+- https://usemoney.ai/glossary/{slug} - Individual glossary term definitions
+
+### Documentation
+- https://usemoney.ai/docs - Platform documentation and guides
+- https://usemoney.ai/docs/{slug} - Individual documentation pages
+
+## Crawling Guidelines
+- All routes listed above are publicly accessible and may be indexed
+- All other routes require authentication and should NOT be indexed
+- API endpoints (/api/*) are not for public consumption
+- Sitemap available at: https://usemoney.ai/sitemap.xml
+
+## Features
+- Multi-broker integration (Zerodha, Upstox, Angel One, Groww, Dhan, Fyers)
+- Portfolio tracking and analytics across all brokers
+- Trade book with FIFO pairing and CSV import
+- Paper trading simulator with real-time market data
+- FIRE (Financial Independence, Retire Early) calculator
+- AI-powered portfolio analysis, research, and market insights
+- Risk analysis (VaR, drawdown, correlation)
+- Portfolio roast (AI-powered portfolio scoring)
+- Stock and mutual fund discovery
+- Watchlist management
+- Tax analysis
+- Educational content (blog, glossary, newsletters, documentation)
+
+## Technology
+Built with Next.js 15, React 19, TypeScript, Tailwind CSS, and deployed on Vercel.
+Database: MongoDB Atlas. AI: Google Gemini. Payments: Dodo Payments.

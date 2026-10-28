@@ -1,0 +1,33 @@
+{
+  "quoteResponse": {
+    "result": [
+      {
+        "symbol": "RELIANCE.NS",
+        "shortName": "Reliance Industries",
+        "longName": "Reliance Industries Limited",
+        "regularMarketPrice": 1402.5,
+        "regularMarketChange": 12.3,
+        "regularMarketChangePercent": 0.885,
+        "regularMarketOpen": 1390.0,
+        "regularMarketDayHigh": 1410.0,
+        "regularMarketDayLow": 1385.5,
+        "regularMarketPreviousClose": 1390.2,
+        "regularMarketVolume": 5123456,
+        "regularMarketTime": 1718418600,
+        "marketCap": 18980000000000,
+        "trailingPE": 27.4,
+        "fiftyTwoWeekHigh": 1608.8,
+        "fiftyTwoWeekLow": 1114.85,
+        "exchange": "NSI",
+        "quoteType": "EQUITY"
+      },
+      {
+        "symbol": "DELISTED.NS",
+        "shortName": "Delisted Co",
+        "exchange": "NSI",
+        "quoteType": "EQUITY"
+      }
+    ],
+    "error": null
+  }
+}

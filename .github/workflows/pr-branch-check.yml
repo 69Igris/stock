@@ -1,0 +1,43 @@
+name: PR Branch Name Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+
+jobs:
+  check-branch-name:
+    name: Validate branch naming convention
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check branch name
+        env:
+          BRANCH: ${{ github.head_ref }}
+        run: |
+          # Allow exempt branches
+          if [[ "$BRANCH" =~ ^(main|release|develop|dependabot/.*)$ ]]; then
+            echo "✅ Exempt branch: $BRANCH"
+            exit 0
+          fi
+
+          # Validate: {type}/MONEY-{number}     (text descriptions NOT allowed)
+          REGEX='^(feat|fix|test|chore|docs|refactor|perf|ci|build|style|hotfix)/MONEY-[0-9]+$'
+
+          if [[ "$BRANCH" =~ $REGEX ]]; then
+            echo "✅ Branch name valid: $BRANCH"
+          else
+            echo ""
+            echo "❌ Branch name does not follow the naming convention."
+            echo ""
+            echo "  Expected: {type}/MONEY-{number}     (no text description)"
+            echo "  Got:      $BRANCH"
+            echo ""
+            echo "  Allowed types: feat, fix, test, chore, docs, refactor, perf, ci, build, style, hotfix"
+            echo "  Text descriptions are NOT allowed - the Linear ticket is the source of truth."
+            echo ""
+            echo "  Examples:"
+            echo "    feat/MONEY-85"
+            echo "    fix/MONEY-108"
+            echo "    test/MONEY-112"
+            echo ""
+            exit 1
+          fi

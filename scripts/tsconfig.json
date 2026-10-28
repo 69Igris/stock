@@ -1,0 +1,15 @@
+{
+  "extends": "@usemoney/typescript-config/base.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    // A script that imports @usemoney/services reaches a .tsx renderer through
+    // the barrel. Without this the project reports TS6142 ("resolved to .tsx
+    // but --jsx is not set") against a file OUTSIDE scripts/ — a diagnostic
+    // about this config rather than about any script (MONEY-1238).
+    "jsx": "react-jsx",
+    "noEmit": true
+  },
+  "include": ["./**/*.ts", "./**/*.mts"],
+  "exclude": ["node_modules"]
+}

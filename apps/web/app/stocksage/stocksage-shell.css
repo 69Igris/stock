@@ -1,0 +1,211 @@
+/* ══════════════════════════════════════════════════════════════════
+   StockSage shell — responsive / mobile rail drawers  (MONEY-587, task #32)
+
+   Mobile-first: the right "Sources" rail is an off-canvas drawer that
+   slides in from the right (transform: translateX(101%)) below 1280px and
+   becomes an inline 3rd pane at >=1280px. A click-to-close backdrop covers
+   the page while the drawer is open on mobile, and a thin reopen tab (with
+   an unread-count badge) lets the user pull the rail back in on desktop.
+
+   Scoped under .ss-shell / .ss-right etc. so nothing collides with the
+   chat-block CSS in app/chat-blocks.css.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* The flex row holding history-sidebar · center · sources-rail. */
+.ss-shell {
+  position: relative;
+}
+
+/* ── RIGHT SOURCES RAIL (drawer below 1280, inline ≥1280) ──────────── */
+.ss-right {
+  position: fixed;
+  top: var(--mobile-header-h, 5.25rem);
+  right: 0;
+  bottom: 0;
+  /* top + bottom drive the drawer height; override Tailwind h-full so the
+     fixed drawer doesn't resolve height:100% against the viewport and
+     overflow below the header. */
+  height: auto;
+  width: 360px;
+  max-width: 90vw;
+  z-index: 80;
+  transform: translateX(101%);
+  transition: transform 0.26s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--surface);
+  border-left: 2px solid var(--ink);
+}
+.ss-right.is-open {
+  transform: translateX(0);
+  box-shadow: -8px 0 0 rgba(0, 0, 0, 0.04);
+}
+
+/* ── Backdrop (mobile only, click-to-close) ────────────────────────── */
+.ss-backdrop {
+  position: fixed;
+  top: var(--mobile-header-h, 5.25rem);
+  inset-inline: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.42);
+  z-index: 70;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.ss-backdrop.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ── Reopen tab + floating reopen button ───────────────────────────── */
+/* Mobile floating reopen button (bottom-right, above the composer). */
+.ss-reopen-fab {
+  position: fixed;
+  right: 14px;
+  bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 13px;
+  border-radius: 999px;
+  border: 1.5px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-hard, 3px 3px 0 var(--ink));
+}
+.ss-reopen-fab:hover {
+  transform: translate(-1px, -1px);
+}
+.ss-reopen-fab .cnt {
+  display: grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--emerald-pure);
+  color: #fff;
+  border: 1.5px solid var(--paper);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* Desktop vertical reopen tab (shown ≥1280 when the rail is closed). */
+.ss-reopen {
+  display: none;
+}
+
+/* ── Wide-content scroll guard ─────────────────────────────────────── */
+/* Tables / cards that overflow narrow viewports scroll horizontally
+   instead of forcing the whole page wide. Block-level tables already wrap
+   in `.cb-table-scroll`; this keeps the shell flex chain shrinkable so
+   that horizontal scroll lands on those inner containers (not the page). */
+.ss-scroll-x {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.ss-shell,
+.ss-shell .pf-app {
+  min-width: 0;
+  max-width: 100%;
+}
+/* Defensive: any wide table/pre inside the stocksage thread scrolls
+   horizontally on narrow viewports rather than widening the page. */
+.ss-shell table,
+.ss-shell pre {
+  max-width: 100%;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   RESPONSIVE — right rail persists inline ≥1280px
+   ══════════════════════════════════════════════════════════════════ */
+@media (min-width: 1280px) {
+  .ss-right {
+    position: relative;
+    top: auto;
+    bottom: auto;
+    transform: none;
+    max-width: none;
+    /* MONEY-778: match the design's 360px rail (ss.css .ss-right) and the
+       /analysis page; chat was the only surface at 300px. */
+    width: 360px;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+  .ss-right.is-closed {
+    display: none;
+  }
+  .ss-right.is-open {
+    box-shadow: none;
+  }
+
+  /* Backdrop + mobile FAB never show at desktop width. */
+  .ss-backdrop,
+  .ss-reopen-fab {
+    display: none;
+  }
+
+  /* Thin desktop reopen tab. */
+  .ss-reopen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    width: 44px;
+    border-left: 2px solid var(--ink);
+    background: var(--surface);
+    padding: 14px 0;
+    cursor: pointer;
+  }
+  .ss-reopen .vt {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    font-weight: 700;
+  }
+  .ss-reopen .cnt {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    background: var(--emerald-pure);
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    min-width: 24px;
+    height: 24px;
+    display: grid;
+    place-items: center;
+  }
+  .ss-reopen:hover .cnt {
+    transform: translate(-1px, -1px);
+    box-shadow: 2px 2px 0 var(--ink);
+  }
+}
+
+/* Between 1024–1279px the AppShell swaps the mobile header for the desktop
+   topbar; the rail is still an off-canvas drawer, so align it to topbar-h. */
+@media (min-width: 1024px) and (max-width: 1279.98px) {
+  .ss-right,
+  .ss-backdrop {
+    top: var(--topbar-h, 5.25rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ss-right,
+  .ss-backdrop {
+    transition: none;
+  }
+}

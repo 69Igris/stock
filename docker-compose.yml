@@ -1,0 +1,44 @@
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+      args:
+        NODE_ENV: local
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=local
+      - PORT=8080
+      - REDIS_URL=redis://redis:6379
+      - WEB_URL=http://localhost:3000
+      - ADMIN_URL=http://localhost:3001
+    env_file:
+      - apps/api/.env.local
+    depends_on:
+      - redis
+
+  workers:
+    build:
+      context: .
+      dockerfile: workers/Dockerfile
+    ports:
+      - "8081:8080"
+    environment:
+      - PORT=8080
+      - NODE_ENV=local
+      - REDIS_URL=redis://redis:6379
+    env_file:
+      - workers/.env
+    depends_on:
+      - redis
+
+volumes:
+  redis-data:

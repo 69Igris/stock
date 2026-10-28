@@ -1,0 +1,445 @@
+{
+ "amc": "KOTAK",
+ "provenance": "real",
+ "sourceUrl": "https://vatseelabs-s3.kotakmf.com/FormsDownloads/Portfolios/Consolidated-SEBI-Portfolio-as-on-August-31,-2026/ConsolidatedSEBIPortfolioAugust2026.xlsx",
+ "fetchedAt": "2026-09-14T12:22:02.009Z",
+ "httpStatus": 200,
+ "userAgent": "absent",
+ "fileBytes": 3706593,
+ "dataMonth": "2026-08",
+ "sheetName": "V3I",
+ "sheetCountInFile": 120,
+ "headerRow": 1,
+ "rowsCaptured": "0..11 of 93",
+ "colsCaptured": 9,
+ "merges": [
+  {
+   "s": {
+    "c": 0,
+    "r": 1
+   },
+   "e": {
+    "c": 2,
+    "r": 1
+   }
+  },
+  {
+   "s": {
+    "c": 0,
+    "r": 2
+   },
+   "e": {
+    "c": 2,
+    "r": 2
+   }
+  },
+  {
+   "s": {
+    "c": 1,
+    "r": 3
+   },
+   "e": {
+    "c": 2,
+    "r": 3
+   }
+  }
+ ],
+ "cells": [
+  [
+   null,
+   null,
+   {
+    "v": "Portfolio of Kotak Nifty200 Value 30 Index Fund as on 31-Aug-2026",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   {
+    "v": "Name of Instrument",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   {
+    "v": "ISIN Code",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Industry",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Yield",
+    "t": "s",
+    "z": "0.00"
+   },
+   {
+    "v": "Quantity",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Market Value (Rs.in Lacs)",
+    "t": "s",
+    "z": "#,##0.00"
+   },
+   {
+    "v": "% to Net Assets",
+    "t": "s",
+    "z": "0.00"
+   }
+  ],
+  [
+   {
+    "v": "Equity & Equity related",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   {
+    "v": "Listed/Awaiting listing on Stock Exchange",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   {
+    "v": " ",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "STATE BANK OF INDIA.",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "INE062A01020",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Banks",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   {
+    "v": 6613,
+    "t": "n",
+    "z": "General"
+   },
+   {
+    "v": 70.10000000000001,
+    "t": "n",
+    "z": "#,##0.00"
+   },
+   {
+    "v": 5.32,
+    "t": "n",
+    "z": "0.00"
+   }
+  ],
+  [
+   null,
+   {
+    "v": " ",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "BHARAT PETROLEUM CORPORATION  LTD.",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "INE029A01011",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Petroleum Products",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   {
+    "v": 21612,
+    "t": "n",
+    "z": "General"
+   },
+   {
+    "v": 70.03,
+    "t": "n",
+    "z": "#,##0.00"
+   },
+   {
+    "v": 5.3100000000000005,
+    "t": "n",
+    "z": "0.00"
+   }
+  ],
+  [
+   null,
+   {
+    "v": " ",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Oil And Natural Gas Corporation Ltd.",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "INE213A01029",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Oil",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   {
+    "v": 28512,
+    "t": "n",
+    "z": "General"
+   },
+   {
+    "v": 66.09,
+    "t": "n",
+    "z": "#,##0.00"
+   },
+   {
+    "v": 5.010000000000001,
+    "t": "n",
+    "z": "0.00"
+   }
+  ],
+  [
+   null,
+   {
+    "v": " ",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Hindalco Industries Ltd.",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "INE038A01020",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Non - Ferrous Metals",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   {
+    "v": 6469,
+    "t": "n",
+    "z": "General"
+   },
+   {
+    "v": 65.69,
+    "t": "n",
+    "z": "#,##0.00"
+   },
+   {
+    "v": 4.98,
+    "t": "n",
+    "z": "0.00"
+   }
+  ],
+  [
+   null,
+   {
+    "v": " ",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "NTPC LTD",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "INE733E01010",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Power",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   {
+    "v": 19163,
+    "t": "n",
+    "z": "General"
+   },
+   {
+    "v": 62.74,
+    "t": "n",
+    "z": "#,##0.00"
+   },
+   {
+    "v": 4.760000000000001,
+    "t": "n",
+    "z": "0.00"
+   }
+  ],
+  [
+   null,
+   {
+    "v": " ",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Coal India Limited",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "INE522F01014",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Consumable Fuels",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   {
+    "v": 15490,
+    "t": "n",
+    "z": "General"
+   },
+   {
+    "v": 62.230000000000004,
+    "t": "n",
+    "z": "#,##0.00"
+   },
+   {
+    "v": 4.72,
+    "t": "n",
+    "z": "0.00"
+   }
+  ],
+  [
+   null,
+   {
+    "v": " ",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "INDIAN OIL CORPORATION LTD.",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "INE242A01010",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Petroleum Products",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   {
+    "v": 43970,
+    "t": "n",
+    "z": "General"
+   },
+   {
+    "v": 61.18,
+    "t": "n",
+    "z": "#,##0.00"
+   },
+   {
+    "v": 4.640000000000001,
+    "t": "n",
+    "z": "0.00"
+   }
+  ],
+  [
+   null,
+   {
+    "v": " ",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "TATA MOTORS PASSENGER VEHICLES LTD",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "INE155A01022",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Automobiles",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   {
+    "v": 19567,
+    "t": "n",
+    "z": "General"
+   },
+   {
+    "v": 60.43,
+    "t": "n",
+    "z": "#,##0.00"
+   },
+   {
+    "v": 4.590000000000001,
+    "t": "n",
+    "z": "0.00"
+   }
+  ]
+ ]
+}

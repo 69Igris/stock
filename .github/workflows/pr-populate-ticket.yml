@@ -1,0 +1,78 @@
+name: PR Populate Linear Ticket
+
+# Auto-populate the `MONEY-XXX` placeholder in the PR body with the ticket
+# number extracted from the branch name when a PR is opened.
+#
+# Why this exists:
+#   GitHub's built-in PR templates are static markdown - they don't support
+#   any form of templating. We enforce a strict `{type}/MONEY-{number}`
+#   branch convention (see .github/workflows/pr-branch-check.yml) and the
+#   ticket is always extractable from the branch name, so this workflow
+#   patches the PR body on open to replace the `MONEY-XXX` placeholder
+#   with the real ticket. Saves the author one copy-paste.
+#
+# Security:
+#   All untrusted inputs (branch name, PR body) are passed through `env:`
+#   and referenced as shell variables - never inlined into run: commands.
+#   See https://github.blog/security/vulnerability-research/how-to-catch
+#   -github-actions-workflow-injections-before-attackers-do/
+#
+# When it runs: only on `pull_request.opened` - editing later is a no-op
+# to avoid surprising the author after manual edits.
+
+on:
+  pull_request:
+    types: [opened]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  populate-ticket:
+    name: Replace MONEY-XXX with branch ticket
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract ticket number from branch and update PR body
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          BRANCH: ${{ github.head_ref }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          set -euo pipefail
+
+          # Extract MONEY-{number} from the branch name.
+          # All untrusted input ($BRANCH, $PR_BODY) is handled via shell
+          # variables from env: - never inlined into the script - so
+          # injection payloads in branch names or PR bodies cannot break
+          # out of the string context.
+          if [[ ! "$BRANCH" =~ MONEY-([0-9]+) ]]; then
+            echo "No MONEY-<number> in branch name '$BRANCH' - nothing to populate."
+            exit 0
+          fi
+          TICKET="MONEY-${BASH_REMATCH[1]}"
+          echo "Detected Linear ticket from branch: $TICKET"
+
+          if [ -z "${PR_BODY:-}" ]; then
+            echo "PR body is empty - nothing to patch."
+            exit 0
+          fi
+
+          if [[ "$PR_BODY" != *"MONEY-XXX"* ]]; then
+            echo "No MONEY-XXX placeholder in PR body - nothing to patch."
+            exit 0
+          fi
+
+          # Write the body to a temp file and rewrite the placeholder there.
+          # Using a file + --body-file (instead of inlining with sed and
+          # passing the result as --body) lets special characters in the
+          # PR body (quotes, backticks, dollar signs, multi-line blocks)
+          # round-trip safely without any shell quoting gymnastics.
+          BODY_FILE="$(mktemp)"
+          printf '%s' "$PR_BODY" > "$BODY_FILE"
+          sed -i "s/MONEY-XXX/${TICKET}/g" "$BODY_FILE"
+
+          gh pr edit "$PR_NUMBER" --body-file "$BODY_FILE"
+          echo "Updated PR #$PR_NUMBER - MONEY-XXX → $TICKET"

@@ -1,0 +1,119 @@
+/* ─────────────────────────────────────────────────────────────────
+   FIRE Calculator — playful design tokens + mobile overrides.
+   Extends playful-app.css. Co-located per instructions.
+   ───────────────────────────────────────────────────────────────── */
+
+/* ── Slider track ─────────────────────────────────────────────── */
+.pf-fire-slider {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--rule-softer);
+  border: 1.5px solid var(--rule-soft);
+  outline: none;
+  cursor: pointer;
+  display: block;
+}
+.pf-fire-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--ink);
+  border: 2px solid var(--paper);
+  box-shadow: 0 0 0 2px var(--ink);
+  cursor: pointer;
+}
+.pf-fire-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--ink);
+  border: 2px solid var(--paper);
+  box-shadow: 0 0 0 2px var(--ink);
+  cursor: pointer;
+}
+
+/* ── Inline editable input inside tables ──────────────────────── */
+.pf-fire-inline-input {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  color: var(--ink);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  outline: none;
+}
+.pf-fire-inline-input:focus {
+  border-bottom: 1.5px solid var(--emerald);
+}
+
+/* ── Grid layouts ─────────────────────────────────────────────── */
+.pf-fire-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.pf-fire-main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+.pf-fire-milestones-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 12px;
+}
+
+.pf-fire-whatif-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.pf-fire-asset-grid {
+  display: grid;
+  grid-template-columns: 130px minmax(0, 1fr);
+  gap: 16px;
+}
+
+/* Mobile stacks */
+@media (max-width: 1100px) {
+  .pf-fire-main-grid {
+    grid-template-columns: 1fr;
+  }
+  .pf-fire-inputs-panel {
+    position: static !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .pf-fire-asset-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Scenario bar ─────────────────────────────────────────────── */
+.pf-fire-scenario-bar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+/* ── Range track fill (needs inline background) ───────────────── */
+.pf-fire-knob-track {
+  height: 5px;
+  border-radius: 999px;
+  border: 1.5px solid var(--rule-soft);
+  overflow: hidden;
+}

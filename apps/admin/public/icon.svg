@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  
+  <g transform="rotate(-3 256 256)">
+    <rect width="512" height="512" rx="92" ry="92" fill="#1d1d1b"></rect>
+    <text x="256" y="372" text-anchor="middle" font-family="JetBrains Mono, ui-monospace, monospace" font-weight="800" font-size="340" fill="#f7f3e6" letter-spacing="-8">U</text>
+  </g>
+</svg>

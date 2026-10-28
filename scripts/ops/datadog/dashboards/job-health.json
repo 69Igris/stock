@@ -1,0 +1,97 @@
+{
+  "_ticket": "MONEY-1361",
+  "_why": [
+    "The board for 'which scheduled job has stopped producing'. The first widget",
+    "is the ZERO-WRITE MONITOR'S OWN QUERY, by job instead of per job, so the",
+    "board and the alarm cannot disagree: dashboards-agreement.test.ts renders",
+    "monitor-zero-write.json through apply-monitors.sh and compares the two",
+    "clamp_max skeletons, rather than restating the formula here."
+  ],
+  "title": "UseMoney — job health",
+  "description": "managed-by:apply-dashboards — edit the file, not the UI",
+  "layout_type": "ordered",
+  "template_variables": [
+    { "name": "env", "prefix": "env", "default": "production" }
+  ],
+  "widgets": [
+    {
+      "definition": {
+        "type": "query_table",
+        "title": "Selected but wrote nothing (36h) — the monitor's own query",
+        "_why": "clamp_max(selected,1) - clamp_max(written,1) > 0 is the truth table: found work and produced nothing ALERTS, a partial write does not, and genuinely idle (0/0) does not. A bare ratio or subtraction loses all three distinctions.",
+        "requests": [
+          {
+            "q": "clamp_max(sum:stockbook.job.selected{$env} by {job}.as_count(), 1) - clamp_max(sum:stockbook.job.written{$env} by {job}.as_count(), 1)",
+            "aggregator": "last",
+            "limit": 60,
+            "order": "desc"
+          }
+        ],
+        "time": { "live_span": "2d" }
+      }
+    },
+    {
+      "definition": {
+        "type": "toplist",
+        "title": "Rows written by job, 7d",
+        "requests": [
+          {
+            "q": "top(sum:stockbook.job.written{$env} by {job}.as_count(), 50, 'sum', 'desc')"
+          }
+        ],
+        "time": { "live_span": "1w" }
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Rows selected by job",
+        "_why": "Selected WITHOUT written is the half that makes a zero honest: a job that selects nothing is idle, a job that selects and writes nothing is broken, and the two are byte-identical if you only plot writes.",
+        "requests": [
+          {
+            "q": "sum:stockbook.job.selected{$env} by {job}.as_count()",
+            "display_type": "bars"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Upstream (transport) failures by job",
+        "_why": "Its own counter because it is not measured in ROWS — a 403 from an upstream is a reason no rows were considered, and folding it into `failed` is what hid Tickertape's egress block for five months.",
+        "requests": [
+          {
+            "q": "sum:stockbook.job.transport_failures{$env} by {job}.as_count()",
+            "display_type": "bars"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Rows that failed to persist, by job",
+        "requests": [
+          {
+            "q": "sum:stockbook.job.failed{$env} by {job}.as_count()",
+            "display_type": "bars"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "EDGAR detection latency p95 (s)",
+        "_why": "A DogStatsD histogram, so the sidecar aggregates it into .avg/.count/.max/.median/.95percentile sub-series — the base name `stockbook.edgar.detect_latency_seconds` carries no points of its own and a widget on it renders empty.",
+        "requests": [
+          {
+            "q": "avg:stockbook.edgar.detect_latency_seconds.95percentile{$env}",
+            "display_type": "line"
+          }
+        ]
+      }
+    }
+  ]
+}

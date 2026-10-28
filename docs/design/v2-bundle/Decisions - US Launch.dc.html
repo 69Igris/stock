@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/usemoney-play-design-system-67522a6c-d1c3-4617-97de-fcd968490366/colors_and_type.css">
+  <style>
+    body{margin:0;background:var(--paper);background-image:radial-gradient(var(--dot-fg) 1px,transparent 1.5px),radial-gradient(var(--dot-fg-2) 1px,transparent 1.5px);background-size:7px 7px,11px 11px;font-family:var(--font-sans);color:var(--ink)}
+    a{color:var(--emerald-text);text-decoration:none}a:hover{color:var(--ink);text-decoration:underline}
+  </style>
+</helmet>
+<div style="max-width:880px;margin:0 auto;padding:54px 28px 100px">
+  <div style="display:inline-flex;align-items:center;gap:7px;font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--emerald-text);letter-spacing:1.4px;text-transform:uppercase"><span style="width:6px;height:6px;border-radius:99px;background:var(--emerald)"></span>DECISIONS LOG · US + INDIA · WEB + MOBILE · 06 SEP 2026</div>
+  <h1 style="font-weight:800;font-size:44px;line-height:1.02;letter-spacing:-2px;margin:14px 0 10px">Decided, <span style="font-family:var(--font-serif);font-style:italic;font-weight:400">and why.</span></h1>
+  <p style="font-size:15px;line-height:1.6;color:var(--ink-2);max-width:680px;margin:0">What changed between the shared US Launch mockups, the code on <span style="font-family:var(--font-mono);font-size:13px">main</span>, and this project's v2 set. Each row names the option we took, the alternative we didn't, and what in the repo it leans on.</p>
+
+  <div style="margin-top:22px;border:2px solid var(--ink);border-radius:12px;background:var(--pop-2);box-shadow:3px 3px 0 var(--ink);padding:14px 18px;font-size:13px;line-height:1.6;color:#1d1d1b">
+    <span style="font-family:var(--font-mono);font-size:10.5px;font-weight:700;letter-spacing:1.2px">SUPERSEDES</span> — Module D (US Launch) · the pre-GA / waitlist state in the shared mockups and in v2 Screener · IBKR as a connect path. <b>Everything else in the shared US Launch mockups stands</b> and is ported to <a href="v2 US Launch.dc.html">v2 US Launch</a>.
+  </div>
+
+  <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+    <div style="margin-top:18px;border:2px solid var(--ink);border-radius:14px;background:var(--paper-3);box-shadow:4px 4px 0 var(--ink);overflow:hidden">
+      <div style="background:var(--ink);color:var(--paper);padding:11px 20px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><span style="font-family:var(--font-mono);font-weight:800;font-size:13px;background:var(--pop-2);color:#1d1d1b;border-radius:6px;padding:1px 9px;transform:rotate(-2deg)">{{ r.n }}</span><b style="font-size:16px">{{ r.t }}</b><span style="margin-left:auto;font-family:var(--font-mono);font-size:9.5px;opacity:0.7">{{ r.scope }}</span></div>
+      <div style="padding:14px 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;font-size:13px;line-height:1.6;color:var(--ink-2)">
+        <div><div style="font-family:var(--font-mono);font-size:9px;font-weight:800;letter-spacing:1.2px;color:var(--emerald-text)">DECISION</div><div style="margin-top:4px;color:var(--ink)">{{ r.d }}</div></div>
+        <div><div style="font-family:var(--font-mono);font-size:9px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">NOT THIS</div><div style="margin-top:4px">{{ r.not }}</div></div>
+        <div><div style="font-family:var(--font-mono);font-size:9px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">IN THE REPO</div><div style="margin-top:4px;font-family:var(--font-mono);font-size:11.5px;line-height:1.7">{{ r.repo }}</div></div>
+      </div>
+      <div style="padding:10px 20px;border-top:1.5px dashed var(--rule-soft);background:var(--paper-2);font-size:12.5px;color:var(--ink-2)"><b>Where it shows:</b> {{ r.where }}</div>
+    </div>
+  </sc-for>
+
+  <div style="margin-top:26px;border:2px solid var(--ink);border-radius:14px;background:var(--paper-3);box-shadow:4px 4px 0 var(--ink);padding:18px 22px">
+    <div style="font-family:var(--font-mono);font-size:10.5px;font-weight:700;letter-spacing:1.2px;color:var(--ink-3)">OPEN — NEEDS ENGINEERING BEFORE BUILD</div>
+    <ul style="margin:10px 0 0;padding-left:18px;font-size:13.5px;line-height:1.75;color:var(--ink-2)">
+      <li><b>Databento</b> is not on <span style="font-family:var(--font-mono);font-size:12px">main</span> yet. When it lands: confirm it feeds EOD only at launch, and which flag turns live ticks on (mockups assume <span style="font-family:var(--font-mono);font-size:12px">us-quotes-live</span>).</li>
+      <li><b>RBI reference-rate fetcher</b> is a stub (<span style="font-family:var(--font-mono);font-size:12px">fetchFromRbi</span> returns null, MONEY-217). Cost-basis and LRS screens depend on it.</li>
+      <li><b>SnapTrade vs ConnectTrade</b> — pick one; scopes/copy in the consent screen assume SnapTrade's connection portal.</li>
+      <li><b>Persona fields</b> (market, residency, primary currency) need a home on the user model; nothing stores them today.</li>
+      <li><b>Tier gate</b> replaces the flag at launch — the gated state is deliberately not designed yet.</li>
+      <li><b>StockSage US arm</b> — no US tools in the research registry yet (every symbol tool reads NSE/BSE/screener.in/XBRL). Needs EDGAR + EOD tools, a `market` field on the plan and the preview-plan estimate, and the picker's rich search to include `us_instruments` behind <span style="font-family:var(--font-mono);font-size:12px">us-stocks-search</span>. Until then the US-page CTA must be gated, not hopeful.</li>
+      <li><b>Mobile clients</b> — the repo ships a REST API for mobile, no app source. The mobile mockups target that API; confirm the app is a separate repo.</li>
+    </ul>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:22px;font-size:12.5px">
+    <a href="UseMoney v2 Hub.dc.html" style="border:2px solid var(--ink);border-radius:9px;background:var(--paper);padding:8px 13px;font-weight:800;box-shadow:2px 2px 0 var(--ink);color:var(--ink)">v2 Hub →</a>
+    <a href="v2 US Launch.dc.html" style="border:2px solid var(--ink);border-radius:9px;background:var(--paper);padding:8px 13px;font-weight:800;box-shadow:2px 2px 0 var(--ink);color:var(--ink)">v2 US Launch →</a>
+    <a href="UseMoney Mobile.html?start=usportfolio" style="border:2px solid var(--ink);border-radius:9px;background:var(--paper);padding:8px 13px;font-weight:800;box-shadow:2px 2px 0 var(--ink);color:var(--ink)">Mobile v2.1 · US →</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return { rows: [
+      { n: "01", t: "US quotes are end-of-day at launch", scope: "WEB + MOBILE", d: "Every US price carries ◷ EOD · <date> close. No intraday chart, no live claim. Live ticks arrive later behind a flag; the pill and copy already have a slot for it.", not: "Live in session / delayed outside (the shared mockups). Too easy to ship a live badge over a stale number.", repo: "us-client.tsx · ProvenanceChip + DelayedDataNote · tiingo-rt-read (ingest only) · Databento pending", where: "US stock page, holdings, dashboard tiles, screener US pill, sync log." },
+      { n: "02", t: "Two FX rates, each with one job", scope: "WEB + MOBILE", d: "Spot (hourly) for today's values and totals — stamped SPOT ₹84.00/$ · 1H. RBI reference rate of the trade date for cost basis and every LRS figure — stamped RBI REF. Never mixed on one number.", not: "One published daily rate for everything. Cost basis would drift with the day's rate.", repo: "core/currency/exchange-rates.ts (Yahoo USDINR=X, 1h cache) · services/gst/rbi-fx.ts (RBI ref, stub)", where: "Import review, holdings totals, LRS ledger, Market preferences disclosure." },
+      { n: "03", t: "No pre-GA, no waitlist — a flag, then a tier", scope: "WEB + MOBILE", d: "While us-stocks-listing is off, the US layer is simply absent. Mockups carry a FLAG ON/OFF control to show both states. At launch the gate becomes a pricing tier (designed later).", not: "Waitlist with a queue position. There is no launch stage that needs it.", repo: "lib/types/feature-flags.ts (UsFeatureFlag) · us-market-access.ts email allowlist (founder gate, not a product state)", where: "v2 Screener US pill, v2 Dashboard FLAG button, US Launch top bar, mobile screener." },
+      { n: "04", t: "SnapTrade (or ConnectTrade) for US retail brokers; IBKR direct dropped", scope: "WEB + MOBILE", d: "Robinhood, Fidelity, Schwab, Webull, E*TRADE via the aggregator's connection portal, read-only scopes only. IBKR statements still import.", not: "IBKR OAuth direct connect. Its single 'trading' scope contradicts read-only; the adapter stays in the repo but is not a product path.", repo: "brokers/adapters/interactive-brokers.ts (kept, not surfaced) · no aggregator code yet", where: "Link a brokerage, consent → sync → done / re-auth, Connected US accounts." },
+      { n: "05", t: "Persona = two onboarding questions", scope: "WEB + MOBILE", d: "Where do you invest? (India / US / Both) then, if US: Where do you live? (US → NRI, $ primary, link first · India → LRS, ₹ primary, import first, LRS tracker on). Both editable in Market preferences.", not: "Inferring from broker or import source, or a bare currency toggle. Residency is what drives LRS, and it should be asked.", repo: "No user fields yet — needs market, residency, primaryCurrency on the profile", where: "Onboarding step 4, Market preferences, currency order everywhere." },
+      { n: "06", t: "Vendor never named", scope: "WEB + MOBILE", d: "Prices say 'third-party consolidated tape'. Filings say SEC EDGAR (public source, not a vendor). FX says spot / RBI reference.", not: "Naming Tiingo or Databento in the UI. Licence terms and vendor swaps shouldn't leak into copy.", repo: "ProvenanceChip currently renders source ids like TIINGO_RT — map to a neutral label", where: "Every provenance chip, disclosure block, sync log." },
+      { n: "07", t: "US lands inside the v2 set, not beside it", scope: "WEB", d: "A 5th surface (US Launch, 8 screens) plus deltas inside v2 Dashboard and v2 Screener. Module D superseded.", not: "Keeping the shared file as the only source. The v2 shell, nav and dark mode are where the rest of the product lives.", repo: "apps/web routes unchanged: /brokers, /stock/[symbol], /settings", where: "UseMoney v2 Hub cards 05–06." },
+      { n: "09", t: "StockSage: US research is a flagged arm, and the picker must say which market", scope: "WEB + MOBILE · AUDIT", d: "@-mention picker gains a market pill (INDIA | US) and NASDAQ/NYSE badges; US rows appear only with us-stocks-search. 'Research with Sage' on a US page is gated by us-stock-research and, while off, reads 'Research · India only today' rather than failing after the credit is spent. US runs, when they arrive, use EDGAR + EOD tools and say so in the plan preview.", not: "Letting a US ticker through the existing pipeline. The agent resolves market: 'IN' only; a bare 'AAPL' fails with 'not listed on NSE or BSE' — after the plan step.", repo: "packages/research/src/agent.ts (market: \"IN\", India-only by capability) · symbol-resolver.ts (.NS default) · StockMentionPicker.tsx (NSE/BSE badges only, 'Search NSE / BSE…') · feature-flags.ts (us-stock-research, us-stocks-search) · preview-plan/route.ts (no market in estimate)", where: "US stock page Sage CTA (web + mobile), chat @-picker, research confirm sheet, plan preview." },
+      { n: "08", t: "Mobile gets the full US layer and the v2 parity screens", scope: "MOBILE", d: "Fork, SnapTrade link, import, US stock, mixed holdings, LRS, preferences; plus Screener with scans sheet, Strategies lifecycle, Home presets, Settings → Developer. 14 new flows in the existing 65-screen app.", not: "Gate-only or core-only. The mobile API already exposes strategies, scans, saved-screens and /v1/market/us/quotes.", repo: "apps/api/src/routes/v1/{market,strategies,scans,saved-screens,imports}.ts · apps/api/src/lib/us-access.ts", where: "UseMoney Mobile.html → ☰ Flows → 'US layer' and 'Web-v2 parity'." },
+    ] };
+  }
+}
+</script>
+</body>
+</html>

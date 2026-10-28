@@ -1,0 +1,343 @@
+/* Blog list — playful aesthetic */
+.filter-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+.filter-row a {
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  color: var(--ink-2);
+  border: 1.5px solid var(--ink);
+  transition:
+    background 0.12s,
+    color 0.12s;
+}
+.filter-row a:hover {
+  background: var(--rule-softer);
+}
+.filter-row a.on {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.feat-post {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 50px;
+  align-items: center;
+  padding-bottom: 40px;
+  margin-bottom: 50px;
+  border-bottom: 2px solid var(--ink);
+}
+.feat-post .img {
+  aspect-ratio: 16/10;
+  background: #0d1117;
+  padding: 30px;
+  overflow: hidden;
+  position: relative;
+  border: 2px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--ink);
+  border-radius: 12px;
+}
+html.dark .feat-post .img {
+  background: #060912;
+}
+.feat-post .img .tag {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: var(--pop-2);
+  color: #1d1d1b;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border: 1.5px solid #1d1d1b;
+  z-index: 2;
+}
+.feat-post .body .cat {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--emerald);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.feat-post .body h2 {
+  margin-top: 14px;
+  font-size: clamp(30px, 3.8vw, 44px);
+  line-height: 1.04;
+  letter-spacing: -1.4px;
+  font-weight: 800;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.feat-post .body h2 .ser {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+}
+.feat-post .body h2 .hl {
+  background: var(--pop-2);
+  padding: 0 4px;
+  border-radius: 3px;
+  color: var(--ink);
+}
+.feat-post .body p {
+  margin-top: 14px;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 460px;
+}
+.feat-post .body a.read-more {
+  display: inline-block;
+  margin-top: 20px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  color: var(--emerald);
+  font-weight: 600;
+}
+.feat-post .meta {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.feat-post .meta .avi {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--pop-4);
+  border: 2px solid var(--ink);
+  display: grid;
+  place-items: center;
+  color: var(--paper);
+  font-weight: 800;
+  font-size: 12px;
+  font-family: "JetBrains Mono", monospace;
+  transform: rotate(-3deg);
+}
+.feat-post .meta .info {
+  font-size: 13px;
+  color: var(--ink-3);
+}
+.feat-post .meta .info b {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.post-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+.post-card {
+  padding: 24px 26px;
+  border-radius: 14px;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s,
+    background 0.12s;
+  display: flex;
+  flex-direction: column;
+  color: var(--ink);
+}
+.post-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-hard);
+  background: var(--paper-3);
+}
+.post-card .cat {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--emerald);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.post-card h3 {
+  margin-top: 12px;
+  font-size: 22px;
+  line-height: 1.12;
+  letter-spacing: -0.5px;
+  font-weight: 800;
+  color: var(--ink);
+  flex: 1;
+}
+.post-card h3 .ser {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+}
+.post-card p {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.post-card .meta {
+  margin-top: 16px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  color: var(--ink-3);
+}
+
+/* Empty state */
+.blog-empty {
+  margin: 0 auto;
+  padding: 50px 40px;
+  max-width: 560px;
+  text-align: center;
+  border: 2px dashed var(--ink);
+  border-radius: 14px;
+  background: var(--paper-3);
+}
+.blog-empty p {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-size: 20px;
+  color: var(--ink-2);
+}
+.blog-empty .sub {
+  margin-top: 12px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  color: var(--ink-3);
+  letter-spacing: 0.5px;
+}
+
+/* Newsletter — always-dark band, hard-coded so polarity doesn't flip */
+.newsletter-card {
+  background: #1d1d1b;
+  color: #f7f3e6;
+  padding: 60px 50px;
+  border-radius: 16px;
+  text-align: center;
+  border: 2px solid #1d1d1b;
+  box-shadow: 6px 6px 0 var(--pop-2);
+  position: relative;
+  overflow: hidden;
+}
+.newsletter-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    rgba(247, 243, 230, 0.04) 1px,
+    transparent 1.5px
+  );
+  background-size: 9px 9px;
+  pointer-events: none;
+}
+.newsletter-card h3 {
+  font-size: clamp(32px, 4.2vw, 48px);
+  letter-spacing: -1.6px;
+  font-weight: 800;
+  line-height: 1.05;
+  color: #f7f3e6;
+  position: relative;
+}
+.newsletter-card h3 .ser {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+}
+.newsletter-card h3 .hl {
+  background: var(--pop-2);
+  color: #1d1d1b;
+  padding: 0 6px;
+  border-radius: 4px;
+}
+.newsletter-card p {
+  margin-top: 16px;
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-size: 20px;
+  color: rgba(247, 243, 230, 0.78);
+  max-width: 540px;
+  margin-inline: auto;
+  position: relative;
+}
+.newsletter-card form {
+  margin: 30px auto 0;
+  max-width: 480px;
+  display: flex;
+  gap: 8px;
+  position: relative;
+}
+.newsletter-card form input {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(247, 243, 230, 0.4);
+  font: inherit;
+  font-size: 14px;
+  background: rgba(247, 243, 230, 0.06);
+  color: #f7f3e6;
+}
+.newsletter-card form input::placeholder {
+  color: rgba(247, 243, 230, 0.5);
+}
+.newsletter-card form button {
+  padding: 12px 24px;
+  border-radius: 8px;
+  background: #f7f3e6;
+  color: #1d1d1b;
+  font-weight: 700;
+  font-size: 14px;
+  border: 1.5px solid #f7f3e6;
+  cursor: pointer;
+  transition:
+    box-shadow 0.12s,
+    transform 0.12s;
+}
+.newsletter-card form button:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--pop-2);
+}
+.newsletter-card .meta {
+  margin-top: 18px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  color: rgba(247, 243, 230, 0.55);
+  position: relative;
+}
+
+@media (max-width: 1000px) {
+  .feat-post,
+  .post-grid {
+    grid-template-columns: 1fr;
+  }
+  .post-grid {
+    gap: 16px;
+  }
+}
+
+/*
+ * Phones: stack the newsletter form so the Subscribe button gets its own row.
+ * Desktop is a single flex row (input grows, button hugs its content); below
+ * 600px the row is too cramped — the button text was clipping to "Subscri".
+ */
+@media (max-width: 600px) {
+  .newsletter-card {
+    padding: 40px 22px;
+  }
+  .newsletter-card form {
+    flex-direction: column;
+    gap: 12px;
+    max-width: 320px;
+  }
+  .newsletter-card form input,
+  .newsletter-card form button {
+    width: 100%;
+  }
+}

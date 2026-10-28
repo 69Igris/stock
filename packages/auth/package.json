@@ -1,0 +1,25 @@
+{
+  "name": "@usemoney/auth",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@clerk/nextjs": "7.4.2"
+  },
+  "peerDependencies": {
+    "@clerk/nextjs": "7.4.2"
+  },
+  "devDependencies": {
+    "@usemoney/typescript-config": "*",
+    "typescript": "5.9.2"
+  }
+}

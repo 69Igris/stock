@@ -1,0 +1,40 @@
+# Integration test pipeline
+# Runs on: PR merge to develop branch
+# Requires: DATABASE_URL_QA, REDIS_URL_QA, WORKER_URL_QA secrets in GCP Secret Manager
+
+steps:
+  # 1. Install dependencies
+  - name: 'node:22'
+    entrypoint: 'yarn'
+    args: ['install', '--frozen-lockfile']
+
+  # 2. Run unit tests (fast, no external deps)
+  - name: 'node:22'
+    entrypoint: 'yarn'
+    args: ['test']
+    timeout: '300s'
+
+  # 3. Run integration tests (needs QA secrets)
+  - name: 'node:22'
+    entrypoint: 'yarn'
+    args: ['test:integration']
+    timeout: '600s'
+    env:
+      - 'RUN_INTEGRATION_TESTS=true'
+    secretEnv:
+      - 'DATABASE_URL'
+      - 'REDIS_URL'
+      - 'WORKER_URL'
+
+availableSecrets:
+  secretManager:
+    - versionName: projects/stock-book-483718/secrets/DATABASE_URL_QA/versions/latest
+      env: DATABASE_URL
+    - versionName: projects/stock-book-483718/secrets/REDIS_URL_QA/versions/latest
+      env: REDIS_URL
+    - versionName: projects/stock-book-483718/secrets/WORKER_URL_QA/versions/latest
+      env: WORKER_URL
+
+timeout: '900s'
+options:
+  machineType: 'E2_HIGHCPU_8'

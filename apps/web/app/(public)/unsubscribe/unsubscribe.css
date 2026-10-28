@@ -1,0 +1,168 @@
+/* ─────────────────────────────────────────────────────────────────────
+   Public Unsubscribe page — scoped styles.
+   Depends on playful.css being loaded first (provides CSS custom
+   properties and .playful-page scope, button classes, etc.).
+   ───────────────────────────────────────────────────────────────────── */
+
+/* Full-height centering wrapper — sits inside .playful-page > main */
+.unsub-outer {
+  min-height: calc(100vh - 140px); /* rough nav + footer height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+}
+
+/* Card */
+.unsub-card {
+  width: 100%;
+  max-width: 480px;
+  background: var(--paper-3);
+  border: 2px solid var(--ink);
+  border-radius: 16px;
+  padding: 40px 36px 32px;
+  box-shadow: var(--shadow-hard);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+}
+
+/* Icon badge */
+.unsub-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  border: 2px solid var(--ink);
+  margin-bottom: 20px;
+  flex-shrink: 0;
+}
+
+.unsub-icon--success {
+  background: var(--emerald-bg);
+  color: var(--emerald);
+}
+
+.unsub-icon--neutral {
+  background: var(--rule-softer);
+  color: var(--ink-3);
+}
+
+.unsub-icon--error {
+  background: rgba(255, 107, 53, 0.1);
+  color: var(--pop-1);
+}
+
+/* Eyebrow — matches page-head eyebrow from playful.css */
+.unsub-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--emerald);
+  letter-spacing: 0.3px;
+  margin-bottom: 10px;
+}
+
+.unsub-eyebrow .d {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--emerald);
+  animation: ph-pulse 1.6s infinite; /* reuse playful.css keyframe */
+}
+
+/* Title */
+.unsub-title {
+  font-size: clamp(26px, 5vw, 36px);
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+  font-weight: 800;
+  color: var(--ink);
+  margin: 0 0 16px;
+}
+
+/* Body copy */
+.unsub-body {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  margin: 0 0 12px;
+}
+
+.unsub-body--muted {
+  color: var(--ink-3);
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+/* CTA slot (error states) */
+.unsub-cta {
+  margin-bottom: 20px;
+}
+
+/* Resubscribe button — full-width variant of .btn-solid */
+.unsub-resub-btn {
+  width: 100%;
+  justify-content: center;
+  padding: 13px 22px;
+  font-size: 15px;
+  border-radius: 10px;
+  margin-bottom: 24px;
+  /* Disabled state */
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s,
+    opacity 0.12s;
+}
+
+.unsub-resub-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Footer links row */
+.unsub-footer-links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.unsub-link {
+  font-size: 13px;
+  color: var(--ink-3);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.unsub-link:hover {
+  color: var(--emerald);
+}
+
+.unsub-sep {
+  color: var(--ink-4);
+  font-size: 13px;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────── */
+@media (max-width: 520px) {
+  .unsub-card {
+    padding: 28px 20px 24px;
+    border-radius: 12px;
+  }
+
+  .unsub-title {
+    font-size: 26px;
+    letter-spacing: -1px;
+  }
+}

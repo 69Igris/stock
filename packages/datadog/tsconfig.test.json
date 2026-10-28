@@ -1,0 +1,57 @@
+{
+  // MONEY-1326 — type-check the TESTS here too.
+  //
+  // `tsconfig.json` includes only `src/**/*`, so `tsc --listFiles` saw ZERO
+  // files under `__tests__/` — 4,163 lines of test code, including the
+  // 719-line `job-outcome-source-scan.ts` that BOTH job-outcome guards read,
+  // entirely outside `yarn type-check` (gate 3 of `verify:push`).
+  //
+  // That is the same hole MONEY-1326 closed for `workers/`, and it matters for
+  // the same reason: a test whose types are wrong may be asserting against a
+  // shape that no longer exists, which is how a guard silently stops guarding.
+  // The scanner is not a test at all — it is the ANALYSIS the guards' verdicts
+  // rest on — so leaving it unchecked put the load-bearing module on the wrong
+  // side of the gate that the change introducing it was arguing for.
+  //
+  // MEASURED before wiring it in: 0 errors, with `noUncheckedIndexedAccess`
+  // both on and off. So unlike `workers/` (19 errors) and `packages/core`,
+  // there was no damage to triage and nothing to baseline.
+  //
+  // A separate config rather than widening `include`, for the reason
+  // `workers/tsconfig.test.json` and `packages/core/tsconfig.test.json` give:
+  // the main config EMITS (`outDir: "./dist"`, `declaration: true`), so
+  // pulling `__tests__` in would start emitting .d.ts files for test code into
+  // the shipped bundle. This one only checks.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+
+    // Widened from `./src` to the PACKAGE root — `__tests__` sits outside the
+    // emitted tree, and without this every test file is TS6059 ("not under
+    // rootDir"), which is 4 errors that say nothing about the code.
+    //
+    // Not widened to the monorepo root the way `workers/` needs: nothing here
+    // imports across a package boundary. The guards read
+    // `workers/src/processors/*.ts` as TEXT at runtime via `node:fs`, never as
+    // a module, which is the whole point of a source scan.
+    //
+    // rootDir exists to control the LAYOUT OF EMITTED OUTPUT. This config emits
+    // nothing, so there is no layout to constrain. tsconfig.json still emits
+    // with `rootDir: "./src"`.
+    "rootDir": ".",
+    "declaration": false,
+    "declarationMap": false
+
+    // `noUncheckedIndexedAccess` is deliberately LEFT ON, unlike `workers/` and
+    // `packages/core`, which both turned it off after measuring the cost (55
+    // and similar, essentially all `arr[0]` on a known-shape fixture). Here it
+    // costs ZERO errors, so the stricter check is free and there is nothing to
+    // trade for it. If it ever starts costing, measure before turning it off —
+    // do not copy the neighbours' decision without their measurement.
+  },
+  // `src` is included alongside `__tests__` because the tests import it, and a
+  // project listing only the tests would pull src in through those imports
+  // anyway — naming it makes the graph explicit rather than incidental.
+  "include": ["src/**/*", "__tests__/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

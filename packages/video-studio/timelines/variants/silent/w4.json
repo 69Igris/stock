@@ -1,0 +1,65 @@
+{
+  "title": "W4 Index vs Active (Silent)",
+  "aspect": "9:16",
+  "fps": 30,
+  "brandTheme": "cream",
+  "scenes": [
+    {
+      "id": "hook",
+      "type": "hook",
+      "durationSec": 4,
+      "kicker": "SPIVA India · 10-yr",
+      "headline": "Active vs ==Index==",
+      "subtext": "Who wins over 10 years?",
+      "motion": "rise"
+    },
+    {
+      "id": "stat1",
+      "type": "stat",
+      "durationSec": 4.5,
+      "stat": {
+        "kicker": "Large-cap · 10-yr",
+        "value": "73%",
+        "label": "of active funds lagged the index."
+      },
+      "motion": "kenburns-in",
+      "disclaimer": true
+    },
+    {
+      "id": "stat2",
+      "type": "stat",
+      "durationSec": 4.5,
+      "stat": {
+        "kicker": "Mid/Small-cap · 10-yr",
+        "value": "82%",
+        "label": "underperformed (SPIVA India)."
+      },
+      "motion": "rise",
+      "disclaimer": true
+    },
+    {
+      "id": "broll",
+      "type": "veo",
+      "durationSec": 6,
+      "veoPrompt": "abstract two soft ribbons of emerald-green and cream light flowing side by side and gently merging into one steady stream over a dark background, premium minimal fintech motion graphics, calm, elegant, no text, no logos, no people",
+      "motion": "static"
+    },
+    {
+      "id": "p1",
+      "type": "point",
+      "durationSec": 4.5,
+      "headline": "==Costs== compound too",
+      "subtext": "Lower cost, fewer surprises.",
+      "motion": "rise",
+      "disclaimer": true
+    },
+    {
+      "id": "cta",
+      "type": "cta",
+      "durationSec": 3.5,
+      "headline": "Long game, *low cost*.",
+      "subtext": "Education only · UseMoney AI (my product)",
+      "motion": "pop"
+    }
+  ]
+}

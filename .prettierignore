@@ -1,0 +1,48 @@
+# Generated artifacts — rewritten by a script, so formatting them is churn:
+# `yarn format` reformats the file, the next generator run un-formats it, and
+# the diff reappears forever. The generator is the source of truth for layout.
+
+# scripts/data/probe-exchange-archives.ts (MONEY-1096)
+docs/reference/exchange-archive-probe.json
+docs/reference/exchange-archive-ranges.md
+
+# scripts/data/probe-exchange-archives.ts --registry (MONEY-1097)
+docs/reference/exchange-registry-verification.json
+docs/reference/exchange-registry-verification.md
+
+# scripts/data/probe-exchange-archives.ts --floors (MONEY-941)
+docs/reference/exchange-archive-floors.json
+docs/reference/exchange-archive-floors.md
+
+# ---------------------------------------------------------------------------
+# Captured test fixtures are BYTES, not source — MONEY-1198
+# ---------------------------------------------------------------------------
+# Every fixture under a `__tests__/fixtures/` tree is a verbatim capture of what
+# an exchange, AMC or API actually served. Their VALUE is that they are
+# byte-identical to the real response, because the defects they pin are invisible
+# in anything hand-written or re-serialised: doubled double-quotes in a title
+# row, trailing spaces in header cells, a `.xls` extension over OOXML bytes, the
+# "Lakhs"/"Lacs" split, a reversed "Rating / Industry" header.
+#
+# Prettier reformatting one silently destroys that property. It already happened:
+# `prettier --write` (via lint-staged's `*.{json,css,scss,md}` rule) pretty-
+# printed `amc-pages/mirae-downloads-error.json`, turning `"ReturnCode":"9999"`
+# into `"ReturnCode": "9999"` — which broke the test asserting on the raw error
+# body, AFTER the commit had been verified green. A fixture that has been
+# formatted is no longer evidence of anything.
+#
+# The same reasoning is already written into the MONEY-1186 fixture commit:
+# reducing an XLSX means rebuilding its zip, and the rebuild would quietly
+# normalise the very defects the tests exist to pin. This makes that rule
+# mechanical instead of hoping nobody stages a fixture.
+**/__tests__/fixtures/**
+
+# Vendored third-party bundle — 957 files that must match upstream exactly, and
+# are re-synced by scripts/ops/sync-charting-library.sh rather than edited.
+vendor/charting_library/**
+apps/web/public/charting_library/**
+
+# Build output.
+**/dist/**
+**/.next/**
+**/coverage/**

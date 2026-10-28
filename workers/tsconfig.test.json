@@ -1,0 +1,66 @@
+{
+  // MONEY-1326 — type-check the TESTS too.
+  //
+  // `tsconfig.json` includes only `src/**/*` and `report-templates/**/*`, so
+  // none of the 91 files under `__tests__/` had ever been seen by `tsc`. That
+  // is not cosmetic. `yarn type-check` is gate 3 of `verify:push` and was
+  // 25/25 green while ~2,500 workers test cases were entirely unchecked, and a
+  // test whose types are wrong may be asserting against a shape that no longer
+  // exists — which is how a guard silently stops guarding. Turning this on
+  // surfaced 19 errors, several of them exactly that:
+  //
+  //   - `IntradayTotals` gained `unmappedMissing`/`unmappedUnfetchable`
+  //     (MONEY-1236) and the fixture did not, so the operator-facing reason
+  //     string read "…, undefined because the instrument has NO yahooSymbol…"
+  //     and every assertion still passed. The branch those fields exist to
+  //     express had no test at all.
+  //   - `XbrlProjectionWriteResult` grew EIGHT fields past the drain's
+  //     hand-maintained mirror of it — under a comment promising that exact
+  //     drift "is a type error here".
+  //   - `selectTrustsToMint`'s fixtures were cast `as never`, which satisfies
+  //     every generic constraint, so the assertions read properties off
+  //     `never`.
+  //
+  // A separate config rather than widening `include`, for the same reason
+  // packages/core keeps one (MONEY-1118 item 13): the main config EMITS. It
+  // sets `rootDir: "."`, `outDir: "./dist"` and `declaration: true`, so
+  // pulling `__tests__` in would start emitting .d.ts files for test code into
+  // the shipped bundle. This one only checks.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+
+    // Widened to the MONOREPO root, not this package.
+    //
+    // `__tests__` sits outside the emitted tree, and four tests deliberately
+    // import the REAL module across a package boundary by relative path rather
+    // than hand-copying a constant — `scripts/jobs/xbrl-projection-drain-logic.mjs`,
+    // `scripts/jobs/xbrl-reparse-logic.mjs`,
+    // `packages/core/src/market-data/docs-section-logic` and
+    // `packages/core/src/market-data/xbrl-projection`. Those are the point of
+    // the tests that use them, so the root has to cover them.
+    //
+    // rootDir exists to control the LAYOUT OF EMITTED OUTPUT. This config emits
+    // nothing (`noEmit` above), so there is no layout to constrain and widening
+    // it costs nothing. tsconfig.json still emits with `rootDir: "."`.
+    "rootDir": "../..",
+    "declaration": false,
+    "declarationMap": false,
+
+    // OFF for tests only — the same call packages/core made, and measured the
+    // same way. base.json enables it; leaving it on here produced 74 errors
+    // instead of 19, and all 55 of the difference were `arr[0]` on a
+    // known-shape fixture. Keeping it on would mean 55 non-null assertions
+    // added to assertions — noise that buys nothing, and `!` sprinkled through
+    // tests is how a real narrowing bug later hides in the crowd. Indexing past
+    // the end of a fixture already fails the test, which is the same signal.
+    //
+    // src/ is UNAFFECTED: tsconfig.json still checks it with the flag on.
+    "noUncheckedIndexedAccess": false
+  },
+  // `src` is included alongside `__tests__` because the tests import it and a
+  // project that lists only the tests would still pull src in through those
+  // imports — naming it makes the graph explicit rather than incidental.
+  "include": ["src/**/*", "report-templates/**/*", "__tests__/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

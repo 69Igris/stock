@@ -1,0 +1,29 @@
+# M13 · Module: Portfolio tab — Holdings · Positions · Trades (FIFO pairs) · holding sheet · pair sheet · broker filter/sort · MF held · CSV import wizard · US lots
+
+Read `docs/prompts/design-v2/00-shared-context.md` — it is part of this prompt. Prerequisites: M00, M10. Related: M16 (row → stock/MF page), M20 (US lots + statement import).
+
+**Ticket:** `MONEY-{n}` "Mobile — Portfolio" → `feat/MONEY-{n}`.
+**Design sources:** `docs/design/v2-bundle/app/s-portfolio.jsx` (`PortfolioScreenV2`: `PageHead` "Your reconciled book." + `SyncPill`; summary card Current · Today · Overall; `Seg` Holdings | Positions | Trades (URL/param `portfolio:holdings|positions|trades`); Holdings: US row link when flag, broker chips (All brokers + each connected) + sort chip cycling BY VALUE → BY P&L → BY TODAY, "Equity · N" section with total, rows (SymTile · symbol · "qty @ ₹avg [· n here]" · value · P&L% · day%) → `HoldingSheet` (symbol, name, star, Value/P&L/Today stats, "Across brokers · N" rows with logo/qty/avg/value, "Open {sym}" / "Ask Sage"), "Mutual funds · N" rows (SIP line, NAV) → MF page, "Import trades (CSV)"; Positions: MTM dark card, open positions rows (side · symbol · MTM; QTY · AVG · LTP · broker · product) + footer "READ-ONLY MIRROR OF YOUR BROKER TERMINALS. USEMONEY NEVER PLACES ORDERS."; Trades: Realized FY · Pairs · Win rate card, chips All / Short-term / Long-term / ↑ Import, "FIFO pairs · N" rows (symbol · qty · dates · P&L · LTCG/STCG tag) → `PairSheet` (bought → sold prices, Gross P&L / Charges & taxes / Net P&L, "Ask Sage about the tax"), US lots section when flag; `ImportScreenV2`: 3 steps UPLOAD (broker format tiles Zerodha/Groww/Upstox/Angel, file card "CSV · XLSX · CONTRACT-NOTE PDF"), MAP COLUMNS (auto-mapped list with ✓, first-rows table), REVIEW (Imported · Duplicates skipped · FIFO pairs matched · Span tiles + sticker "dupes caught: 8 — your P&L stays honest."), Done → toast "206 trades imported · 42 pairs matched").
+
+## Read first
+- `apps/api/src/routes/v1/{holdings,positions,trades,paired,mutualfunds,brokers,imports,jobs,tax}.ts`: `GET /v1/holdings` (opt-in cursor pagination; per-broker rows — the design groups by symbol across brokers → group client-side or add `?group=symbol` server-side mirroring `holdings-dedup-logic.ts`), `GET /v1/holdings/summary`, `GET /v1/positions`, `/positions/summary`, `/positions/closed-today`, `GET /v1/trades?fy=` + `/trades/fys`, `GET /v1/paired` + `/paired/stats`, `GET /v1/mutualfunds`, `POST /v1/imports` (async enqueue — check whether it accepts multipart or a GCS signed URL; add `POST /v1/imports/preview` returning the column mapping + first rows as `previewFileAction` does on web), `GET /v1/imports/:batchId`, `GET /v1/jobs/:jobId`, `GET /v1/brokers`
+- Web logic to mirror, never re-implement: `packages/services/src/{holdings-logic,positions-logic,trades-logic}.ts`, `packages/core/src/import/*` (format detection, mapping), `apps/web/lib/actions/holdings-dedup-logic.ts`
+- `packages/types/src/{holding,trade,mutual-fund}`
+
+## Build
+1. **Holdings segment:** summary card from `/v1/holdings/summary` + `/v1/dashboard`; broker chips from `/v1/brokers`; symbol-grouped rows (sum qty across brokers, weighted avg, per-broker breakdown in the sheet); sort cycle; MF rows from `/v1/mutualfunds` (SIP amount if the model carries it — else omit the SIP line); FlashList; row → `HoldingSheet`; sheet "Open" → `/stock/[symbol]`, "Ask Sage" → Sage with prefill "Tell me about my {sym} position"; star toggles watchlist (`POST/DELETE /v1/watchlists/:id/items`).
+2. **Positions segment:** MTM total, rows from `/v1/positions` (+ closed-today collapsed section), read-only footer; live LTP refresh every 10 s during market hours via `/v1/market/quotes` batch (delayed flag shown).
+3. **Trades segment:** stats from `/v1/paired/stats` (realized FY, pairs, win rate — computed server-side; if the endpoint lacks win rate, add it there, never compute from a partial page), FY selector from `/v1/trades/fys`, term chips, paired rows (cursor paginated) → `PairSheet` (gross/charges/net from the pair row; "Ask Sage about the tax" prefill), "TAX REPORT →" → M18.
+4. **Import wizard** (`/import`): format tiles (from the API's supported formats list — add `GET /v1/imports/formats` if missing), file pick (`expo-document-picker`: csv/xlsx/pdf ≤ 20 MB), upload (multipart or signed URL → `POST /v1/imports/preview` → mapping + sample rows), review counts after `POST /v1/imports` + job polling (`/v1/jobs/:jobId`), Done → Trades segment + toast; errors: unsupported format, malformed file (server message), duplicates-only import ("nothing new — all N rows already in your book").
+5. **US layer (flag):** "United States · 4 symbols · $…" link row above Equity → M20 mixed holdings; "US lots · imported & linked" section in Trades with the RBI-ref note (read from `/v1/trades?market=US`); "US statement →" chip in the import Format section → M20 import.
+6. **Copy/format:** ₹ en-IN everywhere; P&L colours gain/loss only; tabular numerals; eyebrow "Portfolio · N brokers · live" (or "+ N US accounts").
+
+## Non-goals
+Manual holding add (web-only today; add later), tradebook editing, positions closing (read-only mirror).
+
+## Acceptance
+- Holdings grouped by symbol match the web holdings page totals for the same QA user (contract test comparing `/v1/holdings` grouping to `holdings-dedup-logic` output); broker filter narrows rows and the sheet breakdown.
+- Positions refresh LTP during market hours only; footer present.
+- Paired trades page through cursors; `PairSheet` numbers reconcile (gross − charges = net) for every row (test).
+- Import of the QA Zerodha CSV fixture → preview mapping → job → review counts equal the web import of the same file; duplicate re-import reports 0 new.
+- Screenshots (3 segments + sheets + wizard, light/dark); `verify:push`; `/code-review`.

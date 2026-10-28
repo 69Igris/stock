@@ -1,0 +1,48 @@
+{
+  "_readme": [
+    "MONEY-1359 — browser error volume, the surviving scope of the cancelled",
+    "MONEY-450.",
+    "",
+    "This is the only monitor in the set that watches something a USER sees. Every",
+    "other one watches whether our own work happened; a JS error breaks the page in",
+    "front of somebody while every server-side signal stays green.",
+    "",
+    "A count and not a rate, unlike the APM row, because RUM sessions are the",
+    "denominator and they swing by an order of magnitude between an Indian evening",
+    "and 04:00 IST. A 1%-of-sessions threshold would be one error at night. 20 in",
+    "15 minutes is a floor under the noise of a single unlucky browser and still",
+    "catches a bad deploy inside one evaluation.",
+    "",
+    "Boundary errors carry `@context.boundary` (MONEY-726: error.tsx and",
+    "global-error.tsx report explicitly rather than relying on auto-capture, which",
+    "cannot see a crash above the layout because RUM never initialised there)."
+  ],
+  "name": "[{{env}}] stockbook-web — more than 20 browser errors in 15 minutes",
+  "type": "rum alert",
+  "query": "rum(\"@type:error service:stockbook-web env:{{env}}\").rollup(\"count\").last(\"15m\") > 20",
+  "message": "stockbook-web raised more than 20 RUM errors in 15 minutes.\n\nRUM Explorer: `@type:error service:stockbook-web env:{{env}}`, group by `@error.message`, then by `@view.url_path`. One message across many paths is a shared component or a bad deploy; many messages on one path is that page.\n\n`@context.boundary` is present on errors reported from a React error boundary (`error` or `global-error`). A `global-error` one is the more serious: it escaped the root layout, so the app shell itself failed to render.\n\n@{{notify}}",
+  "tags": [
+    "managed-by:apply-monitors",
+    "money:1359",
+    "family:rum-errors",
+    "service:stockbook-web",
+    "env:{{env}}"
+  ],
+  "options": {
+    "thresholds": { "critical": 20 },
+    "notify_no_data": false,
+    "renotify_interval": 0,
+    "include_tags": true
+  },
+  "_notify_no_data_rationale": [
+    "FALSE. Zero browser errors is the goal, and overnight IST there are barely",
+    "any SESSIONS, let alone errors. Paging on that would mute the channel.",
+    "",
+    "'RUM stopped reporting entirely' is a real failure — a broken client token, a",
+    "bad deploy dropping the provider — and it is NOT covered here. It is a",
+    "session-volume question and belongs on the web-vitals board (MONEY-1361),",
+    "where the number is read rather than alerted on. Written down so the gap is",
+    "chosen rather than assumed."
+  ],
+  "_placeholders": ["{{env}} production | qa", "{{notify}} notification handle"]
+}

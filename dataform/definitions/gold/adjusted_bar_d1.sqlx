@@ -1,0 +1,81 @@
+config {
+  type: "view",
+  schema: datasets.gold(),
+  name: "adjusted_bar_d1",
+  description: "CRSP back-adjusted daily bars, both markets. The adjustment is computed at READ time so a newly-announced corporate action invalidates a cache instead of restating stored history.",
+  columns: {
+    market: "US | IN",
+    listing_id: "{symbol}:{exchange}:{listingStart} in both markets, built by buildListingId(). India has no listing start, so its third segment is `unknown` (MONEY-1522).",
+    session_date: "the VENUE's session day, never a UTC date",
+    open: "RAW, as it printed",
+    high: "RAW",
+    low: "RAW",
+    close: "RAW",
+    volume: "RAW. 0 is ambiguous without `source` — see the silver DDL",
+    div_cash: "RAW, the BAR's own column. NULL on every India bar — bhavcopy carries no corporate actions, so the factor came from silver.corporate_action instead",
+    split_factor: "RAW, the BAR's own column. NULL on every India bar — see div_cash",
+    price_factor: "cumulative CRSP factor, product over every LATER bar. Exactly 1 on the newest bar. FLOAT64 — a factor, not money (MONEY-1528)",
+    split_factor_cum: "cumulative split factor alone. Divides volume; a dividend must not touch share counts. FLOAT64",
+    adj_open: "open * price_factor",
+    adj_high: "high * price_factor",
+    adj_low: "low * price_factor",
+    adj_close: "close * price_factor. Equals `close` on the newest bar, by construction and by assertion",
+    adj_volume: "ROUND(volume / split_factor_cum)",
+    adjustment_policy_version: "ADJUSTMENT_POLICY_VERSION in includes/adjustment.js — bumped when the POLICY moves, not when the SQL is edited"
+  },
+  assertions: {
+    uniqueKey: ["market", "listing_id", "session_date"],
+    nonNull: ["market", "listing_id", "session_date", "source", "adjustment_policy_version"],
+    // MONEY-1619: gold owns the ADJUSTMENT, not the exchange's numbers. The
+    // raw OHLC order is the source's (31,992 NSE/BSE/Tiingo bars break it in
+    // raw silver, e.g. NSE 1996 LAKSHMILL open 585 > high 570); multiplying
+    // by one positive factor cannot reorder prices. So the check is that a
+    // bar whose RAW order holds keeps it after adjustment.
+    rowConditions: [
+      "high IS NULL OR low IS NULL OR open IS NULL OR close IS NULL OR NOT (high >= open AND high >= close AND high >= low AND low <= open AND low <= close) OR (adj_high >= adj_open AND adj_high >= adj_close AND adj_high >= adj_low AND adj_low <= adj_open AND adj_low <= adj_close)",
+      "volume IS NULL OR volume >= 0",
+      "session_date <= CURRENT_DATE()",
+      "price_factor > 0",
+      "split_factor_cum > 0"
+    ]
+  },
+  tags: ["gold", "bars"]
+}
+
+/*
+ * A VIEW, NOT AN INCREMENTAL TABLE — and that is the single most load-bearing
+ * line in this file.
+ *
+ * The B4 brief says "incremental where rows only append". These rows do NOT
+ * only append: the CRSP factor for bar k is the product over every bar AFTER
+ * k, so one new split restates EVERY earlier row of that listing. An
+ * incremental table would therefore append tomorrow's bar on the new basis and
+ * leave a decade of history on the old one — a series with a step
+ * discontinuity at whatever date the split landed, on real prices, with nothing
+ * reporting an error.
+ *
+ * Computing at READ time is the property the TypeScript already has and states
+ * in its own header: "computed here rather than stored so a newly-announced
+ * corporate action invalidates a cache instead of restating history — AAPL
+ * alone is 11,517 rows that would otherwise be rewritten per event." A view
+ * cannot drift from its source; a table has to be kept current by something.
+ *
+ * PARTITIONING IS NOT LOST BY THIS. A view has no partitions of its own, but it
+ * inherits the pruning of `lake_silver.price_bar_d1` — PARTITION BY
+ * DATE_TRUNC(session_date, MONTH), CLUSTER BY market, listing_id, source — so a
+ * reader filtering market + listing_id + a date range still scans a slice.
+ * Materialising it is a one-word change (`type: "table"`) if a read path ever
+ * MEASURES the scan as too slow; nothing is waiting on it today, and
+ * lake-layout.md §8 forbids the web request path from querying BigQuery at all.
+ * `005_gold_instrument_current.sql` makes the same argument for the same
+ * reason.
+ *
+ * THE SQL ITSELF IS NOT WRITTEN HERE. It comes from
+ * `includes/adjustment.js`, which is the ONE definition of a policy that also
+ * exists in TypeScript, and which
+ * `packages/core/__tests__/market-data/adjustment-sql-parity.test.ts` EXECUTES
+ * and compares against that TypeScript. SQL pasted into a .sqlx file is SQL
+ * nothing can test.
+ */
+
+${adjustment.adjustedBarD1Sql(ref("price_bar_d1"), ref("corporate_action"))}

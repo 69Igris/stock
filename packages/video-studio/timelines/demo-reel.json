@@ -1,0 +1,39 @@
+{
+  "title": "Studio demo",
+  "aspect": "9:16",
+  "fps": 30,
+  "brandTheme": "cream",
+  "captions": { "enabled": true, "fromVoiceover": true },
+  "watermark": true,
+  "scenes": [
+    {
+      "id": "hook",
+      "type": "hook",
+      "durationSec": 3,
+      "kicker": "Portfolio blindness",
+      "headline": "What do you ==actually own==?",
+      "motion": "rise",
+      "disclaimer": true
+    },
+    {
+      "id": "stat",
+      "type": "stat",
+      "durationSec": 3,
+      "stat": {
+        "kicker": "Total equity %",
+        "value": "70–80%",
+        "label": "Most people guess 50%."
+      },
+      "motion": "kenburns-in",
+      "disclaimer": true
+    },
+    {
+      "id": "cta",
+      "type": "cta",
+      "durationSec": 3,
+      "headline": "Awareness first. *Decisions later.*",
+      "motion": "pop",
+      "disclaimer": false
+    }
+  ]
+}

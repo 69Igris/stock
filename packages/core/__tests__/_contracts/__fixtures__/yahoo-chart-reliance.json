@@ -1,0 +1,30 @@
+{
+  "chart": {
+    "result": [
+      {
+        "meta": {
+          "currency": "INR",
+          "symbol": "RELIANCE.NS",
+          "exchangeName": "NSI",
+          "instrumentType": "EQUITY",
+          "regularMarketPrice": 1402.5,
+          "previousClose": 1390.2,
+          "gmtoffset": 19800
+        },
+        "timestamp": [1718245800, 1718332200, 1718418600, 1718505000],
+        "indicators": {
+          "quote": [
+            {
+              "open": [1390.0, 1401.1, 1404.0, null],
+              "high": [1408.0, 1410.0, 1411.0, 1412.0],
+              "low": [1385.5, 1399.0, 1402.0, 1401.0],
+              "close": [1402.5, 1405.25, null, 1409.0],
+              "volume": [5123456, 4987000, 4500000, 0]
+            }
+          ]
+        }
+      }
+    ],
+    "error": null
+  }
+}

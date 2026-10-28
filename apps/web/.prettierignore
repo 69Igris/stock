@@ -1,0 +1,11 @@
+node_modules
+.next
+out
+dist
+build
+*.config.js
+.env
+.env.*
+public
+yarn.lock
+package-lock.json

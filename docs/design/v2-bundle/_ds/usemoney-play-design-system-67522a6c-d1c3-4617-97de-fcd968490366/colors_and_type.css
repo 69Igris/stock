@@ -1,0 +1,290 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   UseMoney · "Playful" Design System — colors_and_type.css
+   ───────────────────────────────────────────────────────────────────────
+   Single source of truth for the cream-paper, neo-brutalist UseMoney brand.
+   Ported 1:1 from the production stockbook-monorepo:
+     · apps/web/app/playful-app.css       (authenticated app)
+     · apps/web/app/(marketing)/playful.css (marketing site)
+
+   Two themes: cream-paper light (default) + deep-ink dark (html.dark).
+   Three typefaces: Inter (UI/body), Instrument Serif (italic display
+   accents), JetBrains Mono (labels, numbers, eyebrows — tabular-nums).
+
+   Load this file, then add class="dark" to <html> for dark mode.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap");
+
+/* ───────────────────────────────────────────────────────────────────────
+   1 · COLOR TOKENS — cream-paper light (default)
+   ─────────────────────────────────────────────────────────────────────── */
+:root {
+  /* Paper surfaces (lightest → warm) */
+  --paper:    #f7f3e6;   /* app background */
+  --paper-2:  #efe7d0;   /* recessed / alternating bands */
+  --paper-3:  #fbf8eb;   /* raised tiles, swatches */
+
+  /* Ink — text + borders + the everything-line */
+  --ink:    #1d1d1b;     /* primary text, 2px borders, brand mark */
+  --ink-2:  #3a3a35;     /* secondary text */
+  --ink-3:  #6b6b62;     /* tertiary / meta text */
+  --ink-4:  #74746b;     /* decorative dim meta only (near-AA) */
+
+  /* Rules (hairlines) + dot-grid texture */
+  --rule:        #1d1d1b;
+  --rule-soft:   rgba(29, 29, 27, 0.14);
+  --rule-softer: rgba(29, 29, 27, 0.08);
+  --dot-fg:      rgba(29, 29, 27, 0.045);
+  --dot-fg-2:    rgba(29, 29, 27, 0.03);
+
+  /* Emerald — the brand accent (gains, "live", eyebrows) */
+  --emerald:     #16a34a;
+  --emerald-bg:  rgba(22, 163, 74, 0.08);
+
+  /* Pop accents — FILLS / BORDERS / ICONS only */
+  --pop-1: #ff6b35;   /* coral  */
+  --pop-2: #fbbf24;   /* gold   — the signature highlighter */
+  --pop-3: #3b82f6;   /* blue   */
+  --pop-4: #ff77b9;   /* pink   */
+  --pop-5: #a78bfa;   /* violet */
+
+  /* Text-safe accent variants — for COLORED TEXT on paper (WCAG AA ≥4.5:1) */
+  --emerald-text: #0f7a34;
+  --pop-1-text:   #b23c0a;   /* burnt coral */
+  --pop-2-text:   #8a5e00;   /* dark amber  */
+  --pop-3-text:   #1d4ed8;   /* blue-700    */
+  --pop-4-text:   #be185d;   /* pink-700    */
+  --pop-5-text:   #6d28d9;   /* violet-700  */
+  --on-pop:       #1d1d1b;   /* ink to sit ON a pop fill (constant in both themes) */
+
+  /* Semantic — finance */
+  --gain:  #16a34a;
+  --loss:  #b91c1c;
+
+  /* Hard offset shadows — the neo-brutalist signature */
+  --shadow-hard: 4px 4px 0 var(--ink);
+  --shadow-soft: 3px 3px 0 var(--ink);
+
+  /* Code / terminal echo */
+  --code-bg: var(--ink);
+  --code-fg: var(--paper);
+
+  /* Radii */
+  --r-sm: 6px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-xl: 14px;
+  --r-pill: 999px;
+
+  /* ─────────────────────────────────────────────────────────────────────
+     2 · TYPE TOKENS
+     ───────────────────────────────────────────────────────────────────── */
+  /* Brand fonts (final, source-verified — only these three render on playful
+     surfaces; .pf-app / sidebar / mobile sheet all list "Inter" first):
+       Brand / headings  → Instrument Serif (italic display/accent, flourishes)
+       Body / UI         → Inter (primary)
+       Numbers / mono    → JetBrains Mono (tabular — all numbers/labels/tickers)
+     DM Sans is NOT a brand font — it's only a stack fallback (leftover Tailwind
+     default from the discarded Terminal Luxe). Kept un-loaded so it never shows
+     unless a machine has it installed. */
+  --font-sans:    "Inter", "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif:   "Instrument Serif", "Times New Roman", serif;  /* always italic in use */
+  --font-mono:    "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+
+  /* Display / heading scale (clamps are fluid; px values are the desktop cap).
+     landing H1 / in-app H1 / section H2 / card heading / serif lede: */
+  --fs-hero:    clamp(40px, 6.5vw, 96px); /* @kind font */
+  --fs-h1:      38px; /* @kind font */
+  --fs-h2:      clamp(34px, 5vw, 64px); /* @kind font */
+  --fs-h3:      22px; /* @kind font */
+  --fs-lede:    24px; /* @kind font */
+  --fs-body:    15px; /* @kind font */
+  --fs-sm:      13px; /* @kind font */
+  --fs-meta:    11px; /* @kind font */
+
+  --ls-tight:   -2px; /* @kind spacing */
+  --ls-snug:    -0.5px; /* @kind spacing */
+  --ls-mono:    1.5px; /* @kind spacing */
+}
+
+/* ───────────────────────────────────────────────────────────────────────
+   1b · COLOR TOKENS — deep-ink dark (html.dark)
+   ─────────────────────────────────────────────────────────────────────── */
+html.dark {
+  --paper:    #16140e;
+  --paper-2:  #1f1c14;
+  --paper-3:  #1a1810;
+
+  --ink:    #f4ede0;
+  --ink-2:  #d8d1c4;
+  --ink-3:  #a09a8d;
+  --ink-4:  #8a8478;
+
+  --rule:        #f4ede0;
+  --rule-soft:   rgba(244, 237, 224, 0.16);
+  --rule-softer: rgba(244, 237, 224, 0.08);
+  --dot-fg:      rgba(244, 237, 224, 0.05);
+  --dot-fg-2:    rgba(244, 237, 224, 0.035);
+
+  --emerald:     #34d399;
+  --emerald-bg:  rgba(52, 211, 153, 0.1);
+
+  --pop-1: #ff8a5b;
+  --pop-2: #fcd34d;
+  --pop-3: #60a5fa;
+  --pop-4: #f9a8d4;
+  --pop-5: #c4b5fd;
+
+  /* In dark, accent text == bright tokens (already ≥4.5:1 on deep-ink) */
+  --emerald-text: #34d399;
+  --pop-1-text:   #ff8a5b;
+  --pop-2-text:   #fcd34d;
+  --pop-3-text:   #60a5fa;
+  --pop-4-text:   #f9a8d4;
+  --pop-5-text:   #c4b5fd;
+
+  --gain: #34d399;
+  --loss: #ff8a5b;
+
+  /* Offset shadows stay black in dark (var(--ink) would flip to cream) */
+  --shadow-hard: 4px 4px 0 #000;
+  --shadow-soft: 3px 3px 0 #000;
+
+  --code-bg: #2a2620;
+  --code-fg: var(--paper);
+}
+
+/* ───────────────────────────────────────────────────────────────────────
+   3 · BASE / RESET — opt-in via .um (so it never bleeds into host pages)
+   ─────────────────────────────────────────────────────────────────────── */
+.um, .um * { box-sizing: border-box; }
+
+.um {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  /* Signature cream-paper dot-grid texture */
+  background-image:
+    radial-gradient(var(--dot-fg) 1px, transparent 1.5px),
+    radial-gradient(var(--dot-fg-2) 1px, transparent 1.5px);
+  background-size: 7px 7px, 11px 11px;
+  background-position: 0 0, 3px 3px;
+}
+
+.um ::selection { background: var(--pop-2); color: #1d1d1b; }
+
+/* ───────────────────────────────────────────────────────────────────────
+   4 · SEMANTIC TYPE CLASSES
+   ─────────────────────────────────────────────────────────────────────── */
+
+/* Display accent — italic serif. Drop inside any heading for the brand
+   "money." / "intelligently." flourish. */
+.ser, .serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* Mono — labels, prices, eyebrows. Always tabular for aligned numerals. */
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Gold highlighter — the signature "marked with a pen" emphasis. */
+.hl-gold {
+  background: var(--pop-2);
+  color: #1d1d1b;
+  padding: 0 6px;
+  border-radius: 4px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Coral strike-through — for "the old way" crossed out. */
+.strike { position: relative; display: inline-block; white-space: nowrap; }
+.strike::after {
+  content: "";
+  position: absolute;
+  left: -6px; right: -6px; top: 54%;
+  height: 5px;
+  background: var(--pop-1);
+  transform: rotate(-2deg);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* Hero display headline */
+.t-hero {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: var(--fs-hero);
+  line-height: 1;
+  letter-spacing: -2.8px;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+/* Section heading (marketing) */
+.t-h2 {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: var(--fs-h2);
+  line-height: 0.98;
+  letter-spacing: var(--ls-tight);
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+/* In-app page title */
+.t-h1 {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: var(--fs-h1);
+  line-height: 1.02;
+  letter-spacing: -1.5px;
+  color: var(--ink);
+}
+
+/* Card / sub-section heading */
+.t-h3 {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: var(--fs-h3);
+  letter-spacing: var(--ls-snug);
+  color: var(--ink);
+}
+
+/* Italic serif lede / sub-headline */
+.t-lede {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: var(--fs-lede);
+  line-height: 1.35;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+/* Mono eyebrow — emerald, uppercase, letter-spaced */
+.t-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta);
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--emerald);
+}
+
+/* Mono label — neutral uppercase tag */
+.t-label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta);
+  font-weight: 700;
+  letter-spacing: var(--ls-mono);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* Body copy */
+.t-body { font-size: var(--fs-body); line-height: 1.6; color: var(--ink-2); }

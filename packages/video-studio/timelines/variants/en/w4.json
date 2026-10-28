@@ -1,0 +1,94 @@
+{
+  "title": "W4 Index vs Active (EN)",
+  "aspect": "9:16",
+  "fps": 30,
+  "brandTheme": "cream",
+  "music": {
+    "track": "corporate-lofi",
+    "gainDb": -22,
+    "duckUnderVoiceover": true
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "type": "hook",
+      "durationSec": 4,
+      "kicker": "SPIVA India · 10-yr",
+      "headline": "Active vs ==Index==",
+      "subtext": "Who wins over 10 years?",
+      "motion": "rise",
+      "voiceover": {
+        "text": "Over ten years — active funds versus the index. Who actually wins?",
+        "lang": "en-IN"
+      }
+    },
+    {
+      "id": "stat1",
+      "type": "stat",
+      "durationSec": 4.5,
+      "stat": {
+        "kicker": "Large-cap · 10-yr",
+        "value": "73%",
+        "label": "of active funds lagged the index."
+      },
+      "motion": "kenburns-in",
+      "disclaimer": true,
+      "voiceover": {
+        "text": "In large-cap, seventy-three percent of active funds lagged the index.",
+        "lang": "en-IN"
+      }
+    },
+    {
+      "id": "stat2",
+      "type": "stat",
+      "durationSec": 4.5,
+      "stat": {
+        "kicker": "Mid/Small-cap · 10-yr",
+        "value": "82%",
+        "label": "underperformed (SPIVA India)."
+      },
+      "motion": "rise",
+      "disclaimer": true,
+      "voiceover": {
+        "text": "In mid and small-cap, eighty-two percent trailed their benchmark.",
+        "lang": "en-IN"
+      }
+    },
+    {
+      "id": "broll",
+      "type": "veo",
+      "durationSec": 6,
+      "veoPrompt": "abstract two soft ribbons of emerald-green and cream light flowing side by side and gently merging into one steady stream over a dark background, premium minimal fintech motion graphics, calm, elegant, no text, no logos, no people",
+      "motion": "static",
+      "voiceover": {
+        "text": "Over the long run, cost and consistency make the real difference.",
+        "lang": "en-IN"
+      }
+    },
+    {
+      "id": "p1",
+      "type": "point",
+      "durationSec": 4.5,
+      "headline": "==Costs== compound too",
+      "subtext": "Lower cost, fewer surprises.",
+      "motion": "rise",
+      "disclaimer": true,
+      "voiceover": {
+        "text": "Lower cost usually means fewer surprises.",
+        "lang": "en-IN"
+      }
+    },
+    {
+      "id": "cta",
+      "type": "cta",
+      "durationSec": 3.5,
+      "headline": "Long game, *low cost*.",
+      "subtext": "Education only · UseMoney AI (my product)",
+      "motion": "pop",
+      "voiceover": {
+        "text": "Long game, low cost — with UseMoney AI.",
+        "lang": "en-IN"
+      }
+    }
+  ]
+}

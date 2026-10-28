@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>US Launch Build Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  :root {
+    --ground:#F7F8FA; --surface:#FFFFFF; --surface-sunk:#EEF0F4;
+    --ink:#171B22; --ink-soft:#4A5462; --ink-faint:#7A8492;
+    --rule:#DCE0E7; --rule-strong:#C3C9D3;
+    --p0:#3B4FA8; --p0-sunk:#E7EAF6;
+    --p1:#2F7A74; --p1-sunk:#E0F0EE;
+    --p2:#8A5BB0; --p2-sunk:#F0E8F7;
+    --p3:#A9713F; --p3-sunk:#F5EADF;
+    --done:#2E7D5B; --done-sunk:#E2F0E9;
+    --running:#B07C1E; --running-sunk:#F7EEDB;
+    --blocked:#B4483C; --blocked-sunk:#F8E7E5;
+    --phone:#FFFFFF; --phone-edge:#C9CED7; --ph-bar:#E3E6EC; --ph-bar2:#EEF0F4;
+    --shadow:0 1px 2px rgba(23,27,34,.05),0 4px 16px rgba(23,27,34,.05);
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --ground:#12151A; --surface:#1A1E25; --surface-sunk:#23282F;
+    --ink:#E8EBF0; --ink-soft:#A7B0BC; --ink-faint:#78828F;
+    --rule:#2C323A; --rule-strong:#3C434D;
+    --p0:#8C9DE8; --p0-sunk:#23293F;
+    --p1:#62C2B8; --p1-sunk:#1A2D2B;
+    --p2:#C39BE6; --p2-sunk:#2B2236;
+    --p3:#D29A62; --p3-sunk:#30251B;
+    --done:#5FBE92; --done-sunk:#1B2C25;
+    --running:#E0AF43; --running-sunk:#2E2718;
+    --blocked:#E8837A; --blocked-sunk:#2F1E1C;
+    --phone:#161A20; --phone-edge:#3A414B; --ph-bar:#2C323A; --ph-bar2:#23282F;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+  }}
+  :root[data-theme="dark"]{
+    --ground:#12151A; --surface:#1A1E25; --surface-sunk:#23282F;
+    --ink:#E8EBF0; --ink-soft:#A7B0BC; --ink-faint:#78828F;
+    --rule:#2C323A; --rule-strong:#3C434D;
+    --p0:#8C9DE8; --p0-sunk:#23293F;
+    --p1:#62C2B8; --p1-sunk:#1A2D2B;
+    --p2:#C39BE6; --p2-sunk:#2B2236;
+    --p3:#D29A62; --p3-sunk:#30251B;
+    --done:#5FBE92; --done-sunk:#1B2C25;
+    --running:#E0AF43; --running-sunk:#2E2718;
+    --blocked:#E8837A; --blocked-sunk:#2F1E1C;
+    --phone:#161A20; --phone-edge:#3A414B; --ph-bar:#2C323A; --ph-bar2:#23282F;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+  }
+  *{box-sizing:border-box}
+  body{background:var(--ground);color:var(--ink);font-family:"Source Sans 3",ui-sans-serif,system-ui,sans-serif;font-size:16px;line-height:1.55;margin:0;padding:0 16px 96px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto}
+  h1,h2,h3{font-family:Bitter,ui-serif,Georgia,serif;text-wrap:balance;margin:0}
+  code,.mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+  code{font-size:.86em;background:var(--surface-sunk);padding:1px 4px;border-radius:2px;overflow-wrap:anywhere}
+  header{padding:52px 0 28px;border-bottom:2px solid var(--ink)}
+  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:14px}
+  h1{font-size:clamp(30px,4.6vw,46px);font-weight:700;letter-spacing:-.02em;line-height:1.08}
+  .standfirst{color:var(--ink-soft);max-width:68ch;margin-top:14px;font-size:17px}
+  .live{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin:28px 0 0;border-radius:3px;overflow:hidden}
+  .live div{background:var(--surface);padding:14px 16px}
+  .live dt{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint)}
+  .live dd{margin:5px 0 0;font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}
+  .live dd small{display:block;font-size:12px;font-weight:400;color:var(--ink-soft)}
+  section{margin-top:56px}
+  h2{font-size:24px;font-weight:600;letter-spacing:-.01em}
+  h3{font-size:17px;font-weight:600}
+  .note{color:var(--ink-soft);font-size:15px;max-width:72ch;margin:8px 0 18px}
+  .kicker{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin:22px 0 8px}
+
+  /* run box */
+  .run{background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--p0);border-radius:3px;padding:18px 20px;box-shadow:var(--shadow)}
+  .run pre{margin:10px 0 0;background:var(--surface-sunk);border-radius:3px;padding:12px 14px;overflow-x:auto;font-family:"JetBrains Mono",monospace;font-size:12.5px;line-height:1.55;white-space:pre-wrap;word-break:break-word}
+  .run ol{margin:12px 0 0;padding-left:20px;color:var(--ink-soft);font-size:15px}
+  .run li{margin:4px 0}
+
+  /* architecture flow */
+  .arch{display:grid;grid-template-columns:1fr 44px 1.2fr 44px 1fr;align-items:stretch;gap:0;margin-top:16px}
+  .arch .col{display:flex;flex-direction:column;gap:10px}
+  .node{background:var(--surface);border:1px solid var(--rule-strong);border-radius:3px;padding:12px 14px;box-shadow:var(--shadow)}
+  .node.core{border:2px solid var(--p0)}
+  .node.later{border-style:dashed;box-shadow:none;background:transparent}
+  .node .n-k{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint)}
+  .node .n-t{font-weight:600;margin-top:2px}
+  .node .n-p{font-size:13px;color:var(--ink-soft);margin-top:4px;overflow-wrap:anywhere}
+  .arrow{display:flex;align-items:center;justify-content:center;color:var(--ink-faint);font-family:"JetBrains Mono",monospace;font-size:18px}
+  .rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:16px}
+  .rules div{font-size:14px;color:var(--ink-soft);border-top:1px solid var(--rule);padding-top:8px}
+  .rules strong{color:var(--ink);display:block;font-size:14.5px}
+
+  /* phase strip */
+  .strip{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}
+  .ph{border-radius:3px;padding:14px 14px 12px;border-top:4px solid}
+  .ph .ph-n{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+  .ph .ph-t{font-family:Bitter,serif;font-weight:600;font-size:17px;margin-top:2px}
+  .ph .ph-d{font-size:13.5px;color:var(--ink-soft);margin-top:6px}
+  .ph .ph-g{font-size:12.5px;margin-top:8px;font-family:"JetBrains Mono",monospace;color:var(--ink-faint)}
+  .ph0{background:var(--p0-sunk);border-color:var(--p0)} .ph0 .ph-n{color:var(--p0)}
+  .ph1{background:var(--p1-sunk);border-color:var(--p1)} .ph1 .ph-n{color:var(--p1)}
+  .ph2{background:var(--p2-sunk);border-color:var(--p2)} .ph2 .ph-n{color:var(--p2)}
+  .ph3{background:var(--p3-sunk);border-color:var(--p3)} .ph3 .ph-n{color:var(--p3)}
+
+  /* journey */
+  .journey{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:14px}
+  .step{background:var(--surface);border:1px solid var(--rule-strong);border-radius:3px;padding:7px 11px;font-size:14px}
+  .step small{display:block;font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--ink-faint);letter-spacing:.06em}
+  .sep{color:var(--ink-faint);font-family:"JetBrains Mono",monospace}
+  .branches{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px;margin-top:12px}
+  .branch{border-left:3px solid var(--rule-strong);padding:6px 0 6px 12px;font-size:14px;color:var(--ink-soft)}
+  .branch strong{color:var(--ink)}
+
+  /* phase lanes */
+  .lane-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .lane-key{font-family:"JetBrains Mono",monospace;font-size:13px;font-weight:600;padding:3px 9px;border-radius:2px;letter-spacing:.04em}
+  .k0{background:var(--p0-sunk);color:var(--p0)} .k1{background:var(--p1-sunk);color:var(--p1)}
+  .k2{background:var(--p2-sunk);color:var(--p2)} .k3{background:var(--p3-sunk);color:var(--p3)}
+  ul.tasks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+  li.task{background:var(--surface);border:1px solid var(--rule);border-radius:3px;display:grid;grid-template-columns:26px 108px 1fr auto;gap:0 14px;align-items:start;padding:13px 16px;box-shadow:var(--shadow)}
+  li.task.is-done{background:var(--surface-sunk);box-shadow:none}
+  li.task.is-done .t-title{color:var(--ink-soft);text-decoration:line-through;text-decoration-color:var(--done)}
+  input[type=checkbox]{appearance:none;width:17px;height:17px;margin:3px 0 0;border:1.5px solid var(--rule-strong);border-radius:2px;background:var(--surface);cursor:pointer;display:grid;place-content:center}
+  input[type=checkbox]:checked{background:var(--done);border-color:var(--done)}
+  input[type=checkbox]:checked::after{content:"";width:9px;height:5px;border:2px solid #fff;border-top:0;border-right:0;transform:rotate(-45deg) translateY(-1px)}
+  input[type=checkbox]:focus-visible{outline:2px solid var(--p0);outline-offset:2px}
+  .t-id{font-family:"JetBrains Mono",monospace;font-size:12px;font-weight:600;color:var(--ink-soft);padding-top:3px;overflow-wrap:anywhere}
+  .t-body{min-width:0}
+  .t-title{font-weight:600;font-size:15.5px}
+  .t-why{color:var(--ink-soft);font-size:14px;margin-top:3px;overflow-wrap:anywhere}
+  .t-prompt{font-family:"JetBrains Mono",monospace;font-size:11.5px;color:var(--ink-faint);margin-top:6px;overflow-wrap:anywhere}
+  .t-meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;justify-content:flex-end;padding-top:2px;max-width:230px}
+  .chip{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.04em;padding:2px 7px;border-radius:2px;white-space:nowrap}
+  .c-flag{background:var(--running-sunk);color:var(--running)}
+  .c-pts{background:var(--surface-sunk);color:var(--ink-soft)}
+  .c-dep{background:var(--blocked-sunk);color:var(--blocked)}
+  .c-par{background:var(--done-sunk);color:var(--done)}
+  .c-you{background:var(--p2-sunk);color:var(--p2)}
+  .gate{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;margin:14px 0;padding:10px 16px;border-top:2px solid var(--blocked);background:var(--blocked-sunk);border-radius:0 0 3px 3px}
+  .gate .g-key{font-family:"JetBrains Mono",monospace;font-weight:600;font-size:12.5px;color:var(--blocked)}
+  .gate .g-text{font-size:14px;color:var(--ink-soft)}
+
+  /* tables */
+  .tbl-wrap{overflow-x:auto;border:1px solid var(--rule);border-radius:3px;background:var(--surface);margin-top:14px}
+  table{border-collapse:collapse;width:100%;font-size:14px;min-width:640px}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+  th{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;background:var(--surface-sunk)}
+  tr:last-child td{border-bottom:0}
+  td.mono{font-size:12.5px;white-space:nowrap}
+  td.ord{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--ink-faint);font-variant-numeric:tabular-nums}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  .d0{background:var(--p0)} .d1{background:var(--p1)} .d2{background:var(--p2)} .d3{background:var(--p3)}
+  .yes{color:var(--done);font-weight:600} .no{color:var(--ink-faint)} .gated{color:var(--running);font-weight:600}
+
+  /* phones */
+  .screens-filter{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+  .screens-filter button{font:inherit;font-family:"JetBrains Mono",monospace;font-size:12px;padding:6px 12px;min-height:34px;border-radius:2px;border:1px solid var(--rule-strong);background:var(--surface);color:var(--ink-soft);cursor:pointer}
+  .screens-filter button[aria-pressed="true"]{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+  .screens-filter button:focus-visible{outline:2px solid var(--p0);outline-offset:2px}
+  .phones{display:grid;grid-template-columns:repeat(auto-fill,minmax(236px,1fr));gap:26px 18px;margin-top:18px}
+  .scr{display:flex;flex-direction:column;gap:8px}
+  .phone{width:100%;max-width:250px;margin:0 auto;border:1.5px solid var(--phone-edge);border-radius:22px;background:var(--phone);padding:10px 9px 8px;min-height:450px;display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden;font-size:11px;line-height:1.35}
+  .phone::before{content:"";display:block;width:54px;height:5px;border-radius:3px;background:var(--ph-bar);margin:0 auto 4px}
+  .w-top{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:2px 2px 6px;border-bottom:1px solid var(--rule)}
+  .w-top b{font-family:Bitter,serif;font-size:12.5px}
+  .w-mp{display:inline-flex;border:1px solid var(--rule-strong);border-radius:999px;overflow:hidden;font-family:"JetBrains Mono",monospace;font-size:8.5px}
+  .w-mp span{padding:2px 5px;color:var(--ink-faint)} .w-mp span.on{background:var(--ink);color:var(--ground)}
+  .w-h{font-family:Bitter,serif;font-weight:600;font-size:13px;margin-top:2px}
+  .w-p{color:var(--ink-soft);font-size:10.5px}
+  .w-chip{align-self:flex-start;font-family:"JetBrains Mono",monospace;font-size:8.5px;padding:1px 5px;border-radius:2px;background:var(--surface-sunk);color:var(--ink-soft)}
+  .w-search{border:1px solid var(--rule-strong);border-radius:6px;padding:5px 7px;color:var(--ink-faint);font-size:10.5px}
+  .w-tabs{display:flex;gap:10px;border-bottom:1px solid var(--rule);font-size:10px;color:var(--ink-faint);padding-bottom:3px}
+  .w-tabs span.on{color:var(--ink);font-weight:600;border-bottom:2px solid var(--ink);padding-bottom:2px}
+  .w-pills{display:flex;gap:4px;flex-wrap:wrap}
+  .w-pills span{border:1px solid var(--rule-strong);border-radius:999px;padding:1px 7px;font-size:9.5px;color:var(--ink-soft)}
+  .w-pills span.on{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+  .w-row{display:flex;justify-content:space-between;gap:6px;padding:4px 0;border-bottom:1px solid var(--ph-bar2);font-size:10.5px}
+  .w-row i{font-style:normal;color:var(--ink-faint);font-size:9.5px;display:block}
+  .w-row .v{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .up{color:var(--done)} .dn{color:var(--blocked)}
+  .w-card{border:1px solid var(--rule-strong);border-radius:8px;padding:7px 8px;display:flex;flex-direction:column;gap:3px}
+  .w-card b{font-size:11px}
+  .w-door{border:1.5px solid var(--rule-strong);border-radius:10px;padding:9px 9px;display:flex;flex-direction:column;gap:2px;min-height:44px}
+  .w-door b{font-size:11.5px}
+  .w-door.pri{border-color:var(--p0);background:var(--p0-sunk)}
+  .w-gate{border:1.5px dashed var(--running);border-radius:8px;padding:7px 8px;background:var(--running-sunk);display:flex;flex-direction:column;gap:3px}
+  .w-gate b{font-size:11px;color:var(--ink)}
+  .w-btn{background:var(--ink);color:var(--ground);border-radius:8px;text-align:center;padding:7px;font-weight:600;font-size:11px;min-height:30px}
+  .w-btn2{border:1px solid var(--ink);border-radius:8px;text-align:center;padding:6px;font-size:10.5px}
+  .w-link{color:var(--p0);font-size:10.5px}
+  .w-chart{height:64px;border-radius:4px;background:linear-gradient(180deg,var(--p1-sunk),transparent);position:relative;border-bottom:1px solid var(--rule)}
+  .w-chart svg{position:absolute;inset:0;width:100%;height:100%}
+  .w-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+  .w-grid div{background:var(--surface-sunk);border-radius:4px;padding:4px 5px;font-size:9.5px;color:var(--ink-soft)}
+  .w-grid div b{display:block;color:var(--ink);font-size:10.5px}
+  .w-heat{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+  .w-heat span{height:20px;border-radius:2px;font-size:7.5px;display:flex;align-items:center;justify-content:center;color:#fff}
+  .w-donut{width:62px;height:62px;border-radius:50%;margin:2px auto;background:conic-gradient(var(--p0) 0 62%,var(--p3) 62% 100%);-webkit-mask:radial-gradient(circle,transparent 18px,#000 19px);mask:radial-gradient(circle,transparent 18px,#000 19px)}
+  .w-bar{height:8px;border-radius:4px;background:var(--surface-sunk);overflow:hidden}
+  .w-bar span{display:block;height:100%;background:var(--p3)}
+  .w-sheet{margin-top:auto;border:1px solid var(--rule-strong);border-radius:12px 12px 0 0;padding:8px;background:var(--surface);box-shadow:0 -6px 18px rgba(0,0,0,.12);display:flex;flex-direction:column;gap:4px}
+  .w-sheet::before{content:"";width:28px;height:3px;border-radius:2px;background:var(--rule-strong);margin:0 auto 3px}
+  .w-dim{position:absolute;inset:0;background:rgba(10,12,16,.28);pointer-events:none}
+  .w-tabbar{margin-top:auto;display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--rule);padding-top:5px;font-size:8.5px;color:var(--ink-faint);text-align:center}
+  .w-tabbar span.on{color:var(--ink);font-weight:600}
+  .w-fill{flex:1}
+  .s-meta{font-size:13px;color:var(--ink-soft)}
+  .s-meta .s-id{font-family:"JetBrains Mono",monospace;font-size:11.5px;font-weight:600;color:var(--ink)}
+  .s-meta .s-name{font-weight:600;color:var(--ink);font-size:14.5px;display:block}
+  .s-meta .s-line{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--ink-faint);overflow-wrap:anywhere}
+  .s-meta .s-states{font-size:12.5px;margin-top:3px}
+
+  .parked{background:var(--surface-sunk);border:1px dashed var(--rule-strong);border-radius:3px;padding:16px 18px;color:var(--ink-soft);font-size:15px}
+  footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--rule);color:var(--ink-faint);font-size:13px;display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
+  .save{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+  @media (max-width:760px){
+    .arch{grid-template-columns:1fr;gap:0}
+    .arrow{height:30px;transform:rotate(90deg)}
+    .strip{grid-template-columns:1fr 1fr}
+    li.task{grid-template-columns:24px 1fr}
+    .t-id,.t-body,.t-meta{grid-column:2}
+    .t-meta{justify-content:flex-start;margin-top:7px;max-width:none}
+  }
+  @media (max-width:420px){ .strip{grid-template-columns:1fr} }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<script id="state" type="application/json">{"done":{}}</script>
+<div class="wrap">
+<header>
+  <div class="eyebrow">Plan 4 · US Launch — NRI &amp; LRS Portfolio Intelligence · 24 Sep 2026</div>
+  <h1>US full stack, from the market switch to the broker</h1>
+  <p class="standfirst">The whole US build, in the order it can ship: Phase&nbsp;0 splits India and US and rebuilds onboarding; Phase&nbsp;1 is the screener and markets; Phase&nbsp;2 is StockSage; Phase&nbsp;3 is brokers. Every screen sits behind its own <code>us-*</code> PostHog flag, off by default, and every prompt runs from cloud Claude Code because everything it needs is committed under <code>docs/prompts/us-fullstack/</code>.</p>
+  <dl class="live">
+    <div><dt>Prompts</dt><dd>30<small>one per session, one PR</small></dd></div>
+    <div><dt>Tickets</dt><dd>56<small>20 filed today · MONEY-1621–1640</small></dd></div>
+    <div><dt>Points</dt><dd>≈ 260<small>P0 60 · P1 110 · P2 40 · P3 50</small></dd></div>
+    <div><dt>Flags</dt><dd>20<small>all <code>us-*</code>, default off</small></dd></div>
+    <div><dt>Screens</dt><dd>20<small>mobile-first, 375px</small></dd></div>
+    <div><dt>Native apps</dt><dd>Later<small>APIs built for them now</small></dd></div>
+  </dl>
+</header>
+
+<section>
+  <h2>Run a prompt from cloud Claude Code</h2>
+  <p class="note">Start a cloud session on the repo, paste the line below with the prompt path from any ticket row, and walk away. The session branches, builds, runs the serialised gate and <code>/code-review</code>, pushes and opens a PR. It never merges.</p>
+  <div class="run">
+    <pre>Read docs/prompts/design-v2/00-shared-context.md and docs/prompts/us-fullstack/00-shared-context.md, then execute docs/prompts/us-fullstack/&lt;phase&gt;/&lt;file&gt;.md end to end. Do not merge.</pre>
+    <ol>
+      <li>Run rows marked <strong>parallel</strong> in separate cloud sessions at the same time; they touch different files.</li>
+      <li>Merge the PR. Then in PostHog turn the prompt's flag on <strong>for yourself only</strong> and look at it on your phone.</li>
+      <li>Widen the flag when it is right. US prices need the licence decision (MONEY-1563) before anyone beyond the allowlist sees them.</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <h2>One function, two callers</h2>
+  <p class="note">Your rule from today, written into the shared context and enforced by MONEY-1632: each feature is one function in <code>packages/services</code>. The Next.js app reaches it through a server action; the future mobile app reaches the same function through <code>/v1/us/*</code>. A registry lists every surface and a test fails when either caller is missing, or when either has its own implementation.</p>
+  <div class="arch">
+    <div class="col">
+      <div class="node"><div class="n-k">Web, today</div><div class="n-t">Next.js component</div><div class="n-p">calls the server action only — never <code>fetch('/v1')</code></div></div>
+      <div class="node"><div class="n-k">Caller</div><div class="n-t">Server action</div><div class="n-p"><code>apps/web/lib/actions/us-&lt;surface&gt;.ts</code> · auth → user → US access → shared schema</div></div>
+    </div>
+    <div class="arrow" aria-hidden="true">→</div>
+    <div class="col" style="justify-content:center">
+      <div class="node core"><div class="n-k">The only implementation</div><div class="n-t">Service</div><div class="n-p"><code>packages/services/src/us/&lt;surface&gt;.service.ts</code> + <code>-logic.ts</code>. Returns plain JSON (ISO dates, no Prisma types). Reads <code>CandleRepository</code> / Prisma; never BigQuery.</div></div>
+      <div class="node"><div class="n-k">Enforced by</div><div class="n-t"><code>US_SURFACES</code> + parity test</div><div class="n-p">both callers exist, import the same export, neither imports the database</div></div>
+    </div>
+    <div class="arrow" aria-hidden="true">←</div>
+    <div class="col">
+      <div class="node"><div class="n-k">Caller</div><div class="n-t"><code>/v1/us/*</code> route</div><div class="n-p"><code>apps/api/src/routes/v1/us/</code> · same four steps · cursor pagination · refusal is absence</div></div>
+      <div class="node later"><div class="n-k">Later</div><div class="n-t">iOS / Android app</div><div class="n-p">a client of <code>/v1/us/*</code>, not a rewrite (M20, parked)</div></div>
+    </div>
+  </div>
+  <div class="rules">
+    <div><strong>Why a new ticket was needed</strong>The existing <code>saved-screens</code> pair is a port, not a shared call: the web action still runs its own Prisma queries and the <code>/v1</code> route re-declares the schemas.</div>
+    <div><strong>One family, pinned</strong>All US routes live under a single new <code>/v1/us</code> family, so the 38-family pin moves once, in MONEY-1632.</div>
+    <div><strong>Two gates, both required</strong>US access (the licence, in code) and the screen's flag (PostHog). A refused user sees the layer as absent, never an error.</div>
+  </div>
+</section>
+
+<section>
+  <h2>The four phases</h2>
+  <p class="note">A phase starts when the tickets it depends on are merged. Inside a phase, the parallel chips say what can run at once.</p>
+  <div class="strip">
+    <div class="ph ph0"><div class="ph-n">Phase 0</div><div class="ph-t">India / US split</div><div class="ph-d">Service contract, flag registry, access as an entitlement, <code>/start</code>, market fork and switch, FX.</div><div class="ph-g">9 prompts · ≈ 60 pts</div></div>
+    <div class="ph ph1"><div class="ph-n">Phase 1</div><div class="ph-t">Screener &amp; market</div><div class="ph-d">Screener projection, search everywhere, the US stock page, news, US Markets, watchlist, funds, <code>/v1</code> parity.</div><div class="ph-g">10 prompts · ≈ 110 pts</div></div>
+    <div class="ph ph2"><div class="ph-n">Phase 2</div><div class="ph-t">StockSage</div><div class="ph-d">The US research arm, the Ask-Sage sheet on every surface, currency-correct reports, evals before widening.</div><div class="ph-g">5 prompts · ≈ 40 pts</div></div>
+    <div class="ph ph3"><div class="ph-n">Phase 3</div><div class="ph-t">Brokers</div><div class="ph-d">Currency on holdings, the SnapTrade rail (P18), US connect, mixed holdings, LRS, portfolio wiring.</div><div class="ph-g">6 prompts · ≈ 50 pts</div></div>
+  </div>
+
+  <div class="kicker">First run, after Phase 0</div>
+  <div class="journey">
+    <span class="step"><small>1</small>Sign up</span><span class="sep">→</span>
+    <span class="step"><small>2</small>Terms</span><span class="sep">→</span>
+    <span class="step"><small>S0.1</small>/start · three doors</span><span class="sep">→</span>
+    <span class="step"><small>S0.2</small>India · US · Both</span><span class="sep">→</span>
+    <span class="step"><small>server</small>User.market saved</span>
+  </div>
+  <div class="branches">
+    <div class="branch"><strong>India</strong> → Home as today. No US anywhere, and no nudge until 7 days of activity (S0.7).</div>
+    <div class="branch"><strong>US or Both, access passes</strong> → Home with the US cards; the market pill (S0.6) is live; search shows a US section.</div>
+    <div class="branch"><strong>US or Both, no access</strong> → the same Home, with GateInline cards (S0.5) linking to <code>/upgrade?market=US</code>. Never a modal.</div>
+    <div class="branch"><strong>Just look around</strong> → one demo fixture covering India and US; "Make this mine" converts.</div>
+  </div>
+</section>
+
+<section>
+  <div class="lane-head"><span class="lane-key k0">PHASE 0</span><h2>India / US split and onboarding</h2></div>
+  <p class="note">P0-01 and P0-02 run first, in parallel: every later prompt assumes the service contract and the flag registry exist.</p>
+  <ul class="tasks" id="p0"></ul>
+</section>
+<section>
+  <div class="lane-head"><span class="lane-key k1">PHASE 1</span><h2>Screener and market</h2></div>
+  <p class="note">The projection job (P1-01) feeds the screener, the stock page's key ratios and the markets page, so it goes first. P1-10 runs last and audits every <code>/v1/us</code> route against the registry.</p>
+  <ul class="tasks" id="p1"></ul>
+</section>
+<section>
+  <div class="lane-head"><span class="lane-key k2">PHASE 2</span><h2>StockSage</h2></div>
+  <p class="note">The Ask-Sage buttons from Phase 1 are already on every US surface, dark. They light up when <code>us-stock-research</code> and <code>us-sage-entrypoints</code> turn on — no code change.</p>
+  <ul class="tasks" id="p2"></ul>
+</section>
+<section>
+  <div class="lane-head"><span class="lane-key k3">PHASE 3</span><h2>Broker integration</h2></div>
+  <p class="note">P3-02 executes SnapTrade P18 with four overrides written into the README: currency ships first (P3-01), FX follows Decisions&nbsp;#02, broker routes stay at <code>/v1/brokers/snaptrade</code> (the rail also serves Zerodha and Upstox), and a US card needs US access, <code>us-broker-connect</code> and <code>snaptrade-brokers</code> together.</p>
+  <ul class="tasks" id="p3"></ul>
+</section>
+
+<section>
+  <h2>Flags you switch on</h2>
+  <p class="note">Declared once by MONEY-1622, read everywhere through it. The order column is a suggested enable sequence: each one depends only on those above it. Every flag goes to you first, then widens.</p>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Order</th><th>Flag</th><th>Phase</th><th>Turns on</th><th>Ticket</th></tr></thead>
+    <tbody id="flags"></tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Who sees what</h2>
+  <p class="note">Every prompt carries this matrix for its own screens, and every PR ships screenshots for U1, U2 and U5.</p>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>User</th><th>Arrives by</th><th>Market pill</th><th>US search &amp; pages</th><th>Sage on US</th><th>US brokers</th></tr></thead>
+    <tbody id="users"></tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Screens, mobile first</h2>
+  <p class="note">Intent sketches at phone width: what each screen holds and which flag gates it. <strong>The visual design is the Claude Design bundle</strong> (<code>docs/design/v2-bundle/</code>); where a sketch and the bundle differ, the bundle wins. The numbers are sample data. Each screen lists its route, flag, ticket and the states the prompt must build.</p>
+  <div class="screens-filter" role="group" aria-label="Filter screens by phase">
+    <button type="button" data-f="all" aria-pressed="true">All 20</button>
+    <button type="button" data-f="0" aria-pressed="false">Phase 0</button>
+    <button type="button" data-f="1" aria-pressed="false">Phase 1</button>
+    <button type="button" data-f="2" aria-pressed="false">Phase 2</button>
+    <button type="button" data-f="3" aria-pressed="false">Phase 3</button>
+  </div>
+  <div class="phones" id="phones"></div>
+</section>
+
+<section>
+  <h2>Not in this program</h2>
+  <div class="parked">
+    <strong>Native apps (M20, MONEY-1590–1593)</strong> stay parked in Backlog rather than cancelled: they describe exactly what the app will need, and the <code>/v1/us/*</code> routes built here are what it will call. <strong>SnapTrade P19–P27</strong> (one US broker per session) follow P3-03, run straight from the pack. <strong>P28/P29</strong> (Zerodha and Upstox through SnapTrade) are India work. <strong>P30–P33</strong> (crypto) wait on a crypto licence. Founder-only: <strong>MONEY-1563</strong> licence decision, <strong>MONEY-923</strong> legal memo, <strong>MONEY-921</strong> closed beta.
+  </div>
+</section>
+
+<footer>
+  <span>Source: <code>docs/prompts/us-fullstack/</code> on <code>docs/MONEY-1632</code> · Plan of record <code>PLAN-sep2026.md</code></span>
+  <span class="save" id="save">Loading…</span>
+</footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var state = { done: {} };
+  try { state = JSON.parse(document.getElementById("state").textContent) || state; } catch (e) {}
+  if (!state.done) state.done = {};
+  var saveEl = document.getElementById("save");
+  var artifactNs = null;
+
+  var P = "docs/prompts/us-fullstack/";
+  var TASKS = {
+    p0: [
+      { id: "1632", t: "Service contract: one function, called by the server action and /v1/us", pts: 4, flag: "", prompt: "phase-0/P0-01-service-contract.md", par: "with P0-02", dep: "",
+        w: "Builds <code>packages/services/src/us/</code>, the <code>US_SURFACES</code> registry, the parity test and the <code>/v1/us</code> mount, with a worked first surface." },
+      { id: "1622", t: "Flag registry: one declaration for all 20 us-* flags", pts: 4, flag: "", prompt: "phase-0/P0-02-flag-registry.md", par: "with P0-01", dep: "",
+        w: "Today the names live in four hand-synced copies and <code>useUsFeatureFlags</code> has no consumers. Adds <code>/v1/me/flags</code> for the app." },
+      { id: "1562", t: "useUsLayer() and the gate audit (+ MONEY-1561)", pts: 6, flag: "", prompt: "phase-0/P0-03-us-layer-and-gate-audit.md", par: "with P0-08, P0-09", dep: "P0-01, P0-02",
+        w: "Licence gate and product flag decided in one place for web and api; every US read route checked for both." },
+      { id: "1624", t: "US access as an entitlement; GateInline and /upgrade?market=US (+ MONEY-917)", pts: 8, flag: "us-upgrade", prompt: "phase-0/P0-04-us-entitlement-and-upgrade.md", par: "with P0-05", dep: "P0-03",
+        w: "Plan and region rule plus a global switch, still fail-closed. USD plans on Dodo; Premium recommended, priced by IP currency." },
+      { id: "1623", t: "/start first run and the market fork (+ MONEY-1584 · W12)", pts: 16, flag: "us-onboarding", prompt: "phase-0/P0-05-onboarding-start-and-fork.md", par: "with P0-04", dep: "P0-01, P0-02",
+        w: "Terms before /start; three doors; the quiz goes. The profile moves off client-writable Clerk metadata to server-owned <code>User.market</code>, residency and currency." },
+      { id: "1625", t: "Market switch: India · US · Both", pts: 4, flag: "us-market-switch", prompt: "phase-0/P0-06-market-switch.md", par: "with P0-08", dep: "P0-05",
+        w: "One pill in the top bar and tab bar, persisted as <code>User.market</code>, driving search, screener, discover and dashboard." },
+      { id: "1626", t: "Existing users meet US; one demo fixture (+ MONEY-919)", pts: 4, flag: "us-onboarding", prompt: "phase-0/P0-07-existing-users-and-demo.md", par: "with P0-06", dep: "P0-05",
+        w: "The Add-US card after 7 days, a <code>User.market = IN</code> backfill, and the user-type matrix instrumented end to end." },
+      { id: "1575", t: "FX and denomination (MONEY-1575 · 1576 · 1578)", pts: 10, flag: "us-currency-toggle", prompt: "phase-0/P0-08-fx-and-denomination.md", par: "with P0-03, P0-06", dep: "P0-01",
+        w: "<code>FxRate</code> keyed by source; one <code>convertUsd</code>: spot for values, RBI reference for cost. A missing rate disables the toggle with a reason." },
+      { id: "899", t: "Market-aware foundations (MONEY-899 · 901 · 903)", pts: 8, flag: "", prompt: "phase-0/P0-09-market-aware-foundations.md", par: "any time", dep: "",
+        w: "Kill the <code>.NS</code> default, parameterise the ₹ formatter, per-exchange hours and holidays." }
+    ],
+    p1: [
+      { id: "1566", t: "us_screener_row and the projection job (+ MONEY-1568)", pts: 10, flag: "", prompt: "phase-1/P1-01-us-screener-projection.md", par: "with P1-05", dep: "P0-01",
+        w: "One row per active listing from <code>candles</code>, <code>us_fundamentals</code> and <code>us_fund_nav</code>; a sharded Cloud Run job, apply flag present and false." },
+      { id: "1569", t: "Screener contract and search rung (MONEY-1569 · 1570 · 1574)", pts: 10, flag: "", prompt: "phase-1/P1-02-screener-contract-and-search-rung.md", par: "with P1-04", dep: "P1-01",
+        w: "Every response names what it excluded and why; search reports which rung answered, so a silent Atlas miss stops looking like a working search." },
+      { id: "1627", t: "US in every picker", pts: 4, flag: "us-stocks-search", prompt: "phase-1/P1-03-us-in-every-picker.md", par: "with P1-05", dep: "P0-03, P1-02",
+        w: "Search, command palette and add-to-watchlist return US listings by <code>listingId</code>, never saved as NSE rows." },
+      { id: "1586", t: "US stock page (W09) with the H lane's chart", pts: 16, flag: "us-stocks-listing · us-stock-chart · us-stock-fundamentals", prompt: "phase-1/P1-04-us-stock-page.md", par: "with P1-02", dep: "P1-01",
+        w: "EOD header, key ratios with filing chips, financials, insiders, 13F holders. The chart reads market-data <code>/udf/history</code>; no new candle read path." },
+      { id: "1629", t: "US news and SEC events", pts: 4, flag: "us-news", prompt: "phase-1/P1-05-us-news-and-events.md", par: "with P1-01", dep: "P0-01",
+        w: "<code>UsNewsArticle</code> and <code>UsFilingInsight</code> are written today and read by nothing." },
+      { id: "1587", t: "Screener US pill (W02) and quant screener on US (+ MONEY-983)", pts: 20, flag: "us-screener", prompt: "phase-1/P1-06-screener-us-pill.md", par: "with P1-07", dep: "P1-02",
+        w: "Three US modes from one filter registry; the exclusion row renders under the results." },
+      { id: "1628", t: "US Markets page /markets/us", pts: 8, flag: "us-market-overview", prompt: "phase-1/P1-07-us-markets-page.md", par: "with P1-06", dep: "P1-01, P1-05",
+        w: "Indices, movers, sector heatmap, news and SEC events, each stamped with its EOD date." },
+      { id: "1589", t: "Watchlist, Home cards and cross-surface wiring (+ MONEY-1631 · 912)", pts: 12, flag: "us-watchlist · us-dashboard", prompt: "phase-1/P1-08-watchlist-and-wiring.md", par: "with P1-09", dep: "P1-01, P1-03, P1-04, P0-08",
+        w: "☆ everywhere a US stock shows; recent views; Home US cards; Ask-Sage buttons rendered dark until Phase 2." },
+      { id: "1571", t: "US funds and ETFs (MONEY-1571 · 1572 · 1573)", pts: 6, flag: "us-funds", prompt: "phase-1/P1-09-us-funds.md", par: "with P1-08", dep: "P1-06",
+        w: "NAV serving through <code>/udf/history</code>; reference data bought, scraped or scoped out with a quoted price." },
+      { id: "1630", t: "/v1/us parity sweep", pts: 8, flag: "", prompt: "phase-1/P1-10-api-parity-sweep.md", par: "runs last", dep: "all of Phase 1",
+        w: "Audits every <code>US_SURFACES</code> row against its route and fills the gaps with contract tests." }
+    ],
+    p2: [
+      { id: "1583", t: "StockSage US arm (+ MONEY-1585)", pts: 18, flag: "us-stock-research", prompt: "phase-2/P2-01-stocksage-us-arm.md", par: "with P2-03", dep: "Phase 1 data",
+        w: "US tools for filings, fundamentals, insiders, 13F, EOD prices and FX spot; a market-aware resolver; refusal before any credit is reserved." },
+      { id: "1588", t: "Sage US deltas (W06) and the Ask-Sage sheet (+ MONEY-1634)", pts: 12, flag: "us-sage-entrypoints", prompt: "phase-2/P2-02-sage-us-deltas-and-entrypoints.md", par: "with P2-05", dep: "P2-01, P1-08",
+        w: "Market pill in the @-picker; a bottom sheet from every US surface carrying <code>{market, listingId}</code>." },
+      { id: "1633", t: "Currency-aware research renderers", pts: 4, flag: "us-stock-research", prompt: "phase-2/P2-03-currency-aware-renderers.md", par: "with P2-01", dep: "P0-08, P0-09",
+        w: "No ₹ on a USD report; an optional ₹ chip with the rate date." },
+      { id: "913", t: "US-person guardrail and disclaimers", pts: 4, flag: "", prompt: "phase-2/P2-04-us-person-guardrail.md", par: "with P2-03", dep: "P2-01",
+        w: "Impersonal research only; the publisher-exclusion copy." },
+      { id: "1635", t: "US research evals — the widening gate", pts: 4, flag: "", prompt: "phase-2/P2-05-us-research-evals.md", par: "with P2-02", dep: "P2-01",
+        w: "About 40 US questions graded on both models, pass bar written before the first run. <code>us-stock-research</code> widens only on a pass." }
+    ],
+    p3: [
+      { id: "1636", t: "Currency on Holding, Trade and Position", pts: 4, flag: "", prompt: "phase-3/P3-01-currency-on-holdings.md", par: "—", dep: "P0-08",
+        w: "P18 §1e brought forward: a named currency on every row, INR backfill, totals converted at read." },
+      { id: "1637", t: "SnapTrade rail — executes P18", pts: 8, flag: "snaptrade-brokers", prompt: "phase-3/P3-02-snaptrade-rail.md", par: "—", dep: "P3-01, P0-02, P0-08",
+        w: "One aggregator behind the adapter interface, SANDBOX end to end on the test key, launch-review polling budget built in." },
+      { id: "1638", t: "US broker connect (W08) (+ MONEY-914)", pts: 4, flag: "us-broker-connect", prompt: "phase-3/P3-03-us-broker-connect.md", par: "with P3-05", dep: "P3-02",
+        w: "The US section of the broker picker; the portal in a sheet on mobile; status, resync, disconnect." },
+      { id: "1639", t: "Mixed India + US holdings (W10) (+ MONEY-916)", pts: 8, flag: "us-holdings · us-currency-toggle", prompt: "phase-3/P3-04-mixed-holdings.md", par: "—", dep: "P3-01, P3-03",
+        w: "One portfolio, grouped by market, ₹ or $ totals with the rate date, local return plus FX return; US lots in FIFO." },
+      { id: "915", t: "LRS/TCS tracker and statement import (W11)", pts: 8, flag: "us-lrs-tracker · us-statement-import", prompt: "phase-3/P3-05-lrs-tracker-and-statement-import.md", par: "with P3-03", dep: "P3-01",
+        w: "Vested and INDmoney statements in; remittances counted against the LRS limit." },
+      { id: "1640", t: "US portfolio into Sage, Roast and watchlist", pts: 4, flag: "", prompt: "phase-3/P3-06-portfolio-wiring.md", par: "—", dep: "P3-04, P2-02",
+        w: "Sage portfolio answers include US; Roast scores US rows or says per row that it can't." }
+    ]
+  };
+  var GATES = {
+    p0: { before: "1562", key: "AFTER P0-01 + P0-02", text: "Everything below builds on the contract and the registry. Merge both first." },
+    p1: { before: "1630", key: "LAST", text: "The parity sweep reads every row the other nine prompts registered." },
+    p2: { before: "1635", key: "WIDENING GATE", text: "<code>us-stock-research</code> leaves the allowlist only when these evals pass." },
+    p3: { before: "1639", key: "AFTER CONNECT", text: "Mixed holdings needs real US rows: currency (P3-01) and a connected broker (P3-03)." }
+  };
+
+  var FLAGS = [
+    ["us-onboarding", 0, "S0.1 /start, S0.2 fork, S0.3 prefs, S0.7 Add-US", "1623 · 1584 · 1626"],
+    ["us-market-switch", 0, "S0.6 market pill", "1625"],
+    ["us-stocks-search", 1, "S1.1 US in search and pickers", "1627"],
+    ["us-stocks-listing", 1, "S1.3 US stock page", "1586"],
+    ["us-stock-chart", 1, "Chart block on S1.3", "1586 · H lane"],
+    ["us-stock-fundamentals", 1, "Ratios, financials, insiders, 13F on S1.3", "1586"],
+    ["us-news", 1, "News, filings and events on S1.3 and S1.2", "1629"],
+    ["us-market-overview", 1, "S1.2 /markets/us", "1628"],
+    ["us-screener", 1, "S1.4 screener US pill", "1587 · 983"],
+    ["us-watchlist", 1, "S1.5 mixed watchlist", "1589 · 1631"],
+    ["us-dashboard", 1, "S1.6 Home US cards", "912 · 1631"],
+    ["us-funds", 1, "US MF and ETF modes, fund pages", "1571–1573"],
+    ["us-currency-toggle", 0, "$ ↔ ₹ toggle", "1578 · 1639"],
+    ["us-stock-research", 2, "S2.2 US research report", "1583 · 1633"],
+    ["us-sage-entrypoints", 2, "S2.1 Sage pill, S2.3 Ask-Sage sheet", "1588 · 1634"],
+    ["us-upgrade", 0, "S0.4 /upgrade?market=US, S0.5 GateInline", "1624 · 917"],
+    ["us-broker-connect", 3, "S3.1 connect a US broker", "1638"],
+    ["us-holdings", 3, "S3.2 mixed holdings", "1639"],
+    ["us-lrs-tracker", 3, "S3.3 LRS/TCS tracker", "915"],
+    ["us-statement-import", 3, "S3.4 statement import", "915"]
+  ];
+
+  var USERS = [
+    ["U1 New, India-only", "/start → India", "<span class='no'>hidden</span>", "<span class='no'>absent</span>", "<span class='no'>absent</span>", "<span class='no'>absent</span>"],
+    ["U2 New, US-interested", "/start → US or Both", "<span class='yes'>shown</span>", "<span class='yes'>yes</span>, if access passes", "<span class='yes'>yes</span>", "<span class='yes'>yes</span>"],
+    ["U3 Existing India user", "already onboarded", "after Add-US", "after Add-US", "after Add-US", "after Add-US"],
+    ["U4 Demo visitor", "Just look around", "<span class='yes'>shown</span>", "demo data", "demo answers", "demo holdings"],
+    ["U5 FREE, flag on", "any", "<span class='yes'>shown</span>", "<span class='gated'>GateInline</span>", "<span class='gated'>GateInline</span>", "<span class='gated'>GateInline</span>"],
+    ["U6 Paid plan, flag on", "any", "<span class='yes'>shown</span>", "<span class='yes'>yes</span>", "<span class='yes'>yes</span>", "<span class='yes'>yes</span>"],
+    ["U7 Founder / allowlist", "override", "<span class='yes'>shown</span>", "<span class='yes'>yes</span>, any plan", "<span class='yes'>yes</span>", "<span class='yes'>yes</span>"]
+  ];
+
+  // Wireframe blocks: [type, ...args]
+  var SPARK = '<svg viewBox="0 0 100 40" preserveAspectRatio="none"><polyline fill="none" stroke="currentColor" stroke-width="1.6" points="0,30 10,27 20,29 30,22 40,24 50,17 60,19 70,12 80,14 90,8 100,10"/></svg>';
+  var TABBAR = ["tabbar", 0];
+  var SCREENS = [
+    { id: "S0.1", ph: 0, name: "First run: three doors", route: "/start", flag: "us-onboarding", tk: "MONEY-1623",
+      states: "loading · error · demo", b: [["h","Let's get your money in one place"],["p","Pick one — you can add the rest later."],["door","Connect Zerodha","Read-only · 30 seconds",1],["door","Upload a statement","CSV, PDF or broker export"],["door","Just look around","A sample portfolio, India + US"],["fill"],["p","You accepted the terms on the last step."]] },
+    { id: "S0.2", ph: 0, name: "Market fork", route: "/start/market", flag: "us-onboarding", tk: "MONEY-1584",
+      states: "loading · error", b: [["h","Where do you invest?"],["pills",["India","US","Both"],2],["p","Where do you live?"],["pills",["India","Outside India"],0],["card","We'll show","Indian and US markets, ₹ first with $ beside it."],["fill"],["btn","Continue"]] },
+    { id: "S0.3", ph: 0, name: "Settings → Market preferences", route: "/settings/market", flag: "us-onboarding", tk: "MONEY-1584",
+      states: "loading · error · saved toast", b: [["top","Market","IN"],["row","Markets I follow","Both"],["row","Residency","India"],["row","Show amounts in","₹ INR"],["row","US hours shown in","IST"],["p","Changing this updates search, screener and Home."],["fill"],TABBAR] },
+    { id: "S0.4", ph: 0, name: "Upgrade for US", route: "/upgrade?market=US", flag: "us-upgrade", tk: "MONEY-1624",
+      states: "loading · error · paid (redirect)", b: [["h","Add US markets"],["p","US stocks, ETFs and funds, researched by Sage."],["card","Premium · recommended","₹899 / month · US + India · Sage on both"],["card","Pro","₹499 / month · India only"],["p","Prices in ₹ because you're in India."],["fill"],["btn","Continue with Premium"]] },
+    { id: "S0.5", ph: 0, name: "GateInline card", route: "any US surface", flag: "us-upgrade", tk: "MONEY-1624",
+      states: "gated (this is the state)", b: [["top","AAPL","US"],["chip","EOD · 23 Sep"],["gate","US data is on Premium","See Apple, Microsoft and 8,000 more US listings.","See plans"],["p","Everything else on this page is still yours."],["fill"],TABBAR] },
+    { id: "S0.6", ph: 0, name: "Market pill", route: "top bar · tab bar", flag: "us-market-switch", tk: "MONEY-1625",
+      states: "persisted · flag-off (absent)", b: [["top","Home","BOTH"],["p","Portfolio · India + US"],["row","Total value","₹14.2L","$4,180 in US"],["row","Today","+₹6,410","+0.45%",1],["card","Switch market","India · US · Both — search, screener and Home follow it."],["fill"],TABBAR] },
+    { id: "S0.7", ph: 0, name: "Add US card", route: "Home", flag: "us-onboarding", tk: "MONEY-1626",
+      states: "dismissed (never again) · demo", b: [["top","Home","IN"],["row","Total value","₹12.8L"],["card","Invest in the US too?","Track US holdings next to India, in ₹ or $.","Add US markets · Not now"],["row","RELIANCE","₹2,941","+0.8%",1],["row","INFY","₹1,622","−0.3%",-1],["fill"],TABBAR] },
+    { id: "S1.1", ph: 1, name: "Search, US section", route: "search overlay", flag: "us-stocks-search", tk: "MONEY-1627",
+      states: "loading · empty · rung shown in debug", b: [["search","app"],["tabs",["All","India","US"],0],["p","US"],["row","AAPL","Apple Inc · NASDAQ",""],["row","APP","AppLovin · NASDAQ",""],["p","India"],["row","APPLE","Apple Finance · BSE",""],["fill"]] },
+    { id: "S1.2", ph: 1, name: "US Markets", route: "/markets/us", flag: "us-market-overview", tk: "MONEY-1628",
+      states: "loading · DataGap · demo", b: [["top","US Markets","US"],["chip","EOD · 23 Sep 2026"],["grid",[["S&P 500","6,512 +0.4%"],["Nasdaq","21,384 +0.7%"],["Dow","45,102 −0.1%"],["VIX","14.8"]]],["heat"],["row","NVDA","Top gainer","+3.2%",1],["row","SEC · 8-K","MSFT files results","2h"],["fill"],TABBAR] },
+    { id: "S1.3", ph: 1, name: "US stock page", route: "/us/stock/[symbol]", flag: "us-stocks-listing +3", tk: "MONEY-1586",
+      states: "loading · DataGap · gated · demo", b: [["top","AAPL","US"],["row","Apple Inc","NASDAQ · EOD 23 Sep","$228.14"],["chart"],["tabs",["Overview","Financials","News","Holders"],0],["grid",[["P/E","34.1"],["ROE","148%"],["Mkt cap","$3.45T"],["Div yield","0.4%"]]],["btn2","☆ Watchlist   ·   Ask Sage"],TABBAR] },
+    { id: "S1.4", ph: 1, name: "Screener, US pill", route: "/discover/screener?market=US", flag: "us-screener", tk: "MONEY-1587",
+      states: "loading · empty · exclusion row", b: [["top","Screener","US"],["pills",["Stocks","Funds","ETFs"],0],["pills",["P/E < 25","ROE > 15%","+ filter"],-1],["row","MSFT","Software · $3.1T","31.8"],["row","GOOGL","Internet · $2.1T","23.4"],["p","412 match · 38 excluded: no ROE filed"],["fill"],TABBAR] },
+    { id: "S1.5", ph: 1, name: "Mixed watchlist", route: "/watchlist", flag: "us-watchlist", tk: "MONEY-1589",
+      states: "loading · empty · demo", b: [["top","Watchlist","BOTH"],["tabs",["All","India","US"],0],["row","NVDA","US · EOD","$181.40","+3.2%",1],["row","TCS","NSE","₹3,112","−0.4%",-1],["row","MSFT","US · EOD","$468.20","+0.6%",1],["fill"],TABBAR] },
+    { id: "S1.6", ph: 1, name: "Home, US cards", route: "/dashboard", flag: "us-dashboard", tk: "MONEY-912",
+      states: "loading · DataGap · demo", b: [["top","Home","BOTH"],["card","US market · 23 Sep","S&P 500 +0.4% · Nasdaq +0.7%","Open US Markets →"],["card","Recently viewed","AAPL · NVDA · MSFT"],["card","Ask Sage","Is NVDA expensive against its 5-year P/E?"],["fill"],TABBAR] },
+    { id: "S2.1", ph: 2, name: "Sage market pill", route: "/sage", flag: "us-sage-entrypoints", tk: "MONEY-1588",
+      states: "loading · gated · credit chip", b: [["top","Sage","US"],["pills",["India","US"],1],["card","Suggested","Compare AAPL and MSFT margins over 5 years"],["card","Suggested","What did insiders buy at NVDA this quarter?"],["fill"],["search","Ask about any US stock…"],TABBAR] },
+    { id: "S2.2", ph: 2, name: "US research report", route: "/sage/research/[id]", flag: "us-stock-research", tk: "MONEY-1633",
+      states: "running · partial · DataGap · error", b: [["top","Report","US"],["h","Apple — valuation check"],["chip","Sources: 10-Q Aug 2026 · EOD 23 Sep"],["row","Revenue TTM","$408.6B","≈ ₹34.1L Cr"],["row","P/E vs 5y median","34.1 vs 28.7",""],["p","Not investment advice. Research is impersonal."],["fill"],TABBAR] },
+    { id: "S2.3", ph: 2, name: "Ask-Sage sheet", route: "sheet from any US surface", flag: "us-sage-entrypoints", tk: "MONEY-1634",
+      states: "loading · gated · credit chip", b: [["top","MSFT","US"],["chart"],["dim"],["sheet",[["h","Ask Sage about MSFT"],["pills",["Valuation","Filings","Insiders"],-1],["search","Is MSFT cheaper than last year?"],["btn","Ask · 2 credits"]]]] },
+    { id: "S3.1", ph: 3, name: "Connect a US broker", route: "/brokers?market=US", flag: "us-broker-connect", tk: "MONEY-1638",
+      states: "loading · gated · portal error · connected", b: [["top","Brokers","US"],["tabs",["India","US"],1],["card","Robinhood","Read-only · History from account opening","Connect"],["card","Interactive Brokers","Read-only · Updated daily","Connect"],["p","Connections open in a secure SnapTrade window."],["fill"],TABBAR] },
+    { id: "S3.2", ph: 3, name: "Mixed holdings", route: "/holdings", flag: "us-holdings", tk: "MONEY-1639",
+      states: "loading · empty · FX missing · demo", b: [["top","Portfolio","BOTH"],["pills",["₹ INR","$ USD"],0],["donut"],["row","India · 11 holdings","₹10.9L","+1.2%",1],["row","US · 4 holdings","₹3.3L","FX +0.8%",1],["p","USD→INR 88.42 · spot, 23 Sep"],TABBAR] },
+    { id: "S3.3", ph: 3, name: "LRS/TCS tracker", route: "/tax/lrs", flag: "us-lrs-tracker", tk: "MONEY-915",
+      states: "loading · empty · import prompt", b: [["top","LRS","US"],["h","FY 2026-27"],["bar",38],["row","Remitted","$95,000 of $250,000",""],["row","TCS collected","₹1.9L",""],["p","RBI reference rate on each remittance date."],["fill"],TABBAR] },
+    { id: "S3.4", ph: 3, name: "Statement import", route: "/brokers/import", flag: "us-statement-import", tk: "MONEY-915",
+      states: "uploading · parsing · error · done", b: [["top","Import","US"],["h","Upload a US statement"],["card","Vested · INDmoney","PDF or CSV · up to 20 MB"],["btn2","Choose file"],["row","vested-aug-2026.pdf","Parsing…",""],["fill"],TABBAR] }
+  ];
+
+  function esc(s) { return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+  function chip(c, t) { return '<span class="chip ' + c + '">' + t + "</span>"; }
+
+  function block(b) {
+    var k = b[0];
+    if (k === "h") return '<div class="w-h">' + esc(b[1]) + "</div>";
+    if (k === "p") return '<div class="w-p">' + esc(b[1]) + "</div>";
+    if (k === "chip") return '<span class="w-chip">' + esc(b[1]) + "</span>";
+    if (k === "fill") return '<div class="w-fill"></div>';
+    if (k === "dim") return '<div class="w-dim"></div>';
+    if (k === "top") {
+      var mk = { IN: ["IN","US","Both"], US: ["IN","US","Both"], BOTH: ["IN","US","Both"] }[b[2]];
+      var on = { IN: 0, US: 1, BOTH: 2 }[b[2]];
+      return '<div class="w-top"><b>' + esc(b[1]) + '</b><span class="w-mp">' +
+        mk.map(function (m, i) { return '<span' + (i === on ? ' class="on"' : "") + ">" + m + "</span>"; }).join("") + "</span></div>";
+    }
+    if (k === "search") return '<div class="w-search">⌕ ' + esc(b[1]) + "</div>";
+    if (k === "tabs") return '<div class="w-tabs">' + b[1].map(function (t, i) { return "<span" + (i === b[2] ? ' class="on"' : "") + ">" + esc(t) + "</span>"; }).join("") + "</div>";
+    if (k === "pills") return '<div class="w-pills">' + b[1].map(function (t, i) { return "<span" + (i === b[2] ? ' class="on"' : "") + ">" + esc(t) + "</span>"; }).join("") + "</div>";
+    if (k === "row") {
+      var cls = b[5] === 1 ? "up" : b[5] === -1 ? "dn" : "";
+      var right = b[3] ? esc(b[3]) : "";
+      var sub = b[4] ? '<i class="' + cls + '">' + esc(b[4]) + "</i>" : "";
+      if (b[4] && typeof b[5] === "undefined" && b[4] !== "") sub = "<i>" + esc(b[4]) + "</i>";
+      return '<div class="w-row"><span>' + esc(b[1]) + (b[2] ? "<i>" + esc(b[2]) + "</i>" : "") + '</span><span class="v">' + right + sub + "</span></div>";
+    }
+    if (k === "card") return '<div class="w-card"><b>' + esc(b[1]) + '</b><span class="w-p">' + esc(b[2]) + "</span>" + (b[3] ? '<span class="w-link">' + esc(b[3]) + "</span>" : "") + "</div>";
+    if (k === "door") return '<div class="w-door' + (b[3] ? " pri" : "") + '"><b>' + esc(b[1]) + '</b><span class="w-p">' + esc(b[2]) + "</span></div>";
+    if (k === "gate") return '<div class="w-gate"><b>' + esc(b[1]) + '</b><span class="w-p">' + esc(b[2]) + '</span><span class="w-link">' + esc(b[3]) + " →</span></div>";
+    if (k === "btn") return '<div class="w-btn">' + esc(b[1]) + "</div>";
+    if (k === "btn2") return '<div class="w-btn2">' + esc(b[1]) + "</div>";
+    if (k === "chart") return '<div class="w-chart" style="color:var(--p1)">' + SPARK + "</div>";
+    if (k === "grid") return '<div class="w-grid">' + b[1].map(function (c) { return "<div><b>" + esc(c[1]) + "</b>" + esc(c[0]) + "</div>"; }).join("") + "</div>";
+    if (k === "heat") {
+      var cells = [["Tech","+1.1",1],["Health","−0.3",0],["Energy","−0.9",0],["Finance","+0.4",1],["Cons.","+0.2",1],["Util.","−0.1",0],["Indus.","+0.6",1],["Real est.","−0.5",0]];
+      return '<div class="w-heat">' + cells.map(function (c) { return '<span style="background:var(' + (c[2] ? "--done" : "--blocked") + ')">' + c[0] + " " + c[1] + "</span>"; }).join("") + "</div>";
+    }
+    if (k === "donut") return '<div class="w-donut" role="img" aria-label="Allocation: India 77%, US 23%"></div>';
+    if (k === "bar") return '<div class="w-bar"><span style="width:' + b[1] + '%"></span></div>';
+    if (k === "sheet") return '<div class="w-sheet">' + b[1].map(block).join("") + "</div>";
+    if (k === "tabbar") return '<div class="w-tabbar"><span class="on">Home</span><span>Portfolio</span><span>Sage</span><span>Discover</span><span>You</span></div>';
+    return "";
+  }
+
+  function screenHtml(s) {
+    return '<div class="scr" data-ph="' + s.ph + '"><div class="phone" role="img" aria-label="Wireframe of ' + esc(s.name) + '">' +
+      s.b.map(block).join("") + '</div><div class="s-meta"><span class="s-id">' + s.id + '</span> <span class="dot d' + s.ph + '"></span>' +
+      '<span class="s-name">' + esc(s.name) + '</span><div class="s-line">' + esc(s.route) + " · " + esc(s.flag) + " · " + esc(s.tk) + '</div>' +
+      '<div class="s-states">States: ' + esc(s.states) + ", flag-off (absent)</div></div></div>";
+  }
+
+  function taskHtml(t) {
+    var done = !!state.done[t.id];
+    var chips = "";
+    if (t.flag) chips += chip("c-flag", t.flag);
+    chips += chip("c-pts", t.pts + " pts");
+    if (t.dep) chips += chip("c-dep", "after " + t.dep);
+    if (t.par && t.par !== "—") chips += chip("c-par", t.par);
+    return '<li class="task' + (done ? " is-done" : "") + '"><input type="checkbox" data-id="' + t.id + '"' + (done ? " checked" : "") +
+      ' aria-label="' + t.t.replace(/"/g, "&quot;") + '"><span class="t-id">MONEY-' + t.id + '</span><div class="t-body"><div class="t-title">' + t.t +
+      '</div><div class="t-why">' + t.w + '</div><div class="t-prompt">' + P + t.prompt + '</div></div><div class="t-meta">' + chips + "</div></li>";
+  }
+
+  function render() {
+    Object.keys(TASKS).forEach(function (lane) {
+      var g = GATES[lane], html = "";
+      TASKS[lane].forEach(function (t) {
+        if (g && g.before === t.id) html += '<div class="gate"><span class="g-key">' + g.key + '</span><span class="g-text">' + g.text + "</span></div>";
+        html += taskHtml(t);
+      });
+      document.getElementById(lane).innerHTML = html;
+    });
+    document.getElementById("flags").innerHTML = FLAGS.map(function (f, i) {
+      return '<tr><td class="ord">' + (i + 1) + '</td><td class="mono">' + f[0] + '</td><td><span class="dot d' + f[1] + '"></span>' + f[1] + "</td><td>" + f[2] + '</td><td class="mono">' + f[3] + "</td></tr>";
+    }).join("");
+    document.getElementById("users").innerHTML = USERS.map(function (u) {
+      return "<tr>" + u.map(function (c, i) { return i === 0 ? "<td><strong>" + c + "</strong></td>" : "<td>" + c + "</td>"; }).join("") + "</tr>";
+    }).join("");
+    document.getElementById("phones").innerHTML = SCREENS.map(screenHtml).join("");
+  }
+
+  document.querySelector(".screens-filter").addEventListener("click", function (ev) {
+    var btn = ev.target.closest("button"); if (!btn) return;
+    var f = btn.dataset.f;
+    document.querySelectorAll(".screens-filter button").forEach(function (b) { b.setAttribute("aria-pressed", b === btn ? "true" : "false"); });
+    document.querySelectorAll(".scr").forEach(function (s) { s.style.display = (f === "all" || s.dataset.ph === f) ? "" : "none"; });
+  });
+
+  function documentHtml() {
+    var clone = document.documentElement.cloneNode(true);
+    clone.querySelector("#state").textContent = JSON.stringify(state);
+    ["p0","p1","p2","p3","flags","users","phones"].forEach(function (id) { var n = clone.querySelector("#" + id); if (n) n.innerHTML = ""; });
+    clone.querySelector("#save").textContent = "Loading…";
+    return "<!doctype html>\n" + clone.outerHTML;
+  }
+
+  var pending = null;
+  function scheduleSave() {
+    if (!artifactNs) { saveEl.textContent = "Ticks stay on this device — open on claude.ai to share"; return; }
+    if (pending) clearTimeout(pending);
+    saveEl.textContent = "Saving…";
+    pending = setTimeout(function () {
+      artifactNs.publish(documentHtml()).then(function () {
+        saveEl.textContent = "Saved for everyone · " + new Date().toLocaleTimeString();
+      }).catch(function (err) {
+        saveEl.textContent = (err && err.code === "conflict") ? "Someone else saved first — reloading to theirs" : "Not saved — you may not have edit access";
+      });
+    }, 600);
+  }
+
+  document.addEventListener("change", function (ev) {
+    var box = ev.target;
+    if (!box || box.type !== "checkbox" || !box.dataset.id) return;
+    if (box.checked) state.done[box.dataset.id] = true; else delete state.done[box.dataset.id];
+    render();
+    scheduleSave();
+  });
+
+  render();
+  saveEl.textContent = "Tick a ticket when its PR merges";
+  if (window.claude && window.claude.use) {
+    window.claude.use("artifact").then(function (ns) {
+      artifactNs = ns;
+      if (!ns) saveEl.textContent = "Read-only view";
+    }).catch(function () {});
+  }
+})();
+</script>
+</body>
+</html>

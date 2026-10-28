@@ -1,0 +1,6 @@
+{
+  "status": "error",
+  "message": "Invalid `checksum`.",
+  "data": null,
+  "error_type": "TokenException"
+}

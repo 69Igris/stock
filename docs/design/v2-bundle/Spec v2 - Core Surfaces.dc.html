@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/usemoney-play-design-system-67522a6c-d1c3-4617-97de-fcd968490366/colors_and_type.css">
+  <style>
+    body{margin:0;background:var(--paper);background-image:radial-gradient(var(--dot-fg) 1px,transparent 1.5px);background-size:9px 9px;font-family:var(--font-sans);color:var(--ink)}
+    a{color:var(--emerald-text);text-decoration:none}a:hover{color:var(--ink);text-decoration:underline}
+  </style>
+</helmet>
+<div style="max-width:880px;margin:0 auto;padding:54px 28px 100px">
+  <div style="display:inline-flex;align-items:center;gap:7px;font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--emerald-text);letter-spacing:1.4px;text-transform:uppercase"><span style="width:6px;height:6px;border-radius:99px;background:var(--emerald)"></span>PART 1 · SPEC V2 · CORE SURFACES · AWAITING APPROVAL</div>
+  <h1 style="font-weight:800;font-size:44px;line-height:1.02;letter-spacing:-2px;margin:14px 0 10px">Integration, <span style="font-family:var(--font-serif);font-style:italic;font-weight:400">not reinvention.</span></h1>
+  <p style="font-size:15px;line-height:1.6;color:var(--ink-2);max-width:680px;margin:0">Refines <a href="Module Specs A-H.dc.html">Modules A–H</a> against the shipped IA. No route moves, no renames of learned concepts. Bias: fewer visible controls, progressive disclosure for the rest. Same shell (16rem sidebar + topbar), same tokens, computed-or-absent numbers, inline gating, chat everywhere.</p>
+
+  <div style="margin-top:22px;border:2px solid var(--ink);border-radius:12px;background:var(--pop-2);box-shadow:3px 3px 0 var(--ink);padding:14px 18px;font-size:13px;line-height:1.6">
+    <span style="font-family:var(--font-mono);font-size:10.5px;font-weight:700;letter-spacing:1.2px">SUPERSEDES</span> — Module C as a standalone surface (folds into Strategies) · Module A's Strategy-Lab IA (its analytics content — OverfitBadge, walk-forward, metrics — stands) · Module E's dashboard portion (§1C is now the dashboard deliverable) · Module H's placement (components stand; home is Settings → Developer). <b>Everything else in A–H stands.</b>
+  </div>
+
+  <div style="margin-top:22px;border:2px solid var(--ink);border-radius:14px;background:var(--paper-3);box-shadow:4px 4px 0 var(--ink);padding:18px 22px">
+    <div style="font-family:var(--font-mono);font-size:10.5px;font-weight:700;letter-spacing:1.2px;color:var(--ink-3)">ONE NEW SHARED COMPONENT — VIEWSWITCHER</div>
+    <div style="font-size:13.5px;line-height:1.65;color:var(--ink-2);margin-top:8px">Compact mono control beside the page title on Screener and Strategies: <span style="font-family:var(--font-mono);font-size:11.5px;font-weight:700;border:2px solid var(--ink);border-radius:8px;padding:3px 9px;background:var(--paper)">VIEW: ADVANCED ▾</span> → Beginner / Intermediate / Advanced, one-line description each. Quiet (ghost until hover-lift), persists per user per surface. When the persona engine ships, this same component becomes its manual override — no redesign later. <b style="color:var(--ink)">Baseline shipped = Advanced</b>; Beginner/Intermediate are visibility presets over the same component tree, never forks (§Part 3).</div>
+  </div>
+
+  <!-- 1A -->
+  <div style="margin-top:26px;border:2px solid var(--ink);border-radius:14px;background:var(--paper-3);box-shadow:4px 4px 0 var(--ink);overflow:hidden">
+    <div style="background:var(--ink);color:var(--paper);padding:12px 20px;display:flex;align-items:baseline;gap:12px"><span style="font-family:var(--font-mono);font-weight:800;font-size:15px;background:var(--pop-2);color:#1d1d1b;border-radius:6px;padding:1px 9px;transform:rotate(-2deg)">1A</span><b style="font-size:17px">Unified Screener</b><span style="font-family:var(--font-mono);font-size:10px;opacity:.7">/DISCOVER/SCREENER · SCANS GO NATIVE · INDIA + US</span></div>
+    <div style="padding:16px 20px;font-size:13.5px;line-height:1.65;color:var(--ink-2)">
+      <b style="color:var(--ink)">Structure kept.</b> Mode tabs <span style="font-family:var(--font-mono);font-size:11px;font-weight:700">STOCKS | MUTUAL FUNDS | ETFS</span> and URL params unchanged. New market dimension: a compact pill pair <span style="font-family:var(--font-mono);font-size:11px;font-weight:700;border:2px solid var(--ink);border-radius:99px;padding:2px 8px;background:var(--paper)">INDIA</span> <span style="font-family:var(--font-mono);font-size:11px;font-weight:700;border:2px solid var(--ink);border-radius:99px;padding:2px 8px;background:var(--paper)">US</span> right of the mode tabs, scoped per mode; Global later is a third pill, not a rework. Active pill = ink-stamped.<br>
+      <b style="color:var(--ink)">US pre-GA.</b> Pill visible to <i>everyone</i>. Unflagged → full-canvas gated state: "US markets — coming soon" + join-waitlist CTA (the pill markets the launch). Flagged → real thing: DelayedDataBadge ("EOD · as of Jul 17 close"), $-primary with ₹ toggle (FX as-of line), filter sidebar shell identical but contents swapped to SEC-fundamentals filters with filing-date ProvenanceChips. India keeps the current set. MF mode: India funds now, US later under the same switcher.<br>
+      <b style="color:var(--ink)">Scans go native — <span style="background:var(--pop-2);padding:0 4px">/discover/scans dies</span></b> (founder-gated today; migration safe; route redirects into the screener with the Scans rail open). <b>Placement decided: top section of the left rail</b>, above filter groups — because a scan <i>is</i> a saved query, so it lives where queries are authored; a chip-row above results would fight the one-row quick-chip budget and can't scale to a searchable library with source badges. Rail lists scans with badges <span style="font-family:var(--font-mono);font-size:10.5px;font-weight:700">ENGINE | CHARTINK | STRATEGY | YOURS</span>. Selecting one <b>runs it in place</b>: sidebar shows its rules as read-only chips with an "Edit as filters" unlock (edits fork to an unsaved draft, source scan untouched); results render in the same table under a slim scan context bar. Reverse direction: any hand-built filter set → "Save as scan." <b>Naming decided:</b> the one surviving word is <b>"Scans"</b> — "Saved screens" merges in as YOURS. One mental model: <i>a scan is a saved screener query, whoever authored it.</i><br>
+      <b style="color:var(--ink)">Simplifications (explicit).</b> ① AI filter builder merges into the single search input — type a ticker → typeahead; type a phrase → a persistent bottom row appears: <span style="font-family:var(--font-mono);font-size:11px">↵ BUILD FILTERS FROM "undervalued large caps"</span>; symbol matches always listed above, so both behaviors coexist without a mode toggle. ② Quick chips: max one row + "+N" overflow. ③ Advanced filters stay behind the existing toggle. ④ Bulk-action toolbar appears only on selection. ⑤ Save-as-scan, per-scan alerts, export, columns — all in <b>one</b> overflow "⋯" on the results header; no floating alert config. ⑥ Match-score bar kept, slimmer, in-row.<br>
+      <b style="color:var(--ink)">States.</b> US pre-GA gate · scan with zero matches ("Nothing matches today — this scan re-runs at 16:05 IST") · DataGapBanner (source degraded; affected columns show —, never stale values silently) · gated scan (GateInline + CreditChip on the run action) · loading skeleton table.
+    </div>
+  </div>
+
+  <!-- 1B -->
+  <div style="margin-top:18px;border:2px solid var(--ink);border-radius:14px;background:var(--paper-3);box-shadow:4px 4px 0 var(--ink);overflow:hidden">
+    <div style="background:var(--ink);color:var(--paper);padding:12px 20px;display:flex;align-items:baseline;gap:12px"><span style="font-family:var(--font-mono);font-weight:800;font-size:15px;background:var(--pop-2);color:#1d1d1b;border-radius:6px;padding:1px 9px;transform:rotate(2deg)">1B</span><b style="font-size:17px">Strategies — whole lifecycle, one home</b><span style="font-family:var(--font-mono);font-size:10px;opacity:.7">/STRATEGIES · SIGNALS + FORWARDRUN FOLD IN</span></div>
+    <div style="padding:16px 20px;font-size:13.5px;line-height:1.65;color:var(--ink-2)">
+      <b style="color:var(--ink)">IA.</b> Top-level tabs: <span style="font-family:var(--font-mono);font-size:11px;font-weight:700">CATALOG | CUSTOM | SIGNALS</span> — Signals is the global feed (all strategies' recent signals, grouped by day, strategy filter chips); <b>decided: third tab, no new sidebar item.</b> Detail page tabs: <span style="font-family:var(--font-mono);font-size:11px;font-weight:700">OVERVIEW | BACKTEST | SIGNALS | FORWARD RUN</span> — Backtest and Forward routes already exist; Signals is the addition; Overview = rules in plain English (DSL code-view toggle), status, latest stats. Build custom + Create AI unchanged.<br>
+      <b style="color:var(--ink)">Lifecycle.</b> One status chip drives everything: <span style="font-family:var(--font-mono);font-size:10.5px;font-weight:700">DRAFT → BACKTESTED → VALIDATED → FORWARD → RETIRED</span> (VALIDATED = passes the Module-A overfit checks — CPCV/PBO content stands). Each tab's empty state teaches the next step: "Backtest this strategy to unlock Signals" / "Run signals for 2 weeks before Forward Run."<br>
+      <b style="color:var(--ink)">Signals tab.</b> Schedule (EOD 16:05 IST default, intraday for PRO), per-channel alert toggles, recent signal list — the exact rule that fired in plain English + values at trigger + mini chart with entry marker.<br>
+      <b style="color:var(--ink)">Forward Run tab.</b> Shadow-portfolio ledger (signal → hypothetical fill incl. costs), hypothetical P&amp;L vs NIFTY, divergence-from-backtest indicator (amber outside the backtest band), and the word <b>simulation</b> on every P&amp;L surface: "hypothetical — no real orders were or can be placed."<br>
+      <b style="color:var(--ink)">Catalog cards, calmed.</b> Status chip + max 2 stats (Sharpe · MaxDD) with real computed values, or <i>"Not yet backtested — run it"</i> CTA + CreditChip. Everything else lives on detail. Never a fake number.<br>
+      <b style="color:var(--ink)">Screener ↔ Strategies bridge.</b> Same DSL, two lenses. Strategy Overview → <span style="font-family:var(--font-mono);font-size:11px;font-weight:700;border:2px solid var(--ink);border-radius:8px;padding:2px 8px;background:var(--paper)">SEE CURRENT MATCHES</span> opens the screener with the rules as a STRATEGY-badged scan. Screener scan overflow → <span style="font-family:var(--font-mono);font-size:11px;font-weight:700;border:2px solid var(--ink);border-radius:8px;padding:2px 8px;background:var(--paper)">TRACK AS A STRATEGY</span> promotes it into /strategies as DRAFT. Copy teaches the lens: <i>screener = who matches now · strategy = does this rule set make money over time.</i>
+    </div>
+  </div>
+
+  <!-- 1C -->
+  <div style="margin-top:18px;border:2px solid var(--ink);border-radius:14px;background:var(--paper-3);box-shadow:4px 4px 0 var(--ink);overflow:hidden">
+    <div style="background:var(--ink);color:var(--paper);padding:12px 20px;display:flex;align-items:baseline;gap:12px"><span style="font-family:var(--font-mono);font-weight:800;font-size:15px;background:var(--pop-2);color:#1d1d1b;border-radius:6px;padding:1px 9px;transform:rotate(-2deg)">1C</span><b style="font-size:17px">Dashboard ×3 — one data contract, three densities</b><span style="font-family:var(--font-mono);font-size:10px;opacity:.7">/DASHBOARD · THIS IS THE PERSONA DELIVERABLE</span></div>
+    <div style="padding:16px 20px;font-size:13.5px;line-height:1.65;color:var(--ink-2)">
+      Same underlying data in all three so the difference is legible; persona changes presentation, never advice (SEBI). Chat entry present in all three. Each carries a persona-switch preview (see the other layouts before applying) and a quiet "Why this layout?" link → settings.<br>
+      <b style="color:var(--ink)">Beginner — "Guide me."</b> Net worth + day change <i>in words</i> ("Up ₹4,120 today — that's 0.4%"), <b>one</b> guided next-action card (never a stack), Ask-Sage bar with 3 suggested simple prompts, one learn tile, roast teaser. Banned vocabulary: XIRR, VaR, Greeks, beta, drawdown — plain equivalents only ("your yearly growth rate").<br>
+      <b style="color:var(--ink)">Intermediate — "Keep me sharp."</b> Today's layout, refined: holdings summary, Compare-to-NIFTY, tax-preview moat widget, insights/briefing card, Ask-Sage bar. Default persona.<br>
+      <b style="color:var(--ink)">Advanced — "Get out of my way."</b> Dense 3-column terminal: watchlist + signals rail | portfolio metrics (XIRR · beta · drawdown · exposure) + holdings table | research/roast/alerts rail. Minimal padding, mono tabular everywhere, max data-ink. No greeting card.
+    </div>
+  </div>
+
+  <!-- 1D -->
+  <div style="margin-top:18px;border:2px solid var(--ink);border-radius:14px;background:var(--paper-3);box-shadow:4px 4px 0 var(--ink);overflow:hidden">
+    <div style="background:var(--ink);color:var(--paper);padding:12px 20px;display:flex;align-items:baseline;gap:12px"><span style="font-family:var(--font-mono);font-weight:800;font-size:15px;background:var(--pop-2);color:#1d1d1b;border-radius:6px;padding:1px 9px;transform:rotate(2deg)">1D</span><b style="font-size:17px">Developer console → Settings</b><span style="font-family:var(--font-mono);font-size:10px;opacity:.7">CORRECTION TO MODULE H · NO NEW TOP-LEVEL AREA</span></div>
+    <div style="padding:16px 20px;font-size:13.5px;line-height:1.65;color:var(--ink-2)">
+      Path: <span style="font-family:var(--font-mono);font-size:11px;font-weight:700">SETTINGS → DEVELOPER</span> — one settings section, dense, sober. Module H components reused verbatim, re-anchored in the settings frame: API keys table (create/revoke, last-used), MCP connect card with copy-paste snippets (Claude/Cursor), usage meter, and the tool catalog with provenance badges <span style="font-family:var(--font-mono);font-size:10.5px;font-weight:700">CONSENTED-BROKER | BHAVCOPY-DERIVED | PURE-COMPUTE | EDGAR</span>. The mockup shows the navigation path from the sidebar.
+    </div>
+  </div>
+
+  <div style="margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:14px">
+    <div style="border:2px solid var(--ink);border-radius:12px;background:var(--paper);box-shadow:3px 3px 0 var(--ink);padding:14px 18px;font-size:12.5px;line-height:1.6;color:var(--ink-2)">
+      <div style="font-family:var(--font-mono);font-size:10.5px;font-weight:700;letter-spacing:1.2px;color:var(--ink-3)">PART 2 — MOCKUPS, ON APPROVAL</div>
+      <div style="margin-top:6px">① Screener (Stocks India + US variant + scans-native interaction) → ② Strategies (catalog + detail, four tabs populated) → ③ Dashboard ×3 → ④ Settings → Developer. 1280 desktop-first → 375, TCS/RELIANCE/HDFCBANK + AAPL/MSFT, ₹ en-IN + $.</div>
+    </div>
+    <div style="border:2px solid var(--ink);border-radius:12px;background:var(--paper);box-shadow:3px 3px 0 var(--ink);padding:14px 18px;font-size:12.5px;line-height:1.6;color:var(--ink-2)">
+      <div style="font-family:var(--font-mono);font-size:10.5px;font-weight:700;letter-spacing:1.2px;color:var(--ink-3)">PART 3 — "GO PERSONA" PRESETS (LATER)</div>
+      <div style="margin-top:6px"><b style="color:var(--ink)">Beginner:</b> screener opens on curated scans, plain-language descriptions, ≤5 chips, AI input primary, sidebar hidden behind "more filters"; strategies catalog-only, growth-of-₹10,000 + one risk line, no jargon. <b style="color:var(--ink)">Intermediate:</b> sidebar collapsible (closed), CAGR/Sharpe/MaxDD without validation jargon, scans = manual filters, four tabs with explanatory subtitles. Presets subtract from Advanced — one component tree + flags.</div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

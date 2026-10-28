@@ -1,0 +1,137 @@
+{
+  "13f_amend": {
+    "file": "thirteenf_amendment.txt.gz",
+    "url": "https://www.sec.gov/Archives/edgar/data/1067983/000095012325008361/0000950123-25-008361.txt",
+    "sha256": "c9f62a5e7fd0473f8ace8c70929a348c4f3fe13f1b192752cd0c4e0346bbdca3",
+    "bytes": 6369,
+    "gzipBytes": 2014,
+    "fetchedAt": "2026-08-29T07:47:51.269635Z",
+    "why": "13F-HR/A. `amendmentType` decides whether the amendment REPLACES the original's holdings or ADDS to them; getting it wrong either doubles a portfolio or erases most of it. (filed 2025-08-14, period 2025-03-31)"
+  },
+  "13f_post": {
+    "file": "thirteenf_post2023.txt.gz",
+    "url": "https://www.sec.gov/Archives/edgar/data/1067983/000119312526352200/0001193125-26-352200.txt",
+    "sha256": "19fc411d481abb83dc262b3ddeacaa3b6d8ae30c0d7ba76566595e2c60e62a0e",
+    "bytes": 51654,
+    "gzipBytes": 4467,
+    "fetchedAt": "2026-08-29T07:47:48.406733Z",
+    "why": "13F-HR FILED on or after 2023-01-03, so its values are whole dollars under Release 34-95148. Paired with the pre-cutover fixture, this is what makes the unit rule falsifiable. (filed 2026-08-14, period 2026-06-30)"
+  },
+  "13f_pre": {
+    "file": "thirteenf_pre2023.txt.gz",
+    "url": "https://www.sec.gov/Archives/edgar/data/1067983/000095012322012275/0000950123-22-012275.txt",
+    "sha256": "64204f1646acb698a08de04da338e79e7ffb927002252c4479a5fdeda7a065d4",
+    "bytes": 96598,
+    "gzipBytes": 6312,
+    "fetchedAt": "2026-08-29T07:47:49.887239Z",
+    "why": "13F-HR filed BEFORE 2023-01-03, so its values are thousands. Without this half the unit rule is an untested constant. (filed 2022-11-14, period 2022-09-30)"
+  },
+  "atom_getcurrent": {
+    "file": "atom_getcurrent.xml.gz",
+    "url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&count=100&start=0&type=&owner=include&output=atom",
+    "sha256": "f38e0359e95d58221e805d2814de05626f6577d42a967de50c64be315cae4328",
+    "bytes": 56755,
+    "gzipBytes": 3879,
+    "fetchedAt": "2026-08-29T06:00:04Z",
+    "why": "parse_current_filings_atom fixture. 100 entries collapse to 49 distinct accessions because SEC emits one entry per filer ROLE (Reporting / Issuer / Subject / Filed by) \u2014 a detector that does not dedupe on the accession publishes the same filing up to four times. Captured by an earlier probe under the same User-Agent, so it cost this run nothing."
+  },
+  "companyfacts_aapl": {
+    "file": "companyfacts_aapl.json.gz",
+    "url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000320193.json",
+    "sha256": "73a86c6aedc31f77cac2ea4df5f80f0b3bd7e6eb58bb4e01444fbedf3afb9c43",
+    "bytes": 3789099,
+    "gzipBytes": 255521,
+    "fetchedAt": "2026-08-29T07:47:40.107530Z",
+    "why": "facts_from_companyfacts_json fixture, and the source of Apple's 10-K accession via the `accn` on its own facts. Also the fixture that proves `frame` survives our parser \u2014 edgartools' own parser drops it."
+  },
+  "companyfacts_short_history": {
+    "file": "companyfacts_coreweave.json.gz",
+    "url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001769628.json",
+    "sha256": "f74c941c85d0e2816df569b0263fc617aa13702e00c570f51e3301e90a54361a",
+    "bytes": 500328,
+    "gzipBytes": 40848,
+    "fetchedAt": "2026-08-29T07:47:41.381275Z",
+    "why": "A 2025 IPO, so FEWER THAN FIVE fiscal years. Decision 5 says a short-history filer must yield everything it has and raise nothing; that is only falsifiable against a filer that actually has a short history."
+  },
+  "daily_index_20220214": {
+    "file": "form_20220214.idx.gz",
+    "url": "https://www.sec.gov/Archives/edgar/daily-index/2022/QTR1/form.20220214.idx",
+    "sha256": "be07996ea63610d5745760d6a4de6bf14f18f7e38226c79909ffab7317b128c7",
+    "bytes": 2931669,
+    "gzipBytes": 355358,
+    "fetchedAt": "2026-08-29T07:47:37.112908Z",
+    "why": "parse_daily_index fixture AND the source of a legacy `SC 13G` accession. 2022-02-14 is simultaneously the Q4-2021 13F deadline and the annual 13G deadline, so a single day's index carries both populations and no second request is needed."
+  },
+  "efts_8k_search": {
+    "file": "efts_8k_search.json.gz",
+    "url": "https://efts.sec.gov/LATEST/search-index?forms=8-K&dateRange=custom&startdt=2026-08-26&enddt=2026-08-28&from=0",
+    "sha256": "ebe0e3161bab7d606f4f1d2fb94288ecc79807d29feb83b7290e052984501056",
+    "bytes": 65965,
+    "gzipBytes": 9375,
+    "fetchedAt": "2026-08-29T06:00:09Z",
+    "why": "parse_efts_response fixture. `_source` carries `ciks` as an ARRAY and has no `form_type` at all; the field is `form`. Also the source of the 8-K accession, via the only two hits whose `items` array contains '2.02'. Captured by an earlier probe under the same User-Agent."
+  },
+  "eightk_bundle": {
+    "file": "eightk_ibio.txt.gz",
+    "url": "https://www.sec.gov/Archives/edgar/data/1420720/000142072026000019/0001420720-26-000019.txt",
+    "sha256": "19f67e34f9b6efb766cf68c9045805b193683bb17d1b3d5a512e3c9dda0e05af",
+    "bytes": 332421,
+    "gzipBytes": 45970,
+    "fetchedAt": "2026-08-29T07:47:45.480047Z",
+    "why": "8-K carrying Item 2.02 (results of operations) and 9.01, with an EX-99.1 press release. Accession came free from the already captured EFTS response, whose `items` array names 2.02 outright \u2014 so no request was spent hunting for an earnings 8-K."
+  },
+  "form4_bundle": {
+    "file": "form4_jefferies.txt.gz",
+    "url": "https://www.sec.gov/Archives/edgar/data/1211677/000121465926011109/0001214659-26-011109.txt",
+    "sha256": "28c10c93132bbe7cfa81c93e84a70a1da75263304c980bd287bd46f0ade40dc6",
+    "bytes": 13713,
+    "gzipBytes": 2028,
+    "fetchedAt": "2026-08-29T07:47:42.727954Z",
+    "why": "Insider parsing: derivative rows, footnotes and the `equitySwapInvolved` element. Accession came free from the Atom page; picked by its 13 KB size against 8 KB for its siblings, which is a derivative table."
+  },
+  "form4_derivative_bundle": {
+    "file": "form4_monopar_amendment.txt.gz",
+    "url": "https://www.sec.gov/Archives/edgar/data/1645469/000143774926029235/0001437749-26-029235.txt",
+    "sha256": "5d06ca5245276149795313562b677699014ec9ac537e35a23cf87711d87186a4",
+    "bytes": 23625,
+    "gzipBytes": 2693,
+    "fetchedAt": "2026-08-29T07:51:45.758502Z",
+    "why": "The derivative half of insider parsing \u2014 underlyingSecurity, underlyingShares, exercisePrice, exerciseDate, expirationDate \u2014 six schema columns the Jefferies Form 4 leaves entirely untested, plus the `4/A` amendment path. Chosen as the largest ownership filing on the Atom page (23 KB against 13 KB), which is a derivative table."
+  },
+  "schedule13d_bundle": {
+    "file": "schedule13d_expion.txt.gz",
+    "url": "https://www.sec.gov/Archives/edgar/data/1927401/000190359626000330/0001903596-26-000330.txt",
+    "sha256": "1f172c340a28bb63c57c58699fd642298b005dd9c65e16d656d78ec5c391c2de",
+    "bytes": 716013,
+    "gzipBytes": 127890,
+    "fetchedAt": "2026-08-29T07:47:44.134010Z",
+    "why": "A post-2024-12-18 `SCHEDULE 13D` \u2014 structured XML, so has_structured_data is True and percent/voting/dispositive fields exist. Accession came free from the Atom page."
+  },
+  "schedule13g_legacy": {
+    "file": "schedule13g_legacy.txt.gz",
+    "url": "https://www.sec.gov/Archives/edgar/data/1801172/000090571822000346/0000905718-22-000346.txt",
+    "sha256": "2facbaaf98944e0d891aa14207f07f4db1ed65795a376b7f90dd927277bd3736",
+    "bytes": 47943,
+    "gzipBytes": 5613,
+    "fetchedAt": "2026-08-29T07:51:47.216621Z",
+    "why": "A pre-mandate `SC 13G` \u2014 HTML only. Proves has_structured_data is False and that the adapter still recovers identities rather than raising, so a 2019 filing's null percentOfClass reads as 'not machine-readable' and never as 'zero'."
+  },
+  "submissions_berkshire": {
+    "file": "submissions_brk.json.gz",
+    "url": "https://data.sec.gov/submissions/CIK0001067983.json",
+    "sha256": "ca619a37dc072dc39fd55adf7a825439255962e9b6be1b41cc632475d78957d7",
+    "bytes": 161425,
+    "gzipBytes": 29368,
+    "fetchedAt": "2026-08-29T07:47:35.456870Z",
+    "why": "parse_submissions_json fixture. Berkshire is chosen over a pure operating company because one filer's history has to supply the 13F trio (post-2023, pre-2023, amendment) as well as the paging `filings.files[]` references, and Berkshire files all four."
+  },
+  "tenk_bundle_aapl": {
+    "file": "tenk_aapl.txt.gz",
+    "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079.txt",
+    "sha256": "60f22bb90bb8e46894019fd57c27df69abd192f3f0f4183c4345d786426f3391",
+    "bytes": 9392337,
+    "gzipBytes": 1129341,
+    "fetchedAt": "2026-08-29T07:47:47.146084Z",
+    "why": "statements_from_bundle fixture \u2014 the standardization path, with hand-verified revenue and net income. Apple because its numbers are the ones anyone can check against the filing."
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://turborepo.dev/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*",
+        "!__tests__/**",
+        "!**/*.test.ts",
+        "!**/*.test.tsx",
+        "!CLAUDE.md",
+        "!README.md"
+      ]
+    },
+    "db:generate": {
+      "cache": false,
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*",
+        "!__tests__/**",
+        "!**/*.test.ts",
+        "!**/*.test.tsx",
+        "!CLAUDE.md",
+        "!README.md"
+      ]
+    }
+  }
+}

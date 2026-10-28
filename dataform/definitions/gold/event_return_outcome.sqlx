@@ -1,0 +1,94 @@
+config {
+  type: "incremental",
+  schema: datasets.gold(),
+  name: "event_return_outcome",
+  description: "Returns after every instrument_event, point-in-time: only bars dated AFTER the event's venue-local observed date count as 'after'. One row per event, including the ones that cannot be measured (window_status says why). MONEY-1596 (C5a).",
+  uniqueKey: ["event_id"],
+  bigquery: {
+    partitionBy: "DATE_TRUNC(observed_date, MONTH)",
+    clusterBy: ["market"]
+  },
+  columns: {
+    event_id: "sha1(source NUL source_record_key) — the silver key, so an outcome cites the event it measured",
+    market: "US | IN",
+    listing_id: "the listing the event names. NULL is kept, never dropped: window_status NO_LISTING",
+    event_type: "the closed vocabulary in packages/core/src/events/event-types.ts",
+    observed_at: "when WE first saw the event — the latest silver (observed_at, ingested_at) row's clock. Never published_at, never ingested_at",
+    observed_date: "observed_at's calendar day on the VENUE's clock: America/New_York for US (the lake's ET session rule), Asia/Kolkata for IN. The partition key",
+    window_status: "NO_LISTING | NO_BARS | STALE_BARS | OPEN | COMPLETE. Returns are NULL unless OPEN or COMPLETE",
+    base_session_date: "the listing's last session ON OR BEFORE observed_date — the reference close, which the event cannot have moved if it arrived after the close",
+    session_date_1d: "the first session AFTER observed_date. Always > observed_date; assert_event_outcome_point_in_time fails otherwise",
+    session_date_5d: "the fifth session after the base",
+    session_date_20d: "the twentieth. NULL while the window is OPEN",
+    last_after_session_date: "the newest after-session the row used",
+    after_sessions: "after-sessions available, 0-20",
+    ret_1d: "adj_close(day 1) / adj_close(base) - 1. A FRACTION: 0.02 is +2%",
+    ret_5d: "…to the fifth session",
+    ret_20d: "…to the twentieth",
+    abn_ret_1d: "ret_1d minus the benchmark's return over the SAME two dates (SPY for US, NIFTY 50 for IN). NULL when the benchmark has no bar on either date",
+    abn_ret_5d: "…five sessions",
+    abn_ret_20d: "…twenty sessions",
+    vol_20d_before: "sample stddev of daily log returns over the 20 sessions ENDING at the base. Daily, not annualised",
+    vol_20d_after: "the same over the after-sessions (up to 20). Daily, not annualised",
+    gap_open_pct: "adj_open(day 1) / adj_close(base) - 1, in PERCENT (2.0 is +2%) — the one percent-unit column, because its name says so; every ret_* is a fraction",
+    benchmark_id: "SPY:NYSE:1993-01-29 | nifty-50",
+    adjustment_policy_version: "adjusted_bar_d1's policy stamp on the bars used — crsp-v3 today",
+    computed_at: "when this row was last measured. The incremental watermark"
+  },
+  assertions: {
+    uniqueKey: ["event_id"],
+    nonNull: ["event_id", "market", "event_type", "observed_at", "observed_date", "window_status", "computed_at"],
+    rowConditions: [
+      "window_status IN ('NO_LISTING', 'NO_BARS', 'STALE_BARS', 'OPEN', 'COMPLETE')",
+      "(listing_id IS NULL) = (window_status = 'NO_LISTING')",
+      "after_sessions BETWEEN 0 AND 20"
+    ]
+  },
+  tags: ["gold", "events"]
+}
+
+/*
+ * THE SQL IS NOT WRITTEN HERE. It comes from `includes/event_outcome.js`, which
+ * `packages/core/__tests__/market-data/event-outcome-sql.test.ts` EXECUTES
+ * against fixtures — the point-in-time rule, the abnormal-return arithmetic and
+ * both markets' benchmark joins — for the reason `adjusted_bar_d1.sqlx` gives:
+ * SQL pasted into a .sqlx is SQL nothing can test. The include's header carries
+ * the point-in-time rule and its one stated cost (a pre-open event's day-0
+ * reaction is not in any ret_*).
+ *
+ * ## INCREMENTAL, AND WHAT A RUN RE-MEASURES
+ *
+ * Not every event every night. `incrementalCandidatesSql` re-reads an event
+ * when silver wrote a row for it since the last run (a new event, a C3
+ * re-link) or when its stored outcome is not yet COMPLETE and it is younger
+ * than REMEASURE_DAYS (60) — so an OPEN row is rebuilt each run until its
+ * twentieth session lands, which is the brief's "rebuilt for events whose
+ * 20-day window has just closed", and a row that can never complete stops
+ * being re-read. The MERGE on `event_id` replaces the row in place.
+ *
+ * A FULL REFRESH is the remedy for the inputs this cannot see — a corporate
+ * action loaded late whose ex-date sits inside an already COMPLETE window, or
+ * bars backfilled for events older than 60 days — and is the first run
+ * anywhere (the backfill).
+ *
+ * ## MONTH PARTITIONS, NOT DAY
+ *
+ * "Partitioned by observed_date" — at MONTH grain, as `price_bar_d1` is. The
+ * table holds a few thousand rows a month; day partitions would be hundreds of
+ * sub-megabyte partitions (the anti-pattern BigQuery documents) and would run
+ * into the per-table partition ceiling the day SEC history back to the 1990s
+ * is measured. Every reader filters `observed_date >=`, which prunes either way.
+ *
+ * ## COST
+ *
+ * `adjusted_bar_d1` is a VIEW, and this reads it twice (the listings' bars and
+ * SPY's). Measured with a dry run on prod 2026-09-23: 1.06 GB per read over
+ * today's 14.3M India bars — about a cent a run.
+ */
+
+${event_outcome.eventReturnOutcomeSql({
+  events: ref("instrument_event"),
+  bars: ref("adjusted_bar_d1"),
+  indexEod: ref("index_eod"),
+  candidates: incremental() ? event_outcome.incrementalCandidatesSql(self()) : "TRUE"
+})}

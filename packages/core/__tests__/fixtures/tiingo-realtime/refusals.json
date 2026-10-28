@@ -1,0 +1,5 @@
+{
+  "_comment": "Refusal frames captured live 2026-08-31. thresholdLevel 0 and 5 BOTH return a 400 that reads exactly like an entitlement rejection and is NOT one — the parameter is simply not accepted on our tier. The BOATS 403 IS a real entitlement gap. Classification must be on BODY, never on the presence of an error frame.",
+  "thresholdLevelRejected": {"response":{"code":400,"message":"thresholdLevel not valid for your subscription tier. Please read the new IEX Market data rules on: https://www.tiingo.com/documentation/iex"},"messageType":"E"},
+  "boatsNotEntitled": {"response":{"code":403,"message":"Not authorized for service: boats"},"messageType":"E"}
+}

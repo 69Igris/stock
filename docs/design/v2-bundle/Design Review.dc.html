@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/usemoney-play-design-system-67522a6c-d1c3-4617-97de-fcd968490366/colors_and_type.css">
+  <style>
+    body{margin:0;background:var(--paper);background-image:radial-gradient(var(--dot-fg) 1px,transparent 1.5px),radial-gradient(var(--dot-fg-2) 1px,transparent 1.5px);background-size:7px 7px,11px 11px;background-position:0 0,3px 3px;font-family:var(--font-sans);color:var(--ink)}
+    a{color:var(--emerald-text);text-decoration:none}a:hover{color:var(--ink);text-decoration:underline}
+  </style>
+</helmet>
+<div style="max-width:860px;margin:0 auto;padding:56px 28px 90px">
+  <div style="display:inline-flex;align-items:center;gap:7px;font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--emerald-text);letter-spacing:1.4px;text-transform:uppercase"><span style="width:6px;height:6px;border-radius:99px;background:var(--emerald)"></span>DESIGN REVIEW · MOBILE APP V2</div>
+  <h1 style="font-weight:800;font-size:46px;line-height:1.02;letter-spacing:-2px;margin:14px 0 10px">The old app was <span style="font-family:var(--font-serif);font-style:italic;font-weight:400">screens.</span> The new one is <mark style="background:var(--pop-2);color:#1d1d1b;padding:0 6px">flows.</mark></h1>
+  <p style="font-size:16px;line-height:1.55;color:var(--ink-2);max-width:640px;margin:0 0 8px">Review of <em>UseMoney Android/iOS App</em> (65 screens) against <span style="font-family:var(--font-mono);font-size:13.5px">stockbook-monorepo</span>, and the rebuild plan. The visual system stays — the information architecture, depth and interactivity change.</p>
+
+  <div style="margin-top:34px;border:2px solid var(--ink);border-radius:14px;background:var(--paper-3);box-shadow:4px 4px 0 var(--ink);padding:22px 24px">
+    <div style="font-family:var(--font-mono);font-size:10.5px;font-weight:700;letter-spacing:1.2px;color:var(--ink-3)">01 / WHAT HOLDS UP</div>
+    <ul style="margin:12px 0 0;padding-left:18px;font-size:14.5px;line-height:1.7;color:var(--ink-2)">
+      <li>The visual language — paper, ink borders, hard shadows, gold marker — is faithful to the design system and survives on small screens. <b>Kept as-is.</b></li>
+      <li>Public surface is complete: onboarding, 11 Clerk auth screens, 10 marketing pages, resources, legal. <b>~29 screens reused unchanged.</b></li>
+      <li>Copy voice (period-mid-headline, mono labels, ₹ numbers) is right everywhere.</li>
+    </ul>
+  </div>
+
+  <div style="margin-top:20px;border:2px solid var(--ink);border-radius:14px;background:var(--paper-3);box-shadow:4px 4px 0 var(--ink);padding:22px 24px">
+    <div style="font-family:var(--font-mono);font-size:10.5px;font-weight:700;letter-spacing:1.2px;color:var(--loss)">02 / WHAT THE REPO SAYS IS MISSING</div>
+    <ul style="margin:12px 0 0;padding-left:18px;font-size:14.5px;line-height:1.7;color:var(--ink-2)">
+      <li><b>Positions</b> — <span style="font-family:var(--font-mono);font-size:12.5px">app/positions</span> (58KB client) has no mobile screen at all.</li>
+      <li><b>No instrument pages.</b> Every list (holdings, screener, movers) dead-ends — the repo's stock/MF detail depth never made it to mobile.</li>
+      <li><b>Analysis & Compare</b> (<span style="font-family:var(--font-mono);font-size:12.5px">app/analysis</span>, <span style="font-family:var(--font-mono);font-size:12.5px">app/compare</span>) absent in-app.</li>
+      <li><b>Sectors</b> (<span style="font-family:var(--font-mono);font-size:12.5px">discover/sectors</span>), <b>CSV import wizard</b> (<span style="font-family:var(--font-mono);font-size:12.5px">tradebook/import</span>), <b>welcome/first-run</b> (<span style="font-family:var(--font-mono);font-size:12.5px">app/welcome</span>) and <b>demo mode</b> all missing.</li>
+      <li><b>Screens are endpoints, not journeys.</b> Broker connect has no OAuth → syncing → error states; Roast has no run → progress → share; Sage never spends a credit; there is no paywall or checkout anywhere.</li>
+    </ul>
+  </div>
+
+  <div style="margin-top:20px;border:2px solid var(--ink);border-radius:14px;background:var(--paper-3);box-shadow:4px 4px 0 var(--ink);padding:22px 24px">
+    <div style="font-family:var(--font-mono);font-size:10.5px;font-weight:700;letter-spacing:1.2px;color:var(--ink-3)">03 / THE IA PROBLEM</div>
+    <p style="margin:12px 0 0;font-size:14.5px;line-height:1.7;color:var(--ink-2)">The old shell copies the desktop sidenav into a drawer — <b>30 items in 5 groups behind a hamburger</b> — then adds a 5-tab bar that duplicates four of them. That's desktop thinking. Mobile IA should be <b>reach-based</b>: the four things you check daily on the bar, everything else two taps deep with context, not in a catalog.</p>
+  </div>
+
+  <div style="margin-top:20px;border:2px solid var(--ink);border-radius:14px;background:var(--ink);color:var(--paper);box-shadow:4px 4px 0 var(--emerald);padding:22px 24px">
+    <div style="font-family:var(--font-mono);font-size:10.5px;font-weight:700;letter-spacing:1.2px;color:var(--emerald)">04 / NEW APPROACH — V2</div>
+    <div style="margin-top:14px;display:grid;grid-template-columns:repeat(5,1fr);gap:8px;text-align:center">
+      <div style="border:2px solid var(--paper);border-radius:10px;padding:10px 4px;font-weight:800;font-size:13px">Home</div>
+      <div style="border:2px solid var(--paper);border-radius:10px;padding:10px 4px;font-weight:800;font-size:13px">Portfolio</div>
+      <div style="border:2px solid var(--paper);border-radius:10px;padding:10px 4px;font-weight:800;font-size:13px;background:var(--emerald);color:#0b0b09">● Sage</div>
+      <div style="border:2px solid var(--paper);border-radius:10px;padding:10px 4px;font-weight:800;font-size:13px">Discover</div>
+      <div style="border:2px solid var(--paper);border-radius:10px;padding:10px 4px;font-weight:800;font-size:13px">You</div>
+    </div>
+    <ul style="margin:16px 0 0;padding-left:18px;font-size:14.5px;line-height:1.75">
+      <li><b>Sage-centric:</b> center tab, plus a Sage strip on every money surface — dashboard, stock page, roast verdict, tax report — with visible credit costs.</li>
+      <li><b>Portfolio</b> = one place: Holdings · Positions · Tradebook segments, broker filter, pull-to-refresh sync, rows open a holding sheet → full stock page.</li>
+      <li><b>Discover</b> = Markets · Movers · Sectors · Screener · News · Watchlists.</li>
+      <li><b>You</b> = plan & credits, brokers, notifications, settings, help, legal (old marketing/legal pages reused here). No drawer anywhere.</li>
+      <li><b>Depth over breadth:</b> stock & MF detail pages, holding sheet, trade-pair sheet, compare table — every list row goes somewhere.</li>
+      <li><b>Flows with states:</b> first-run (onboard → auth → profile → connect broker → sync → ready), broker OAuth incl. token-expiry & error retry, Sage deep research (confirm cost → progress → cited report), Roast (scope → run → score → share card), CSV import (upload → map → review), upgrade (paywall → UPI checkout → success), FIRE scenarios. Loading / empty / error / gated states designed, not implied.</li>
+      <li><b>New primitives:</b> bottom sheet, toast, segmented control, credit chip, tier-lock, sync pill, global search overlay, coach marks.</li>
+    </ul>
+  </div>
+
+  <div style="margin-top:20px;border:2px solid var(--ink);border-radius:14px;background:var(--paper-3);box-shadow:4px 4px 0 var(--ink);padding:22px 24px">
+    <div style="font-family:var(--font-mono);font-size:10.5px;font-weight:700;letter-spacing:1.2px;color:var(--ink-3)">05 / BUILT FOR WHAT'S COMING</div>
+    <p style="margin:12px 0 6px;font-size:14.5px;line-height:1.7;color:var(--ink-2)">The v2 IA leaves explicit seams for the 2026H2 roadmap modules, so they bolt on without another rebuild:</p>
+    <ul style="margin:6px 0 0;padding-left:18px;font-size:14.5px;line-height:1.7;color:var(--ink-2)">
+      <li><b>Strategy Lab (A)</b> → Discover · Strategies slot; lifecycle chips already in the vocabulary.</li>
+      <li><b>Analyst Board (B)</b> → launches from stock page & Sage composer.</li>
+      <li><b>Signals / ForwardRun (C)</b> → Discover feed slot + notification patterns.</li>
+      <li><b>US / NRI (D)</b> → Portfolio is currency-aware; import wizard generalises to statements.</li>
+      <li><b>Personas (E)</b> → You · Settings section reserved; Home widgets are modular.</li>
+      <li><b>Memory (F)</b> → Settings transparency center; Sage chips slot exists.</li>
+      <li><b>Model picker (G)</b> → Sage composer row; credit-multiplier chips reuse the credit chip.</li>
+    </ul>
+    <p style="margin:14px 0 0;font-size:13.5px;color:var(--ink-3)">Excluded per direction: paper trading, learning/quiz/tutor.</p>
+  </div>
+
+  <div style="margin-top:26px;display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+    <a href="UseMoney Mobile.dc.html" style="display:inline-flex;align-items:center;gap:9px;padding:14px 22px;border-radius:12px;border:2px solid var(--ink);background:var(--ink);color:var(--paper);font-weight:800;font-size:15px;box-shadow:4px 4px 0 var(--emerald)">Open the v2 app →</a>
+    <a href="baseline/UseMoney Android App.html" style="display:inline-flex;align-items:center;gap:9px;padding:13px 20px;border-radius:12px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);font-weight:700;font-size:14px;box-shadow:3px 3px 0 var(--ink)">Old design (baseline)</a>
+    <span style="font-family:var(--font-mono);font-size:11px;color:var(--ink-3);letter-spacing:.5px">BOTH FRAMES · LIGHT/DARK · FULLY INTERACTIVE</span>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

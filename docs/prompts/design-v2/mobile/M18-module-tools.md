@@ -1,0 +1,27 @@
+# M18 · Module: Tools — FIRE calculator · Calculators hub · Risk report (PRO gate) · Tax report · Document vault
+
+Read `docs/prompts/design-v2/00-shared-context.md` — it is part of this prompt. Prerequisites: M00, M10. Related: M14 (Sage prefills), M19 (plan gate), M20 (LRS row in Tax when LRS persona).
+
+**Ticket:** `MONEY-{n}` "Mobile — Tools" → `feat/MONEY-{n}`.
+**Design sources:** `docs/design/v2-bundle/app/s-tools.jsx` (`FireScreenV2`: verdict card "AT THIS RATE, FIRE AT {age}" + ahead/behind line + NEED/PROJECTED, scenario chips Lean FIRE · Regular · Fat FIRE + "SWR 4% · CPI 6%", "Corpus projection" chart with need line, "Your numbers" sliders (Age today · Retire at · Monthly SIP · Monthly spend (today) · Expected return), footer "STARTS FROM YOUR REAL CORPUS (₹x). STCG/LTCG-AWARE WITHDRAWALS IN THE FULL PLAN — EDUCATION, NOT ADVICE.", CTA "Sanity-check with Sage"; `CalculatorsScreenV2`: SIP future value (sheet with sliders + FUTURE VALUE / INVESTED / GAIN), Capital-gains tax → tax, CAGR / XIRR, SWP drawdown, FIRE → fire; `RiskScreenV2`: dark VaR card "1-DAY VALUE AT RISK · 95% · -₹x · a bad-but-normal day costs about this much.", 4 tiles (Beta · Volatility · Max drawdown · Sharpe), PRO gate else Concentration rows, currency exposure card (flag), "Moves together" correlation rows, "Ask Sage to translate this"; `TaxScreenV2`: FY chip, dark "TAX DUE SO FAR" card + line "all of it from short-term gains. Long-term is riding free.", Realised gains breakdown rows (label · ₹ · note), US card (flag) "US holdings are tracked, not taxed here" (LRS persona → LRS tracker link), "Exemption meter · LTCG · ₹1.25L FREE" bar, "Harvest before March" cards (symbol · unrealised · note + "saves about ₹x in tax"), "Plan it with Sage", footer "COMPUTED FROM FIFO-PAIRED TRADES ACROSS ALL BROKERS. VERIFY WITH YOUR CA BEFORE FILING."; `DocumentsScreenV2`: upload tile "Drop a statement or contract note · PDF · CSV · TEXT IS EXTRACTED & LINKED TO TRADES", document rows (name · status parsed/processing · detail)).
+
+## Read first
+- `apps/api/src/routes/v1/{fire,risk,tax,documents,subscription}.ts`: `GET /v1/fire`, `POST /v1/fire`, `PUT /:id`, `DELETE /:id`, `POST /:id/turn` + `/:id/chat` (Ask FIRE chat — `packages/fire`), `GET /v1/risk` (gated: check the envelope for `gated: true` vs 403), `GET /v1/tax/report?fy=`, `/tax/ledgers`, `/tax/trades`, `GET /v1/documents`, `/:id`, `DELETE /:id` (**no upload endpoint on the API** — add `POST /v1/documents` (multipart or signed-URL) mirroring `apps/web/lib/actions/documents.ts` upload → `document-process` worker; poll `/v1/documents/:id` status)
+- `packages/core/src/calc/*` (FIRE/SIP/CAGR/XIRR/SWP math — **port the pure functions to `apps/mobile/src/calc/` via a shared, RN-safe package if `packages/core/src/calc` has no server deps; otherwise copy with parity tests against the same fixtures**), `packages/fire` (scenario schema), `packages/services/src/{risk,tax}-logic.ts` (what the report contains), `apps/web/app/{fire,risk,tax,documents,calculators}/*` (semantics)
+
+## Build
+1. **FIRE:** load scenarios (`GET /v1/fire`; create a default from the real corpus if none), sliders bound to the scenario (debounced `PUT /:id`), projection + FIRE age computed by the shared calc (same numbers as web — parity test), scenario chips (lean/regular/fat multipliers), need line, footer; "Sanity-check with Sage" → FIRE chat (`POST /v1/fire/:id/turn` — free parser tier; LLM turns cost `fire_chat` credits: show `CreditChip` when the server says so).
+2. **Calculators hub:** SIP sheet (local pure math), CAGR/XIRR (input cashflows or pick a holding → `/v1/dashboard/returns`), SWP drawdown (local), links to Tax and FIRE; "Coming this sprint" empty states are **not** allowed — implement or omit the card.
+3. **Risk:** `GET /v1/risk` → if gated: VaR/tiles blurred/`—` + `GateBanner` (never fake numbers); if allowed: VaR card, tiles, concentration rows, correlation pairs, currency exposure (flag + mixed book: from the risk payload when W10 adds it, else omit); "Ask Sage to translate this" prefill.
+4. **Tax:** FY selector (`/v1/trades/fys`), report (`/v1/tax/report?fy=`): tax due card + copy line derived from the breakdown (short-term vs long-term share — logic tested), breakdown rows, LTCG exemption meter (₹1.25 L default from the server's constants, not hardcoded), harvest ideas (from the report's `harvest` list — render only when present), US card (flag; LRS persona → M20 LRS screen), "Plan it with Sage" prefill, footer; "Export for my CA" if the API offers a report file (`/v1/tax/report?format=xlsx`? — add if missing, else omit the button).
+5. **Documents:** list from `/v1/documents` with status; upload via document picker → `POST /v1/documents` → processing row with spinner → poll; tap → detail sheet (extracted summary/linked trades if the model exposes them); delete with confirm.
+
+## Non-goals
+Full ITR generation, custom calculators beyond the hub, document viewer (link out to the signed URL in the in-app browser).
+
+## Acceptance
+- FIRE projection and FIRE age equal the web calculator for the same scenario fixture (parity test); slider edits persist via the API.
+- Risk gated path shows the gate with no numbers; allowed path renders all tiles from the payload.
+- Tax numbers equal `/v1/tax/report` byte-for-byte after formatting (no client math beyond formatting); harvest cards only when present.
+- Document upload from the picker creates a processing row that flips to parsed on QA.
+- Screenshots (5 screens; light/dark); `verify:push`; `/code-review`.

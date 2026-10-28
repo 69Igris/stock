@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UseMoney · Module D — US Launch</title>
+  <link rel="stylesheet" href="styles/colors_and_type.css" />
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: #f7f3e6; -webkit-font-smoothing: antialiased; }
+    button, input, textarea { font-family: inherit; }
+    :root { --gain-text: #0f7a34; } html.dark { --gain-text: #34d399; }
+    a { color: #16a34a; } a:hover { color: #1d1d1b; }
+    #umboot { position: fixed; inset: 0; display: grid; place-items: center; font-family: 'JetBrains Mono', monospace; color: #6b6b62; font-size: 12px; letter-spacing: 1px; }
+  </style>
+  <template id="__bundler_thumbnail">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+      <rect width="100" height="100" fill="#f7f3e6"/>
+      <rect x="20" y="26" width="60" height="48" rx="8" fill="#1d1d1b"/>
+      <text x="50" y="60" text-anchor="middle" font-family="monospace" font-weight="800" font-size="26" fill="#fbbf24">D</text>
+    </svg>
+  </template>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="um-superseded-banner" style="position:sticky;top:0;z-index:9999;background:#fbbf24;border-bottom:2px solid #1d1d1b;color:#1d1d1b;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;padding:8px 16px;letter-spacing:0.3px">SUPERSEDED IN V2 — US launch is now its own v2 surface: SnapTrade link + statement import, EOD-only quotes, RBI reference rate for cost basis, flag-gated (no pre-GA). LRS tracker content stands. <a href="v2 US Launch.dc.html" style="color:#1d1d1b;text-decoration:underline;font-weight:800">Open the v2 mockup →</a></div>
+  <div id="root"><div id="umboot">● LOADING MODULE D…</div></div>
+  <script src="app/data.js"></script>
+  <script src="web/wdata.js"></script>
+  <script type="text/babel" src="src/shared.jsx"></script>
+  <script type="text/babel" src="app/kit2.jsx"></script>
+  <script type="text/babel" src="web/wshell.jsx"></script>
+  <script type="text/babel" src="web/mod-a.jsx"></script>
+  <script type="text/babel" src="web/mod-d.jsx"></script>
+  <script type="text/babel">
+    ReactDOM.createRoot(document.getElementById("root")).render(<ModuleD />);
+  </script>
+</body>
+</html>

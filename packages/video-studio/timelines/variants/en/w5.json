@@ -1,0 +1,91 @@
+{
+  "title": "W5 Building in public Month 1 (EN)",
+  "aspect": "9:16",
+  "fps": 30,
+  "brandTheme": "cream",
+  "music": {
+    "track": "corporate-lofi",
+    "gainDb": -22,
+    "duckUnderVoiceover": true
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "type": "hook",
+      "durationSec": 4,
+      "kicker": "Building in public",
+      "headline": "Month 1, ==by the numbers==",
+      "motion": "rise",
+      "voiceover": {
+        "text": "The first month of building UseMoney AI — a few honest numbers.",
+        "lang": "en-IN"
+      }
+    },
+    {
+      "id": "stat",
+      "type": "stat",
+      "durationSec": 4.5,
+      "stat": {
+        "kicker": "Sign-ups",
+        "value": "[fill]",
+        "label": "people joined in month 1."
+      },
+      "motion": "kenburns-in",
+      "voiceover": {
+        "text": "How many people joined in month one — the real number goes here.",
+        "lang": "en-IN"
+      }
+    },
+    {
+      "id": "cards",
+      "type": "cards",
+      "durationSec": 5.5,
+      "headline": "What I learned",
+      "bullets": [
+        "[fill]% added a 2nd broker",
+        "[fill] subscribed",
+        "$0 spent on tools"
+      ],
+      "motion": "rise",
+      "voiceover": {
+        "text": "What I learned — some added a second broker, a few subscribed, and I spent zero on tools.",
+        "lang": "en-IN"
+      }
+    },
+    {
+      "id": "broll",
+      "type": "veo",
+      "durationSec": 6,
+      "veoPrompt": "abstract warm cream and emerald-green gradient light gently brightening like a soft slow sunrise, drifting glow, premium minimal fintech motion graphics, hopeful, elegant, no text, no logos, no people",
+      "motion": "static",
+      "voiceover": {
+        "text": "A small start — but the direction is completely clear.",
+        "lang": "en-IN"
+      }
+    },
+    {
+      "id": "p1",
+      "type": "point",
+      "durationSec": 4.5,
+      "headline": "Transparency is the *product*",
+      "subtext": "Build in public, learn in public.",
+      "motion": "rise",
+      "voiceover": {
+        "text": "Transparency is the real product — build in public, learn in public.",
+        "lang": "en-IN"
+      }
+    },
+    {
+      "id": "cta",
+      "type": "cta",
+      "durationSec": 3.5,
+      "headline": "Follow the ==build==.",
+      "subtext": "UseMoney AI (my product) · building in public",
+      "motion": "pop",
+      "voiceover": {
+        "text": "Follow the build. UseMoney AI.",
+        "lang": "en-IN"
+      }
+    }
+  ]
+}

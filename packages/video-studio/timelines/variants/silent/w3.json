@@ -1,0 +1,65 @@
+{
+  "title": "W3 The F and O trap (Silent)",
+  "aspect": "9:16",
+  "fps": 30,
+  "brandTheme": "cream",
+  "scenes": [
+    {
+      "id": "hook",
+      "type": "hook",
+      "durationSec": 4,
+      "kicker": "SEBI study",
+      "headline": "9 in 10 ==lose==.",
+      "subtext": "F&O, by the numbers.",
+      "motion": "rise"
+    },
+    {
+      "id": "stat1",
+      "type": "stat",
+      "durationSec": 4.5,
+      "stat": {
+        "kicker": "SEBI · FY22–24",
+        "value": "93%",
+        "label": "of F&O traders made a net loss."
+      },
+      "motion": "kenburns-in",
+      "disclaimer": true
+    },
+    {
+      "id": "stat2",
+      "type": "stat",
+      "durationSec": 4.5,
+      "stat": {
+        "kicker": "3 years · ~1.1 cr traders",
+        "value": "₹1.8 L cr",
+        "label": "in net losses (SEBI)."
+      },
+      "motion": "rise",
+      "disclaimer": true
+    },
+    {
+      "id": "broll",
+      "type": "veo",
+      "durationSec": 6,
+      "veoPrompt": "abstract deep teal and charcoal light slowly swirling then settling into calm still gradients, moody premium minimal fintech motion graphics, soft glow, elegant, no text, no logos, no people",
+      "motion": "static"
+    },
+    {
+      "id": "p1",
+      "type": "point",
+      "durationSec": 4.5,
+      "headline": "Education ==over== adrenaline",
+      "subtext": "Understand the odds before you act.",
+      "motion": "rise",
+      "disclaimer": true
+    },
+    {
+      "id": "cta",
+      "type": "cta",
+      "durationSec": 3.5,
+      "headline": "Know the *odds*.",
+      "subtext": "Not advice · Education only · UseMoney AI (my product)",
+      "motion": "pop"
+    }
+  ]
+}

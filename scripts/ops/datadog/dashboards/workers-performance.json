@@ -1,0 +1,402 @@
+{
+  "_ticket": "MONEY-1379",
+  "_why": [
+    "The board for 'is the PLATFORM under the workers keeping up' \u2014 the Pub/Sub",
+    "queue every handler is fed from, the Cloud Run services that drain it, and",
+    "the Gemini token quota those handlers spend. None of it is emitted by this",
+    "repo: every series here is supplied by Datadog's Google Cloud integration,",
+    "so there is no local constant a test could compare a name against. What",
+    "stands in for that is apply-perf-monitors.sh, which PREFLIGHTS every series",
+    "it alerts on against the live org (three outcomes: points / none /",
+    "did-not-run) before a monitor is allowed to exist over it.",
+    "",
+    "gcp.* carries NO env tag, so nothing here may be scoped by $env \u2014 a widget",
+    "that tried would match zero series and render empty, which is the exact",
+    "failure this directory exists to prevent. Scoping is by NAME instead",
+    "(subscription_id:*-prod-push, service_name:stockbook-workers-prod), which",
+    "is also the ownership boundary: algo-* shares this GCP project and must",
+    "never be charted here.",
+    "",
+    "UNITS ARE NOT UNIFORM AND THE MARKERS ENCODE THAT.",
+    "gcp.pubsub.subscription.oldest_unacked_message_age is SECONDS (deadline",
+    "600); gcp.run.request_latency.* is MILLISECONDS (same deadline, 600000).",
+    "A marker copied between those two widgets is off by 1000x and still looks",
+    "plausible."
+  ],
+  "title": "UseMoney \u2014 workers performance",
+  "description": "managed-by:apply-dashboards \u2014 edit the file, not the UI",
+  "layout_type": "ordered",
+  "template_variables": [
+    {
+      "name": "env",
+      "prefix": "env",
+      "default": "production"
+    }
+  ],
+  "widgets": [
+    {
+      "definition": {
+        "type": "note",
+        "_why": "States the two things a reader cannot infer from the graphs: where these series come from (so a gap is a vendor question, not a missing emitter) and why no selector applies to them.",
+        "content": "Every series here is supplied by the GCP integration (MONEY-1379) and preflighted by apply-perf-monitors.sh before any monitor exists over it. No env tag on gcp.* \u2014 scoped by name. LLM Observability widgets land in the phase-2 PR once ml_obs.* has been observed (MONEY-1380).",
+        "background_color": "yellow",
+        "font_size": "14",
+        "text_align": "left",
+        "vertical_align": "top",
+        "show_tick": false,
+        "tick_pos": "50%",
+        "tick_edge": "left",
+        "has_padding": true
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Pub/Sub \u2014 oldest unacked message age, top 10 (s)",
+        "_why": "Answers 'is any queue about to redeliver'. At 600s Pub/Sub gives up waiting and hands the SAME message to a second container, so the work doubles rather than fails \u2014 the only symptom is this line crossing the red marker. Top 10 because 190 subscriptions exist and the *-pull-local ones are never drained, so an unscoped chart is permanently red and therefore permanently ignored.",
+        "requests": [
+          {
+            "q": "top(max:gcp.pubsub.subscription.oldest_unacked_message_age{subscription_id:*-prod-push} by {subscription_id}, 10, 'max', 'desc')",
+            "display_type": "line"
+          }
+        ],
+        "markers": [
+          {
+            "value": "y = 600",
+            "display_type": "error dashed",
+            "label": "ack deadline 600s"
+          },
+          {
+            "value": "y = 480",
+            "display_type": "warning dashed",
+            "label": "monitor crit 480"
+          }
+        ],
+        "time": {
+          "live_span": "4h"
+        }
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Pub/Sub \u2014 the 12 analysis/LLM subscriptions, oldest unacked (s)",
+        "_why": "Answers the same question for the handlers that call a MODEL, which is where an overrun is expected rather than surprising. Named explicitly instead of pattern-matched so a new analysis subscription is an edit here, not a silent omission from the one chart that would have shown it.",
+        "requests": [
+          {
+            "q": "max:gcp.pubsub.subscription.oldest_unacked_message_age{subscription_id IN (stock-research-prod-push,portfolio-roast-prod-push,l3-analysis-prod-push,research-preview-plan-prod-push,login-briefing-prod-push,comparison-analysis-prod-push,strategy-scan-prod-push,studio-render-prod-push,proactive-analysis-prod-push,stock-document-ingest-prod-push,us-filing-insight-prod-push,stock-document-embed-prod-push)} by {subscription_id}",
+            "display_type": "line"
+          }
+        ],
+        "markers": [
+          {
+            "value": "y = 600",
+            "display_type": "error dashed",
+            "label": "ack deadline 600s"
+          },
+          {
+            "value": "y = 480",
+            "display_type": "warning dashed",
+            "label": "monitor crit 480"
+          }
+        ],
+        "time": {
+          "live_span": "4h"
+        }
+      }
+    },
+    {
+      "definition": {
+        "type": "toplist",
+        "title": "Pub/Sub \u2014 undelivered messages by subscription",
+        "_why": "Answers 'how much work is waiting', which age alone cannot tell you: one stuck message and ten thousand queued messages both show as an old oldest-unacked, and only one of them means the workers are under-provisioned.",
+        "requests": [
+          {
+            "q": "top(max:gcp.pubsub.subscription.num_undelivered_messages{subscription_id:*-prod-push} by {subscription_id}, 20, 'max', 'desc')"
+          }
+        ],
+        "time": {
+          "live_span": "1h"
+        }
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Dead-lettered (24h)",
+        "_why": "Answers 'did anything get thrown away'. A dead-letter is the end of the line \u2014 five delivery attempts exhausted \u2014 so any non-zero value is work that will never be done unless somebody replays it, which is why the format goes red at >0 rather than at a threshold.",
+        "requests": [
+          {
+            "q": "sum:gcp.pubsub.subscription.dead_letter_message_count{subscription_id:*-prod-push}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_red"
+              }
+            ]
+          }
+        ],
+        "time": {
+          "live_span": "1d"
+        }
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Pub/Sub \u2014 push responses by class (stacked)",
+        "_why": "Answers 'is the delivery itself healthy', one layer below the handler's own counters. Pub/Sub ACKs only on a 2xx, so a wall of remote_server_5xx here is a redelivery loop building up before any job-level metric moves.",
+        "requests": [
+          {
+            "q": "sum:gcp.pubsub.subscription.push_request_count{subscription_id:*-prod-push} by {response_class}.as_count()",
+            "display_type": "bars"
+          }
+        ],
+        "time": {
+          "live_span": "4h"
+        }
+      }
+    },
+    {
+      "definition": {
+        "type": "toplist",
+        "title": "Pub/Sub \u2014 5xx + unreachable by subscription (1h)",
+        "_why": "Answers 'which subscription is failing', which the stacked chart above deliberately hides by grouping on response class. `unreachable` sits beside 5xx because a service that cannot be reached at all and one that answers 500 are the same outcome for the message.",
+        "requests": [
+          {
+            "q": "top(sum:gcp.pubsub.subscription.push_request_count{subscription_id:*-prod-push AND response_class IN (remote_server_5xx,unreachable)} by {subscription_id}.as_count(), 15, 'sum', 'desc')"
+          }
+        ],
+        "time": {
+          "live_span": "1h"
+        }
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Cloud Run \u2014 instances vs cap",
+        "_why": "Answers 'are we out of room'. A service pinned at its maxScale is not scaling any more \u2014 the queue behind it grows instead, so this is the chart that explains an unacked age that will not come down. The two markers are the two different caps; one line at 20 would be wrong for us-fundamentals.",
+        "requests": [
+          {
+            "q": "sum:gcp.run.container.instance_count{service_name:stockbook-workers-prod}",
+            "display_type": "line"
+          },
+          {
+            "q": "sum:gcp.run.container.instance_count{service_name:us-fundamentals-prod}",
+            "display_type": "line"
+          }
+        ],
+        "markers": [
+          {
+            "value": "y = 20",
+            "display_type": "error dashed",
+            "label": "workers maxScale"
+          },
+          {
+            "value": "y = 10",
+            "display_type": "warning dashed",
+            "label": "us-fundamentals maxScale"
+          }
+        ],
+        "time": {
+          "live_span": "4h"
+        }
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Cloud Run workers \u2014 handler time p95 / p99 / avg (ms)",
+        "_why": "Answers 'how close is a handler to the ack deadline' from the SERVICE side, before the queue shows it. UNITS: this series is MILLISECONDS, so the deadline marker is 600000 and not 600 \u2014 the same number as the Pub/Sub widget above, three orders of magnitude apart, and a marker copied between them looks entirely plausible while being wrong.",
+        "requests": [
+          {
+            "q": "avg:gcp.run.request_latency.user_execution.p95{service_name:stockbook-workers-prod}",
+            "display_type": "line"
+          },
+          {
+            "q": "avg:gcp.run.request_latency.user_execution.p99{service_name:stockbook-workers-prod}",
+            "display_type": "line"
+          },
+          {
+            "q": "avg:gcp.run.request_latency.user_execution.avg{service_name:stockbook-workers-prod}",
+            "display_type": "line"
+          }
+        ],
+        "markers": [
+          {
+            "value": "y = 600000",
+            "display_type": "error dashed",
+            "label": "ack deadline 600s = 600000ms"
+          },
+          {
+            "value": "y = 540000",
+            "display_type": "warning dashed",
+            "label": "monitor crit 540000ms"
+          },
+          {
+            "value": "y = 420000",
+            "display_type": "info dashed",
+            "label": "RUN_TIME_BUDGET_MS 420000ms"
+          }
+        ],
+        "time": {
+          "live_span": "4h"
+        }
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Cloud Run workers \u2014 pending requests",
+        "_why": "Answers 'is the service holding requests it has not started yet'. Pending is the half-second of truth between Pub/Sub having delivered and a container having begun: a standing queue here means the instance cap is binding even when instance_count looks calm between samples.",
+        "requests": [
+          {
+            "q": "sum:gcp.run.pending_queue.pending_requests{service_name:stockbook-workers-prod}",
+            "display_type": "line"
+          }
+        ],
+        "markers": [
+          {
+            "value": "y = 5",
+            "display_type": "warning dashed",
+            "label": "queueing"
+          }
+        ],
+        "time": {
+          "live_span": "4h"
+        }
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Cloud Run workers \u2014 CPU / memory utilisation p95",
+        "_why": "Answers 'which resource would a bigger instance buy back'. The doc-conversion pass died twice on 'The configured memory limit was reached' while CPU sat idle \u2014 two very different remedies, and a single 'saturation' number cannot tell them apart.",
+        "requests": [
+          {
+            "q": "avg:gcp.run.container.cpu.utilizations.p95{service_name:stockbook-workers-prod}",
+            "display_type": "line"
+          },
+          {
+            "q": "avg:gcp.run.container.memory.utilizations.p95{service_name:stockbook-workers-prod}",
+            "display_type": "line"
+          }
+        ],
+        "time": {
+          "live_span": "4h"
+        }
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Cloud Run workers \u2014 requests by response class",
+        "_why": "Answers 'what is the service actually returning'. This is the same population as the Pub/Sub push chart seen from the other end, and the two disagreeing is itself the finding: a 2xx here with a 5xx there is a delivery problem, not a handler one.",
+        "requests": [
+          {
+            "q": "sum:gcp.run.request_count{service_name:stockbook-workers-prod} by {response_code_class}.as_count()",
+            "display_type": "bars"
+          }
+        ],
+        "time": {
+          "live_span": "4h"
+        }
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Cloud Run workers \u2014 cold-start latency p95 (ms)",
+        "_why": "Answers 'how much of a handler's budget is spent before its own code runs'. A cold start is charged to the SAME 600s ack deadline as the work, so a startup regression eats headroom from every job at once without appearing in any job's own timing. Milliseconds, like every gcp.run latency series.",
+        "requests": [
+          {
+            "q": "avg:gcp.run.container.startup_latencies.p95{service_name:stockbook-workers-prod}",
+            "display_type": "line"
+          }
+        ],
+        "time": {
+          "live_span": "1d"
+        }
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Cloud Run workers \u2014 max request concurrency p95",
+        "_why": "Answers 'how many messages one container is chewing at once', which is the multiplier on every memory and CPU number above. It is also the lever: lowering concurrency buys per-request headroom without raising the instance cap.",
+        "requests": [
+          {
+            "q": "avg:gcp.run.container.max_request_concurrencies.p95{service_name:stockbook-workers-prod}",
+            "display_type": "line"
+          }
+        ],
+        "time": {
+          "live_span": "4h"
+        }
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Gemini \u2014 input-token quota utilisation by model",
+        "_why": "Answers 'how close are we to being refused'. The requests-per-minute quota limit is INT64_MAX \u2014 unlimited \u2014 so TOKENS are the only real ceiling Google enforces, which is why this is the widget with thresholds and the one below it has none. Plotted as usage/limit so a quota increase moves the ceiling rather than invalidating the markers.",
+        "requests": [
+          {
+            "q": "avg:gcp.generativelanguage.quota.generate_content_paid_tier_3_input_token_count.usage{*} by {model} / avg:gcp.generativelanguage.quota.generate_content_paid_tier_3_input_token_count.limit{*} by {model}",
+            "display_type": "line"
+          }
+        ],
+        "markers": [
+          {
+            "value": "y = 0.85",
+            "display_type": "error dashed",
+            "label": "85% of token quota"
+          },
+          {
+            "value": "y = 0.7",
+            "display_type": "warning dashed",
+            "label": "70% of token quota"
+          }
+        ],
+        "time": {
+          "live_span": "4h"
+        }
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Gemini \u2014 requests/min by model (no ceiling)",
+        "_why": "Answers 'which model is being called, and how much', as a shape to read the token chart against \u2014 deliberately with NO markers, because this quota's limit is INT64_MAX and a threshold drawn over an unlimited ceiling is a number somebody will later mistake for a real one.",
+        "requests": [
+          {
+            "q": "avg:gcp.generativelanguage.quota.generate_content_paid_tier_3_requests.usage{*} by {model}",
+            "display_type": "line"
+          }
+        ],
+        "time": {
+          "live_span": "1d"
+        }
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Cloud Scheduler \u2014 failed attempts by job (executions log)",
+        "_why": "Answers 'did a job even get triggered'. A scheduler attempt that ends DEADLINE_EXCEEDED never reaches Pub/Sub at all, so every other widget on this board stays perfectly calm while the work silently does not happen \u2014 the one failure here that is invisible from inside the workers.",
+        "requests": [
+          {
+            "q": "sum:gcp.logging.log_entry_count{log:cloudscheduler.googleapis.com/executions,severity:error,job_id:*-prod} by {job_id}.as_count()",
+            "display_type": "bars"
+          }
+        ],
+        "time": {
+          "live_span": "1w"
+        }
+      }
+    }
+  ]
+}

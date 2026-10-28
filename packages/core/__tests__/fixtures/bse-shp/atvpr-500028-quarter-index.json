@@ -1,0 +1,60 @@
+{
+ "Table": [
+  {
+   "yr": "2026 - 2027",
+   "qtrid": 130.01,
+   "qtr": "June 2026",
+   "status": "Revised",
+   "filing_date_time": null,
+   "revised_date_time": "2026-07-15T16:47:53.63",
+   "XbrlFile": "500028_1572026164650_SHP.xml",
+   "revised_reson": "As the revised  REGULATION 31(XLSM) is uploaded by our RTA",
+   "xbrlurl": "/XBRLFILES/SHPXBRLDataXML/500028_1572026164650_SP.html",
+   "seourl": "/stock-share-price/atv-projects-india-ltd/atvpr/500028/",
+   "navigateurl": "/stock-share-price/atv-projects-india-ltd/atvpr/500028/qtrid/130.01/shareholding-pattern/Jun-2026/",
+   "navigateurldebt": "/stock-share-price/debt-other/scripcode/500028/qtrid/130.01/shareholding-pattern/Jun-2026/"
+  },
+  {
+   "yr": "2026 - 2027",
+   "qtrid": 130,
+   "qtr": "June 2026",
+   "status": "New",
+   "filing_date_time": "2026-07-11T15:33:41.16",
+   "revised_date_time": null,
+   "XbrlFile": "500028_1172026153339_SHP.xml",
+   "revised_reson": "",
+   "xbrlurl": "/XBRLFILES/SHPXBRLDataXML/500028_1172026153339_SP.html",
+   "seourl": "/stock-share-price/atv-projects-india-ltd/atvpr/500028/",
+   "navigateurl": "/stock-share-price/atv-projects-india-ltd/atvpr/500028/qtrid/130.00/shareholding-pattern/Jun-2026/",
+   "navigateurldebt": "/stock-share-price/debt-other/scripcode/500028/qtrid/130.00/shareholding-pattern/Jun-2026/"
+  },
+  {
+   "yr": "2025 - 2026",
+   "qtrid": 129,
+   "qtr": "March 2026",
+   "status": "New",
+   "filing_date_time": "2026-04-20T11:59:48.14",
+   "revised_date_time": null,
+   "XbrlFile": "500028_2042026115947_SHP.xml",
+   "revised_reson": "",
+   "xbrlurl": "/XBRLFILES/SHPXBRLDataXML/500028_2042026115947_SP.html",
+   "seourl": "/stock-share-price/atv-projects-india-ltd/atvpr/500028/",
+   "navigateurl": "/stock-share-price/atv-projects-india-ltd/atvpr/500028/qtrid/129.00/shareholding-pattern/Mar-2026/",
+   "navigateurldebt": "/stock-share-price/debt-other/scripcode/500028/qtrid/129.00/shareholding-pattern/Mar-2026/"
+  },
+  {
+   "yr": "2025 - 2026",
+   "qtrid": 128,
+   "qtr": "December 2025",
+   "status": "New",
+   "filing_date_time": "2026-01-15T12:37:14.263",
+   "revised_date_time": null,
+   "XbrlFile": "500028_1512026123713_SHP.xml",
+   "revised_reson": "",
+   "xbrlurl": "/XBRLFILES/SHPXBRLDataXML/500028_1512026123713_SP.html",
+   "seourl": "/stock-share-price/atv-projects-india-ltd/atvpr/500028/",
+   "navigateurl": "/stock-share-price/atv-projects-india-ltd/atvpr/500028/qtrid/128.00/shareholding-pattern/Dec-2025/",
+   "navigateurldebt": "/stock-share-price/debt-other/scripcode/500028/qtrid/128.00/shareholding-pattern/Dec-2025/"
+  }
+ ]
+}

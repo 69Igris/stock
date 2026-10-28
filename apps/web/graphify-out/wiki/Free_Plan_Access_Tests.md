@@ -1,0 +1,25 @@
+# Free Plan Access Tests
+
+> 1 nodes
+
+## Key Concepts
+
+- **free-plan-access.test.ts** (0 connections) — `__tests__/subscription/free-plan-access.test.ts`
+
+## Relationships
+
+- No strong cross-community connections detected
+
+## Source Files
+
+- `__tests__/subscription/free-plan-access.test.ts`
+
+## Audit Trail
+
+- EXTRACTED: 0 (0%)
+- INFERRED: 0 (0%)
+- AMBIGUOUS: 0 (0%)
+
+---
+
+*Part of the graphify knowledge wiki. See [index](index.md) to navigate.*

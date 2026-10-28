@@ -1,0 +1,38 @@
+config {
+  type: "assertion",
+  schema: datasets.gold(),
+  name: "assert_event_outcome_point_in_time",
+  description: "No event outcome may use a bar dated on or before the day the event was observed, on the venue's clock — and no outcome may carry a clock earlier than silver's. MONEY-1596 (C5a).",
+  tags: ["gold", "events"]
+}
+
+/*
+ * THE ASSERTION THE WHOLE MODEL EXISTS TO PASS
+ *
+ * An outcome that counts the event's own day as "after" measures price moves
+ * that happened before anybody knew — a backtest built on it trades on the
+ * future and reports skill. Nothing throws when that happens: the number is a
+ * perfectly ordinary return.
+ *
+ * It fails a row when ANY of these holds:
+ *
+ *   - observed_date is not observed_at's venue-local day, RECOMPUTED here
+ *     rather than trusted — a model that drifted to the UTC day would move an
+ *     evening 8-K's reaction into its own baseline;
+ *   - the outcome's observed_at is earlier than any clock silver holds for the
+ *     event (a model that read published_at, or the earliest row, would pass
+ *     every date check below while measuring from before the sighting);
+ *   - the base bar is dated after the observation;
+ *   - any after-bar (1d, 5d, 20d, or the last used) is dated on or before the
+ *     observed date.
+ *
+ * The SQL comes from `includes/event_outcome.js`, and
+ * `packages/core/__tests__/market-data/event-outcome-sql.test.ts` executes it:
+ * zero rows over the model's real output, and a named failure for each of the
+ * mutations above.
+ *
+ * Universally quantified — it passes on an empty table, so QA (no US bars, no
+ * events of its own) needs no env gate.
+ */
+
+${event_outcome.pointInTimeViolationsSql(ref("event_return_outcome"), ref("instrument_event"))}

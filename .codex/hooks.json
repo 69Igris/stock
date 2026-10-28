@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'/Users/aaryanyadav/Desktop/stockbook-monorepo/.codex/hooks/pre-push-gate.sh'",
+            "timeout": 60
+          }
+        ]
+      }
+    ]
+  }
+}

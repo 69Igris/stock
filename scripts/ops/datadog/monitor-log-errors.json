@@ -1,0 +1,61 @@
+{
+  "_readme": [
+    "MONEY-1359 — error-level log VOLUME for one service.",
+    "",
+    "Deliberately a coarse instrument. It is not trying to find the bug; it is",
+    "trying to notice that a service started shouting, which nothing did before.",
+    "The per-service threshold is what makes that possible: stockbook-workers runs",
+    "~60 job routes and has a higher healthy floor than apps/api does.",
+    "",
+    "`status:error` and not `level:error`. Pino emits the level as a LABEL (see",
+    "packages/logger/src/config.ts formatters.level) and the transport tags the",
+    "line `ddsource:nodejs`, so Datadog's nodejs integration pipeline remaps it to",
+    "the reserved `status` attribute. If that pipeline is ever absent this query",
+    "matches nothing — which is why apply-service-monitors.sh runs a search",
+    "PREFLIGHT and refuses the row rather than creating a monitor over an empty",
+    "query (MONEY-1362 owns the remapper if the preflight says it is missing)."
+  ],
+  "name": "[{{env}}] {{service}} — more than {{threshold}} error logs in an hour",
+  "type": "log alert",
+  "query": "logs(\"service:{{service}} env:{{env}} status:error\").index(\"*\").rollup(\"count\").last(\"1h\") > {{threshold}}",
+  "message": "{{service}} logged more than {{threshold}} error-level lines in the last hour.\n\nLogs: `service:{{service}} env:{{env}} status:error`, then group by `@msg` — a single repeated message is a different incident from a spread, and the shape tells you which before you read one line.\n\nRedaction is CLIENT-SIDE and this alert does not change that: `packages/logger` redacts through pino serializers and `redact` paths, and workers additionally wrap `console.*` (MONEY-1209, after live NSE session cookies reached prod Cloud Logging). A credential visible in a sample here is a bug in that redaction, not a Datadog setting to change.\n\n@{{notify}}",
+  "tags": [
+    "managed-by:apply-monitors",
+    "money:1359",
+    "family:log-errors",
+    "service:{{service}}",
+    "env:{{env}}"
+  ],
+  "options": {
+    "thresholds": { "critical": "{{threshold}}" },
+    "notify_no_data": false,
+    "renotify_interval": 0,
+    "enable_logs_sample": true,
+    "include_tags": true
+  },
+  "_notify_no_data_rationale": [
+    "FALSE. Zero error logs in an hour is the outcome we WANT, and it is common.",
+    "A no-data notification here would page on the healthiest possible state,",
+    "which is the fastest way to have this channel muted (MONEY-1238).",
+    "",
+    "'The service stopped logging entirely' is a real failure and is NOT this",
+    "monitor's question — the APM error-rate row and each job's zero-write monitor",
+    "cover it from two directions."
+  ],
+  "_enable_logs_sample_rationale": [
+    "TRUE, and it is the one option here worth arguing. Datadog attaches sample",
+    "log lines to the notification, so the alert arrives with evidence instead of",
+    "a count that sends you to a search box.",
+    "",
+    "It is safe for the same reason the redaction paragraph above is in the",
+    "message: what reaches Datadog was already redacted before it left the",
+    "process. Turning this off would not protect anything — it would only make an",
+    "already-published line harder to read."
+  ],
+  "_placeholders": [
+    "{{service}}   stockbook-workers | stockbook-web | stockbook-api | us-fundamentals",
+    "{{threshold}} per-service hourly ceiling",
+    "{{env}}       production | qa",
+    "{{notify}}    notification handle"
+  ]
+}

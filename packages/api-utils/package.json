@@ -1,0 +1,29 @@
+{
+  "name": "@usemoney/api-utils",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./response": "./src/response/index.ts",
+    "./request": "./src/request/index.ts",
+    "./pagination": "./src/pagination/index.ts",
+    "./errors": "./src/errors/index.ts",
+    "./types": "./src/types/index.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0",
+    "test": "node --import tsx ../../scripts/test-timeout.ts --import tsx --test --test-timeout=30000 \"__tests__/**/*.test.ts\""
+  },
+  "dependencies": {
+    "hono": "^4.12.18"
+  },
+  "devDependencies": {
+    "@usemoney/typescript-config": "*",
+    "@types/node": "^22.15.3",
+    "typescript": "5.9.2"
+  }
+}

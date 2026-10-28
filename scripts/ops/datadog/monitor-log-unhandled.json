@@ -1,0 +1,39 @@
+{
+  "_readme": [
+    "MONEY-1359 — an unhandled promise rejection, in any service.",
+    "",
+    "Matched on TEXT rather than on a status, because that is how it arrives: an",
+    "unhandled rejection is printed by the Node runtime itself, not by our logger,",
+    "so it carries no level we control and no structured field to query.",
+    "",
+    "Worth its own row rather than folding into the error-volume monitor: ONE is",
+    "significant here. It means a promise rejected with nobody to catch it, which",
+    "under Node 22 terminates the process — on a Cloud Run service that is an",
+    "instance dying mid-request. NOT the realtime holder, despite this query",
+    "being env-wide: tiingo-realtime never calls initLogger() and its sidecar",
+    "sets no DD_LOGS_ENABLED, so it ships NOTHING to the log intake and this",
+    "monitor cannot see its rejections. What covers that process dying is",
+    "rt.health_ok's no-data alarm in monitor-rt-health.json.",
+    "This repo has shipped exactly that: an uncaught `import()` rejection in the",
+    "RUM provider took navigation down with it (MONEY-1220), which is why the",
+    "analytics providers are now asserted to `.catch()` every dynamic import."
+  ],
+  "name": "[{{env}}] unhandled promise rejection",
+  "type": "log alert",
+  "query": "logs(\"env:{{env}} (\\\"unhandledRejection\\\" OR \\\"Unhandled promise rejection\\\")\").index(\"*\").rollup(\"count\").last(\"15m\") > 0",
+  "message": "An unhandled promise rejection was logged in {{env}}.\n\nOne is enough to act on: the rejection had no catch, so whatever was awaiting it never resumed, and Node terminates the process on an unhandled rejection. Find the service on the event, then the stack in the sample.\n\nBOTH spellings are matched deliberately — the Node runtime's own warning and the wrapper text differ, and matching only one is how this goes quiet without anything changing.\n\n@{{notify}}",
+  "tags": [
+    "managed-by:apply-monitors",
+    "money:1359",
+    "family:log-unhandled",
+    "env:{{env}}"
+  ],
+  "options": {
+    "thresholds": { "critical": 0 },
+    "notify_no_data": false,
+    "renotify_interval": 0,
+    "enable_logs_sample": true,
+    "include_tags": true
+  },
+  "_placeholders": ["{{env}} production | qa", "{{notify}} notification handle"]
+}

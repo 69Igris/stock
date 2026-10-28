@@ -1,0 +1,1547 @@
+/* ─────────────────────────────────────────────────────────────────────
+   UseMoney · "Playful" marketing site stylesheet (ported from
+   landing-page design bundle, adapted for next-themes class attribute).
+   Cream-paper light theme + deep-ink dark theme. Loaded only on
+   routes under apps/web/app/(marketing)/.
+   ───────────────────────────────────────────────────────────────────── */
+
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap");
+
+/* Scope all token + base styles to .playful-page so the rest of the
+   app (Terminal Luxe) is untouched. */
+.playful-page {
+  --paper: #f7f3e6;
+  --paper-2: #efe7d0;
+  --paper-3: #fbf8eb;
+  --ink: #1d1d1b;
+  --ink-2: #3a3a35;
+  --ink-3: #6b6b62;
+  --ink-4: #9a9a92;
+  --rule: #1d1d1b;
+  --rule-soft: rgba(29, 29, 27, 0.14);
+  --rule-softer: rgba(29, 29, 27, 0.08);
+  --dot-fg: rgba(29, 29, 27, 0.045);
+  --dot-fg-2: rgba(29, 29, 27, 0.03);
+  --emerald: #16a34a;
+  --emerald-bg: rgba(22, 163, 74, 0.08);
+  --pop-1: #ff6b35;
+  --pop-2: #fbbf24;
+  --pop-3: #3b82f6;
+  --pop-4: #ff77b9;
+  --pop-5: #a78bfa;
+  --shadow-hard: 4px 4px 0 var(--ink);
+  --shadow-soft: 3px 3px 0 var(--ink);
+  --code-bg: var(--ink);
+  --code-fg: var(--paper);
+
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Inter", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  /* Contain any over-wide decorative child (laptop mockup, stickers, wide
+     tables) so the whole page never scrolls sideways on mobile — which dragged
+     the .container left padding off-screen and made card/table text read
+     flush-left. `clip` (not `hidden`) does NOT create a scroll container, so the
+     sticky .nav keeps sticking; `hidden` here would break it. */
+  overflow-x: clip;
+  background-image:
+    radial-gradient(var(--dot-fg) 1px, transparent 1.5px),
+    radial-gradient(var(--dot-fg-2) 1px, transparent 1.5px);
+  background-size:
+    7px 7px,
+    11px 11px;
+  background-position:
+    0 0,
+    3px 3px;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+html.dark .playful-page {
+  --paper: #16140e;
+  --paper-2: #1f1c14;
+  --paper-3: #1a1810;
+  --ink: #f4ede0;
+  --ink-2: #d8d1c4;
+  --ink-3: #a09a8d;
+  --ink-4: #6a655a;
+  --rule: #f4ede0;
+  --rule-soft: rgba(244, 237, 224, 0.16);
+  --rule-softer: rgba(244, 237, 224, 0.08);
+  --dot-fg: rgba(244, 237, 224, 0.05);
+  --dot-fg-2: rgba(244, 237, 224, 0.035);
+  --emerald: #34d399;
+  --emerald-bg: rgba(52, 211, 153, 0.1);
+  --pop-1: #ff8a5b;
+  --pop-2: #fcd34d;
+  --pop-3: #60a5fa;
+  --pop-4: #f9a8d4;
+  --pop-5: #c4b5fd;
+  --shadow-hard: 4px 4px 0 #000;
+  --shadow-soft: 3px 3px 0 #000;
+  --code-bg: #2a2620;
+  /* Code block stays dark in both themes; --code-fg must be cream in
+     dark mode too (the inherited var(--paper) flips to dark and
+     produces dark-on-dark). Pin explicitly here. */
+  --code-fg: #f4ede0;
+}
+
+.playful-page * {
+  box-sizing: border-box;
+}
+
+/* Selection — keep playful contrast. Yellow surface + dark ink stays
+   readable in both themes (pop-2 is yellow in both); inside the always-
+   dark big-cta / ticker / newsletter card / OAuth diagram we use cream
+   on a darker yellow so it still pops. */
+.playful-page ::selection {
+  background: var(--pop-2);
+  color: #1d1d1b;
+}
+.playful-page ::-moz-selection {
+  background: var(--pop-2);
+  color: #1d1d1b;
+}
+.playful-page .big-cta ::selection,
+.playful-page .ticker-band ::selection,
+.playful-page .newsletter-card ::selection,
+.playful-page .diagram ::selection {
+  background: rgba(252, 211, 77, 0.35);
+  color: #f7f3e6;
+}
+.playful-page .big-cta ::-moz-selection,
+.playful-page .ticker-band ::-moz-selection,
+.playful-page .newsletter-card ::-moz-selection,
+.playful-page .diagram ::-moz-selection {
+  background: rgba(252, 211, 77, 0.35);
+  color: #f7f3e6;
+}
+/* Yellow-locked surfaces (pricing PRO card, .yellow-surface) flip the
+   selection too — emerald-tinted so it reads on yellow. */
+.playful-page [data-bg="yellow"] ::selection,
+.playful-page .yellow-surface ::selection {
+  background: rgba(22, 163, 74, 0.25);
+  color: #1d1d1b;
+}
+.playful-page a {
+  color: inherit;
+  text-decoration: none;
+}
+.playful-page img {
+  display: block;
+  max-width: 100%;
+}
+.playful-page button {
+  font: inherit;
+  cursor: pointer;
+  border: 0;
+  background: none;
+  color: inherit;
+}
+.playful-page .serif {
+  font-family: "Instrument Serif", "Times New Roman", serif;
+  font-weight: 400;
+}
+.playful-page .mono {
+  font-family: "JetBrains Mono", monospace;
+  font-variant-numeric: tabular-nums;
+}
+.playful-page .container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 36px;
+}
+.playful-page .container-narrow {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 36px;
+}
+
+/* ── NAV ───────────────────────────────────────────────────────── */
+.playful-page .nav {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: var(--paper);
+  border-bottom: 2px solid var(--ink);
+}
+.playful-page .nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  gap: 18px;
+}
+.playful-page .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+  font-size: 18px;
+  color: var(--ink);
+}
+.playful-page .brand-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
+  background: var(--ink);
+  display: grid;
+  place-items: center;
+  color: var(--paper);
+  font-weight: 900;
+  font-size: 17px;
+  font-family: "JetBrains Mono", monospace;
+  transform: rotate(-3deg);
+}
+/* "AI" suffix on the wordmark — emerald accent, mono, slightly raised.
+   A hair of left margin separates it from "UseMoney". */
+.playful-page .brand-ai {
+  color: var(--emerald);
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 700;
+  font-size: 0.72em;
+  letter-spacing: 0.5px;
+  margin-left: 4px;
+  vertical-align: 2px;
+}
+.playful-page .nav-links {
+  display: flex;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
+.playful-page .nav-links a {
+  padding: 7px 12px;
+  border-radius: 8px;
+  color: var(--ink);
+  transition: background 0.12s;
+  position: relative;
+}
+.playful-page .nav-links a:hover {
+  background: var(--rule-softer);
+}
+.playful-page .nav-links a.is-active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* Resources dropdown */
+.playful-page .nav-drop {
+  position: relative;
+}
+.playful-page .nav-drop-btn {
+  padding: 7px 12px;
+  border-radius: 8px;
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.playful-page .nav-drop-btn:hover {
+  background: var(--rule-softer);
+}
+.playful-page .nav-drop-btn .caret {
+  transition: transform 0.15s;
+  opacity: 0.65;
+}
+.playful-page .nav-drop.is-open .nav-drop-btn .caret {
+  transform: rotate(180deg);
+}
+.playful-page .nav-drop-panel {
+  position: absolute;
+  /* Panel sits flush against button bottom, with its own padding-top
+     creating the visual gap. Keeps hover continuous (no dead zone
+     between trigger and panel). */
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+  min-width: 280px;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: var(--shadow-hard);
+  padding: 8px;
+  display: none;
+  z-index: 50;
+  margin-top: 8px;
+}
+/* Invisible bridge over the 8px gap so the panel stays open
+   while the cursor crosses from button to menu. */
+.playful-page .nav-drop-panel::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+  height: 10px;
+}
+.playful-page .nav-drop.is-open .nav-drop-panel,
+.playful-page .nav-drop:hover .nav-drop-panel,
+.playful-page .nav-drop:focus-within .nav-drop-panel {
+  display: block;
+  transform: translateX(-50%) translateY(0);
+}
+.playful-page .nav-drop-panel a {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  align-items: center;
+  color: var(--ink);
+  transition: background 0.12s;
+}
+.playful-page .nav-drop-panel a:hover {
+  background: var(--rule-softer);
+}
+.playful-page .nav-drop-panel a .ic {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--pop-2);
+  border: 1.5px solid var(--ink);
+  display: grid;
+  place-items: center;
+  color: #1d1d1b;
+  transform: rotate(-3deg);
+  flex-shrink: 0;
+}
+.playful-page .nav-drop-panel a:nth-child(2) .ic {
+  background: var(--pop-4);
+  color: #f7f3e6;
+}
+.playful-page .nav-drop-panel a:nth-child(3) .ic {
+  background: var(--pop-3);
+  color: #f7f3e6;
+}
+.playful-page .nav-drop-panel a:nth-child(4) .ic {
+  background: var(--pop-1);
+  color: #f7f3e6;
+}
+.playful-page .nav-drop-panel a:nth-child(5) .ic {
+  background: var(--pop-5);
+  color: #f7f3e6;
+}
+.playful-page .nav-drop-panel a .body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.playful-page .nav-drop-panel a .t {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.2px;
+}
+.playful-page .nav-drop-panel a .s {
+  font-size: 12px;
+  color: var(--ink-3);
+}
+.playful-page .nav-cta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.playful-page .nav-cta .theme-tog {
+  margin-right: 4px;
+}
+
+/* Theme toggle */
+.playful-page .theme-tog {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1.5px solid var(--ink);
+  background: transparent;
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s,
+    background 0.12s;
+  color: var(--ink);
+}
+.playful-page .theme-tog:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+.playful-page .theme-tog .sun,
+.playful-page .theme-tog .moon {
+  display: none;
+}
+html:not(.dark) .playful-page .theme-tog .moon {
+  display: block;
+}
+html.dark .playful-page .theme-tog .sun {
+  display: block;
+}
+
+/* ── BUTTONS ───────────────────────────────────────────────────── */
+.playful-page .btn-flat {
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  border: 1.5px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s,
+    background 0.12s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+.playful-page .btn-flat:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+.playful-page .btn-solid {
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  border: 1.5px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+.playful-page .btn-solid:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--emerald);
+}
+.playful-page .btn-flat.lg,
+.playful-page .btn-solid.lg {
+  padding: 13px 22px;
+  font-size: 15px;
+}
+.playful-page .kbd {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--ink-3);
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: var(--rule-softer);
+  margin-left: 6px;
+}
+
+/* ── PAGE HEAD (used by subpages) ──────────────────────────────── */
+.playful-page .page-head {
+  padding: 70px 0 50px;
+  border-bottom: 2px solid var(--ink);
+  position: relative;
+}
+.playful-page .page-head .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--emerald);
+  letter-spacing: 0.3px;
+}
+.playful-page .page-head .eyebrow .d {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--emerald);
+  animation: ph-pulse 1.6s infinite;
+}
+@keyframes ph-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(1.3);
+  }
+}
+
+.playful-page .page-head h1 {
+  margin-top: 16px;
+  font-size: clamp(46px, 6.6vw, 92px);
+  line-height: 0.96;
+  letter-spacing: -3px;
+  font-weight: 800;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.playful-page .page-head h1 .ser {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -2.8px;
+}
+.playful-page .page-head h1 .hl {
+  background: var(--pop-2);
+  padding: 0 6px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  border-radius: 4px;
+  color: var(--ink);
+}
+.playful-page .page-head h1 .strike {
+  position: relative;
+}
+.playful-page .page-head h1 .strike::after {
+  content: "";
+  position: absolute;
+  left: -4px;
+  right: -4px;
+  top: 52%;
+  height: 4px;
+  background: var(--pop-1);
+  transform: rotate(-2deg);
+}
+.playful-page .page-head .lede {
+  margin-top: 22px;
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-size: 24px;
+  line-height: 1.35;
+  color: var(--ink-2);
+  max-width: 720px;
+}
+.playful-page .page-head .lede b {
+  font-style: normal;
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ── SECTION ────────────────────────────────────────────────────── */
+.playful-page .section {
+  padding: 100px 0;
+  border-bottom: 2px solid var(--ink);
+  position: relative;
+}
+.playful-page .section-h {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  margin-bottom: 50px;
+  flex-wrap: wrap;
+}
+.playful-page .section-h .num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 1.5px;
+  padding: 4px 9px;
+  border: 1.5px solid var(--ink);
+  border-radius: 6px;
+  background: var(--paper);
+  transform: rotate(-1deg);
+}
+.playful-page .section-h h2 {
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 0.98;
+  letter-spacing: -2px;
+  font-weight: 800;
+  color: var(--ink);
+  text-wrap: balance;
+  flex: 1;
+}
+.playful-page .section-h h2 .ser {
+  font-family: "Instrument Serif", serif;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -1.6px;
+}
+.playful-page .section-h h2 .hl {
+  background: var(--pop-2);
+  padding: 0 6px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  border-radius: 4px;
+  color: var(--ink);
+}
+.playful-page .section-sub {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--ink-2);
+  max-width: 640px;
+  line-height: 1.35;
+}
+
+/* ── STICKERS / ANNOTATIONS ────────────────────────────────────── */
+.playful-page .sticker {
+  position: absolute;
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-size: 18px;
+  line-height: 1.2;
+  padding: 12px 16px;
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  background: var(--paper);
+  box-shadow: var(--shadow-hard);
+  max-width: 220px;
+  color: var(--ink);
+}
+.playful-page .sticker strong {
+  font-family: "Inter", sans-serif;
+  font-style: normal;
+  font-weight: 700;
+}
+
+/* ── COMPARE TABLE ─────────────────────────────────────────────── */
+.playful-page .tbl-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.playful-page .compare-tbl {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+}
+.playful-page .compare-tbl th,
+.playful-page .compare-tbl td {
+  padding: 14px 18px;
+  text-align: left;
+  font-size: 14px;
+  border-bottom: 1px solid var(--rule-soft);
+  color: var(--ink);
+}
+.playful-page .compare-tbl th {
+  background: var(--ink);
+  color: var(--paper);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.playful-page .compare-tbl th:not(:last-child),
+.playful-page .compare-tbl td:not(:last-child) {
+  border-right: 1px solid var(--rule-soft);
+}
+.playful-page .compare-tbl tr:last-child td {
+  border-bottom: 0;
+}
+.playful-page .compare-tbl tr:nth-child(even) td {
+  background: var(--rule-softer);
+}
+.playful-page .compare-tbl td.feat {
+  font-weight: 600;
+}
+.playful-page .compare-tbl td.um {
+  background: var(--emerald-bg) !important;
+  color: var(--emerald);
+  font-weight: 700;
+}
+.playful-page .compare-tbl td.um::before {
+  content: "● ";
+}
+.playful-page .compare-tbl td.no {
+  color: var(--ink-3);
+}
+.playful-page .compare-tbl td .small {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+}
+
+/* ── BIG CTA · always-dark band ─────────────────────────────── */
+.playful-page .big-cta {
+  background: #1d1d1b;
+  color: #f7f3e6;
+  padding: 130px 0;
+  text-align: center;
+  border-bottom: 2px solid #1d1d1b;
+  position: relative;
+  overflow: hidden;
+}
+.playful-page .big-cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    rgba(247, 243, 230, 0.04) 1px,
+    transparent 1.5px
+  );
+  background-size: 9px 9px;
+  pointer-events: none;
+}
+.playful-page .big-cta h2 {
+  font-size: clamp(54px, 7vw, 108px);
+  line-height: 0.94;
+  letter-spacing: -3.4px;
+  font-weight: 800;
+  text-wrap: balance;
+  position: relative;
+  color: #f7f3e6;
+}
+.playful-page .big-cta h2 .ser {
+  font-family: "Instrument Serif", serif;
+  font-weight: 400;
+  font-style: italic;
+}
+.playful-page .big-cta h2 .hl {
+  background: var(--pop-2);
+  color: #1d1d1b;
+  padding: 0 8px;
+  border-radius: 6px;
+  /*
+   * Clone the rounded background on each line of a wrapped highlight so a
+   * span like `Use Money` reads as one continuous pill when it fits on a
+   * single line, and as two independently-rounded pills when it wraps.
+   * Matches the page-head / section-h .hl behaviour higher up in this file.
+   */
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.playful-page .big-cta p {
+  margin-top: 24px;
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-size: 26px;
+  color: rgba(247, 243, 230, 0.78);
+  position: relative;
+}
+html.dark .playful-page .big-cta p {
+  color: var(--ink-3);
+}
+.playful-page .big-cta .cta-row {
+  margin-top: 40px;
+  display: inline-flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
+}
+.playful-page .big-cta .btn-flat {
+  border-color: #f7f3e6;
+  color: #f7f3e6;
+  background: transparent;
+}
+.playful-page .big-cta .btn-flat:hover {
+  box-shadow: 3px 3px 0 var(--emerald);
+}
+.playful-page .big-cta .btn-solid {
+  background: #f7f3e6;
+  color: #1d1d1b;
+  border-color: #f7f3e6;
+}
+.playful-page .big-cta .btn-solid:hover {
+  box-shadow: 3px 3px 0 var(--emerald);
+}
+
+/* ── FOOTER ────────────────────────────────────────────────────── */
+.playful-page .footer {
+  background: var(--paper);
+  padding: 70px 0 32px;
+}
+.playful-page .footer-grid {
+  display: grid;
+  grid-template-columns: 1.6fr repeat(4, 1fr);
+  gap: 36px;
+}
+.playful-page .fbrand h5 {
+  font-size: 24px;
+  line-height: 1.1;
+  letter-spacing: -0.7px;
+  font-weight: 800;
+  max-width: 280px;
+  color: var(--ink);
+}
+.playful-page .fbrand h5 .ser {
+  font-family: "Instrument Serif", serif;
+  font-weight: 400;
+  font-style: italic;
+}
+.playful-page .fbrand p {
+  margin-top: 12px;
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ink-3);
+  max-width: 300px;
+}
+.playful-page .fbrand .socials {
+  display: flex;
+  gap: 8px;
+  margin-top: 22px;
+}
+.playful-page .fbrand .socials a {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1.5px solid var(--ink);
+  display: grid;
+  place-items: center;
+  color: var(--ink);
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s;
+}
+.playful-page .fbrand .socials a:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+.playful-page .fcol h6 {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.playful-page .fcol ul {
+  list-style: none;
+  margin-top: 14px;
+  padding: 0;
+}
+.playful-page .fcol ul li {
+  padding: 4px 0;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.playful-page .fcol ul li a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+.playful-page .footer-bottom {
+  margin-top: 60px;
+  padding-top: 22px;
+  border-top: 1.5px solid var(--ink);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  color: var(--ink-3);
+  flex-wrap: wrap;
+}
+.playful-page .footer-bottom .ser {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.playful-page .footer-bottom .dis-link {
+  color: var(--ink-2);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.12s;
+}
+.playful-page .footer-bottom .dis-link:hover {
+  color: var(--emerald);
+}
+
+/* Ask AI about UseMoney — right side of footer-bottom */
+.playful-page .ask-ai {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+.playful-page .ask-ai-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--ink-3);
+  letter-spacing: 0.4px;
+}
+.playful-page .ask-ai-row {
+  display: flex;
+  gap: 6px;
+}
+.playful-page .ask-ai-row a {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1.5px solid var(--ink);
+  display: grid;
+  place-items: center;
+  color: var(--ink);
+  background: var(--paper);
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s,
+    background 0.12s;
+}
+.playful-page .ask-ai-row a:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink);
+  background: var(--paper-3);
+}
+/* Each AI icon keeps its brand color via inline style on the anchor.
+   The base style above gives them a cream-paper button chassis with
+   the playful hard-shadow hover. In dark mode, swap to a slightly
+   elevated dark surface so brand colors still pop. */
+.playful-page {
+  /* Grok mark — black on cream paper (light), cream on dark paper.
+     Inline style on the anchor reads this variable via var(--grok-brand). */
+  --grok-brand: #000000;
+}
+html.dark .playful-page {
+  --grok-brand: #f4ede0;
+}
+html.dark .playful-page .ask-ai-row a {
+  background: var(--paper-2);
+}
+html.dark .playful-page .ask-ai-row a:hover {
+  background: var(--paper-3);
+}
+
+/* ── HELPERS ───────────────────────────────────────────────────── */
+.playful-page .tag-pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1.5px solid var(--ink);
+  color: var(--ink);
+  background: var(--paper);
+}
+.playful-page .tag-pill.gold {
+  background: var(--pop-2);
+}
+.playful-page .tag-pill.coral {
+  background: var(--pop-1);
+  color: var(--paper);
+}
+.playful-page .tag-pill.blue {
+  background: var(--pop-3);
+  color: var(--paper);
+}
+.playful-page .tag-pill.pink {
+  background: var(--pop-4);
+  color: var(--paper);
+}
+.playful-page .tag-pill.violet {
+  background: var(--pop-5);
+  color: var(--paper);
+}
+.playful-page .tag-pill.emerald {
+  background: var(--emerald);
+  color: var(--paper);
+}
+
+.playful-page .code-block {
+  display: block;
+  padding: 10px 12px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  color: var(--code-fg);
+  background: var(--code-bg);
+  border-radius: 6px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+.playful-page .code-block .gold {
+  color: var(--pop-2);
+}
+.playful-page .code-block .emerald {
+  color: var(--emerald);
+}
+.playful-page .code-block .pink {
+  color: var(--pop-4);
+}
+
+/* ── M brand-mark variant ──────────────────────────────────────── */
+.playful-page .brand-mark[data-letter="M"] {
+  font-size: 0;
+}
+.playful-page .brand-mark[data-letter="M"]::before {
+  content: "M";
+  display: inline-block;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 900;
+  font-size: 0.62em;
+  letter-spacing: -0.6px;
+}
+.playful-page .brand-mark.size-lg {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  font-size: 28px;
+}
+.playful-page .brand-mark.size-lg[data-letter="M"]::before {
+  font-size: 26px;
+}
+
+/* ── Mobile-first responsive ────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .playful-page .container {
+    padding: 0 28px;
+  }
+}
+@media (max-width: 900px) {
+  .playful-page .nav-links {
+    display: none;
+  }
+  .playful-page .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .playful-page .container {
+    padding: 0 22px;
+  }
+  .playful-page .section {
+    padding: 64px 0;
+  }
+  .playful-page .page-head {
+    padding: 44px 0 36px;
+  }
+  .playful-page .page-head h1 {
+    letter-spacing: -2px;
+  }
+  .playful-page .section-h {
+    gap: 12px;
+    margin-bottom: 36px;
+  }
+  .playful-page .section-h h2 {
+    letter-spacing: -1.4px;
+  }
+  .playful-page .big-cta {
+    padding: 84px 0;
+  }
+  .playful-page .big-cta h2 {
+    letter-spacing: -2.4px;
+  }
+  .playful-page .big-cta p {
+    font-size: 20px;
+    margin-top: 16px;
+  }
+  .playful-page .footer {
+    padding: 56px 0 28px;
+  }
+  .playful-page .footer-bottom {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+  .playful-page .nav-inner {
+    padding: 12px 0;
+    gap: 8px;
+  }
+  .playful-page .brand {
+    font-size: 16px;
+  }
+  /* On mobile, declutter the top bar — keep only the theme toggle,
+     avatar (when signed in), and hamburger. The Log in / Dashboard /
+     Start free CTAs live inside the slide-down mobile menu. */
+  .playful-page .nav-cta .btn-flat,
+  .playful-page .nav-cta .btn-solid {
+    display: none;
+  }
+  .playful-page .theme-tog {
+    width: 34px;
+    height: 34px;
+  }
+
+  /* Mobile hamburger + slide-down menu */
+  .playful-page .hamburger {
+    display: inline-grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1.5px solid var(--ink);
+    background: transparent;
+    cursor: pointer;
+    gap: 4px;
+  }
+  .playful-page .hamburger span {
+    display: block;
+    width: 16px;
+    height: 2px;
+    background: var(--ink);
+    transition:
+      transform 0.18s,
+      opacity 0.15s;
+    transform-origin: center;
+  }
+  .playful-page .hamburger.is-x span:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+  }
+  .playful-page .hamburger.is-x span:nth-child(2) {
+    opacity: 0;
+  }
+  .playful-page .hamburger.is-x span:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
+  .playful-page .mobile-menu {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--paper);
+    border-top: 2px solid var(--ink);
+    padding: 22px 22px 28px;
+    z-index: 55;
+    transform: translateY(-110%);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .playful-page.nav-open .mobile-menu {
+    transform: translateY(0);
+  }
+  .playful-page .mobile-menu > a,
+  .playful-page .mobile-menu .nav-drop-btn {
+    display: block;
+    padding: 14px 16px;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+    border-radius: 10px;
+    border: 1.5px solid transparent;
+    background: transparent;
+    text-align: left;
+    width: 100%;
+    font-family: inherit;
+  }
+  .playful-page .mobile-menu > a:hover,
+  .playful-page .mobile-menu .nav-drop-btn:hover {
+    background: var(--rule-softer);
+  }
+  .playful-page .mobile-menu > a.is-active {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .playful-page .mobile-menu .nav-drop {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .playful-page .mobile-menu .nav-drop-btn {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .playful-page .mobile-menu .nav-drop-panel {
+    position: static !important;
+    display: none !important;
+    transform: none !important;
+    margin: 0 0 6px 12px;
+    padding: 4px 0;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  .playful-page .mobile-menu .nav-drop.is-open .nav-drop-panel {
+    display: flex !important;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .playful-page .mobile-menu .nav-drop.is-open .nav-drop-btn .caret {
+    transform: rotate(180deg);
+  }
+  .playful-page .mobile-menu .nav-drop-panel a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    color: var(--ink-2);
+  }
+  .playful-page .mobile-menu .nav-drop-panel a:hover {
+    background: var(--rule-softer);
+    color: var(--ink);
+  }
+  .playful-page .mobile-menu .nav-drop-panel a .ic {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+  }
+  .playful-page .mobile-menu .nav-drop-panel a .body {
+    display: flex;
+    flex-direction: column;
+  }
+  .playful-page .mobile-menu .nav-drop-panel a .t {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .playful-page .mobile-menu .nav-drop-panel a .s {
+    font-size: 12px;
+    color: var(--ink-3);
+  }
+  .playful-page .mobile-menu-cta {
+    margin-top: 14px;
+    padding-top: 18px;
+    border-top: 2px dashed var(--ink);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .playful-page .mobile-menu-cta .btn-flat,
+  .playful-page .mobile-menu-cta .btn-solid {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 16px;
+    font-size: 15px;
+  }
+  /* Authenticated drawer actions — labeled, theme-aware (no bare avatar) */
+  .playful-page .mobile-acct {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .playful-page .mobile-acct-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .playful-page .mobile-acct-row:hover,
+  .playful-page .mobile-acct-row:active {
+    background: var(--paper-2);
+  }
+  .playful-page .mobile-acct-row svg {
+    flex: none;
+    color: var(--ink-3);
+  }
+  .playful-page .mobile-acct-row.danger {
+    color: #c0392b;
+    border-color: #c0392b;
+  }
+  .playful-page .mobile-acct-row.danger svg {
+    color: #c0392b;
+  }
+  html.dark .playful-page .mobile-acct-row.danger {
+    color: #ff8a7a;
+    border-color: #ff8a7a;
+  }
+  html.dark .playful-page .mobile-acct-row.danger svg {
+    color: #ff8a7a;
+  }
+}
+@media (min-width: 901px) {
+  .playful-page .hamburger,
+  .playful-page .mobile-menu {
+    display: none !important;
+  }
+}
+@media (max-width: 600px) {
+  .playful-page .container {
+    padding: 0 18px;
+  }
+  .playful-page .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .playful-page .section {
+    padding: 52px 0;
+  }
+  .playful-page .page-head {
+    padding: 36px 0 28px;
+  }
+  .playful-page .page-head h1 {
+    font-size: clamp(34px, 9vw, 56px);
+    letter-spacing: -1.4px;
+  }
+  .playful-page .page-head .lede {
+    font-size: 18px;
+  }
+  .playful-page .section-h h2 {
+    font-size: clamp(28px, 7vw, 40px);
+    letter-spacing: -1px;
+  }
+  .playful-page .section-sub {
+    font-size: 17px;
+  }
+  .playful-page .big-cta {
+    padding: 64px 0;
+  }
+  .playful-page .big-cta h2 {
+    font-size: clamp(36px, 10vw, 56px);
+    letter-spacing: -1.6px;
+  }
+  .playful-page .big-cta p {
+    font-size: 18px;
+  }
+  .playful-page .compare-tbl {
+    font-size: 12.5px;
+    /* Keep columns legible and let .tbl-scroll handle overflow rather
+       than crushing 5 columns into a phone width. */
+    min-width: 540px;
+  }
+  .playful-page .compare-tbl th,
+  .playful-page .compare-tbl td {
+    padding: 10px 10px;
+  }
+  .playful-page .sticker {
+    display: none;
+  }
+}
+@media (max-width: 420px) {
+  .playful-page .nav-cta .btn-solid {
+    padding: 7px 12px;
+    font-size: 13px;
+  }
+  .playful-page .container {
+    padding: 0 14px;
+  }
+}
+
+/* ── Mobile audit · per-page grids ─────────────────────────────── */
+@media (max-width: 700px) {
+  .playful-page .price-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  .playful-page .pcard.feat {
+    transform: none !important;
+  }
+  .playful-page .pcard .badge {
+    transform: rotate(0) !important;
+  }
+  .playful-page .packs-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .playful-page .ult-note {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 14px !important;
+  }
+  .playful-page .cycle-tog button {
+    padding: 7px 12px !important;
+    font-size: 12.5px !important;
+  }
+  .playful-page .cycle-tog .save {
+    display: none;
+  }
+
+  .playful-page .feat-grid,
+  .playful-page .feat.rev .feat-grid {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+  }
+  .playful-page .feat {
+    padding: 50px 0 !important;
+  }
+  .playful-page .jump {
+    display: none !important;
+  }
+  .playful-page .feat-art {
+    aspect-ratio: auto !important;
+    padding: 18px !important;
+  }
+
+  .playful-page .b-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .playful-page .b-card {
+    grid-template-columns: 48px 1fr !important;
+    gap: 14px !important;
+  }
+  .playful-page .b-card .b-logo {
+    width: 48px !important;
+    height: 48px !important;
+  }
+  .playful-page .b-card .b-status {
+    grid-column: 2 !important;
+    justify-self: flex-start !important;
+    margin-top: 4px !important;
+  }
+  .playful-page .setup-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .playful-page .twocol {
+    grid-template-columns: 1fr !important;
+  }
+
+  .playful-page .quickstats {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .playful-page .quickstats .qs {
+    border-right: 0 !important;
+    border-bottom: 2px solid var(--ink);
+  }
+  .playful-page .quickstats .qs:nth-child(odd) {
+    border-right: 2px solid var(--ink) !important;
+  }
+  .playful-page .quickstats .qs:nth-last-child(-n + 2) {
+    border-bottom: 0;
+  }
+  .playful-page .values {
+    grid-template-columns: 1fr !important;
+  }
+  .playful-page .v-card {
+    border-right: 0 !important;
+    border-bottom: 1.5px dashed var(--ink);
+    padding: 22px 0 !important;
+  }
+  .playful-page .v-card:last-child {
+    border-bottom: 0;
+  }
+  .playful-page .team {
+    grid-template-columns: 1fr !important;
+  }
+  .playful-page .t-row {
+    grid-template-columns: 1fr !important;
+    gap: 6px !important;
+  }
+  .playful-page .t-row .date {
+    padding-top: 0 !important;
+  }
+
+  .playful-page .feat-post {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+  .playful-page .feat-post .img {
+    aspect-ratio: 16/10 !important;
+  }
+  .playful-page .post-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .playful-page .release {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+    padding: 36px 0 !important;
+  }
+  .playful-page .release .meta {
+    position: static !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+    flex-wrap: wrap;
+  }
+  .playful-page .release .meta .date {
+    margin-top: 0 !important;
+  }
+  .playful-page .release .meta .tag {
+    margin-top: 0 !important;
+  }
+
+  .playful-page .pillars {
+    grid-template-columns: 1fr !important;
+  }
+  .playful-page .flow {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+  .playful-page .flow .arr {
+    transform: none !important;
+    padding: 4px 0;
+  }
+  .playful-page .detail {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+  .playful-page .detail + .detail {
+    margin-top: 36px !important;
+    padding-top: 36px !important;
+  }
+
+  .playful-page .section-h {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+  .playful-page .section-h .num {
+    transform: rotate(0) !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .playful-page .packs-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .playful-page .quickstats {
+    grid-template-columns: 1fr !important;
+  }
+  .playful-page .nav-cta .btn-solid {
+    font-size: 12px !important;
+    padding: 6px 10px !important;
+  }
+}
+
+/* ── Yellow-surface contrast lockdown ─────────────────────────── */
+.playful-page [data-bg="yellow"],
+.playful-page .yellow-surface {
+  background: var(--pop-2);
+  --ink: #1d1d1b;
+  --ink-2: #3a3a35;
+  --ink-3: #6b6b62;
+  --ink-4: #9a9a92;
+  --paper: #1d1d1b;
+  color: #1d1d1b;
+}
+.playful-page [data-bg="yellow"] *,
+.playful-page .yellow-surface * {
+  color: inherit;
+}
+.playful-page [data-bg="yellow"] a,
+.playful-page .yellow-surface a {
+  color: #1d1d1b;
+}
+.playful-page [data-bg="yellow"] .pcta,
+.playful-page [data-bg="yellow"] .btn-solid,
+.playful-page .yellow-surface .pcta,
+.playful-page .yellow-surface .btn-solid {
+  background: #1d1d1b !important;
+  color: #f7f3e6 !important;
+  border-color: #1d1d1b !important;
+}
+.playful-page [data-bg="yellow"] .btn-flat,
+.playful-page .yellow-surface .btn-flat {
+  border-color: #1d1d1b !important;
+  color: #1d1d1b !important;
+  background: transparent !important;
+}
+
+.playful-page .hl,
+.playful-page .tag-pill.gold,
+.playful-page .big-cta h2 .hl,
+.playful-page .page-head h1 .hl,
+.playful-page .section-h h2 .hl {
+  --ink: #1d1d1b;
+  --ink-2: #3a3a35;
+  --ink-3: #6b6b62;
+  color: #1d1d1b !important;
+}
+
+.playful-page .tag-pill.coral,
+.playful-page .tag-pill.pink,
+.playful-page .tag-pill.blue,
+.playful-page .tag-pill.violet,
+.playful-page .tag-pill.emerald {
+  color: #f7f3e6 !important;
+}

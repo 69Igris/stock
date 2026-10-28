@@ -1,0 +1,571 @@
+/* ─────────────────────────────────────────────────────────────────────
+   Playful detail styles — SipCalculator + NavGrowthChart
+   Co-located; do NOT import into playful-app.css.
+   Theme-aware: all colours via CSS vars from playful-app.css.
+   NEVER hardcode light/dark hex — use var(--ink), var(--paper), etc.
+   ───────────────────────────────────────────────────────────────────── */
+
+/* ── Mode/period sub-tab strip ─────────────────────────────────────── */
+.det-tab-strip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  border-radius: 8px;
+  border: 1.5px solid var(--ink);
+  background: var(--paper);
+  padding: 2px;
+  flex-shrink: 0;
+  flex-wrap: wrap; /* wraps on very narrow viewports */
+}
+
+.det-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border: 0;
+  background: transparent;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition:
+    background 0.12s,
+    color 0.12s;
+  white-space: nowrap;
+}
+.det-tab-btn:hover {
+  color: var(--ink);
+  background: var(--rule-softer);
+}
+.det-tab-btn.is-active {
+  background: var(--emerald-bg);
+  color: var(--emerald);
+}
+.det-tab-btn:disabled {
+  /* MONEY-1211 — the ETF "Units" tab when no LTP is available. Dimmed via the
+     token ladder, not an opacity hack, so it stays legible in BOTH themes. */
+  color: var(--ink-4);
+  cursor: not-allowed;
+}
+.det-tab-btn:disabled:hover {
+  background: transparent;
+  color: var(--ink-4);
+}
+
+/* ── SIP Calculator ────────────────────────────────────────────────── */
+.sip-card {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft);
+  padding: 20px;
+}
+
+.sip-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.sip-title-block {
+  flex: 1 1 200px;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sip-title {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.sip-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--emerald);
+  animation: ph-pulse 1.6s infinite;
+  flex-shrink: 0;
+}
+
+.sip-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+/* ── Slider control ────────────────────────────────────────────────── */
+.sip-slider-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sip-knob {
+  /* nothing extra needed — labels + input handled inline */
+}
+
+.sip-knob-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.sip-knob-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.sip-knob-value {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 14px;
+  font-weight: 700;
+  /* `--emerald` is the FILL token (dot, thumb, bar) and is ~3.4:1 on cream —
+     the "mint-on-cream values in light mode" half of the MONEY-1211 report.
+     `--emerald-text` is the palette's AA-safe variant for accent TEXT on
+     paper, and maps back to the bright token in dark mode. */
+  color: var(--emerald-text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* MONEY-1211 — the track and thumb are drawn EXPLICITLY, not left to
+   `accent-color` on a native range.
+   `accent-color` tints the thumb and the filled portion but leaves the empty
+   track to the user agent, which paints its default light grey (~#e9e9ed)
+   because nothing in this app declares `color-scheme`. On the cream `--paper`
+   card that grey is all but invisible — the "slider has no track in light
+   mode" report — while in dark mode the same grey is the only reason it shows
+   at all. Both themes were relying on a UA default that only ever suited one.
+   Same treatment as `.pf-fire-slider`, the app's other playful slider. */
+.sip-range {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--rule-softer);
+  border: 1.5px solid var(--rule-soft);
+  cursor: pointer;
+  display: block;
+}
+/* Emerald keeps the calculator's accent identity; the `--paper` ring plus the
+   `--ink` halo is what guarantees the thumb reads against BOTH papers — both
+   tokens invert with the theme, so the thumb is never accent-on-accent. */
+.sip-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--emerald);
+  border: 2px solid var(--paper);
+  box-shadow: 0 0 0 2px var(--ink);
+  cursor: pointer;
+}
+.sip-range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--emerald);
+  border: 2px solid var(--paper);
+  box-shadow: 0 0 0 2px var(--ink);
+  cursor: pointer;
+}
+/* `appearance: none` also removes the UA focus ring, so put one back rather
+   than inheriting `.pf-fire-slider`'s `outline: none` — these are the only
+   keyboard-operable controls in the card. */
+.sip-range:focus-visible {
+  outline: 2px solid var(--emerald-text);
+  outline-offset: 3px;
+}
+
+.sip-range-limits {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9.5px;
+  color: var(--ink-4);
+}
+
+/* ── Result panel ──────────────────────────────────────────────────── */
+.sip-result-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sip-corpus-card {
+  /* Dark result card from the design — pinned dark in BOTH themes via the
+     terminal-band tokens. (It previously flipped cream in dark mode via
+     var(--ink), which washed out the gold corpus amount and the emerald
+     gain and needed per-child compensating overrides.) */
+  background: var(--code-bg);
+  color: var(--code-fg);
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.sip-corpus-eyebrow {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--code-dim);
+  margin-bottom: 4px;
+}
+
+.sip-corpus-amount {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  line-height: 1;
+  color: var(--pop-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.sip-corpus-meta {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  margin-top: 8px;
+  color: var(--code-dim);
+}
+
+.sip-corpus-meta strong {
+  color: var(--code-fg);
+}
+
+.sip-corpus-meta .gain {
+  color: var(--emerald);
+}
+
+/* ── Stacked bar ───────────────────────────────────────────────────── */
+.sip-bar-track {
+  height: 8px;
+  border-radius: 999px;
+  border: 1.5px solid var(--ink);
+  overflow: hidden;
+  display: flex;
+  margin-top: 4px;
+}
+.sip-bar-invested {
+  background: var(--pop-3);
+  height: 100%;
+}
+.sip-bar-gain {
+  background: var(--emerald);
+  height: 100%;
+  flex: 1;
+}
+
+/* ── Legend rows ───────────────────────────────────────────────────── */
+.sip-legend-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.sip-legend-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.sip-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+.sip-legend-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.sip-legend-val {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.sip-disclaimer {
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1.5px dashed var(--rule-soft);
+  font-size: 11px;
+  color: var(--ink-3);
+  line-height: 1.5;
+  font-style: italic;
+}
+
+/* ── NAV Growth Chart ──────────────────────────────────────────────── */
+.nav-card {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft);
+  padding: 20px;
+}
+
+.nav-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.nav-title-block {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.nav-eyebrow {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 6px;
+}
+
+.nav-current-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.nav-current-price {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.nav-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  border: 1.5px solid var(--ink);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.nav-delta.pos {
+  background: var(--emerald-bg);
+  color: var(--emerald);
+}
+.nav-delta.neg {
+  background: rgba(185, 28, 28, 0.08);
+  color: #b91c1c;
+}
+html.dark .nav-delta.neg {
+  color: var(--pop-1);
+}
+
+.nav-vs-bench {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  color: var(--ink-3);
+}
+.nav-vs-bench strong {
+  color: var(--ink);
+}
+
+/* ── Chart wrapper ─────────────────────────────────────────────────── */
+.nav-chart-wrap {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden; /* never cause horizontal scroll */
+}
+
+/* ── Chart loading skeleton ────────────────────────────────────────── */
+.nav-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+  height: 100%;
+}
+.nav-skeleton-bars {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+}
+.nav-skeleton-bar {
+  flex: 1;
+  border-radius: 3px 3px 0 0;
+  background: var(--emerald-bg);
+  animation: ph-pulse 1.6s infinite;
+}
+.nav-skeleton-dates {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.nav-skeleton-date {
+  height: 10px;
+  border-radius: 4px;
+  background: var(--rule-soft);
+  animation: ph-pulse 1.6s infinite;
+}
+
+/* ── Legend footer ─────────────────────────────────────────────────── */
+.nav-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 6px;
+  font-size: 11.5px;
+  color: var(--ink);
+}
+
+.nav-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "JetBrains Mono", monospace;
+}
+
+.nav-legend-line {
+  display: inline-block;
+  width: 14px;
+  height: 3px;
+  border-radius: 3px;
+}
+
+/* ── Period tabs + footer ──────────────────────────────────────────── */
+.nav-footer-row {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1.5px solid var(--rule-soft);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-period-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+
+.nav-period-btn {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  border: 0;
+  background: transparent;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition:
+    background 0.12s,
+    color 0.12s;
+  white-space: nowrap;
+}
+.nav-period-btn:hover {
+  color: var(--ink);
+  background: var(--rule-softer);
+}
+.nav-period-btn.is-active {
+  background: var(--emerald-bg);
+  color: var(--emerald);
+}
+
+.nav-amfi-note {
+  margin-left: auto;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  color: var(--ink-4);
+  white-space: nowrap;
+}
+
+/* ── SIP · ETF extensions (MONEY-1211) ─────────────────────────────────
+   Folded in when `components/etf/EtfSipCalculator.tsx` — a dark-only Tailwind
+   fork — was deleted. Tokens only: the fork's `bg-white/[0.0x]` fills were
+   invisible on the cream light theme, which is the bug this replaces. */
+.sip-submode {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: -8px 0 16px;
+}
+
+.sip-submode-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.sip-units-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1.5px dashed var(--rule-soft);
+}
+
+.sip-units-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.sip-units-val {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.sip-taxnote {
+  padding-top: 12px;
+  border-top: 1.5px dashed var(--rule-soft);
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}

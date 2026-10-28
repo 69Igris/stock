@@ -1,0 +1,170 @@
+/**
+ * gen-claude-md-index.ts — machine-readable index of every CLAUDE.md file.
+ *
+ * Emits docs/reference/claude-md-index.json: per-file path/title/headings/
+ * size/last-commit, plus structured extractions from the root file that are
+ * genuinely config-shaped — the Environment Variables reference and the
+ * Development Commands. The JSON is GENERATED, never hand-edited: CLAUDE.md
+ * stays the single source of truth (the harness loads the Markdown; this
+ * index exists for scripts/tooling that want to consume the same facts
+ * programmatically).
+ *
+ * Output is deterministic (no timestamps) so regeneration only diffs when
+ * content actually changed. Run via `yarn docs:claude-index` after editing
+ * any CLAUDE.md; CI does not gate on it (yet).
+ */
+
+import { execFileSync } from "node:child_process";
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, join, relative, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const OUT_PATH = join(REPO_ROOT, "docs", "reference", "claude-md-index.json");
+
+const SKIP_DIRS = new Set([
+  "node_modules",
+  ".next",
+  ".turbo",
+  "dist",
+  "build",
+  "coverage",
+  ".git",
+  "vendor",
+  ".claude",
+]);
+
+function findClaudeMdFiles(dir: string, out: string[]): void {
+  let entries;
+  try {
+    entries = readdirSync(dir, { withFileTypes: true });
+  } catch {
+    return;
+  }
+  for (const entry of entries) {
+    if (entry.isSymbolicLink()) continue;
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      if (!SKIP_DIRS.has(entry.name)) findClaudeMdFiles(full, out);
+    } else if (entry.name === "CLAUDE.md") {
+      out.push(relative(REPO_ROOT, full));
+    }
+  }
+}
+
+function lastCommitDate(relPath: string): string | null {
+  try {
+    const out = execFileSync("git", ["log", "-1", "--format=%as", "--", relPath], {
+      cwd: REPO_ROOT,
+      encoding: "utf8",
+    }).trim();
+    return out || null;
+  } catch {
+    return null;
+  }
+}
+
+interface EnvVar {
+  name: string;
+  value: string;
+  comment: string;
+}
+
+/** Parse `NAME=value # comment` lines from bash fences in a section. */
+function extractEnvVars(md: string): EnvVar[] {
+  const section = sliceSection(md, "## Environment Variables");
+  if (!section) return [];
+  const vars: EnvVar[] = [];
+  let pendingComment: string[] = [];
+  for (const block of bashBlocks(section)) {
+    for (const raw of block.split("\n")) {
+      const line = raw.trim();
+      if (line.startsWith("#")) {
+        pendingComment.push(line.replace(/^#\s?/, ""));
+        continue;
+      }
+      const m = line.match(/^([A-Z][A-Z0-9_]*)=(.*)$/);
+      if (m) {
+        const [, name, rest] = m;
+        const hashAt = rest.indexOf("#");
+        const value = (hashAt >= 0 ? rest.slice(0, hashAt) : rest).trim();
+        const inline = hashAt >= 0 ? rest.slice(hashAt + 1).trim() : "";
+        const comment = [pendingComment.join(" "), inline].filter(Boolean).join(" — ");
+        vars.push({ name, value, comment });
+      }
+      pendingComment = [];
+    }
+  }
+  return vars;
+}
+
+/** Parse runnable (non-comment) lines from bash fences in a section. */
+function extractCommands(md: string, heading: string): { command: string; comment: string }[] {
+  const section = sliceSection(md, heading);
+  if (!section) return [];
+  const commands: { command: string; comment: string }[] = [];
+  let pendingComment = "";
+  for (const block of bashBlocks(section)) {
+    for (const raw of block.split("\n")) {
+      const line = raw.trim();
+      if (!line) continue;
+      if (line.startsWith("#")) {
+        pendingComment = line.replace(/^#\s?/, "");
+        continue;
+      }
+      commands.push({ command: line, comment: pendingComment });
+      pendingComment = "";
+    }
+  }
+  return commands;
+}
+
+function sliceSection(md: string, heading: string): string | null {
+  const start = md.indexOf(`\n${heading}`);
+  if (start < 0) return null;
+  const rest = md.slice(start + 1 + heading.length);
+  const next = rest.search(/\n## /);
+  return next < 0 ? rest : rest.slice(0, next);
+}
+
+function bashBlocks(text: string): string[] {
+  return [...text.matchAll(/```bash\n([\s\S]*?)```/g)].map((m) => m[1]);
+}
+
+const files: string[] = [];
+findClaudeMdFiles(REPO_ROOT, files);
+files.sort();
+
+const index = files.map((relPath) => {
+  const content = readFileSync(join(REPO_ROOT, relPath), "utf8");
+  const titleMatch = content.match(/^# (.+)$/m);
+  const headings = [...content.matchAll(/^## (.+)$/gm)].map((m) => m[1].trim());
+  return {
+    path: relPath,
+    scope: relPath === "CLAUDE.md" ? "root" : dirname(relPath),
+    title: titleMatch ? titleMatch[1].trim() : null,
+    headings,
+    lines: content.split("\n").length,
+    bytes: Buffer.byteLength(content, "utf8"),
+    lastCommit: lastCommitDate(relPath),
+  };
+});
+
+const rootMd = readFileSync(join(REPO_ROOT, "CLAUDE.md"), "utf8");
+
+const payload = {
+  note: "GENERATED by scripts/gen-claude-md-index.ts (yarn docs:claude-index) — do not hand-edit; CLAUDE.md files are the source of truth.",
+  files: index,
+  root: {
+    envVars: extractEnvVars(rootMd),
+    devCommands: extractCommands(rootMd, "## Development Commands"),
+    opsCommands: extractCommands(rootMd, "## Data Seeding & Ops Scripts"),
+  },
+};
+
+mkdirSync(dirname(OUT_PATH), { recursive: true });
+writeFileSync(OUT_PATH, `${JSON.stringify(payload, null, 2)}\n`);
+console.log(
+  `claude-md-index: ${index.length} files indexed, ${payload.root.envVars.length} env vars, ` +
+    `${payload.root.devCommands.length + payload.root.opsCommands.length} commands → ${relative(REPO_ROOT, OUT_PATH)}`,
+);

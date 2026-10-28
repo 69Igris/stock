@@ -1,0 +1,2766 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UseMoney - Architecture Map</title>
+    <style>
+      :root {
+        --bg: #060b18;
+        --bg-2: #0b1224;
+        --bg-3: #111a30;
+        --line: #1f2a44;
+        --text: #e4e8f0;
+        --muted: #93a0b8;
+        --dim: #64718a;
+        --emerald: #34d399;
+        --emerald-2: #10b981;
+        --emerald-soft: rgba(52, 211, 153, 0.12);
+        --amber: #fbbf24;
+        --blue: #60a5fa;
+        --violet: #a78bfa;
+        --pink: #f472b6;
+        --rose: #fb7185;
+        --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+        --sans:
+          "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--sans);
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      a {
+        color: var(--emerald);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      code,
+      kbd,
+      .mono {
+        font-family: var(--mono);
+        font-size: 0.88em;
+      }
+      header.top {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: linear-gradient(
+          180deg,
+          rgba(6, 11, 24, 0.97),
+          rgba(6, 11, 24, 0.85)
+        );
+        border-bottom: 1px solid var(--line);
+        padding: 14px 28px;
+        backdrop-filter: blur(8px);
+      }
+      header.top .row {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        font-size: 1.05rem;
+        letter-spacing: 0.01em;
+      }
+      .brand .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--emerald);
+        box-shadow: 0 0 12px var(--emerald);
+      }
+      .brand small {
+        color: var(--muted);
+        font-weight: 500;
+        margin-left: 6px;
+        font-size: 0.82rem;
+      }
+      .search {
+        flex: 1;
+        max-width: 420px;
+        margin-left: auto;
+      }
+      .search input {
+        width: 100%;
+        background: var(--bg-2);
+        border: 1px solid var(--line);
+        color: var(--text);
+        padding: 9px 14px;
+        border-radius: 8px;
+        font-family: var(--sans);
+        font-size: 0.92rem;
+        outline: none;
+        transition: border-color 0.15s;
+      }
+      .search input:focus {
+        border-color: var(--emerald);
+      }
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 28px;
+        display: grid;
+        grid-template-columns: 240px 1fr;
+        gap: 32px;
+      }
+      nav.toc {
+        position: sticky;
+        top: 86px;
+        align-self: start;
+        max-height: calc(100vh - 110px);
+        overflow-y: auto;
+        padding-right: 8px;
+      }
+      nav.toc h4 {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--dim);
+        margin: 20px 0 8px 0;
+        font-weight: 600;
+      }
+      nav.toc h4:first-child {
+        margin-top: 0;
+      }
+      nav.toc a {
+        display: block;
+        color: var(--muted);
+        padding: 5px 10px;
+        border-left: 2px solid transparent;
+        font-size: 0.88rem;
+        margin-left: -2px;
+        border-radius: 0 6px 6px 0;
+      }
+      nav.toc a:hover {
+        color: var(--text);
+        background: var(--bg-2);
+        text-decoration: none;
+      }
+      nav.toc a.active {
+        color: var(--emerald);
+        border-left-color: var(--emerald);
+        background: var(--emerald-soft);
+      }
+      main {
+        min-width: 0;
+      }
+      section {
+        margin-bottom: 56px;
+        scroll-margin-top: 90px;
+      }
+      section > h2 {
+        font-size: 1.7rem;
+        margin: 0 0 6px 0;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      section > h2 .num {
+        color: var(--emerald);
+        font-family: var(--mono);
+        font-size: 0.92rem;
+        margin-right: 14px;
+        opacity: 0.7;
+      }
+      section > p.lead {
+        color: var(--muted);
+        margin: 0 0 22px 0;
+        font-size: 0.98rem;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 14px;
+        margin-bottom: 8px;
+      }
+      .stat {
+        background: var(--bg-2);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 16px 18px;
+      }
+      .stat .num {
+        font-family: var(--mono);
+        font-size: 1.7rem;
+        font-weight: 600;
+        color: var(--emerald);
+        line-height: 1;
+      }
+      .stat .label {
+        color: var(--muted);
+        font-size: 0.82rem;
+        margin-top: 6px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 14px;
+      }
+      .grid.wide {
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      }
+      .card {
+        background: var(--bg-2);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 18px 20px;
+        transition:
+          border-color 0.15s,
+          transform 0.15s;
+      }
+      .card:hover {
+        border-color: var(--emerald);
+      }
+      .card.subtle:hover {
+        transform: none;
+      }
+      .card h3 {
+        margin: 0 0 6px 0;
+        font-size: 1rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .card h3 .tag {
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        padding: 2px 8px;
+        border-radius: 4px;
+        background: var(--bg-3);
+        color: var(--dim);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+      .card .path {
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        color: var(--dim);
+        margin-top: 8px;
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+      .card .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 10px;
+      }
+      .pill {
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: var(--bg-3);
+        color: var(--muted);
+        border: 1px solid var(--line);
+      }
+      .pill.emerald {
+        color: var(--emerald);
+        border-color: var(--emerald);
+        background: var(--emerald-soft);
+      }
+      .pill.amber {
+        color: var(--amber);
+        border-color: rgba(251, 191, 36, 0.4);
+        background: rgba(251, 191, 36, 0.08);
+      }
+      .pill.blue {
+        color: var(--blue);
+        border-color: rgba(96, 165, 250, 0.4);
+        background: rgba(96, 165, 250, 0.08);
+      }
+      .pill.violet {
+        color: var(--violet);
+        border-color: rgba(167, 139, 250, 0.4);
+        background: rgba(167, 139, 250, 0.08);
+      }
+      .pill.pink {
+        color: var(--pink);
+        border-color: rgba(244, 114, 182, 0.4);
+        background: rgba(244, 114, 182, 0.08);
+      }
+      .pill.rose {
+        color: var(--rose);
+        border-color: rgba(251, 113, 133, 0.4);
+        background: rgba(251, 113, 133, 0.08);
+      }
+      .subgroup {
+        margin-bottom: 26px;
+      }
+      .subgroup h4 {
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--emerald);
+        margin: 0 0 12px 0;
+        font-weight: 600;
+        font-family: var(--mono);
+      }
+      table.tech {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--bg-2);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      table.tech th,
+      table.tech td {
+        text-align: left;
+        padding: 11px 16px;
+        border-bottom: 1px solid var(--line);
+        font-size: 0.9rem;
+      }
+      table.tech tr:last-child td {
+        border-bottom: none;
+      }
+      table.tech th {
+        color: var(--dim);
+        font-weight: 500;
+        font-size: 0.76rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        background: var(--bg-3);
+      }
+      table.tech td.layer {
+        color: var(--emerald);
+        font-weight: 600;
+      }
+      .diagram {
+        background: var(--bg-2);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 28px;
+        font-family: var(--mono);
+        font-size: 0.84rem;
+        line-height: 1.85;
+        color: var(--muted);
+        overflow-x: auto;
+      }
+      .diagram .layer-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 14px;
+        align-items: stretch;
+        flex-wrap: wrap;
+      }
+      .diagram .box {
+        background: var(--bg-3);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 10px 16px;
+        color: var(--text);
+        font-weight: 500;
+        font-size: 0.82rem;
+        min-width: 140px;
+        text-align: center;
+      }
+      .diagram .box.client {
+        border-color: var(--blue);
+        color: var(--blue);
+      }
+      .diagram .box.edge {
+        border-color: var(--violet);
+        color: var(--violet);
+      }
+      .diagram .box.app {
+        border-color: var(--emerald);
+        color: var(--emerald);
+      }
+      .diagram .box.svc {
+        border-color: var(--amber);
+        color: var(--amber);
+      }
+      .diagram .box.data {
+        border-color: var(--pink);
+        color: var(--pink);
+      }
+      .diagram .arrow {
+        text-align: center;
+        color: var(--dim);
+        font-size: 1rem;
+        line-height: 0.5;
+        margin: 4px 0;
+      }
+      .feature-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+        gap: 10px;
+      }
+      .feature-list .feat {
+        display: flex;
+        gap: 10px;
+        padding: 10px 14px;
+        background: var(--bg-2);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+      }
+      .feature-list .feat .name {
+        color: var(--text);
+        font-weight: 500;
+        flex: 0 0 30%;
+        min-width: 110px;
+      }
+      .feature-list .feat .where {
+        color: var(--muted);
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        align-self: center;
+      }
+      details {
+        background: var(--bg-2);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 14px 18px;
+        margin-bottom: 10px;
+      }
+      details summary {
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.96rem;
+        color: var(--text);
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      details summary::-webkit-details-marker {
+        display: none;
+      }
+      details summary::before {
+        content: "▸";
+        color: var(--emerald);
+        transition: transform 0.15s;
+        display: inline-block;
+      }
+      details[open] summary::before {
+        transform: rotate(90deg);
+      }
+      details .content {
+        margin-top: 14px;
+      }
+      .recipe {
+        margin-bottom: 16px;
+      }
+      .recipe h4 {
+        margin: 0 0 6px 0;
+        color: var(--text);
+        font-size: 0.95rem;
+      }
+      .recipe ol {
+        margin: 4px 0 0 0;
+        padding-left: 18px;
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+      .recipe ol li {
+        margin-bottom: 4px;
+      }
+      .recipe code {
+        color: var(--emerald);
+        background: var(--bg-3);
+        padding: 1px 6px;
+        border-radius: 4px;
+        font-size: 0.85em;
+      }
+      footer.bot {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 36px 28px 60px;
+        color: var(--dim);
+        font-size: 0.82rem;
+        border-top: 1px solid var(--line);
+      }
+      footer.bot p {
+        margin: 4px 0;
+      }
+      .hidden {
+        display: none !important;
+      }
+      @media (max-width: 900px) {
+        .container {
+          grid-template-columns: 1fr;
+        }
+        nav.toc {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="top">
+      <div class="row">
+        <div class="brand">
+          <span class="dot"></span>
+          UseMoney <small>Architecture Map · usemoney.ai</small>
+        </div>
+        <div class="search">
+          <input
+            id="searchInput"
+            type="search"
+            placeholder="Filter by name, path, model, action…"
+          />
+        </div>
+      </div>
+    </header>
+
+    <div class="container">
+      <nav class="toc">
+        <h4>Layout</h4>
+        <a href="#overview">Overview</a>
+        <a href="#stack">Tech Stack</a>
+        <a href="#topology">Topology</a>
+        <h4>Code</h4>
+        <a href="#apps">Apps (4)</a>
+        <a href="#packages">Packages (24)</a>
+        <a href="#workers">Workers (59)</a>
+        <h4>Data</h4>
+        <a href="#database">Database (93)</a>
+        <a href="#routes">API Routes (63)</a>
+        <a href="#actions">Server Actions (65)</a>
+        <h4>Domain</h4>
+        <a href="#brokers">Brokers (10)</a>
+        <a href="#ai">AI Stack</a>
+        <a href="#features">Features</a>
+        <h4>Recipes</h4>
+        <a href="#wheresx">Where is X?</a>
+        <a href="#howto">How to add X</a>
+        <a href="#conventions">Conventions</a>
+      </nav>
+
+      <main>
+        <section id="overview">
+          <h2><span class="num">01</span>Overview</h2>
+          <p class="lead">
+            <strong>UseMoney</strong> is an AI-powered trading portfolio
+            management platform for Indian stock markets. Turborepo monorepo
+            with 4 apps, 24 shared packages, and a workers service running 59
+            Pub/Sub processors.
+          </p>
+          <div class="stats">
+            <div class="stat">
+              <div class="num">4</div>
+              <div class="label">Next.js / Hono apps</div>
+            </div>
+            <div class="stat">
+              <div class="num">24</div>
+              <div class="label">Shared packages</div>
+            </div>
+            <div class="stat">
+              <div class="num">59</div>
+              <div class="label">Worker processors</div>
+            </div>
+            <div class="stat">
+              <div class="num">122</div>
+              <div class="label">Prisma models</div>
+            </div>
+            <div class="stat">
+              <div class="num">89</div>
+              <div class="label">Server actions</div>
+            </div>
+            <div class="stat">
+              <div class="num">63</div>
+              <div class="label">Web API routes</div>
+            </div>
+            <div class="stat">
+              <div class="num">96</div>
+              <div class="label">App pages</div>
+            </div>
+            <div class="stat">
+              <div class="num">10</div>
+              <div class="label">Broker adapters</div>
+            </div>
+            <div class="stat">
+              <div class="num">122</div>
+              <div class="label">Research tools</div>
+            </div>
+            <div class="stat">
+              <div class="num">38</div>
+              <div class="label">Research skills</div>
+            </div>
+            <div class="stat">
+              <div class="num">1089</div>
+              <div class="label">Test files</div>
+            </div>
+            <div class="stat">
+              <div class="num">26.4k</div>
+              <div class="label">Test cases</div>
+            </div>
+          </div>
+        </section>
+
+        <section id="stack">
+          <h2><span class="num">02</span>Tech Stack</h2>
+          <p class="lead">
+            Single source of truth for every layer in the stack.
+          </p>
+          <table class="tech">
+            <thead>
+              <tr>
+                <th>Layer</th>
+                <th>Technology</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="layer">Frontend</td>
+                <td>
+                  Next.js 16.2 · React 18 · TypeScript · Tailwind · shadcn/ui
+                </td>
+                <td>App Router · Vercel deploy</td>
+              </tr>
+              <tr>
+                <td class="layer">Backend</td>
+                <td>Next.js API Routes · tRPC · Hono (api server)</td>
+                <td>apps/api is Hono · runs on Cloud Run</td>
+              </tr>
+              <tr>
+                <td class="layer">Database</td>
+                <td>MongoDB Atlas via Prisma ORM</td>
+                <td>Atlas Search prod-only · dev uses DigitalOcean Mongo</td>
+              </tr>
+              <tr>
+                <td class="layer">Cache</td>
+                <td>
+                  Redis (DigitalOcean) · 3-layer (L1 memory · L2 Redis · L3 SWR)
+                </td>
+                <td>packages/cache</td>
+              </tr>
+              <tr>
+                <td class="layer">Auth</td>
+                <td>Clerk</td>
+                <td>Demo mode via HMAC-signed cookies</td>
+              </tr>
+              <tr>
+                <td class="layer">AI</td>
+                <td>
+                  Google Gemini 2.5 Pro + 2.5 Flash · AI Gateway via Vercel
+                </td>
+                <td>packages/research + packages/roast agents</td>
+              </tr>
+              <tr>
+                <td class="layer">Payments</td>
+                <td>Dodo Payments</td>
+                <td>Webhooks at /api/webhooks/dodo</td>
+              </tr>
+              <tr>
+                <td class="layer">Storage</td>
+                <td>Google Cloud Storage (GCS)</td>
+                <td>
+                  Learning content + RAG embeddings · bucket
+                  stockbook-content-{env}
+                </td>
+              </tr>
+              <tr>
+                <td class="layer">Queue</td>
+                <td>Google Cloud Pub/Sub</td>
+                <td>
+                  57 topics suffixed -qa / -prod · workers consume via Hono HTTP
+                </td>
+              </tr>
+              <tr>
+                <td class="layer">Observability</td>
+                <td>Datadog (APM, RUM, Logs, Metrics) · PostHog</td>
+                <td>APM only works on Cloud Run (sidecar agent)</td>
+              </tr>
+              <tr>
+                <td class="layer">Deployment</td>
+                <td>
+                  Vercel (web · api) · GCP Cloud Run (workers · api server)
+                </td>
+                <td>auto-deploy from main · preview deploys for PRs</td>
+              </tr>
+              <tr>
+                <td class="layer">Monorepo</td>
+                <td>Turborepo · Yarn workspaces · Node ≥18</td>
+                <td>17 concurrent tasks · 5.9.2 TypeScript</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="topology">
+          <h2><span class="num">03</span>System Topology</h2>
+          <p class="lead">Request lifecycle from browser to data layer.</p>
+          <div class="diagram">
+            <div class="layer-row">
+              <div class="box client">Browser / Mobile</div>
+            </div>
+            <div class="arrow">↓</div>
+            <div class="layer-row">
+              <div class="box edge">Vercel Edge</div>
+              <div class="box edge">Clerk Auth</div>
+              <div class="box edge">PostHog / Datadog RUM</div>
+            </div>
+            <div class="arrow">↓</div>
+            <div class="layer-row">
+              <div class="box app">apps/web (Next.js)</div>
+              <div class="box app">apps/admin (Next.js)</div>
+              <div class="box app">apps/content (Next.js)</div>
+              <div class="box app">apps/api (Hono · Cloud Run)</div>
+            </div>
+            <div class="arrow">↓</div>
+            <div class="layer-row">
+              <div class="box svc">@usemoney/services</div>
+              <div class="box svc">@usemoney/core</div>
+              <div class="box svc">@usemoney/research</div>
+              <div class="box svc">@usemoney/roast</div>
+              <div class="box svc">@usemoney/cache</div>
+            </div>
+            <div class="arrow">↓</div>
+            <div class="layer-row">
+              <div class="box data">MongoDB Atlas (Prisma)</div>
+              <div class="box data">Redis</div>
+              <div class="box data">GCS</div>
+              <div class="box data">Pub/Sub → workers</div>
+              <div class="box data">Gemini / AI Gateway</div>
+              <div class="box data">Broker APIs (10)</div>
+            </div>
+          </div>
+        </section>
+
+        <section id="apps">
+          <h2><span class="num">04</span>Apps</h2>
+          <p class="lead">
+            Four user-facing applications under <code>apps/</code>.
+          </p>
+          <div class="grid wide" data-searchable>
+            <div class="card">
+              <h3>apps/web <span class="tag">Next.js</span></h3>
+              <p>
+                Main product. 96 pages, 63 API routes, 89 server actions. Houses
+                dashboard, holdings, tradebook, paper trading, FIRE, AI chat,
+                roast, risk, discover, learning.
+              </p>
+              <span class="path"
+                >apps/web/app/* · apps/web/lib/actions/* ·
+                apps/web/components/*</span
+              >
+              <div class="meta">
+                <span class="pill emerald">App Router</span>
+                <span class="pill">Server Actions</span>
+                <span class="pill">Clerk</span>
+                <span class="pill">tRPC client</span>
+                <span class="pill">Vercel</span>
+              </div>
+            </div>
+            <div class="card">
+              <h3>apps/api <span class="tag">Hono</span></h3>
+              <p>
+                Standalone REST + tRPC API for the mobile client. Mobile-parity
+                build (MONEY-1062 / MONEY-402) exposes <strong>28 v1 endpoint
+                families</strong> — the earlier 15 plus brokers, jobs, market
+                (delayed quotes/OHLC/indices/MF-NAV, <code class="mono">delayed:true</code>
+                flag), discover, me (real profile + persona/preferences),
+                roast, documents, learning, credits, chat-history, quizzes,
+                feedback, alerts, consent. Auth resolves the Clerk sub to the
+                internal Mongo <code class="mono">_id</code> once; list endpoints
+                support opt-in cursor pagination; every response carries
+                <code class="mono">X-Request-Id</code>. Deploys to Cloud Run.
+              </p>
+              <span class="path"
+                >apps/api/src/routes/v1/index.ts (exported V1_ENDPOINTS = 38 families)</span
+              >
+              <div class="meta">
+                <span class="pill blue">Hono</span>
+                <span class="pill">tRPC</span>
+                <span class="pill">Cloud Run</span>
+                <span class="pill amber">Sync w/ server actions</span>
+              </div>
+            </div>
+            <div class="card">
+              <h3>apps/admin <span class="tag">Next.js</span></h3>
+              <p>Internal admin dashboard. Has its own ARCHITECTURE.md.</p>
+              <span class="path"
+                >apps/admin/app/* · apps/admin/components/*</span
+              >
+              <div class="meta">
+                <span class="pill">App Router</span>
+                <span class="pill">Internal-only</span>
+              </div>
+            </div>
+            <div class="card">
+              <h3>apps/content <span class="tag">Next.js</span></h3>
+              <p>
+                Content management & authoring app for the learning surface
+                (lessons, courses, quizzes, blog posts). Has its own
+                ARCHITECTURE.md.
+              </p>
+              <span class="path"
+                >apps/content/app/* · apps/content/components/*</span
+              >
+              <div class="meta">
+                <span class="pill">App Router</span>
+                <span class="pill violet">Content authors</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="packages">
+          <h2><span class="num">05</span>Packages</h2>
+          <p class="lead">
+            24 shared workspace packages. Grouped by responsibility.
+          </p>
+
+          <div class="subgroup">
+            <h4>Domain Logic</h4>
+            <div class="grid" data-searchable>
+              <div class="card">
+                <h3>@usemoney/core <span class="tag">domain</span></h3>
+                <p>
+                  Heart of the product. Brokers (clients + adapters for 10
+                  brokers), pairing (FIFO trade pairing), market-data, screener,
+                  gemini wrappers, calc, content, currency, analytics, auth,
+                  cache, subscription, payments, import, ops (deploy/runtime
+                  provenance).
+                </p>
+                <span class="path"
+                  >packages/core/src/{brokers,pairing,market-data,screener,gemini,calc,content,currency,analytics,subscription,payments,import,ops,auth,cache,db,content}</span
+                >
+                <div class="meta">
+                  <span class="pill emerald">Most-imported</span>
+                </div>
+              </div>
+              <div class="card">
+                <h3>@usemoney/research <span class="tag">AI agent</span></h3>
+                <p>
+                  StockSage autonomous research agent. Planner → executor →
+                  loop-controller. 38 skills (stock, MF, sector, macro,
+                  portfolio, tax) and 122 compute tools.
+                </p>
+                <span class="path"
+                  >packages/research/src/{agent,planner,executor,loop-controller,scratchpad,skills,tools,strategies,data-sources}</span
+                >
+                <div class="meta">
+                  <span class="pill blue">122 tools</span
+                  ><span class="pill violet">38 skills</span>
+                </div>
+              </div>
+              <div class="card">
+                <h3>@usemoney/roast <span class="tag">AI agent</span></h3>
+                <p>
+                  Async multi-step portfolio roast pipeline: fetch →
+                  analyze-stocks → analyze-mf → generate-scores → generate-roast
+                  → assemble.
+                </p>
+                <span class="path"
+                  >packages/roast/src/{agent,steps,prompts}</span
+                >
+                <div class="meta">
+                  <span class="pill violet">Step pipeline</span>
+                </div>
+              </div>
+              <div class="card">
+                <h3>@usemoney/content-engine <span class="tag">AI</span></h3>
+                <p>
+                  Learning content generation & quiz pipeline (lessons, courses,
+                  glossary, quizzes from source material).
+                </p>
+                <span class="path">packages/content-engine/src</span>
+                <div class="meta"><span class="pill violet">Gemini</span></div>
+              </div>
+              <div class="card">
+                <h3>
+                  @usemoney/services <span class="tag">service layer</span>
+                </h3>
+                <p>
+                  Shared service layer used by web, api, and workers. ~30
+                  services (dashboard, holdings, positions, trades, paper, FIRE,
+                  risk, tax, news, notifications, watchlist, learning, credit
+                  reservation, fund composition, GST, etc.). All DB access lives
+                  here.
+                </p>
+                <span class="path">packages/services/src/*.service.ts</span>
+                <div class="meta">
+                  <span class="pill emerald">Service-per-domain</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="subgroup">
+            <h4>Data & Validation</h4>
+            <div class="grid" data-searchable>
+              <div class="card">
+                <h3>@usemoney/database <span class="tag">prisma</span></h3>
+                <p>
+                  Prisma schema (122 models · MongoDB) + generated client. Single
+                  source of truth for data shapes.
+                </p>
+                <span class="path">packages/database/prisma/schema.prisma</span>
+                <div class="meta">
+                  <span class="pill pink">Prisma</span
+                  ><span class="pill">MongoDB Atlas</span>
+                </div>
+              </div>
+              <div class="card">
+                <h3>@usemoney/types <span class="tag">types</span></h3>
+                <p>
+                  Shared TypeScript types used across web, api, workers. No
+                  runtime code.
+                </p>
+                <span class="path">packages/types/src</span>
+              </div>
+              <div class="card">
+                <h3>@usemoney/validation <span class="tag">zod</span></h3>
+                <p>
+                  Zod schemas - chat-blocks, content, document, feedback, fire,
+                  holding, mutual-fund, paper, trade, common.
+                </p>
+                <span class="path">packages/validation/src/*</span>
+                <div class="meta"><span class="pill">Zod</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="subgroup">
+            <h4>Infrastructure</h4>
+            <div class="grid" data-searchable>
+              <div class="card">
+                <h3>@usemoney/cache <span class="tag">caching</span></h3>
+                <p>
+                  3-tier cache: L1 in-memory (10s) · L2 Redis (5min) · L3 SWR.
+                  Used everywhere expensive ops happen.
+                </p>
+                <span class="path">packages/cache/src</span>
+              </div>
+              <div class="card">
+                <h3>@usemoney/auth <span class="tag">auth</span></h3>
+                <p>
+                  Clerk wrappers + helpers. Maps Clerk userId → internal MongoDB
+                  user.
+                </p>
+                <span class="path">packages/auth/src</span>
+              </div>
+              <div class="card">
+                <h3>@usemoney/security <span class="tag">crypto</span></h3>
+                <p>
+                  AES-256-GCM encryption for broker tokens, plus rate limiting
+                  (<code class="mono">/rate-limit</code>) and cron-request auth
+                  (<code class="mono">/cron-auth</code>) consolidated from
+                  apps/web in MONEY-1062.
+                </p>
+                <span class="path">packages/security/src</span>
+              </div>
+              <div class="card">
+                <h3>@usemoney/storage <span class="tag">gcs</span></h3>
+                <p>
+                  GCS client (signed URLs, upload, download). Bucket:
+                  <code class="mono">stockbook-content-{env}</code>.
+                </p>
+                <span class="path">packages/storage/src</span>
+              </div>
+              <div class="card">
+                <h3>@usemoney/datadog <span class="tag">apm</span></h3>
+                <p>
+                  Datadog APM, metrics, logs. dd-trace only enabled where a
+                  Datadog Agent is available (Cloud Run sidecar).
+                </p>
+                <span class="path">packages/datadog/src</span>
+                <div class="meta">
+                  <span class="pill amber">No APM on Vercel</span>
+                </div>
+              </div>
+              <div class="card">
+                <h3>@usemoney/email <span class="tag">email</span></h3>
+                <p>Email sending wrappers (Resend).</p>
+                <span class="path">packages/email/src</span>
+              </div>
+              <div class="card">
+                <h3>@usemoney/pubsub <span class="tag">messaging</span></h3>
+                <p>
+                  Shared Google Cloud Pub/Sub client + 13 job publishers
+                  (client.ts + publish.ts). Reconciled apps/web + workers copies
+                  into one (MONEY-1062). Publisher lives on the web; workers
+                  consume.
+                </p>
+                <span class="path">packages/pubsub/src</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="subgroup">
+            <h4>Cross-cutting & Utilities</h4>
+            <div class="grid" data-searchable>
+              <div class="card">
+                <h3>@usemoney/api-utils</h3>
+                <p>Shared HTTP / fetch helpers.</p>
+                <span class="path">packages/api-utils/src</span>
+              </div>
+              <div class="card">
+                <h3>@usemoney/trpc</h3>
+                <p>tRPC router definitions - shared between web and api.</p>
+                <span class="path">packages/trpc/src</span>
+              </div>
+              <div class="card">
+                <h3>@usemoney/logger</h3>
+                <p>Structured logger. JSON in production, pretty in dev.</p>
+                <span class="path">packages/logger/src</span>
+              </div>
+              <div class="card">
+                <h3>@usemoney/utils</h3>
+                <p>
+                  Generic helpers (dates, numbers, strings). Be conservative
+                  adding to this package.
+                </p>
+                <span class="path">packages/utils/src</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="subgroup">
+            <h4>UI & Config</h4>
+            <div class="grid" data-searchable>
+              <div class="card">
+                <h3>@usemoney/ui <span class="tag">shadcn</span></h3>
+                <p>
+                  Shared UI primitives (shadcn/ui re-exports: accordion, alert,
+                  button, card, dialog, dropdown, form, etc.).
+                </p>
+                <span class="path">packages/ui/src/*.tsx</span>
+              </div>
+              <div class="card subtle">
+                <h3>@usemoney/eslint-config</h3>
+                <p>Shared ESLint config.</p>
+                <span class="path">packages/eslint-config</span>
+              </div>
+              <div class="card subtle">
+                <h3>@usemoney/typescript-config</h3>
+                <p>Shared tsconfig.json presets.</p>
+                <span class="path">packages/typescript-config</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="workers">
+          <h2><span class="num">06</span>Workers</h2>
+          <p class="lead">
+            Hono service running on Cloud Run. Receives Pub/Sub push messages
+            (OIDC-authenticated) on HTTP routes that dispatch to processors. 12
+            Pub/Sub topics (suffixed <code class="mono">-qa</code> /
+            <code class="mono">-prod</code>) plus a dead-letter topic.
+            Cron-style routines fire via Cloud Scheduler.
+          </p>
+          <div class="grid" data-searchable>
+            <div class="card">
+              <h3>instrument-sync</h3>
+              <p>Sync NSE/BSE instrument master to InstrumentMapping.</p>
+              <span class="path"
+                >workers/src/processors/instrument-sync.ts</span
+              >
+            </div>
+            <div class="card">
+              <h3>us-instrument-sync</h3>
+              <p>NASDAQ/NYSE/AMEX instrument seed (Phase 5).</p>
+              <span class="path"
+                >workers/src/processors/us-instrument-sync.ts</span
+              >
+            </div>
+            <div class="card">
+              <h3>price-sync</h3>
+              <p>Daily close prices → DailyPrice / LatestQuote.</p>
+              <span class="path">workers/src/processors/price-sync.ts</span>
+            </div>
+            <div class="card">
+              <h3>intraday-sync</h3>
+              <p>5-min/15-min bars → IntradayBar.</p>
+              <span class="path">workers/src/processors/intraday-sync.ts</span>
+            </div>
+            <div class="card">
+              <h3>sparkline-sync</h3>
+              <p>Sparkline series for discover/dashboard cards.</p>
+              <span class="path">workers/src/processors/sparkline-sync.ts</span>
+            </div>
+            <div class="card">
+              <h3>mf-sync</h3>
+              <p>
+                AMFI NAV feed → MutualFundMaster + MfNavHistory (~14k active
+                funds).
+              </p>
+              <span class="path">workers/src/processors/mf-sync.ts</span>
+            </div>
+            <div class="card">
+              <h3>mf-metadata-sync</h3>
+              <p>Fund metadata (AMC, category, expense ratio).</p>
+              <span class="path"
+                >workers/src/processors/mf-metadata-sync.ts</span
+              >
+            </div>
+            <div class="card">
+              <h3>etf-expense-enrichment</h3>
+              <p>
+                <strong>RETIRED (MONEY-1404).</strong> The processor is deleted;
+                the route survives and answers 200 <code>{retired:true}</code>,
+                same reason as <code>financial-data-sync</code> — Pub/Sub ACKs
+                only on 2xx, so a 410 or a deleted route's 404 NACKs and burns
+                five delivery attempts plus a dead-letter per message until
+                <code>setup-scheduler.sh prod</code> removes the live weekly
+                trigger. It could never write:
+                <code>fetchKuveraMetadata</code> returns null unless
+                <code>MF_METADATA_PROVIDER === "kuvera"</code> and both specs set
+                <code>"amfi"</code>. <code>expenseRatio</code> now comes from
+                AMFI's own monthly TER file via
+                <code>mf-metadata-sync</code>.
+              </p>
+              <span class="path"
+                >workers/src/routes/etf-expense-enrichment.ts</span
+              >
+            </div>
+            <div class="card">
+              <h3>sector-enrichment</h3>
+              <p>Idempotent sector tagging on InstrumentMapping.</p>
+              <span class="path"
+                >workers/src/processors/sector-enrichment.ts</span
+              >
+            </div>
+            <div class="card">
+              <h3>filings-sync</h3>
+              <p>Pull regulatory filings + corporate actions.</p>
+              <span class="path">workers/src/processors/filings-sync.ts</span>
+            </div>
+            <div class="card">
+              <h3>financial-data-sync <em>(retired)</em></h3>
+              <p>
+                RETIRED (MONEY-1220). Its only source was Tickertape, which now
+                returns 403 to our Cloud Run egress (200 from a laptop) — a
+                permanent, silent block. The processor is deleted; the route
+                survives and answers <code>200 {retired:true}</code> rather than
+                410 or 404, because Pub/Sub ACKs only on 2xx — any other status
+                NACKs and burns five delivery attempts per message until the
+                live scheduler is deleted.
+              </p>
+              <span class="path"
+                >workers/src/routes/financial-data-sync.ts</span
+              >
+            </div>
+            <div class="card">
+              <h3>xbrl-sync</h3>
+              <p>
+                Archive NSE XBRL results filings → XbrlFiling (23:15 IST daily,
+                trailing 7-day window). The only leg with egress; older history
+                comes from the manual <code>xbrl-backfill</code> Cloud Run job.
+              </p>
+              <span class="path">workers/src/processors/xbrl-sync.ts</span>
+            </div>
+            <div class="card">
+              <h3>xbrl-projection</h3>
+              <p>
+                Project archived filings → StockFinancials, ANNUAL + QUARTERLY
+                (23:45 IST daily). Writes only when
+                <code>XBRL_PROJECTION_APPLY=true</code>.
+              </p>
+              <span class="path">workers/src/processors/xbrl-projection.ts</span>
+            </div>
+            <div class="card">
+              <h3>xbrl-ratios</h3>
+              <p>
+                Derive 23 of StockRatios' 25 columns from those filings + our
+                own price history (22:00 IST Mon-Fri, after the 21:00 bhavcopy
+                lands the close). targetPrice and recommendation are analyst
+                opinion and are never written.
+              </p>
+              <span class="path">workers/src/processors/xbrl-ratios.ts</span>
+            </div>
+            <div class="card">
+              <h3>index-constituent-sync</h3>
+              <p>NIFTY/SENSEX/sector index constituents.</p>
+              <span class="path"
+                >workers/src/processors/index-constituent-sync.ts</span
+              >
+            </div>
+            <div class="card">
+              <h3>news-sync</h3>
+              <p>Stock-specific news → StockNews.</p>
+              <span class="path">workers/src/processors/news-sync.ts</span>
+            </div>
+            <div class="card">
+              <h3>news-rss-sync</h3>
+              <p>RSS feeds for NewsFeed/NewsArticle.</p>
+              <span class="path">workers/src/processors/news-rss-sync.ts</span>
+            </div>
+            <div class="card">
+              <h3>pairing</h3>
+              <p>FIFO trade pairing → PairedTradeView (after sync/import).</p>
+              <span class="path">workers/src/processors/pairing.ts</span>
+            </div>
+            <div class="card">
+              <h3>import</h3>
+              <p>
+                CSV import with broker-format detection + duplicate handling.
+              </p>
+              <span class="path">workers/src/processors/import.ts</span>
+            </div>
+            <div class="card">
+              <h3>roast</h3>
+              <p>Async portfolio roast (multi-step Gemini pipeline).</p>
+              <span class="path">workers/src/processors/roast.ts</span>
+            </div>
+            <div class="card">
+              <h3>research</h3>
+              <p>StockSage research execution (skills + tools + streaming).</p>
+              <span class="path">workers/src/processors/research.ts</span>
+            </div>
+            <div class="card">
+              <h3>l3-analysis</h3>
+              <p>L3 comprehensive analysis (12-segment, 8-credit).</p>
+              <span class="path">workers/src/processors/l3-analysis.ts</span>
+            </div>
+            <div class="card">
+              <h3>preview-plan</h3>
+              <p>Generates research plan preview without executing.</p>
+              <span class="path">workers/src/processors/preview-plan.ts</span>
+            </div>
+            <div class="card">
+              <h3>login-briefing</h3>
+              <p>Personalized briefing on login.</p>
+              <span class="path">workers/src/processors/login-briefing.ts</span>
+            </div>
+            <div class="card">
+              <h3>document-process</h3>
+              <p>PDF/document ingest → text extraction + embedding.</p>
+              <span class="path"
+                >workers/src/processors/document-process.ts</span
+              >
+            </div>
+            <div class="card">
+              <h3>stock-document-sync</h3>
+              <p>Annual reports + concalls → GCS.</p>
+              <span class="path"
+                >workers/src/processors/stock-document-sync.ts</span
+              >
+            </div>
+            <div class="card">
+              <h3>stock-document-embed</h3>
+              <p>Chunk + Gemini text-004 → DocumentEmbedding (RAG).</p>
+              <span class="path"
+                >workers/src/processors/stock-document-embed.ts</span
+              >
+            </div>
+            <div class="card">
+              <h3>chartink-strategy-sync</h3>
+              <p>Sync Chartink scans for screener.</p>
+              <span class="path"
+                >workers/src/processors/chartink-strategy-sync.ts</span
+              >
+            </div>
+            <div class="card">
+              <h3>strategy-scan</h3>
+              <p>Run custom strategies → ScanResult.</p>
+              <span class="path">workers/src/processors/strategy-scan.ts</span>
+            </div>
+            <div class="card">
+              <h3>strategy-stats-sync</h3>
+              <p>Backfill strategy historical stats.</p>
+              <span class="path"
+                >workers/src/processors/strategy-stats-sync.ts</span
+              >
+            </div>
+            <div class="card">
+              <h3>alert-evaluator</h3>
+              <p>Evaluate watchlist Alerts on price ticks.</p>
+              <span class="path"
+                >workers/src/processors/alert-evaluator.ts</span
+              >
+            </div>
+            <div class="card">
+              <h3>intent-learning</h3>
+              <p>
+                Chat classifier → LearnedPattern (improves intent dispatch).
+              </p>
+              <span class="path"
+                >workers/src/processors/intent-learning.ts</span
+              >
+            </div>
+            <div class="card">
+              <h3>resend-contact-sync</h3>
+              <p>Sync newsletter contacts to Resend.</p>
+              <span class="path"
+                >workers/src/processors/resend-contact-sync.ts</span
+              >
+            </div>
+            <div class="card">
+              <h3>newsletter-publish</h3>
+              <p>Send newsletter email batches.</p>
+              <span class="path"
+                >workers/src/processors/newsletter-publish.ts</span
+              >
+            </div>
+          </div>
+        </section>
+
+        <section id="database">
+          <h2><span class="num">07</span>Database (122 Prisma Models)</h2>
+          <p class="lead">
+            MongoDB Atlas in production (Atlas Search enabled). All access goes
+            through Prisma in <code>packages/services/src/*.service.ts</code> -
+            components and routes never query Prisma directly.
+          </p>
+
+          <div class="subgroup">
+            <h4>Identity, Billing &amp; Platform</h4>
+            <div class="grid" data-searchable>
+              <div class="card">
+                <h3>User</h3>
+                <p>Clerk-mirrored user.</p>
+              </div>
+              <div class="card">
+                <h3>Subscription</h3>
+                <p>FREE / PREMIUM / PRO.</p>
+              </div>
+              <div class="card">
+                <h3>Payment</h3>
+                <p>Dodo payment events.</p>
+              </div>
+              <div class="card">
+                <h3>Coupon, CouponRedemption</h3>
+                <p>Discount codes.</p>
+              </div>
+              <div class="card">
+                <h3>DodoProduct</h3>
+                <p>Cached Dodo product catalog.</p>
+              </div>
+              <div class="card">
+                <h3>PlatformConfig</h3>
+                <p>Runtime feature flags & config.</p>
+              </div>
+              <div class="card">
+                <h3>InviteToken</h3>
+                <p>Invite-only signup.</p>
+              </div>
+              <div class="card">
+                <h3>CreditReservation, CreditUsage</h3>
+                <p>AI credit accounting.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="subgroup">
+            <h4>Broker Data</h4>
+            <div class="grid" data-searchable>
+              <div class="card">
+                <h3>BrokerConnection</h3>
+                <p>Encrypted broker tokens.</p>
+              </div>
+              <div class="card">
+                <h3>Trade</h3>
+                <p>Order book entries.</p>
+              </div>
+              <div class="card">
+                <h3>PairedTradeView</h3>
+                <p>FIFO entry/exit pairs - query target.</p>
+              </div>
+              <div class="card">
+                <h3>Holding</h3>
+                <p>Stock holdings.</p>
+              </div>
+              <div class="card">
+                <h3>Position</h3>
+                <p>F&amp;O positions.</p>
+              </div>
+              <div class="card">
+                <h3>Order</h3>
+                <p>Live/historical orders.</p>
+              </div>
+              <div class="card">
+                <h3>MutualFund</h3>
+                <p>User MF investments.</p>
+              </div>
+              <div class="card">
+                <h3>SyncLog, ImportLog</h3>
+                <p>Sync / CSV import history.</p>
+              </div>
+              <div class="card">
+                <h3>BackgroundJob</h3>
+                <p>Job progress tracking.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="subgroup">
+            <h4>Portfolio, Paper &amp; Planning</h4>
+            <div class="grid" data-searchable>
+              <div class="card">
+                <h3>PaperPortfolio, PaperOrder, PaperPosition</h3>
+                <p>Virtual trading.</p>
+              </div>
+              <div class="card">
+                <h3>FireScenario</h3>
+                <p>FIRE planning scenarios.</p>
+              </div>
+              <div class="card">
+                <h3>AnalysisReport</h3>
+                <p>Generated PDF/risk/tax reports.</p>
+              </div>
+              <div class="card">
+                <h3>DailyJournal</h3>
+                <p>User journal entries.</p>
+              </div>
+              <div class="card">
+                <h3>WatchList, WatchlistItem, Alert</h3>
+                <p>Watchlists + price alerts.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="subgroup">
+            <h4>AI / Chat / Research</h4>
+            <div class="grid" data-searchable>
+              <div class="card">
+                <h3>ChatHistory</h3>
+                <p>Chat messages + block payloads.</p>
+              </div>
+              <div class="card">
+                <h3>ResearchSession</h3>
+                <p>StockSage research runs.</p>
+              </div>
+              <div class="card">
+                <h3>AnalysisSession</h3>
+                <p>L1/L2/L3/L4 analysis sessions.</p>
+              </div>
+              <div class="card">
+                <h3>LoginBriefing</h3>
+                <p>Personalized login briefings.</p>
+              </div>
+              <div class="card">
+                <h3>TokenUsage</h3>
+                <p>Per-user AI token accounting.</p>
+              </div>
+              <div class="card">
+                <h3>DocumentEmbedding</h3>
+                <p>RAG vector embeddings.</p>
+              </div>
+              <div class="card">
+                <h3>PortfolioRoast</h3>
+                <p>Roast results (multi-step).</p>
+              </div>
+              <div class="card">
+                <h3>ClassificationLog, LearnedPattern</h3>
+                <p>Intent classifier feedback loop.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="subgroup">
+            <h4>Content &amp; Learning</h4>
+            <div class="grid" data-searchable>
+              <div class="card">
+                <h3>LearningModule, Lesson, LessonProgress</h3>
+                <p>Legacy learning model.</p>
+              </div>
+              <div class="card">
+                <h3>Course, Chapter, CourseLesson, CourseLessonProgress</h3>
+                <p>New course model.</p>
+              </div>
+              <div class="card">
+                <h3>Quiz, Enrollment</h3>
+                <p>Quizzes + enrollments.</p>
+              </div>
+              <div class="card">
+                <h3>GlossaryTerm</h3>
+                <p>Financial glossary.</p>
+              </div>
+              <div class="card">
+                <h3>ContentGeneration</h3>
+                <p>AI-generated content drafts.</p>
+              </div>
+              <div class="card">
+                <h3>ContentAuthor, ContentInvite</h3>
+                <p>Author management.</p>
+              </div>
+              <div class="card">
+                <h3>Post, Tag, TagOnPost</h3>
+                <p>Blog posts + tags.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="subgroup">
+            <h4>Market &amp; Stock Data</h4>
+            <div class="grid" data-searchable>
+              <div class="card">
+                <h3>InstrumentMapping</h3>
+                <p>Master instrument record (NSE/BSE/US).</p>
+              </div>
+              <div class="card">
+                <h3>DailyPrice, IntradayBar, LatestQuote</h3>
+                <p>OHLCV time series.</p>
+              </div>
+              <div class="card">
+                <h3>MutualFundMaster, MfNavHistory</h3>
+                <p>MF master + NAV history.</p>
+              </div>
+              <div class="card">
+                <h3>
+                  StockFinancials, StockRatios, StockPeers, StockShareholding,
+                  StockNews, StockProfile, StockDocument
+                </h3>
+                <p>Fundamentals + RAG inputs.</p>
+              </div>
+              <div class="card">
+                <h3>FundHolding, FundCompositionMeta</h3>
+                <p>MF holdings + sync metadata.</p>
+              </div>
+              <div class="card">
+                <h3>MarketDataSyncLog</h3>
+                <p>Provider sync logs.</p>
+              </div>
+              <div class="card">
+                <h3>IndexConstituent</h3>
+                <p>Index → instrument mapping.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="subgroup">
+            <h4>Strategies &amp; Screener</h4>
+            <div class="grid" data-searchable>
+              <div class="card">
+                <h3>CustomStrategy, CustomIndicator</h3>
+                <p>User strategies + indicators.</p>
+              </div>
+              <div class="card">
+                <h3>ScanResult</h3>
+                <p>Persisted strategy run output.</p>
+              </div>
+              <div class="card">
+                <h3>ScreenerSnapshot, ScreenerValidation</h3>
+                <p>Cached screener results & validation.</p>
+              </div>
+              <div class="card">
+                <h3>SavedScreen</h3>
+                <p>User-saved screens.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="subgroup">
+            <h4>News, Notifications &amp; Documents</h4>
+            <div class="grid" data-searchable>
+              <div class="card">
+                <h3>Notification</h3>
+                <p>In-app notifications.</p>
+              </div>
+              <div class="card">
+                <h3>NewsArticle, NewsFeed, UpcomingEvent</h3>
+                <p>Aggregated news + calendar.</p>
+              </div>
+              <div class="card">
+                <h3>UserDocument</h3>
+                <p>User-uploaded documents.</p>
+              </div>
+              <div class="card">
+                <h3>Feedback, FeedbackReply, Idea</h3>
+                <p>Feedback & ideas board.</p>
+              </div>
+              <div class="card">
+                <h3>NewsletterSubscriber, EmailLog</h3>
+                <p>Email subscribers + send log.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="subgroup">
+            <h4>GST &amp; Compliance</h4>
+            <div class="grid" data-searchable>
+              <div class="card">
+                <h3>
+                  GstInvoice, GstCreditNote, GstInvoiceCounter, GstAuditLog
+                </h3>
+                <p>Indian GST compliance for paid receipts.</p>
+              </div>
+              <div class="card">
+                <h3>DodoPayoutStaging</h3>
+                <p>Payout reconciliation.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="routes">
+          <h2><span class="num">08</span>Web API Routes</h2>
+          <p class="lead">
+            63 Next.js route handlers in
+            <code>apps/web/app/api/**/route.ts</code>. Internal mutations use
+            server actions; routes are reserved for webhooks, OAuth callbacks,
+            streaming, and external clients.
+          </p>
+          <div class="grid wide" data-searchable>
+            <div class="card">
+              <h3>/api/chat</h3>
+              <p>Chat orchestrator (intent → tool dispatch → block stream).</p>
+            </div>
+            <div class="card">
+              <h3>/api/chat/execute-tool</h3>
+              <p>Confirmation handler for action tools.</p>
+            </div>
+            <div class="card">
+              <h3>/api/research/preview-plan</h3>
+              <p>Preview research plan before executing.</p>
+            </div>
+            <div class="card">
+              <h3>/api/backtest</h3>
+              <p>Strategy backtest execution.</p>
+            </div>
+            <div class="card">
+              <h3>/api/[[...path]]</h3>
+              <p>tRPC catch-all.</p>
+            </div>
+            <div class="card">
+              <h3>/api/trades/paired</h3>
+              <p>Paired trade view stream/CSV.</p>
+            </div>
+            <div class="card">
+              <h3>/api/cache/{clear,stats}</h3>
+              <p>Cache admin.</p>
+            </div>
+            <div class="card">
+              <h3>/api/admin/{fix-mf-pairing,sync-products}</h3>
+              <p>Admin ops.</p>
+            </div>
+            <div class="card">
+              <h3>/api/content/docs</h3>
+              <p>Content catalog API.</p>
+            </div>
+            <div class="card">
+              <h3>/api/feedback/upload</h3>
+              <p>Feedback attachment upload.</p>
+            </div>
+            <div class="card">
+              <h3>/api/subscription/access</h3>
+              <p>Subscription gate check.</p>
+            </div>
+            <div class="card">
+              <h3>/api/market/*</h3>
+              <p>
+                indices, autocomplete, quote, stream, search, historical,
+                mf-historical, fund-composition, broker-status.
+              </p>
+            </div>
+            <div class="card">
+              <h3>/api/newsletter/{subscribe,verify,unsubscribe}</h3>
+              <p>Double-opt-in newsletter.</p>
+            </div>
+            <div class="card">
+              <h3>/api/jobs/[jobId]</h3>
+              <p>BackgroundJob status.</p>
+            </div>
+            <div class="card">
+              <h3>/api/webhooks/{clerk,dodo,dodopayments}</h3>
+              <p>Signed webhooks.</p>
+            </div>
+            <div class="card">
+              <h3>
+                /api/brokers/{zerodha,upstox,angel-one,groww,dhan,fyers,hdfc,icici,interactive-brokers}/callback
+              </h3>
+              <p>OAuth return URLs.</p>
+            </div>
+            <div class="card">
+              <h3>/api/payments/{create-checkout,callback}</h3>
+              <p>Dodo checkout flow.</p>
+            </div>
+            <div class="card">
+              <h3>/api/demo/{start,end}</h3>
+              <p>HMAC-signed demo session.</p>
+            </div>
+            <div class="card">
+              <h3>/api/cron/sync-products</h3>
+              <p>Vercel cron entry.</p>
+            </div>
+            <div class="card">
+              <h3>/api/email</h3>
+              <p>Email send dispatcher.</p>
+            </div>
+            <div class="card">
+              <h3>/api/storage</h3>
+              <p>GCS signed URLs.</p>
+            </div>
+            <div class="card">
+              <h3>/api/invite</h3>
+              <p>Invite token lookup.</p>
+            </div>
+            <div class="card">
+              <h3>/api/debug/clear-ff-cache</h3>
+              <p>Dev-only.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="actions">
+          <h2><span class="num">09</span>Server Actions</h2>
+          <p class="lead">
+            89 server actions in <code>apps/web/lib/actions/</code>. Use these
+            from React Server Components & client mutations.
+            <strong>Server actions are the canonical write path on web</strong>;
+            <code>apps/api</code> mirrors the same surface for the mobile
+            client.
+          </p>
+          <div class="feature-list" data-searchable>
+            <div class="feat">
+              <span class="name">dashboard</span
+              ><span class="where">lib/actions/dashboard.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">holdings</span
+              ><span class="where">lib/actions/holdings.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">positions</span
+              ><span class="where">lib/actions/positions.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">trades</span
+              ><span class="where">lib/actions/trades.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">paper</span
+              ><span class="where">lib/actions/paper.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">risk</span
+              ><span class="where">lib/actions/risk.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">roast</span
+              ><span class="where">lib/actions/roast.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">roast-history</span
+              ><span class="where">lib/actions/roast-history.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">tax-ledgers</span
+              ><span class="where">lib/actions/tax-ledgers.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">gst-profile</span
+              ><span class="where">lib/actions/gst-profile.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">documents</span
+              ><span class="where">lib/actions/documents.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">credits</span
+              ><span class="where">lib/actions/credits.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">notifications</span
+              ><span class="where">lib/actions/notifications.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">news</span
+              ><span class="where">lib/actions/news.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">briefing</span
+              ><span class="where">lib/actions/briefing.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">watchlist</span
+              ><span class="where">lib/actions/watchlist.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">discover</span
+              ><span class="where">lib/actions/discover.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">discover-indices</span
+              ><span class="where">lib/actions/discover-indices.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">discover-mf</span
+              ><span class="where">lib/actions/discover-mf.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">discover-heatmap</span
+              ><span class="where">lib/actions/discover-heatmap.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">discover-sectors</span
+              ><span class="where">lib/actions/discover-sectors.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">sectors / stock-sector / sector-heatmap</span
+              ><span class="where"
+                >lib/actions/sector*.ts, stock-sector.ts</span
+              >
+            </div>
+            <div class="feat">
+              <span class="name">sparklines</span
+              ><span class="where">lib/actions/sparklines.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name"
+                >stock-description / stock-tabs / mf-description</span
+              ><span class="where"
+                >lib/actions/stock-*.ts, mf-description.ts</span
+              >
+            </div>
+            <div class="feat">
+              <span class="name">strategy</span
+              ><span class="where">lib/actions/strategy.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">saved-screens</span
+              ><span class="where">lib/actions/saved-screens.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">learning / content</span
+              ><span class="where">lib/actions/learning.ts, content.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">chat-history</span
+              ><span class="where">lib/actions/chat-history.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">broker-status</span
+              ><span class="where">lib/actions/broker-status.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">billing-flags / feature-flags</span
+              ><span class="where"
+                >lib/actions/billing-flags.ts, feature-flags.ts</span
+              >
+            </div>
+            <div class="feat">
+              <span class="name">coupon</span
+              ><span class="where">lib/actions/coupon.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">email-preferences</span
+              ><span class="where">lib/actions/email-preferences.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">preferences / walkthrough</span
+              ><span class="where"
+                >lib/actions/preferences.ts, walkthrough.ts</span
+              >
+            </div>
+          </div>
+        </section>
+
+        <section id="brokers">
+          <h2><span class="num">10</span>Broker Adapters</h2>
+          <p class="lead">
+            10 brokers implementing the same adapter interface in
+            <code>packages/core/src/brokers/adapters/</code> with matching HTTP
+            clients in <code>clients/</code>. Each broker has its own OAuth
+            callback at <code>/api/brokers/{name}/callback</code>.
+          </p>
+          <div class="grid" data-searchable>
+            <div class="card">
+              <h3>Zerodha (Kite)</h3>
+              <p>
+                Holdings, Positions, Trades, MF.
+                <strong>Only broker with MF API</strong>.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Upstox</h3>
+              <p>1-year token, no MF.</p>
+            </div>
+            <div class="card">
+              <h3>Angel One (SmartAPI)</h3>
+              <p>Midnight token + refreshable, no MF.</p>
+            </div>
+            <div class="card">
+              <h3>Groww</h3>
+              <p>API key + SHA256, paid, no MF/US.</p>
+            </div>
+            <div class="card">
+              <h3>Dhan</h3>
+              <p>Daily token, equity only.</p>
+            </div>
+            <div class="card">
+              <h3>Fyers</h3>
+              <p>Daily + 15-day refresh, no MF.</p>
+            </div>
+            <div class="card">
+              <h3>HDFC Securities</h3>
+              <p>Adapter present.</p>
+            </div>
+            <div class="card">
+              <h3>ICICI Direct</h3>
+              <p>Adapter present.</p>
+            </div>
+            <div class="card">
+              <h3>Interactive Brokers</h3>
+              <p>Global / US trading (Phase 5).</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="ai">
+          <h2><span class="num">11</span>AI Stack</h2>
+          <p class="lead">
+            Two specialized agents plus a chat orchestrator. Powered by Gemini
+            2.5 Pro (deep) and 2.5 Flash (fast).
+          </p>
+
+          <div class="subgroup">
+            <h4>Chat orchestrator (web)</h4>
+            <div class="grid wide" data-searchable>
+              <div class="card">
+                <h3>chat-tools/tier-classifier</h3>
+                <p>Classify intent → Flash response, navigate, or tool call.</p>
+                <span class="path"
+                  >apps/web/lib/chat-tools/tier-classifier.ts</span
+                >
+              </div>
+              <div class="card">
+                <h3>chat-tools/registry</h3>
+                <p>Tool → server action mapping.</p>
+                <span class="path">apps/web/lib/chat-tools/registry.ts</span>
+              </div>
+              <div class="card">
+                <h3>chat-tools/input-validator + output-validator</h3>
+                <p>Two-layer guardrails.</p>
+                <span class="path"
+                  >apps/web/lib/chat-tools/{input,output}-validator.ts</span
+                >
+              </div>
+              <div class="card">
+                <h3>chat-tools/executor</h3>
+                <p>
+                  Run tool + emit blocks (ContentBlock
+                  <code>:::block:TYPE</code>).
+                </p>
+                <span class="path">apps/web/lib/chat-tools/executor.ts</span>
+              </div>
+              <div class="card">
+                <h3>chat-tools/flash-responder</h3>
+                <p>Fast paths that don't need tool calls.</p>
+                <span class="path"
+                  >apps/web/lib/chat-tools/flash-responder.ts</span
+                >
+              </div>
+              <div class="card">
+                <h3>chat-tools/learned-patterns</h3>
+                <p>Feedback loop: log → LearnedPattern → next dispatch.</p>
+                <span class="path"
+                  >apps/web/lib/chat-tools/learned-patterns.ts</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="subgroup">
+            <h4>Research agent (StockSage)</h4>
+            <div class="grid wide" data-searchable>
+              <div class="card">
+                <h3>planner</h3>
+                <p>
+                  Produces a plan of skills+tools given user query + context.
+                </p>
+                <span class="path">packages/research/src/planner.ts</span>
+              </div>
+              <div class="card">
+                <h3>executor + loop-controller</h3>
+                <p>
+                  Runs tools, streams partial results, decides when to stop.
+                </p>
+                <span class="path"
+                  >packages/research/src/{executor,loop-controller}.ts</span
+                >
+              </div>
+              <div class="card">
+                <h3>skills/ (38)</h3>
+                <p>
+                  stock-analysis · mf-analysis · sector-analysis ·
+                  sector-deep-dive · macro-analysis · investment-thesis ·
+                  portfolio-analysis · portfolio-risk-analysis ·
+                  portfolio-optimization · tax-analysis · stock-screener ·
+                  peer-comparison · multi-comparison · global-fund-comparison ·
+                  dcf-valuation · earnings-analysis · financial-deep-dive ·
+                  strategy-analysis.
+                </p>
+                <span class="path">packages/research/src/skills/*.ts</span>
+              </div>
+              <div class="card">
+                <h3>tools/ (122)</h3>
+                <p>
+                  compute-* tools (DCF, beta, drawdown, dividend, correlation,
+                  growth, health-score, etc.) and data-source wrappers (NSE,
+                  BSE, Screener, Chartink, AMFI).
+                </p>
+                <span class="path">packages/research/src/tools/*.ts</span>
+              </div>
+              <div class="card">
+                <h3>strategies/ + data-sources/</h3>
+                <p>
+                  Built-in strategies (60+ indicators across 24 families) and
+                  source adapters.
+                </p>
+                <span class="path"
+                  >packages/research/src/{strategies,data-sources}</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="subgroup">
+            <h4>Roast agent</h4>
+            <div class="grid wide" data-searchable>
+              <div class="card">
+                <h3>steps/ pipeline</h3>
+                <p>
+                  fetch-portfolio → analyze-stocks → analyze-mf →
+                  generate-scores → generate-roast → assemble-result.
+                </p>
+                <span class="path">packages/roast/src/steps/*.ts</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="features">
+          <h2><span class="num">12</span>Features</h2>
+          <p class="lead">
+            User-facing surfaces mapped to their primary location.
+          </p>
+          <div class="feature-list" data-searchable>
+            <div class="feat">
+              <span class="name">Dashboard</span
+              ><span class="where"
+                >app/dashboard · actions/dashboard.ts ·
+                services/dashboard.service.ts</span
+              >
+            </div>
+            <div class="feat">
+              <span class="name">Holdings</span
+              ><span class="where"
+                >app/holdings · actions/holdings.ts ·
+                services/holdings.service.ts</span
+              >
+            </div>
+            <div class="feat">
+              <span class="name">Positions</span
+              ><span class="where"
+                >app/positions · actions/positions.ts ·
+                services/positions.service.ts</span
+              >
+            </div>
+            <div class="feat">
+              <span class="name">Tradebook</span
+              ><span class="where"
+                >app/tradebook · actions/trades.ts · services/trades.service.ts
+                · core/pairing</span
+              >
+            </div>
+            <div class="feat">
+              <span class="name">Mutual Funds</span
+              ><span class="where"
+                >app/mf · actions/discover-mf.ts ·
+                services/mutualfunds.service.ts</span
+              >
+            </div>
+            <div class="feat">
+              <span class="name">Paper Trading</span
+              ><span class="where"
+                >app/paper-trading · actions/paper.ts ·
+                services/paper.service.ts</span
+              >
+            </div>
+            <div class="feat">
+              <span class="name">FIRE Calculator</span
+              ><span class="where"
+                >app/fire · services/fire.service.ts · core/calc</span
+              >
+            </div>
+            <div class="feat">
+              <span class="name">AI Chat</span
+              ><span class="where"
+                >app/chat-history · components/chat · lib/chat ·
+                lib/chat-tools</span
+              >
+            </div>
+            <div class="feat">
+              <span class="name">Portfolio Roast</span
+              ><span class="where"
+                >app/roast · actions/roast.ts · packages/roast</span
+              >
+            </div>
+            <div class="feat">
+              <span class="name">Risk Analysis</span
+              ><span class="where"
+                >app/risk · actions/risk.ts · services/risk.service.ts ·
+                services/risk-stress-test.ts</span
+              >
+            </div>
+            <div class="feat">
+              <span class="name">Watchlist</span
+              ><span class="where"
+                >app/watchlist · actions/watchlist.ts ·
+                services/watchlist.service.ts</span
+              >
+            </div>
+            <div class="feat">
+              <span class="name">Notifications</span
+              ><span class="where"
+                >app/notifications · actions/notifications.ts ·
+                services/notifications.service.ts</span
+              >
+            </div>
+            <div class="feat">
+              <span class="name">Discover (stocks)</span
+              ><span class="where"
+                >app/discover · actions/discover.ts ·
+                services/discover.service.ts</span
+              >
+            </div>
+            <div class="feat">
+              <span class="name">Stock detail</span
+              ><span class="where"
+                >app/stock/[symbol] · actions/stock-*.ts</span
+              >
+            </div>
+            <div class="feat">
+              <span class="name">Strategies / Screener</span
+              ><span class="where"
+                >app/strategies · actions/strategy.ts ·
+                services/strategy.service.ts</span
+              >
+            </div>
+            <div class="feat">
+              <span class="name">Saved screens</span
+              ><span class="where">actions/saved-screens.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">Tax</span
+              ><span class="where"
+                >app/tax · actions/tax-ledgers.ts ·
+                services/tax.service.ts</span
+              >
+            </div>
+            <div class="feat">
+              <span class="name">Documents</span
+              ><span class="where"
+                >app/documents · actions/documents.ts ·
+                services/documents.service.ts</span
+              >
+            </div>
+            <div class="feat">
+              <span class="name">Brokers</span
+              ><span class="where"
+                >app/brokers · core/brokers/* · /api/brokers/*/callback</span
+              >
+            </div>
+            <div class="feat">
+              <span class="name">Pricing &amp; Subscription</span
+              ><span class="where"
+                >app/pricing · services/subscription.service.ts ·
+                core/payments</span
+              >
+            </div>
+            <div class="feat">
+              <span class="name">Learning / Quizzes</span
+              ><span class="where"
+                >app/learning · app/quizzes · services/learning.service.ts</span
+              >
+            </div>
+            <div class="feat">
+              <span class="name">Sage Tutor</span
+              ><span class="where"
+                >app/sage-tutor · packages/content-engine</span
+              >
+            </div>
+            <div class="feat">
+              <span class="name">Help</span
+              ><span class="where">app/help · /api/content/docs</span>
+            </div>
+            <div class="feat">
+              <span class="name">Demo mode</span
+              ><span class="where"
+                >/api/demo/* · lib/demo · components/DemoBanner.tsx</span
+              >
+            </div>
+            <div class="feat">
+              <span class="name">Settings</span
+              ><span class="where">app/settings · actions/preferences.ts</span>
+            </div>
+            <div class="feat">
+              <span class="name">Public (blog, docs, legal)</span
+              ><span class="where">app/(public)/*</span>
+            </div>
+            <div class="feat">
+              <span class="name">Sign in / Sign up</span
+              ><span class="where">app/sign-in · app/sign-up · Clerk</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="wheresx">
+          <h2><span class="num">13</span>Where is X?</h2>
+          <p class="lead">
+            Intent → file. Optimized for fast lookup. Always trust the actual
+            repo state if a path drifts.
+          </p>
+          <table class="tech">
+            <thead>
+              <tr>
+                <th>I want to…</th>
+                <th>Go here</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Add or change a DB model</td>
+                <td>
+                  <code>packages/database/prisma/schema.prisma</code> then
+                  <code>yarn workspace @usemoney/database prisma generate</code>
+                </td>
+              </tr>
+              <tr>
+                <td>Add a server action (web mutation)</td>
+                <td>
+                  <code>apps/web/lib/actions/&lt;domain&gt;.ts</code> - call a
+                  service, never Prisma directly
+                </td>
+              </tr>
+              <tr>
+                <td>Touch business logic for a domain</td>
+                <td>
+                  <code>packages/services/src/&lt;domain&gt;.service.ts</code>
+                </td>
+              </tr>
+              <tr>
+                <td>Add a broker</td>
+                <td>
+                  <code
+                    >packages/core/src/brokers/clients/&lt;broker&gt;.ts</code
+                  >
+                  + <code>adapters/&lt;broker&gt;.ts</code> + OAuth route at
+                  <code
+                    >apps/web/app/api/brokers/&lt;broker&gt;/callback/route.ts</code
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>Add a webhook</td>
+                <td>
+                  <code
+                    >apps/web/app/api/webhooks/&lt;provider&gt;/route.ts</code
+                  >
+                  - verify signature first
+                </td>
+              </tr>
+              <tr>
+                <td>Add a worker / background job</td>
+                <td>
+                  <code>workers/src/processors/&lt;name&gt;.ts</code> +
+                  <code>workers/src/routes/&lt;name&gt;.ts</code> + add topic to
+                  <code>workers/scripts/setup-pubsub.sh</code>
+                </td>
+              </tr>
+              <tr>
+                <td>Add a research skill or tool</td>
+                <td>
+                  <code>packages/research/src/skills/&lt;skill&gt;.ts</code> or
+                  <code
+                    >packages/research/src/tools/compute-&lt;tool&gt;.ts</code
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>Add a Zod schema</td>
+                <td>
+                  <code
+                    >packages/validation/src/&lt;domain&gt;/&lt;name&gt;.ts</code
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>Add a shared type</td>
+                <td><code>packages/types/src/</code></td>
+              </tr>
+              <tr>
+                <td>Add a UI primitive</td>
+                <td><code>packages/ui/src/&lt;component&gt;.tsx</code></td>
+              </tr>
+              <tr>
+                <td>Add a product-specific component</td>
+                <td><code>apps/web/components/&lt;feature&gt;/</code></td>
+              </tr>
+              <tr>
+                <td>Add an environment variable</td>
+                <td>
+                  Document in <code>docs/env-vars-reference.md</code> and
+                  root <code>CLAUDE.md</code> Datadog table if
+                  observability-related
+                </td>
+              </tr>
+              <tr>
+                <td>Mirror server action to mobile</td>
+                <td>
+                  <code>apps/api/src/routes/v1/&lt;domain&gt;.ts</code>
+                  (feedback_api_sync rule)
+                </td>
+              </tr>
+              <tr>
+                <td>Add/change a test</td>
+                <td>Update <code>TEST-COVERAGE.md</code> in the same PR</td>
+              </tr>
+              <tr>
+                <td>Find a Pub/Sub topic</td>
+                <td>
+                  <code>workers/scripts/setup-pubsub.sh</code> - 57 topics
+                  suffixed <code>-qa</code>/<code>-prod</code>
+                </td>
+              </tr>
+              <tr>
+                <td>Look up cron jobs</td>
+                <td>
+                  <code>scripts/ops/setup-scheduler.sh</code> + Cloud Scheduler
+                </td>
+              </tr>
+              <tr>
+                <td>Find broker secret/encryption</td>
+                <td><code>packages/security/src</code> (AES-256-GCM)</td>
+              </tr>
+              <tr>
+                <td>Add a chat block type</td>
+                <td>
+                  <code>packages/validation/src/chat-blocks.ts</code> + renderer
+                  in <code>apps/web/components/chat/</code>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="howto">
+          <h2><span class="num">14</span>How to add X</h2>
+          <p class="lead">Concrete recipes for common changes.</p>
+
+          <details open>
+            <summary>Add a new broker</summary>
+            <div class="content">
+              <div class="recipe">
+                <ol>
+                  <li>
+                    Create HTTP client in
+                    <code
+                      >packages/core/src/brokers/clients/&lt;broker&gt;.ts</code
+                    >
+                  </li>
+                  <li>
+                    Create adapter in
+                    <code
+                      >packages/core/src/brokers/adapters/&lt;broker&gt;.ts</code
+                    >
+                    conforming to the existing interface (holdings, positions,
+                    trades, [mf])
+                  </li>
+                  <li>
+                    Register it in
+                    <code>packages/core/src/brokers/adapters/index.ts</code>
+                  </li>
+                  <li>
+                    Add OAuth callback at
+                    <code
+                      >apps/web/app/api/brokers/&lt;broker&gt;/callback/route.ts</code
+                    >
+                  </li>
+                  <li>
+                    Add UI affordance under <code>apps/web/app/brokers</code>
+                  </li>
+                  <li>
+                    Document API quirks in MEMORY.md
+                    ([[project_broker_api_findings]])
+                  </li>
+                  <li>
+                    Encrypt tokens via <code>packages/security</code> - never
+                    store plaintext
+                  </li>
+                </ol>
+              </div>
+            </div>
+          </details>
+
+          <details>
+            <summary>Add a new server action</summary>
+            <div class="content">
+              <div class="recipe">
+                <ol>
+                  <li>
+                    Create <code>apps/web/lib/actions/&lt;name&gt;.ts</code> -
+                    first line: <code>'use server'</code>
+                  </li>
+                  <li>
+                    Auth check via <code>auth()</code> /
+                    <code>currentUser()</code> from Clerk; respect demo-mode if
+                    relevant
+                  </li>
+                  <li>
+                    Call into a service in
+                    <code>packages/services/src/&lt;domain&gt;.service.ts</code>
+                    - no Prisma in the action file
+                  </li>
+                  <li>
+                    Validate input with a Zod schema from
+                    <code>packages/validation</code>
+                  </li>
+                  <li>Sanitize errors before returning to the client</li>
+                  <li>
+                    Mirror it to
+                    <code>apps/api/src/routes/v1/&lt;domain&gt;.ts</code> for
+                    mobile parity
+                  </li>
+                  <li>
+                    Add tests in <code>apps/web/__tests__</code> + update
+                    <code>TEST-COVERAGE.md</code>
+                  </li>
+                </ol>
+              </div>
+            </div>
+          </details>
+
+          <details>
+            <summary>Add a new DB model</summary>
+            <div class="content">
+              <div class="recipe">
+                <ol>
+                  <li>
+                    Edit <code>packages/database/prisma/schema.prisma</code> -
+                    follow naming + index patterns of nearby models
+                  </li>
+                  <li>
+                    Run
+                    <code
+                      >yarn workspace @usemoney/database prisma generate</code
+                    >
+                    (Turbo runs <code>db:generate</code> on build)
+                  </li>
+                  <li>
+                    For Atlas Search / Vector Search: also update
+                    <code>docs/setup/atlas-search-setup.md</code>
+                  </li>
+                  <li>
+                    Create a service in
+                    <code>packages/services/src/&lt;domain&gt;.service.ts</code>
+                    as the only place that queries the model
+                  </li>
+                  <li>
+                    If seeded data is needed, edit
+                    <code>scripts/seed/</code> and document in
+                    <code>scripts/README.md</code>
+                  </li>
+                </ol>
+              </div>
+            </div>
+          </details>
+
+          <details>
+            <summary>Add a background worker</summary>
+            <div class="content">
+              <div class="recipe">
+                <ol>
+                  <li>
+                    Processor:
+                    <code>workers/src/processors/&lt;name&gt;.ts</code>
+                  </li>
+                  <li>
+                    Route:
+                    <code>workers/src/routes/&lt;name&gt;.ts</code> (Hono, POST
+                    + OIDC verify)
+                  </li>
+                  <li>Register route in <code>workers/src/app.ts</code></li>
+                  <li>
+                    Add topic in <code>workers/scripts/setup-pubsub.sh</code> +
+                    dead-letter
+                  </li>
+                  <li>
+                    For Cloud Scheduler trigger, add job in
+                    <code>scripts/ops/setup-scheduler.sh</code>
+                  </li>
+                  <li>
+                    For tracing on Cloud Run, no extra setup - sidecar agent is
+                    already wired
+                  </li>
+                </ol>
+              </div>
+            </div>
+          </details>
+
+          <details>
+            <summary>Add a research skill or tool</summary>
+            <div class="content">
+              <div class="recipe">
+                <ol>
+                  <li>
+                    Compute tool:
+                    <code
+                      >packages/research/src/tools/compute-&lt;tool&gt;.ts</code
+                    >
+                    - keep pure & deterministic
+                  </li>
+                  <li>
+                    Register in
+                    <code>packages/research/src/tools/index.ts</code> tool
+                    registry
+                  </li>
+                  <li>
+                    Skill:
+                    <code>packages/research/src/skills/&lt;skill&gt;.ts</code> -
+                    wires planner intent to tools
+                  </li>
+                  <li>
+                    Map skill ↔ tools in
+                    <code>packages/research/src/skills/skill-tool-map.ts</code>
+                  </li>
+                  <li>
+                    If it needs external data, add a wrapper in
+                    <code>packages/research/src/data-sources/</code>
+                  </li>
+                </ol>
+              </div>
+            </div>
+          </details>
+
+          <details>
+            <summary>Add a chat block type</summary>
+            <div class="content">
+              <div class="recipe">
+                <ol>
+                  <li>
+                    Define Zod schema in
+                    <code>packages/validation/src/chat-blocks.ts</code>
+                  </li>
+                  <li>
+                    Add parser case in
+                    <code>apps/web/lib/chat/message-parser.ts</code>
+                  </li>
+                  <li>
+                    Add renderer component in
+                    <code>apps/web/components/chat/blocks/</code>
+                  </li>
+                  <li>
+                    If executable, wire into
+                    <code>apps/web/lib/chat-tools/registry.ts</code>
+                  </li>
+                </ol>
+              </div>
+            </div>
+          </details>
+        </section>
+
+        <section id="conventions">
+          <h2><span class="num">15</span>Conventions</h2>
+          <p class="lead">
+            Non-obvious rules. Most are enforced by hooks / CI - others are
+            tribal.
+          </p>
+          <div class="grid wide">
+            <div class="card">
+              <h3>Branch naming</h3>
+              <p>
+                Strict <code>{type}/MONEY-{number}</code> only. No text suffix.
+                Enforced by Husky pre-push and GitHub Actions.
+              </p>
+              <div class="meta"><span class="pill rose">Enforced</span></div>
+            </div>
+            <div class="card">
+              <h3>Never commit unless asked</h3>
+              <p>
+                Don't <code>git add</code> or <code>git commit</code> unless the
+                user explicitly asks. Don't push without asking.
+              </p>
+              <div class="meta"><span class="pill rose">User rule</span></div>
+            </div>
+            <div class="card">
+              <h3>yarn build before commit on source changes</h3>
+              <p>
+                Next.js build catches type errors that
+                <code>tsc --noEmit</code> accepts (factory-vs-instance import
+                confusion).
+              </p>
+            </div>
+            <div class="card">
+              <h3>Theme-aware styling</h3>
+              <p>
+                Never hardcode dark RGBA values; use CSS vars or
+                <code>dark:</code> prefix. Test in both themes.
+              </p>
+            </div>
+            <div class="card">
+              <h3>TEST-COVERAGE.md is single source of truth</h3>
+              <p>
+                Any test add/remove/change updates it in the same PR (counts +
+                per-section tables).
+              </p>
+            </div>
+            <div class="card">
+              <h3>scripts/README.md must stay current</h3>
+              <p>
+                Any change in <code>scripts/</code> (add/rename/remove/flag)
+                requires a README row update in the same PR.
+              </p>
+            </div>
+            <div class="card">
+              <h3>apps/api mirrors server actions</h3>
+              <p>
+                Whenever you add or change a server action with mobile
+                relevance, mirror it in <code>apps/api/src/routes/v1</code>.
+              </p>
+            </div>
+            <div class="card">
+              <h3>No direct Prisma from components or actions</h3>
+              <p>
+                All DB work goes through
+                <code>packages/services/*.service.ts</code>.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Sanitize errors before user-facing</h3>
+              <p>
+                DB/system errors must be mapped via
+                <code>packages/core</code> error helpers; detailed logs stay
+                server-side.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Demo flow must survive UI redesigns</h3>
+              <p>
+                Landing/hero changes preserve Try Demo CTA. Use
+                <code>window.location.href</code> (not <code>router.push</code>)
+                and set <code>tradebook_demo_mode</code> localStorage flag.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Datadog APM on Vercel: OFF</h3>
+              <p>
+                Only Cloud Run gets <code>DD_TRACE_ENABLED=true</code>. Vercel
+                uses RUM + HTTP logs only.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Atlas Search is prod-only</h3>
+              <p>
+                QA/dev hit DigitalOcean Mongo which doesn't support
+                <code>$search</code>. Screener uses dual-path: Atlas in prod,
+                regex in QA.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Don't gate user queries on freshness fields</h3>
+              <p>
+                Don't filter on <code>lastSyncedAt</code>/<code>navDate</code>.
+                Trust upstream <code>isActive</code> flags; do cleanup in sync
+                layer.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Chat must degrade gracefully</h3>
+              <p>
+                Credit/quota walls return 200 + ErrorBlock(warning) +
+                NavigationBlock(upgrade CTA), never bare 403. Flash chat is
+                ungated for FREE.
+              </p>
+            </div>
+            <div class="card">
+              <h3>dist-clean protects tracked dist/</h3>
+              <p>
+                UDF bundle.js is git-tracked; <code>yarn dist-clean</code> walks
+                each <code>dist/</code> and skips ones with git-tracked files.
+              </p>
+            </div>
+            <div class="card">
+              <h3>TradingView chart sync is explicit</h3>
+              <p>
+                postinstall is gated behind
+                <code>SYNC_CHARTING_LIBRARY=1</code>. Bare
+                <code>yarn install</code> is a no-op for charting.
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer class="bot">
+      <p><strong>UseMoney - Architecture Map</strong></p>
+      <p>
+        Companion JSON: <a href="./ARCHITECTURE.json">ARCHITECTURE.json</a> ·
+        Project memory: <code>CLAUDE.md</code> · Test inventory:
+        <code>TEST-COVERAGE.md</code>
+      </p>
+      <p>
+        This page is self-contained and offline-friendly. Open it directly in a
+        browser - no server required.
+      </p>
+      <p style="margin-top: 10px; color: var(--dim)">
+        Generated to map the codebase for fast human + AI navigation. When the
+        codebase drifts, regenerate by asking Claude to rebuild from the live
+        repo.
+      </p>
+    </footer>
+
+    <script>
+      // Sticky TOC active link
+      const links = document.querySelectorAll("nav.toc a");
+      const sections = Array.from(document.querySelectorAll("main section"));
+      function setActive() {
+        const y = window.scrollY + 120;
+        let current = sections[0];
+        for (const s of sections) {
+          if (s.offsetTop <= y) current = s;
+        }
+        links.forEach((a) => {
+          a.classList.toggle(
+            "active",
+            a.getAttribute("href") === "#" + current.id,
+          );
+        });
+      }
+      window.addEventListener("scroll", setActive, { passive: true });
+      setActive();
+
+      // Search: hide non-matching cards/feats
+      const input = document.getElementById("searchInput");
+      const containers = document.querySelectorAll("[data-searchable]");
+      input.addEventListener("input", () => {
+        const q = input.value.trim().toLowerCase();
+        containers.forEach((c) => {
+          const items = c.children;
+          let anyVisible = false;
+          for (const item of items) {
+            const txt = item.textContent.toLowerCase();
+            const match = !q || txt.includes(q);
+            item.classList.toggle("hidden", !match);
+            if (match) anyVisible = true;
+          }
+          // Hide section subgroup if no matches
+          const sub = c.closest(".subgroup");
+          if (sub) sub.classList.toggle("hidden", !anyVisible);
+        });
+      });
+    </script>
+  </body>
+</html>

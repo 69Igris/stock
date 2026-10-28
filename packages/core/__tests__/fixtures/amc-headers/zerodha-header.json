@@ -1,0 +1,391 @@
+{
+ "amc": "ZERODHA",
+ "provenance": "real",
+ "sourceUrl": "https://assets.zerodhafundhouse.com/statutory-reports/portfolio-disclosures/ZSFOF%20-%20Monthly%20Portfolio%20August%202026.xlsx",
+ "fetchedAt": "2026-09-14T12:22:04.387Z",
+ "httpStatus": 200,
+ "userAgent": "absent",
+ "fileBytes": 134195,
+ "dataMonth": "2026-08",
+ "sheetName": "ZSFOF",
+ "sheetCountInFile": 1,
+ "headerRow": 3,
+ "rowsCaptured": "0..17 of 1001",
+ "colsCaptured": 9,
+ "merges": [
+  {
+   "s": {
+    "c": 2,
+    "r": 0
+   },
+   "e": {
+    "c": 8,
+    "r": 0
+   }
+  },
+  {
+   "s": {
+    "c": 2,
+    "r": 1
+   },
+   "e": {
+    "c": 8,
+    "r": 1
+   }
+  },
+  {
+   "s": {
+    "c": 2,
+    "r": 2
+   },
+   "e": {
+    "c": 8,
+    "r": 2
+   }
+  }
+ ],
+ "cells": [
+  [
+   null,
+   null,
+   {
+    "v": "ZERODHA MUTUAL FUND",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   null,
+   {
+    "v": "MONTHLY PORTFOLIO STATEMENT OF ZERODHA SILVER ETF FoF FOR AUGUST 2026",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   null,
+   {
+    "v": "Name of the Instrument",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "ISIN",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Rating / Industry",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Quantity",
+    "t": "s",
+    "z": "_(* #,##0_);_(* \\(#,##0\\);_(* \"-\"??_);_(@_)"
+   },
+   {
+    "v": "Market value\n(Rs. in Lakhs)",
+    "t": "s",
+    "z": "_(* #,##0.00_);_(* \\(#,##0.00\\);_(* \"-\"??_);_(@_)"
+   },
+   {
+    "v": "% to NAV",
+    "t": "s",
+    "z": "_(* #,##0.00_);_(* \\(#,##0.00\\);_(* \"-\"??_);_(@_)"
+   },
+   {
+    "v": "YTM %",
+    "t": "s",
+    "z": "_(* #,##0.00_);_(* \\(#,##0.00\\);_(* \"-\"??_);_(@_)"
+   }
+  ],
+  [
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   null,
+   {
+    "v": "OTHERS",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   null,
+   {
+    "v": "Exchange Traded Funds",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   null,
+   {
+    "v": "Zerodha Silver ETF",
+    "t": "s",
+    "z": "@"
+   },
+   {
+    "v": "INF0R8F01091",
+    "t": "s",
+    "z": "@"
+   },
+   null,
+   {
+    "v": 100525740,
+    "t": "n",
+    "z": "#,##0"
+   },
+   {
+    "v": 23844.705528,
+    "t": "n",
+    "z": "#,##0.00;\\-#,##0.00;0.00"
+   },
+   {
+    "v": 1.0000003736344454,
+    "t": "n",
+    "z": "#,##0.00%"
+   },
+   null
+  ],
+  [
+   null,
+   null,
+   {
+    "v": "Total",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   {
+    "v": 23844.705528,
+    "t": "n",
+    "z": "#,##0.00;\\-#,##0.00;0.00"
+   },
+   {
+    "v": 1.0000003736344454,
+    "t": "n",
+    "z": "#,##0.00%"
+   },
+   null
+  ],
+  [
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   {
+    "v": "110210100",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "TREPS / Reverse Repo Investments",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   null,
+   {
+    "v": "Clearing Corporation of India Limited",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   {
+    "v": 138000,
+    "t": "n",
+    "z": "#,##0.00"
+   },
+   {
+    "v": 138,
+    "t": "n",
+    "z": "#,##0.00;\\-#,##0.00;0.00"
+   },
+   {
+    "v": 0.005787450442594264,
+    "t": "n",
+    "z": "#,##0.00%"
+   },
+   {
+    "v": 0.047599999999999996,
+    "t": "n",
+    "z": "#,##0.00%"
+   }
+  ],
+  [
+   null,
+   null,
+   {
+    "v": "Total",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   {
+    "v": 138,
+    "t": "n",
+    "z": "#,##0.00;\\-#,##0.00;0.00"
+   },
+   {
+    "v": 0.005787450442594264,
+    "t": "n",
+    "z": "#,##0.00%"
+   },
+   null
+  ],
+  [
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   null,
+   {
+    "v": "Other Current Assets / (Liabilities)",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   null,
+   {
+    "v": "Net Receivable / Payable",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   {
+    "v": -138.00890919999802,
+    "t": "n",
+    "z": "#,##0.00;\\(#,##0.00\\)"
+   },
+   {
+    "v": -0.00578782407703971,
+    "t": "n",
+    "z": "#,##0.00%"
+   },
+   null
+  ],
+  [
+   null,
+   null,
+   {
+    "v": "Total",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   {
+    "v": -138.00890919999802,
+    "t": "n",
+    "z": "#,##0.00;\\(#,##0.00\\)"
+   },
+   {
+    "v": -0.00578782407703971,
+    "t": "n",
+    "z": "#,##0.00%"
+   },
+   null
+  ],
+  [
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ]
+ ]
+}

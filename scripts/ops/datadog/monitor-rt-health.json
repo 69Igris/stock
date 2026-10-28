@@ -1,0 +1,58 @@
+{
+  "_readme": [
+    "MONEY-1357 — the realtime socket holder's liveness.",
+    "",
+    "This is the ONE monitor in the set where notify_no_data is deliberately TRUE,",
+    "and the reason is a property of the process rather than a preference.",
+    "",
+    "tiingo-realtime is a singleton: minScale = maxScale = 1, one WebSocket, one",
+    "Redis leader lock, `cpu-throttling: false` so it is not starved between",
+    "requests. Everything else in this estate is either horizontally scaled or",
+    "runs on a clock. For those, silence is ambiguous — an idle night looks like a",
+    "dead job — which is why every other row here sets it false and lets a",
+    "zero-write or absence monitor speak instead.",
+    "",
+    "Here silence is UNAMBIGUOUS. `rt.health_ok` is emitted from flushTick's",
+    "`finally`, every FLUSH_MS (5s), on every path including the early returns for",
+    "not-leader and nothing-due. There is no state in which a living process stops",
+    "emitting it. So no points means the process is gone, and that is exactly the",
+    "event this monitor exists for."
+  ],
+  "_threshold_rationale": [
+    "`min` over the window, not `avg`. The gauge is 0 or 1, so an average is a",
+    "duty cycle — a service that flapped for half the window reads 0.5, which no",
+    "threshold expresses honestly. `min < 1` means 'was it EVER unhealthy in these",
+    "ten minutes', which is the question.",
+    "",
+    "Ten minutes is deliberately longer than one reconnect cycle.",
+    "`decideHealth` already tolerates a normal disconnect (the backoff ladder is up",
+    "to 60s and the heartbeat watchdog 45s, hence UNHEALTHY_AFTER_MS = 180s), so a",
+    "healthy reconnect never reports 0 in the first place. The window is not there",
+    "to absorb that; it is there so a single unhealthy sample during a deploy",
+    "hand-over does not page.",
+    "",
+    "no_data_timeframe 20 minutes = 4x the 5s emit interval expressed generously.",
+    "A Cloud Run revision swap takes a minute; 20 minutes is comfortably past any",
+    "deploy and still notices a dead holder inside a market half-hour."
+  ],
+  "name": "[{{env}}] tiingo-realtime — unhealthy, or silent",
+  "type": "query alert",
+  "query": "min(last_10m):min:stockbook.rt.health_ok{env:{{env}}} < 1",
+  "message": "tiingo-realtime reported UNHEALTHY, or stopped reporting at all.\n\nSilence is the more serious reading. `rt.health_ok` is emitted every 5 seconds from flushTick's `finally` — on every path, including not-leader and nothing-due — so a living process cannot stop emitting it. No data means the process is gone.\n\nThis is the one service where that inference is safe: one socket, one process, minScale=maxScale=1. While it is down NO US quote or minute bar is written, and the web path silently falls back to the EOD close wearing an honest badge that says so — so nothing else will alert.\n\nCheck, in order: `/health` on the service (it returns 503 with a `reason` when the leader has no working socket); the `[tiingo-rt]` log lines for `stepping down` or `disconnected`; and whether two revisions are overlapping, since the Redis leader lock is fail-CLOSED and a lock it cannot reach means no leader at all.\n\nThe `reason` tag carries `decideHealth`'s verdict with digits collapsed to `#`, so it groups.\n\n@{{notify}}",
+  "tags": [
+    "managed-by:apply-monitors",
+    "money:1357",
+    "family:rt-liveness",
+    "service:tiingo-realtime",
+    "env:{{env}}"
+  ],
+  "options": {
+    "thresholds": { "critical": 1 },
+    "notify_no_data": true,
+    "no_data_timeframe": 20,
+    "renotify_interval": 0,
+    "require_full_window": false,
+    "include_tags": true
+  },
+  "_placeholders": ["{{env}} production | qa", "{{notify}} notification handle"]
+}

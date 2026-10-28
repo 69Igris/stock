@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="design_doc_mode" content="canvas">
+  <link rel="stylesheet" href="_ds/usemoney-play-design-system-67522a6c-d1c3-4617-97de-fcd968490366/colors_and_type.css">
+  <style>
+    body{margin:0;background:#eae5d6;font-family:var(--font-sans);color:var(--ink)}
+    a{color:var(--emerald-text);text-decoration:none}a:hover{color:var(--ink);text-decoration:underline}
+    .dv-turn{padding:40px 44px 32px;scroll-margin-top:16px}
+    .dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 6px}
+    .dv-tid{font:600 10px var(--font-mono);padding:3px 7px;background:#1d1d1b;color:#fff;border-radius:4px;text-decoration:none}
+    .dv-tname{font:800 15px/1.2 var(--font-sans);color:#1d1d1b;letter-spacing:-.3px}
+    .dv-sub{font:400 12px/1.5 var(--font-sans);color:rgba(0,0,0,.55);margin:0 0 20px;max-width:760px}
+    .dv-opts{display:flex;flex-wrap:wrap;gap:30px;align-items:flex-start}
+    .dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}
+    .dv-oid{font:600 10.5px var(--font-mono);padding:3px 7px;background:rgba(0,0,0,.1);color:#1d1d1b;border-radius:5px;text-decoration:none}
+    .dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 11.5px/1.3 var(--font-sans);color:rgba(0,0,0,.6)}
+    .dv-card{background:var(--paper);border:2px solid var(--ink);border-radius:10px;box-shadow:5px 5px 0 rgba(29,29,27,.85);overflow:hidden}
+    .dv-opt:target .dv-oid{background:#2a78d6;color:#fff}
+    .dv-next{margin:24px 0 0;font:12px/1.5 var(--font-sans);color:rgba(0,0,0,.55)}
+    .mono{font-family:var(--font-mono)}.ser{font-family:var(--font-serif);font-style:italic;font-weight:400}
+    .shell{display:flex;width:1280px;height:760px;background:var(--paper);background-image:radial-gradient(var(--dot-fg) 1px,transparent 1.5px);background-size:9px 9px}
+    .snav{width:230px;border-right:2px solid var(--ink);background:var(--paper-3);display:flex;flex-direction:column;flex-shrink:0}
+    .snav .items{padding:10px 12px;display:flex;flex-direction:column;gap:2px;flex:1}
+    .ni{display:flex;align-items:center;gap:9px;padding:8px 11px;border-radius:9px;font-size:13px;font-weight:650;color:var(--ink-2)}
+    .ni.on{background:var(--ink);color:var(--paper);font-weight:800}
+    .ni .dt{width:6px;height:6px;border-radius:2px;background:var(--ink-3);flex-shrink:0}
+    .ni.on .dt{background:var(--emerald)}
+    .topbar{height:76px;border-bottom:2px solid var(--ink);display:flex;align-items:center;gap:14px;padding:0 24px;background:var(--paper)}
+    .card{border:2px solid var(--ink);border-radius:13px;background:var(--paper-3);box-shadow:3px 3px 0 var(--ink)}
+    .lbl{font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:1.1px;color:var(--ink-3);text-transform:uppercase}
+    .big{font-family:var(--font-mono);font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+    .up{color:var(--emerald-text);font-family:var(--font-mono);font-weight:700}.dn{color:var(--loss);font-family:var(--font-mono);font-weight:700}
+    .chip{display:inline-flex;align-items:center;gap:5px;border:2px solid var(--ink);border-radius:99px;padding:5px 11px;font-size:11.5px;font-weight:700;background:var(--paper-3)}
+    .gold{background:var(--pop-2);color:#1d1d1b}
+    .row{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:1.5px solid var(--rule-soft);font-size:12.5px}
+    .sage{position:absolute;right:18px;bottom:16px;display:inline-flex;align-items:center;gap:8px;border:2px solid var(--ink);border-radius:99px;background:var(--ink);color:var(--paper);padding:11px 18px;font-weight:800;font-size:13px;box-shadow:3px 3px 0 var(--emerald)}
+    .phone{width:393px;height:760px;background:var(--paper);background-image:radial-gradient(var(--dot-fg) 1px,transparent 1.5px);background-size:9px 9px;display:flex;flex-direction:column}
+    .ptop{padding:14px 16px 10px;border-bottom:2px solid var(--ink);display:flex;align-items:center;justify-content:space-between;background:var(--paper)}
+    .ptabs{border-top:2px solid var(--ink);background:var(--paper-3);display:flex;justify-content:space-around;align-items:flex-start;padding:7px 0 12px;margin-top:auto}
+    .pt{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9.5px;font-weight:650;color:var(--ink-3)}
+    .pt.on{color:var(--ink);font-weight:800}
+    .fab{margin-top:-26px;width:52px;height:52px;border-radius:15px;background:var(--ink);border:2px solid var(--ink);box-shadow:3px 3px 0 var(--emerald);display:grid;place-items:center;transform:rotate(-3deg);color:var(--paper);font-size:20px}
+    .pbody{flex:1;overflow:hidden;padding:14px 16px}
+  </style>
+</helmet>
+
+<section class="dv-turn" id="t1">
+  <div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Module E — persona dashboards · beginner / intermediate / advanced</span></div>
+  <p class="dv-sub">Same underlying data in every card (₹17,24,169 · today +₹8,130 · XIRR 16.4%) — only the presentation changes. Beginner speaks in sentences and hides jargon (sidebar 16→9); Intermediate is the current default plus the tax moat widget and insights; Advanced is a dense 3-column terminal. Sage chat persists in all six. Web 1280px · mobile 393px.</p>
+
+  <div class="dv-opts">
+    <!-- 1a WEB BEGINNER -->
+    <div class="dv-opt" id="1a">
+      <div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Web · Beginner — "Guide me" · 9 nav items · zero jargon</div>
+      <div class="dv-card"><div class="shell">
+        <div class="snav">
+          <div style="padding:16px 16px 12px;border-bottom:2px solid var(--ink);display:flex;align-items:center;gap:9px"><span style="width:30px;height:30px;border-radius:8px;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-family:var(--font-mono);font-weight:800;transform:rotate(-3deg)">U</span><b style="font-size:15px;letter-spacing:-.4px">UseMoney<sup class="mono" style="font-size:8px;color:var(--emerald-text)">AI</sup></b></div>
+          <div style="margin:10px 12px 0;border:2px solid var(--ink);border-radius:9px;background:var(--paper);padding:7px 11px;display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--ink-4)"><span>⌕</span>Search markets…<span class="mono" style="margin-left:auto;font-size:9px;border:1.5px solid var(--rule-soft);border-radius:4px;padding:1px 4px">⌘K</span></div>
+          <div class="items">
+            <div class="ni on"><span class="dt"></span>Dashboard</div>
+            <div class="ni"><span class="dt" style="background:var(--emerald)"></span>StockSage <span class="mono" style="margin-left:auto;font-size:8px;font-weight:800;background:var(--emerald);color:#0b0b09;border-radius:4px;padding:1px 5px">AI</span></div>
+            <div class="ni"><span class="dt"></span>Holdings</div>
+            <div class="ni"><span class="dt"></span>Watchlists</div>
+            <div class="ni"><span class="dt" style="background:var(--pop-4)"></span>Portfolio Roast</div>
+            <div class="ni"><span class="dt" style="background:var(--pop-1)"></span>FIRE Calculator</div>
+            <div class="ni"><span class="dt"></span>Tax Report</div>
+            <div class="ni"><span class="dt"></span>News &amp; Events</div>
+            <div class="ni"><span class="dt"></span>Settings</div>
+          </div>
+          <div style="padding:14px 16px;border-top:1.5px dashed var(--rule-soft)"><span class="mono" style="font-size:9.5px;color:var(--ink-3)">SIMPLE VIEW · <a href="#t1">WHY?</a></span></div>
+        </div>
+        <div style="flex:1;position:relative;display:flex;flex-direction:column">
+          <div class="topbar">
+            <div style="font-weight:800;font-size:18px;letter-spacing:-.5px">Good morning, Rahul <span class="ser" style="color:var(--ink-3);font-size:15px">— the calm view.</span></div>
+            <div style="margin-left:auto;display:flex;gap:10px;align-items:center"><span class="chip gold mono" style="font-size:10.5px">⚡ 2</span><span class="chip" style="width:200px;color:var(--ink-4);font-weight:500;font-size:12px">Search…</span><span style="width:34px;height:34px;border-radius:10px;background:var(--pop-2);border:2px solid var(--ink);display:grid;place-items:center;font-family:var(--font-mono);font-weight:800;font-size:12px;transform:rotate(-3deg)">RV</span></div>
+          </div>
+          <div style="padding:22px 24px;display:grid;grid-template-columns:1.25fr 1fr;gap:16px;overflow:hidden">
+            <div>
+              <div class="card" style="padding:22px 24px;background:var(--ink);color:var(--paper);box-shadow:4px 4px 0 var(--emerald)">
+                <div class="lbl" style="color:var(--paper);opacity:.7">YOUR MONEY, IN A SENTENCE</div>
+                <div style="font-size:23px;line-height:1.35;margin-top:10px;font-weight:650">You've invested <span class="big" style="color:var(--paper);font-size:23px">₹15.2L</span>, and it's now worth <span class="big" style="color:var(--emerald);font-size:23px">₹17,24,169</span>. Today it grew by <mark style="background:var(--pop-2);color:#1d1d1b;padding:0 6px;font-weight:800">₹8,130</mark> — a normal, good day.</div>
+                <div class="mono" style="font-size:10px;opacity:.65;margin-top:12px">GROWING AT 16.4% A YEAR · BEATING A NIFTY SIP (11.2%)</div>
+              </div>
+              <div class="lbl" style="margin:18px 0 10px">3 THINGS WORTH DOING</div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div class="card" style="padding:13px 16px;display:flex;gap:12px;align-items:center;box-shadow:3px 3px 0 var(--pop-1)"><span style="width:32px;height:32px;border-radius:9px;background:var(--pop-1);border:2px solid var(--ink);display:grid;place-items:center;font-weight:800">!</span><div style="flex:1"><b style="font-size:13.5px">Reconnect Upstox</b><div style="font-size:11.5px;color:var(--ink-3)">2 of your holdings stopped updating on Jul 14. Takes ~20 seconds.</div></div><span class="chip" style="font-size:11px">Fix →</span></div>
+                <div class="card" style="padding:13px 16px;display:flex;gap:12px;align-items:center"><span style="width:32px;height:32px;border-radius:9px;background:var(--pop-2);border:2px solid var(--ink);display:grid;place-items:center;font-weight:800">62</span><div style="flex:1"><b style="font-size:13.5px">Read your roast</b><div style="font-size:11.5px;color:var(--ink-3)">A friendly-but-honest review of your holdings is ready.</div></div><span class="chip" style="font-size:11px">Open →</span></div>
+                <div class="card" style="padding:13px 16px;display:flex;gap:12px;align-items:center"><span style="width:32px;height:32px;border-radius:9px;background:var(--pop-5);border:2px solid var(--ink);display:grid;place-items:center;font-weight:800">₹</span><div style="flex:1"><b style="font-size:13.5px">₹1.28L is sitting idle</b><div style="font-size:11.5px;color:var(--ink-3)">Money in your liquid fund hasn't moved in 40 days. Ask Sage what it could do.</div></div><span class="chip" style="font-size:11px">Ask →</span></div>
+              </div>
+            </div>
+            <div>
+              <div class="lbl" style="margin:0 0 10px">WHAT MOVED TODAY</div>
+              <div class="card">
+                <div class="row"><span><b>Dixon</b> <span style="color:var(--ink-3)">— your electronics maker</span></span><span class="up">rose a lot · +3.2%</span></div>
+                <div class="row"><span><b>Bajaj Finance</b> <span style="color:var(--ink-3)">— your lender</span></span><span class="up">rose · +2.1%</span></div>
+                <div class="row" style="border-bottom:0"><span><b>Zomato</b> <span style="color:var(--ink-3)">— food delivery</span></span><span class="dn">fell a bit · -2.1%</span></div>
+              </div>
+              <div class="lbl" style="margin:16px 0 10px">LEARN ONE THING</div>
+              <div class="card" style="padding:16px 18px;background:var(--paper-2)">
+                <div class="ser" style="font-size:16px;line-height:1.4">"Why owning a fund <b>and</b> its top stocks means you're doubled up."</div>
+                <div class="mono" style="font-size:9.5px;color:var(--ink-3);margin-top:8px">3 MIN READ · BECAUSE 18% OF YOUR FUND OVERLAPS YOUR STOCKS</div>
+              </div>
+              <div class="card" style="padding:14px 16px;margin-top:16px;background:var(--pop-2);box-shadow:4px 4px 0 var(--ink)">
+                <b style="font-size:13px;color:#1d1d1b">✦ Ask Sage anything</b>
+                <div style="display:flex;flex-direction:column;gap:7px;margin-top:9px">
+                  <span style="background:#fbf8eb;border:2px solid #1d1d1b;border-radius:99px;padding:7px 12px;font-size:11.5px;font-weight:700;color:#1d1d1b">↪ Is my money doing okay?</span>
+                  <span style="background:#fbf8eb;border:2px solid #1d1d1b;border-radius:99px;padding:7px 12px;font-size:11.5px;font-weight:700;color:#1d1d1b">↪ What should I look at this week?</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="sage">✦ Ask Sage</div>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- 1b WEB INTERMEDIATE -->
+    <div class="dv-opt" id="1b">
+      <div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Web · Intermediate — "Keep me sharp" · default + tax moat widget + insights</div>
+      <div class="dv-card"><div class="shell">
+        <div class="snav">
+          <div style="padding:16px 16px 12px;border-bottom:2px solid var(--ink);display:flex;align-items:center;gap:9px"><span style="width:30px;height:30px;border-radius:8px;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-family:var(--font-mono);font-weight:800;transform:rotate(-3deg)">U</span><b style="font-size:15px;letter-spacing:-.4px">UseMoney<sup class="mono" style="font-size:8px;color:var(--emerald-text)">AI</sup></b></div>
+          <div class="items" style="gap:0;padding:6px 12px">
+            <div class="mono" style="font-size:8.5px;font-weight:700;letter-spacing:1.4px;color:var(--ink-3);padding:6px 10px 3px">WORKSPACE</div>
+            <div class="ni on" style="padding:4.5px 10px;font-size:11.5px"><span class="dt"></span>Dashboard</div>
+            <div class="ni" style="padding:4.5px 10px;font-size:11.5px"><span class="dt" style="background:var(--emerald)"></span>StockSage <span class="mono" style="margin-left:auto;font-size:7.5px;font-weight:800;background:var(--emerald);color:#0b0b09;border-radius:4px;padding:1px 4px">AI</span></div>
+            <div class="ni" style="padding:4.5px 10px;font-size:11.5px"><span class="dt"></span>Holdings</div>
+            <div class="ni" style="padding:4.5px 10px;font-size:11.5px"><span class="dt"></span>Watchlists</div>
+            <div class="ni" style="padding:4.5px 10px;font-size:11.5px"><span class="dt"></span>Tradebook</div>
+            <div class="ni" style="padding:4.5px 10px;font-size:11.5px"><span class="dt" style="background:var(--pop-4)"></span>Portfolio Roast</div>
+            <div class="mono" style="font-size:8.5px;font-weight:700;letter-spacing:1.4px;color:var(--ink-3);padding:8px 10px 3px">DISCOVER</div>
+            <div class="ni" style="padding:4.5px 10px;font-size:11.5px"><span class="dt" style="background:var(--pop-3)"></span>Markets</div>
+            <div class="ni" style="padding:4.5px 10px;font-size:11.5px"><span class="dt"></span>Screener <span class="mono" style="margin-left:auto;font-size:9px;color:var(--ink-3)">▾</span></div>
+            <div class="ni" style="padding:3px 10px 3px 30px;font-size:10.5px;color:var(--ink-3)">↳ Scans</div>
+            <div class="ni" style="padding:4.5px 10px;font-size:11.5px"><span class="dt"></span>Strategies</div>
+            <div class="ni" style="padding:4.5px 10px;font-size:11.5px"><span class="dt"></span>Research List</div>
+            <div class="ni" style="padding:4.5px 10px;font-size:11.5px"><span class="dt"></span>News &amp; Events</div>
+            <div class="mono" style="font-size:8.5px;font-weight:700;letter-spacing:1.4px;color:var(--ink-3);padding:8px 10px 3px">TOOLS</div>
+            <div class="ni" style="padding:4.5px 10px;font-size:11.5px"><span class="dt" style="background:var(--pop-1)"></span>FIRE Calculator</div>
+            <div class="ni" style="padding:4.5px 10px;font-size:11.5px"><span class="dt"></span>Calculators</div>
+            <div class="ni" style="padding:4.5px 10px;font-size:11.5px"><span class="dt"></span>Risk Report</div>
+            <div class="ni" style="padding:4.5px 10px;font-size:11.5px"><span class="dt"></span>Tax Report</div>
+            <div class="ni" style="padding:4.5px 10px;font-size:11.5px"><span class="dt"></span>Document Vault</div>
+            <div class="mono" style="font-size:8.5px;font-weight:700;letter-spacing:1.4px;color:var(--ink-3);padding:8px 10px 3px">ACCOUNT</div>
+            <div class="ni" style="padding:4.5px 10px;font-size:11.5px"><span class="dt"></span>Brokers</div>
+            <div class="ni" style="padding:4.5px 10px;font-size:11.5px"><span class="dt"></span>Settings</div>
+            <div class="ni" style="padding:4.5px 10px;font-size:11.5px"><span class="dt"></span>Notifications</div>
+          </div>
+        </div>
+        <div style="flex:1;position:relative;display:flex;flex-direction:column">
+          <div class="topbar">
+            <div style="font-weight:800;font-size:18px;letter-spacing:-.5px">Dashboard <span class="ser" style="color:var(--ink-3);font-size:15px">— today's tape.</span></div>
+            <span class="chip mono" style="font-size:10px;margin-left:6px"><span style="width:6px;height:6px;border-radius:99px;background:var(--emerald);display:inline-block"></span> SYNCED 09:31</span>
+            <div style="margin-left:auto;display:flex;gap:10px;align-items:center"><span class="chip gold mono" style="font-size:10.5px">⚡ 2</span><span class="chip" style="width:180px;color:var(--ink-4);font-weight:500;font-size:12px">Search…</span><span style="width:34px;height:34px;border-radius:10px;background:var(--pop-2);border:2px solid var(--ink);display:grid;place-items:center;font-family:var(--font-mono);font-weight:800;font-size:12px;transform:rotate(-3deg)">RV</span></div>
+          </div>
+          <div style="padding:18px 24px;overflow:hidden">
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+              <div class="card" style="padding:13px 16px"><div class="lbl">TOTAL VALUE</div><div class="big" style="font-size:22px;margin-top:5px">₹17,24,169</div><div class="mono" style="font-size:10px;color:var(--ink-3);margin-top:2px">3 BROKERS · 13 HOLDINGS</div></div>
+              <div class="card" style="padding:13px 16px"><div class="lbl">TODAY</div><div class="big up" style="font-size:22px;margin-top:5px">+₹8,130</div><div class="up" style="font-size:10.5px;margin-top:2px">+0.47%</div></div>
+              <div class="card" style="padding:13px 16px"><div class="lbl">OVERALL P&amp;L</div><div class="big up" style="font-size:22px;margin-top:5px">+₹2,08,861</div><div class="up" style="font-size:10.5px;margin-top:2px">+13.8% · XIRR 16.4%</div></div>
+              <div class="card" style="padding:13px 16px;background:var(--pop-2);box-shadow:3px 3px 0 var(--ink)"><div class="lbl" style="color:#3a3a35">TAX PREVIEW · FY27</div><div class="big" style="font-size:22px;margin-top:5px;color:#1d1d1b">₹63,880</div><div class="mono" style="font-size:10px;color:#3a3a35;margin-top:2px">LTCG YOU CAN STILL BOOK TAX-FREE</div></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:16px;margin-top:16px">
+              <div>
+                <div class="lbl" style="margin-bottom:9px">HOLDINGS SNAPSHOT</div>
+                <div class="card">
+                  <div class="row mono" style="font-size:10px;color:var(--ink-3);background:var(--paper-2)"><span style="width:110px">SYMBOL</span><span>QTY · AVG</span><span>VALUE</span><span>P&amp;L</span><span>TODAY</span></div>
+                  <div class="row"><b style="width:110px" class="mono">INFY</b><span class="mono" style="color:var(--ink-3);font-size:11px">120 @ 1,482</span><span class="mono">₹1,93,248</span><span class="up">+8.7%</span><span class="dn">-0.4%</span></div>
+                  <div class="row"><b style="width:110px" class="mono">RELIANCE</b><span class="mono" style="color:var(--ink-3);font-size:11px">48 @ 2,410</span><span class="mono">₹1,41,245</span><span class="up">+22.1%</span><span class="up">+1.2%</span></div>
+                  <div class="row"><b style="width:110px" class="mono">ITC</b><span class="mono" style="color:var(--ink-3);font-size:11px">300 @ 410</span><span class="mono">₹1,38,690</span><span class="up">+12.8%</span><span class="up">+0.5%</span></div>
+                  <div class="row"><b style="width:110px" class="mono">TCS</b><span class="mono" style="color:var(--ink-3);font-size:11px">32 @ 3,524</span><span class="mono">₹1,24,646</span><span class="up">+10.5%</span><span class="up">+0.8%</span></div>
+                  <div class="row"><b style="width:110px" class="mono">BAJFINANCE</b><span class="mono" style="color:var(--ink-3);font-size:11px">14 @ 6,120</span><span class="mono">₹1,01,976</span><span class="up">+19.0%</span><span class="up">+2.1%</span></div>
+                  <div class="row" style="border-bottom:0"><b style="width:110px" class="mono">HDFCBANK</b><span class="mono" style="color:var(--ink-3);font-size:11px">60 @ 1,741</span><span class="mono">₹1,01,406</span><span class="dn">-2.9%</span><span class="up">+0.3%</span></div>
+                </div>
+                <div class="mono" style="font-size:10px;color:var(--ink-3);margin-top:8px">+ 7 MORE → HOLDINGS</div>
+              </div>
+              <div>
+                <div class="lbl" style="margin-bottom:9px">INSIGHTS FEED</div>
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <div class="card" style="padding:12px 14px"><b style="font-size:12.5px">84 INFY shares turn long-term on Aug 3</b><div style="font-size:11px;color:var(--ink-3);margin-top:3px">Selling before costs ₹1,144 more in tax. <a href="#1b">Plan it →</a></div></div>
+                  <div class="card" style="padding:12px 14px"><b style="font-size:12.5px">Financials correlation ran 0.81 last quarter</b><div style="font-size:11px;color:var(--ink-3);margin-top:3px">HDFCBANK · SBIN · BAJFINANCE move together — 26.4% of equity.</div></div>
+                  <div class="card" style="padding:12px 14px"><b style="font-size:12.5px">HDFCBANK results Jul 22</b><div style="font-size:11px;color:var(--ink-3);margin-top:3px">You hold 60 shares. Earnings call 17:30 IST.</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="sage">✦ Ask Sage</div>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- 1c WEB ADVANCED -->
+    <div class="dv-opt" id="1c">
+      <div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Web · Advanced — "Get out of my way" · 3-column terminal density</div>
+      <div class="dv-card"><div class="shell">
+        <div class="snav" style="width:190px">
+          <div style="padding:14px 14px 10px;border-bottom:2px solid var(--ink);display:flex;align-items:center;gap:8px"><span style="width:26px;height:26px;border-radius:7px;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-family:var(--font-mono);font-weight:800;font-size:13px;transform:rotate(-3deg)">U</span><b style="font-size:13.5px;letter-spacing:-.3px">UseMoney<sup class="mono" style="font-size:7px;color:var(--emerald-text)">AI</sup></b></div>
+          <div class="items" style="gap:0;padding:6px 10px">
+            <div class="mono" style="font-size:8px;font-weight:700;letter-spacing:1.3px;color:var(--ink-3);padding:5px 9px 2px">WORKSPACE</div>
+            <div class="ni on" style="padding:3.5px 9px;font-size:11px"><span class="dt"></span>Dashboard</div>
+            <div class="ni" style="padding:3.5px 9px;font-size:11px"><span class="dt" style="background:var(--emerald)"></span>StockSage</div>
+            <div class="ni" style="padding:3.5px 9px;font-size:11px"><span class="dt"></span>Holdings</div>
+            <div class="ni" style="padding:3.5px 9px;font-size:11px"><span class="dt"></span>Watchlists</div>
+            <div class="ni" style="padding:3.5px 9px;font-size:11px"><span class="dt"></span>Tradebook</div>
+            <div class="ni" style="padding:3.5px 9px;font-size:11px"><span class="dt" style="background:var(--pop-4)"></span>Portfolio Roast</div>
+            <div class="mono" style="font-size:8px;font-weight:700;letter-spacing:1.3px;color:var(--ink-3);padding:6px 9px 2px">DISCOVER</div>
+            <div class="ni" style="padding:3.5px 9px;font-size:11px"><span class="dt" style="background:var(--pop-3)"></span>Markets</div>
+            <div class="ni" style="padding:3.5px 9px;font-size:11px"><span class="dt"></span>Screener · Scans</div>
+            <div class="ni" style="padding:3.5px 9px;font-size:11px"><span class="dt" style="background:var(--pop-2)"></span>Strategies <span class="mono" style="margin-left:auto;font-size:7.5px;font-weight:800;background:var(--pop-2);color:#1d1d1b;border-radius:4px;padding:1px 4px">LAB</span></div>
+            <div class="ni" style="padding:2px 9px 2px 28px;font-size:10px;color:var(--ink-3)">↳ Signals · ForwardRun</div>
+            <div class="ni" style="padding:3.5px 9px;font-size:11px"><span class="dt"></span>Research List</div>
+            <div class="ni" style="padding:3.5px 9px;font-size:11px"><span class="dt"></span>News &amp; Events</div>
+            <div class="mono" style="font-size:8px;font-weight:700;letter-spacing:1.3px;color:var(--ink-3);padding:6px 9px 2px">TOOLS</div>
+            <div class="ni" style="padding:3.5px 9px;font-size:11px"><span class="dt" style="background:var(--pop-1)"></span>FIRE Calculator</div>
+            <div class="ni" style="padding:3.5px 9px;font-size:11px"><span class="dt"></span>Calculators</div>
+            <div class="ni" style="padding:3.5px 9px;font-size:11px"><span class="dt"></span>Risk Report</div>
+            <div class="ni" style="padding:3.5px 9px;font-size:11px"><span class="dt"></span>Tax Report</div>
+            <div class="ni" style="padding:3.5px 9px;font-size:11px"><span class="dt"></span>Document Vault</div>
+            <div class="mono" style="font-size:8px;font-weight:700;letter-spacing:1.3px;color:var(--ink-3);padding:6px 9px 2px">ACCOUNT</div>
+            <div class="ni" style="padding:3.5px 9px;font-size:11px"><span class="dt"></span>Brokers</div>
+            <div class="ni" style="padding:3.5px 9px;font-size:11px"><span class="dt"></span>Dev console</div>
+            <div class="ni" style="padding:3.5px 9px;font-size:11px"><span class="dt"></span>Settings</div>
+            <div class="ni" style="padding:3.5px 9px;font-size:11px"><span class="dt"></span>Notifications</div>
+          </div>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column">
+          <div class="topbar" style="height:56px;padding:0 18px">
+            <div style="font-weight:800;font-size:15px;letter-spacing:-.4px">Terminal <span class="mono" style="font-size:9.5px;color:var(--emerald-text)">● NSE OPEN · 09:42 IST</span></div>
+            <div class="mono" style="margin-left:14px;font-size:10px;color:var(--ink-2)">NIFTY 24,812 <span class="up">+0.42%</span> · SENSEX 81,421 <span class="up">+0.36%</span> · VIX 13.42 <span class="dn">-4.2%</span></div>
+            <div style="margin-left:auto;display:flex;gap:8px;align-items:center"><span class="chip gold mono" style="font-size:10px;padding:4px 9px">⚡ 2</span><span style="width:30px;height:30px;border-radius:9px;background:var(--pop-2);border:2px solid var(--ink);display:grid;place-items:center;font-family:var(--font-mono);font-weight:800;font-size:11px;transform:rotate(-3deg)">RV</span></div>
+          </div>
+          <div style="flex:1;display:grid;grid-template-columns:200px 1fr 250px;gap:0;overflow:hidden">
+            <div style="border-right:2px solid var(--ink);background:var(--paper-3);overflow:hidden">
+              <div class="lbl" style="padding:10px 12px 6px">WATCH · CORE</div>
+              <div class="mono" style="font-size:10.5px">
+                <div class="row" style="padding:6px 12px"><b>HAL</b><span>4,486 <span class="up">+1.8</span></span></div>
+                <div class="row" style="padding:6px 12px"><b>HINDUNILVR</b><span>2,385 <span class="up">+0.3</span></span></div>
+                <div class="row" style="padding:6px 12px"><b>LT</b><span>3,649 <span class="up">+1.2</span></span></div>
+                <div class="row" style="padding:6px 12px"><b>ASIANPAINT</b><span>2,247 <span class="dn">-1.1</span></span></div>
+                <div class="row" style="padding:6px 12px"><b>ZOMATO</b><span>247 <span class="dn">-2.1</span></span></div>
+                <div class="row" style="padding:6px 12px"><b>DIXON</b><span>14,120 <span class="up">+3.2</span></span></div>
+                <div class="row" style="padding:6px 12px"><b>IRCTC</b><span>812 <span class="dn">-0.6</span></span></div>
+                <div class="row" style="padding:6px 12px;border-bottom:0"><b>ADANIENT</b><span>3,125 <span class="up">+2.9</span></span></div>
+              </div>
+              <div class="lbl" style="padding:12px 12px 6px;border-top:2px solid var(--ink)">SECTOR PULSE</div>
+              <div style="padding:0 12px 12px;display:flex;flex-wrap:wrap;gap:5px">
+                <span class="mono" style="font-size:9px;font-weight:800;border:1.5px solid var(--ink);border-radius:6px;padding:3px 6px;background:color-mix(in oklab,var(--emerald) 25%,var(--paper-3))">DEF +1.9</span>
+                <span class="mono" style="font-size:9px;font-weight:800;border:1.5px solid var(--ink);border-radius:6px;padding:3px 6px;background:color-mix(in oklab,var(--emerald) 25%,var(--paper-3))">INFRA +1.1</span>
+                <span class="mono" style="font-size:9px;font-weight:800;border:1.5px solid var(--ink);border-radius:6px;padding:3px 6px;background:color-mix(in oklab,var(--emerald) 20%,var(--paper-3))">FIN +0.9</span>
+                <span class="mono" style="font-size:9px;font-weight:800;border:1.5px solid var(--ink);border-radius:6px;padding:3px 6px;background:color-mix(in oklab,var(--pop-1) 25%,var(--paper-3))">AUTO -0.9</span>
+                <span class="mono" style="font-size:9px;font-weight:800;border:1.5px solid var(--ink);border-radius:6px;padding:3px 6px;background:color-mix(in oklab,var(--pop-1) 20%,var(--paper-3))">IT -0.5</span>
+              </div>
+            </div>
+            <div style="padding:14px 16px;overflow:hidden">
+              <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px">
+                <div class="card" style="padding:9px 11px;box-shadow:2px 2px 0 var(--ink)"><div class="lbl" style="font-size:8px">VALUE</div><div class="big" style="font-size:14px;margin-top:3px">₹17.24L</div></div>
+                <div class="card" style="padding:9px 11px;box-shadow:2px 2px 0 var(--ink)"><div class="lbl" style="font-size:8px">DAY</div><div class="big up" style="font-size:14px;margin-top:3px">+8,130</div></div>
+                <div class="card" style="padding:9px 11px;box-shadow:2px 2px 0 var(--ink)"><div class="lbl" style="font-size:8px">XIRR</div><div class="big" style="font-size:14px;margin-top:3px">16.4%</div></div>
+                <div class="card" style="padding:9px 11px;box-shadow:2px 2px 0 var(--ink)"><div class="lbl" style="font-size:8px">VAR 95 · 1D</div><div class="big" style="font-size:14px;margin-top:3px;color:var(--loss)">-24.8k</div></div>
+                <div class="card" style="padding:9px 11px;box-shadow:2px 2px 0 var(--ink)"><div class="lbl" style="font-size:8px">BETA</div><div class="big" style="font-size:14px;margin-top:3px">1.08</div></div>
+                <div class="card" style="padding:9px 11px;box-shadow:2px 2px 0 var(--ink)"><div class="lbl" style="font-size:8px">MAX DD</div><div class="big" style="font-size:14px;margin-top:3px;color:var(--loss)">-18.4%</div></div>
+              </div>
+              <div class="lbl" style="margin:12px 0 7px">POSITIONS · EQUITY 10 · MF 3</div>
+              <div class="card">
+                <div class="mono" style="font-size:10.5px">
+                  <div class="row" style="padding:5.5px 12px;background:var(--paper-2);font-size:9px;color:var(--ink-3)"><span style="width:92px">SYM</span><span>QTY@AVG</span><span>LTP</span><span>VALUE</span><span>P&amp;L%</span><span>DAY%</span><span>WT%</span></div>
+                  <div class="row" style="padding:5.5px 12px"><b style="width:92px">INFY</b><span style="color:var(--ink-3)">120@1482</span><span>1,610.4</span><span>1,93,248</span><span class="up">+8.7</span><span class="dn">-0.4</span><span>11.2</span></div>
+                  <div class="row" style="padding:5.5px 12px"><b style="width:92px">RELIANCE</b><span style="color:var(--ink-3)">48@2410</span><span>2,942.6</span><span>1,41,245</span><span class="up">+22.1</span><span class="up">+1.2</span><span>8.2</span></div>
+                  <div class="row" style="padding:5.5px 12px"><b style="width:92px">ITC</b><span style="color:var(--ink-3)">300@410</span><span>462.3</span><span>1,38,690</span><span class="up">+12.8</span><span class="up">+0.5</span><span>8.0</span></div>
+                  <div class="row" style="padding:5.5px 12px"><b style="width:92px">TCS</b><span style="color:var(--ink-3)">32@3524</span><span>3,895.2</span><span>1,24,646</span><span class="up">+10.5</span><span class="up">+0.8</span><span>7.2</span></div>
+                  <div class="row" style="padding:5.5px 12px"><b style="width:92px">BAJFINANCE</b><span style="color:var(--ink-3)">14@6120</span><span>7,284.0</span><span>1,01,976</span><span class="up">+19.0</span><span class="up">+2.1</span><span>5.9</span></div>
+                  <div class="row" style="padding:5.5px 12px"><b style="width:92px">HDFCBANK</b><span style="color:var(--ink-3)">60@1741</span><span>1,690.1</span><span>1,01,406</span><span class="dn">-2.9</span><span class="up">+0.3</span><span>5.9</span></div>
+                  <div class="row" style="padding:5.5px 12px"><b style="width:92px">SBIN</b><span style="color:var(--ink-3)">110@612</span><span>802.5</span><span>88,270</span><span class="up">+31.1</span><span class="up">+0.9</span><span>5.1</span></div>
+                  <div class="row" style="padding:5.5px 12px;border-bottom:0"><b style="width:92px">DIXON</b><span style="color:var(--ink-3)">6@11450</span><span>14,120</span><span>84,720</span><span class="up">+23.3</span><span class="up">+3.2</span><span>4.9</span></div>
+                </div>
+              </div>
+              <div class="mono" style="font-size:9.5px;color:var(--ink-3);margin-top:7px">F&amp;O MTM <span class="up">+₹8,242</span> · 3 OPEN · REALIZED FY27 <span class="up">+₹41,506</span></div>
+            </div>
+            <div style="border-left:2px solid var(--ink);background:var(--paper-3);display:flex;flex-direction:column;overflow:hidden">
+              <div class="lbl" style="padding:10px 12px 6px">SIGNALS · TODAY</div>
+              <div style="padding:0 10px;display:flex;flex-direction:column;gap:7px">
+                <div class="card" style="padding:8px 10px;box-shadow:2px 2px 0 var(--ink)"><span class="mono" style="font-size:8.5px;font-weight:800;background:var(--emerald);border:1.5px solid var(--ink);border-radius:5px;padding:1px 5px">TRIGGERED</span><div class="mono" style="font-size:10.5px;margin-top:5px"><b>RSI reversal</b> · HAL entry @4,410</div></div>
+                <div class="card" style="padding:8px 10px;box-shadow:2px 2px 0 var(--ink)"><span class="mono" style="font-size:8.5px;font-weight:800;background:var(--pop-2);border:1.5px solid var(--ink);border-radius:5px;padding:1px 5px">NEW</span><div class="mono" style="font-size:10.5px;margin-top:5px"><b>Supertrend flip</b> · LT · EOD scan</div></div>
+                <div class="card" style="padding:8px 10px;box-shadow:2px 2px 0 var(--ink)"><span class="mono" style="font-size:8.5px;font-weight:800;background:var(--paper-2);border:1.5px solid var(--ink);border-radius:5px;padding:1px 5px">FWD-RUN</span><div class="mono" style="font-size:10.5px;margin-top:5px">Momentum-12 <span class="up">+2.4%</span> vs bench <span class="up">+1.1%</span></div></div>
+              </div>
+              <div class="lbl" style="padding:12px 12px 6px;border-top:2px solid var(--ink);margin-top:10px">RESEARCH QUEUE</div>
+              <div style="padding:0 10px;display:flex;flex-direction:column;gap:7px">
+                <div class="card" style="padding:8px 10px;box-shadow:2px 2px 0 var(--ink)"><div class="mono" style="font-size:10.5px"><b>INFY</b> · HOLD 71/100 · <span style="color:var(--ink-3)">today</span></div></div>
+                <div class="card" style="padding:8px 10px;box-shadow:2px 2px 0 var(--ink)"><div class="mono" style="font-size:10.5px"><b>Board: TATAMOTORS</b> · <span style="color:var(--ink-3)">queued · ⚡3</span></div></div>
+              </div>
+              <div style="margin-top:auto;padding:10px;border-top:2px solid var(--ink)">
+                <div style="border:2px solid var(--ink);border-radius:10px;background:var(--paper);padding:8px 11px;font-size:11px;color:var(--ink-4);display:flex;justify-content:space-between;align-items:center">Ask Sage… <span class="mono" style="font-size:9px;color:var(--emerald-text)">↵</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- 1d MOBILE BEGINNER -->
+    <div class="dv-opt" id="1d">
+      <div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a>Mobile · Beginner — 4 tabs, sentences not stats</div>
+      <div class="dv-card"><div class="phone">
+        <div class="ptop"><b style="font-size:15px">UseMoney<sup class="mono" style="font-size:8px;color:var(--emerald-text)">AI</sup></b><span class="chip gold mono" style="font-size:10px;padding:4px 9px">⚡ 2</span></div>
+        <div class="pbody">
+          <div class="lbl">GOOD MORNING, RAHUL</div>
+          <div class="card" style="padding:18px;background:var(--ink);color:var(--paper);box-shadow:4px 4px 0 var(--emerald);margin-top:10px">
+            <div style="font-size:18px;line-height:1.4;font-weight:650">Your money is worth <span class="big" style="color:var(--emerald);font-size:19px">₹17,24,169</span> — up <mark style="background:var(--pop-2);color:#1d1d1b;padding:0 5px;font-weight:800">₹8,130</mark> today.</div>
+            <div class="mono" style="font-size:9px;opacity:.65;margin-top:9px">A NORMAL, GOOD DAY. NOTHING NEEDS PANIC.</div>
+          </div>
+          <div class="lbl" style="margin:16px 0 8px">WORTH DOING</div>
+          <div class="card" style="padding:12px 14px;display:flex;gap:10px;align-items:center;box-shadow:3px 3px 0 var(--pop-1)"><span style="width:30px;height:30px;border-radius:8px;background:var(--pop-1);border:2px solid var(--ink);display:grid;place-items:center;font-weight:800;flex-shrink:0">!</span><div><b style="font-size:13px">Reconnect Upstox</b><div style="font-size:11px;color:var(--ink-3)">2 holdings stopped updating · ~20s fix</div></div></div>
+          <div class="card" style="padding:12px 14px;display:flex;gap:10px;align-items:center;margin-top:9px"><span style="width:30px;height:30px;border-radius:8px;background:var(--pop-2);border:2px solid var(--ink);display:grid;place-items:center;font-weight:800;flex-shrink:0">62</span><div><b style="font-size:13px">Your roast is ready</b><div style="font-size:11px;color:var(--ink-3)">an honest review of your holdings</div></div></div>
+          <div class="lbl" style="margin:16px 0 8px">WHAT MOVED</div>
+          <div class="card">
+            <div class="row"><span><b>Dixon</b></span><span class="up">rose a lot</span></div>
+            <div class="row"><span><b>Bajaj Finance</b></span><span class="up">rose</span></div>
+            <div class="row" style="border-bottom:0"><span><b>Zomato</b></span><span class="dn">fell a bit</span></div>
+          </div>
+          <div class="card" style="padding:13px 15px;margin-top:14px;background:var(--pop-2);box-shadow:4px 4px 0 var(--ink)">
+            <b style="font-size:12.5px;color:#1d1d1b">✦ Ask Sage — is my money doing okay?</b>
+          </div>
+        </div>
+        <div class="ptabs">
+          <span class="pt on">⌂<b>Home</b></span>
+          <span class="pt">▤<b>Portfolio</b></span>
+          <span class="fab">✦</span>
+          <span class="pt">◔<b>Learn</b></span>
+          <span class="pt">◉<b>You</b></span>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- 1e MOBILE INTERMEDIATE -->
+    <div class="dv-opt" id="1e">
+      <div class="dv-olabel"><a class="dv-oid" href="#1e">1e</a>Mobile · Intermediate — v2 default + tax widget</div>
+      <div class="dv-card"><div class="phone">
+        <div class="ptop"><b style="font-size:15px">UseMoney<sup class="mono" style="font-size:8px;color:var(--emerald-text)">AI</sup></b><span style="display:flex;gap:7px;align-items:center"><span class="chip gold mono" style="font-size:10px;padding:4px 9px">⚡ 2</span><span class="chip mono" style="font-size:9px;padding:4px 8px">● 09:31</span></span></div>
+        <div class="pbody">
+          <div class="lbl">HEY RAHUL · MARKETS OPEN</div>
+          <div class="card" style="padding:15px 16px;background:var(--ink);color:var(--paper);box-shadow:4px 4px 0 var(--emerald);margin-top:10px">
+            <div class="lbl" style="color:var(--paper);opacity:.65">TOTAL VALUE · 3 BROKERS</div>
+            <div class="big" style="font-size:27px;color:var(--paper);margin-top:4px">₹17,24,169</div>
+            <div class="mono" style="font-size:10px;margin-top:7px"><span style="color:var(--emerald)">+₹8,130 TODAY</span> · <span style="color:var(--pop-2)">XIRR 16.4%</span> · INV ₹15.2L</div>
+          </div>
+          <div class="card" style="padding:12px 14px;margin-top:11px;background:var(--pop-2);box-shadow:3px 3px 0 var(--ink);display:flex;justify-content:space-between;align-items:center">
+            <div><div class="lbl" style="color:#3a3a35">TAX PREVIEW · FY27</div><b style="font-size:13px;color:#1d1d1b">₹63,880 LTCG headroom left</b></div>
+            <span class="mono" style="font-weight:800;color:#1d1d1b">→</span>
+          </div>
+          <div class="lbl" style="margin:14px 0 8px">MOVING YOUR BOOK</div>
+          <div class="card">
+            <div class="row"><span><b class="mono" style="font-size:12px">DIXON</b> <span class="mono" style="font-size:10px;color:var(--ink-3)">6 SH</span></span><span class="up">+₹2,745 · +3.2%</span></div>
+            <div class="row"><span><b class="mono" style="font-size:12px">BAJFINANCE</b> <span class="mono" style="font-size:10px;color:var(--ink-3)">14 SH</span></span><span class="up">+₹2,142 · +2.1%</span></div>
+            <div class="row" style="border-bottom:0"><span><b class="mono" style="font-size:12px">ZOMATO</b> <span class="mono" style="font-size:10px;color:var(--ink-3)">320 SH</span></span><span class="dn">-₹1,689 · -2.1%</span></div>
+          </div>
+          <div class="lbl" style="margin:14px 0 8px">INSIGHT</div>
+          <div class="card" style="padding:12px 14px"><b style="font-size:12.5px">84 INFY shares turn long-term Aug 3</b><div style="font-size:11px;color:var(--ink-3);margin-top:3px">waiting saves ₹1,144 in tax · ask Sage ↪</div></div>
+        </div>
+        <div class="ptabs">
+          <span class="pt on">⌂<b>Home</b></span>
+          <span class="pt">▤<b>Portfolio</b></span>
+          <span class="fab">✦</span>
+          <span class="pt">◫<b>Discover</b></span>
+          <span class="pt">◉<b>You</b></span>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- 1f MOBILE ADVANCED -->
+    <div class="dv-opt" id="1f">
+      <div class="dv-olabel"><a class="dv-oid" href="#1f">1f</a>Mobile · Advanced — dense terminal, numbers first</div>
+      <div class="dv-card"><div class="phone">
+        <div class="ptop" style="padding:12px 14px 8px"><b style="font-size:14px">Terminal</b><span class="mono" style="font-size:9px;color:var(--emerald-text)">● NSE OPEN 09:42</span></div>
+        <div class="mono" style="border-bottom:2px solid var(--ink);background:var(--paper-2);padding:5px 14px;font-size:9px;color:var(--ink-2);white-space:nowrap;overflow:hidden">NIFTY 24,812 <span class="up">+0.42</span> · SENSEX 81,421 <span class="up">+0.36</span> · VIX 13.42 <span class="dn">-4.2</span> · USDINR 83.4</div>
+        <div class="pbody" style="padding:12px 14px">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px">
+            <div class="card" style="padding:8px 10px;box-shadow:2px 2px 0 var(--ink)"><div class="lbl" style="font-size:7.5px">VALUE</div><div class="big" style="font-size:13px;margin-top:2px">₹17.24L</div></div>
+            <div class="card" style="padding:8px 10px;box-shadow:2px 2px 0 var(--ink)"><div class="lbl" style="font-size:7.5px">DAY</div><div class="big up" style="font-size:13px;margin-top:2px">+8,130</div></div>
+            <div class="card" style="padding:8px 10px;box-shadow:2px 2px 0 var(--ink)"><div class="lbl" style="font-size:7.5px">XIRR</div><div class="big" style="font-size:13px;margin-top:2px">16.4%</div></div>
+            <div class="card" style="padding:8px 10px;box-shadow:2px 2px 0 var(--ink)"><div class="lbl" style="font-size:7.5px">VAR95</div><div class="big" style="font-size:13px;margin-top:2px;color:var(--loss)">-24.8k</div></div>
+            <div class="card" style="padding:8px 10px;box-shadow:2px 2px 0 var(--ink)"><div class="lbl" style="font-size:7.5px">BETA</div><div class="big" style="font-size:13px;margin-top:2px">1.08</div></div>
+            <div class="card" style="padding:8px 10px;box-shadow:2px 2px 0 var(--ink)"><div class="lbl" style="font-size:7.5px">MTM F&amp;O</div><div class="big up" style="font-size:13px;margin-top:2px">+8,242</div></div>
+          </div>
+          <div class="lbl" style="margin:12px 0 6px">POSITIONS</div>
+          <div class="card mono" style="font-size:10px">
+            <div class="row" style="padding:5px 11px"><b>INFY</b><span>1,610.4</span><span class="dn">-0.4</span><span class="up">+8.7</span></div>
+            <div class="row" style="padding:5px 11px"><b>RELIANCE</b><span>2,942.6</span><span class="up">+1.2</span><span class="up">+22.1</span></div>
+            <div class="row" style="padding:5px 11px"><b>ITC</b><span>462.3</span><span class="up">+0.5</span><span class="up">+12.8</span></div>
+            <div class="row" style="padding:5px 11px"><b>TCS</b><span>3,895.2</span><span class="up">+0.8</span><span class="up">+10.5</span></div>
+            <div class="row" style="padding:5px 11px"><b>BAJFIN</b><span>7,284.0</span><span class="up">+2.1</span><span class="up">+19.0</span></div>
+            <div class="row" style="padding:5px 11px;border-bottom:0"><b>HDFCBK</b><span>1,690.1</span><span class="up">+0.3</span><span class="dn">-2.9</span></div>
+          </div>
+          <div class="lbl" style="margin:12px 0 6px">SIGNALS</div>
+          <div class="card" style="padding:9px 11px;display:flex;gap:8px;align-items:center"><span class="mono" style="font-size:8px;font-weight:800;background:var(--emerald);border:1.5px solid var(--ink);border-radius:5px;padding:1px 5px">TRIG</span><span class="mono" style="font-size:10.5px;flex:1"><b>RSI reversal</b> · HAL @4,410</span><span class="mono" style="font-size:9px;color:var(--ink-3)">09:35</span></div>
+          <div class="card" style="padding:9px 11px;display:flex;gap:8px;align-items:center;margin-top:7px"><span class="mono" style="font-size:8px;font-weight:800;background:var(--paper-2);border:1.5px solid var(--ink);border-radius:5px;padding:1px 5px">FWD</span><span class="mono" style="font-size:10.5px;flex:1">Momentum-12 <span class="up">+2.4%</span> vs bench <span class="up">+1.1%</span></span></div>
+        </div>
+        <div class="ptabs">
+          <span class="pt on">⌂<b>Home</b></span>
+          <span class="pt">▤<b>Portfolio</b></span>
+          <span class="fab">✦</span>
+          <span class="pt">◫<b>Discover</b></span>
+          <span class="pt">◉<b>You</b></span>
+        </div>
+      </div></div>
+    </div>
+  </div>
+
+  <p class="dv-next">Try next: "wire the persona switcher into the mobile v2 app" · "make <a class="dv-oid" href="#1a">1a</a> even simpler" · "Module A mockup" · "persona onboarding questionnaire + settings section"</p>
+</section>
+</x-dc>
+</body>
+</html>

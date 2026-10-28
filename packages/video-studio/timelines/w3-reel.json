@@ -1,0 +1,94 @@
+{
+  "title": "W3 The F and O trap",
+  "aspect": "9:16",
+  "fps": 30,
+  "brandTheme": "cream",
+  "music": {
+    "track": "corporate-lofi",
+    "gainDb": -22,
+    "duckUnderVoiceover": true
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "type": "hook",
+      "durationSec": 4,
+      "kicker": "SEBI study",
+      "headline": "9 in 10 ==lose==.",
+      "subtext": "F&O, by the numbers.",
+      "motion": "rise",
+      "voiceover": {
+        "text": "हर दस में से नौ एफ़ एंड ओ ट्रेडर्स को नुकसान होता है।",
+        "lang": "hi-IN"
+      }
+    },
+    {
+      "id": "stat1",
+      "type": "stat",
+      "durationSec": 4.5,
+      "stat": {
+        "kicker": "SEBI · FY22–24",
+        "value": "93%",
+        "label": "of F&O traders made a net loss."
+      },
+      "motion": "kenburns-in",
+      "disclaimer": true,
+      "voiceover": {
+        "text": "सेबी के अध्ययन में तिरानवे प्रतिशत ट्रेडर्स को घाटा हुआ।",
+        "lang": "hi-IN"
+      }
+    },
+    {
+      "id": "stat2",
+      "type": "stat",
+      "durationSec": 4.5,
+      "stat": {
+        "kicker": "3 years · ~1.1 cr traders",
+        "value": "₹1.8 L cr",
+        "label": "in net losses (SEBI)."
+      },
+      "motion": "rise",
+      "disclaimer": true,
+      "voiceover": {
+        "text": "तीन साल में करीब एक पॉइंट आठ लाख करोड़ रुपये का शुद्ध नुकसान।",
+        "lang": "hi-IN"
+      }
+    },
+    {
+      "id": "broll",
+      "type": "veo",
+      "durationSec": 6,
+      "veoPrompt": "abstract deep teal and charcoal light slowly swirling then settling into calm still gradients, moody premium minimal fintech motion graphics, soft glow, elegant, no text, no logos, no people",
+      "motion": "static",
+      "voiceover": {
+        "text": "तेज़ी और रोमांच के पीछे अक्सर बड़ा जोखिम छुपा होता है।",
+        "lang": "hi-IN"
+      }
+    },
+    {
+      "id": "p1",
+      "type": "point",
+      "durationSec": 4.5,
+      "headline": "Education ==over== adrenaline",
+      "subtext": "Understand the odds before you act.",
+      "motion": "rise",
+      "disclaimer": true,
+      "voiceover": {
+        "text": "रोमांच से पहले — आँकड़ों और जोखिम को समझें।",
+        "lang": "hi-IN"
+      }
+    },
+    {
+      "id": "cta",
+      "type": "cta",
+      "durationSec": 3.5,
+      "headline": "Know the *odds*.",
+      "subtext": "Not advice · Education only · UseMoney AI (my product)",
+      "motion": "pop",
+      "voiceover": {
+        "text": "जोखिम को समझें। यह सलाह नहीं, सिर्फ़ शिक्षा है।",
+        "lang": "hi-IN"
+      }
+    }
+  ]
+}

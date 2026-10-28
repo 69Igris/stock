@@ -1,0 +1,11 @@
+(self.webpackChunktradingview = self.webpackChunktradingview || []).push([
+  [5538],
+  {
+    5538: (a) => {
+      a.exports = {
+        en: ["Last available bar"],
+        ca_ES: ["Última barra disponible"],
+      };
+    },
+  },
+]);

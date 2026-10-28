@@ -1,0 +1,114 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   UseMoney · Playful placeholder components
+   Co-located CSS — DO NOT import into playful-app.css (shared file).
+   Uses only var(--*) tokens already defined in playful-app.css / tokens.css.
+   ─────────────────────────────────────────────────────────────────────────  */
+
+/* ── Shared wrapper ─────────────────────────────────────────────────────── */
+.ph-wrap {
+  position: relative;
+  width: 100%;
+  /* Never cause horizontal overflow — shrink if needed */
+  max-width: 100%;
+  box-sizing: border-box;
+  border: 1.5px dashed var(--ink);
+  border-radius: 12px;
+  background-color: var(--paper);
+  /* Diagonal hatching uses rule-softer so it works in both themes */
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent 0 8px,
+    var(--rule-softer) 8px 9px
+  );
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  overflow: hidden;
+}
+
+/* ── Caption / eyebrow label ────────────────────────────────────────────── */
+.ph-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+  color: var(--ink-3);
+  text-align: center;
+  /* Allow text to wrap, never push container wider */
+  max-width: 90%;
+  word-break: break-word;
+}
+
+/* ── Note / sub-caption ─────────────────────────────────────────────────── */
+.ph-note {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-3);
+  text-align: center;
+  max-width: 85%;
+  word-break: break-word;
+}
+
+/* ── TradingView caption ────────────────────────────────────────────────── */
+.ph-tv-credit {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--ink-4);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* ── Shimmer animation (loading state) ──────────────────────────────────── */
+@keyframes ph-shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.ph-shimmer-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--rule-soft) 40%,
+    var(--rule-soft) 60%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: ph-shimmer 1.6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ── Text placeholder lines ─────────────────────────────────────────────── */
+.ph-text-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 160px;
+  max-width: 80%;
+  opacity: 0.35;
+}
+
+.ph-text-line {
+  height: 8px;
+  background: var(--ink);
+  border-radius: 4px;
+}
+
+/* Sparkline wrapper — inline-friendly, no horizontal scroll */
+.ph-spark-wrap {
+  display: inline-flex;
+  align-items: center;
+  overflow: hidden;
+  max-width: 100%;
+}

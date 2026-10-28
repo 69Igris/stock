@@ -1,0 +1,65 @@
+# scripts/smoke-list.txt
+# -----------------------------------------------------------------------------
+# SMOKE TIER manifest — the critical-path test subset (`yarn test:smoke`).
+#
+# Each non-blank, non-`#` line is a WORKSPACE-RELATIVE glob (forward slashes).
+# `scripts/run-smoke.ts` reads this file, groups globs by their leading
+# workspace directory (e.g. `apps/web`, `packages/core`), and spawns ONE
+# `node --import tsx --test` per workspace WITH THAT WORKSPACE AS CWD so the
+# `@/*` tsconfig alias and `../../` relative imports resolve exactly as they do
+# under the per-workspace `yarn test`.
+#
+# RULES:
+#   - Keep this list FAST (whole `test:smoke` budget is < 60s) and STABLE: only
+#     pure / mocked tests (no live network, no DB, no Redis). Contract tests use
+#     undici MockAgent and stay pure.
+#   - One glob per line. Globs may use `*` and `**`. A literal file path is fine.
+#   - The leading path segment(s) up to `__tests__` must be a real workspace dir.
+#   - When you ADD/REMOVE a smoke entry, update scripts/README.md.
+#
+# Scope (per MONEY-620): FIFO pairing · calc-suite · guardrails ·
+# webhook signature/idempotency + the *-e2e routes · demo routes ·
+# security/* (encryption, IDOR, SSRF, cron-auth, credit-atomic, rate-limit) ·
+# subscription access · contract tests.
+# -----------------------------------------------------------------------------
+
+# --- FIFO trade pairing (core algorithm + worker edge cases) ---
+apps/web/__tests__/pairing/*.test.ts
+apps/web/__tests__/workers/pairing-edge-cases.test.ts
+apps/web/__tests__/workers/processor-pairing.test.ts
+
+# --- Calculation suite (tax/SIP/FIRE/positions math, single source) ---
+packages/core/__tests__/calc-suite.test.ts
+
+# --- AI guardrails (input/output validation, prompt-injection) ---
+apps/web/__tests__/gemini/guardrails.test.ts
+apps/web/__tests__/gemini/guardrails-edge-cases.test.ts
+apps/web/__tests__/core/gemini/guardrails.test.ts
+
+# --- Webhook signature + idempotency, plus the new *-e2e route tests ---
+apps/web/__tests__/api/webhooks-dodo.test.ts
+apps/web/__tests__/api/webhooks-dodo-edge-cases.test.ts
+apps/web/__tests__/api/webhooks-dodo-e2e.test.ts
+apps/web/__tests__/api/webhooks-clerk-e2e.test.ts
+apps/web/__tests__/api/payments-webhook.test.ts
+apps/web/__tests__/api/payments-callback-e2e.test.ts
+apps/web/__tests__/api/clerk-webhook.test.ts
+
+# --- Demo session + demo routes (HMAC cookies, start/end, data) ---
+apps/web/__tests__/demo/*.test.ts
+apps/web/__tests__/api/demo.test.ts
+apps/web/__tests__/api/demo-start.test.ts
+apps/web/__tests__/api/demo-end.test.ts
+apps/web/__tests__/api/demo-routes-branches.test.ts
+
+# --- Security suite (encryption, IDOR, SSRF, cron-auth, credit-atomic, rate-limit) ---
+apps/web/__tests__/security/*.test.ts
+
+# --- Subscription / tier access gating ---
+apps/web/__tests__/subscription/*.test.ts
+
+# --- External-contract pinning (wire format we send/parse) ---
+apps/web/__tests__/brokers/zerodha-token-exchange-contract.test.ts
+apps/web/__tests__/brokers/oauth-url-state-contract.test.ts
+apps/web/__tests__/research/data-contract.test.ts
+packages/core/__tests__/market-data/yahoo-api-contract.test.ts

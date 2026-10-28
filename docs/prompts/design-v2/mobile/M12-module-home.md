@@ -1,0 +1,29 @@
+# M12 · Module: Home tab — net-worth hero · US drop-in · layout presets (Beginner / Intermediate / Advanced) · broker attention · quick actions · Sage card · movers · allocation · news · events · upgrade teaser
+
+Read `docs/prompts/design-v2/00-shared-context.md` — it is part of this prompt. Prerequisites: M00, M10; A01 (`/v1/sync/summary`) recommended.
+
+**Ticket:** `MONEY-{n}` "Mobile — Home" → `feat/MONEY-{n}`.
+**Design sources:** `docs/design/v2-bundle/app/s-home.jsx` (`HomeScreenV2`: `PageHead` "Hey {name}. Today's tape." + `SyncPill`; dark net-worth hero (TOTAL VALUE · N BROKERS, eye toggle to mask values "₹ •••••••", day %, TODAY / INVESTED / XIRR row, chevron → Portfolio); US drop-in row "Your US book · $58,640 · ◷ AS OF JUL 18 CLOSE · SPOT ₹84.00/$ · OPENS 19:00 IST" (flag); "LAYOUT: INTERMEDIATE ▾" link → presets; broker attention strip ("Upstox token expired — TCS & SBIN lots last synced Jul 14 — reconnect"); quick actions Ask Sage · Roast · FIRE · Tax; Sage prompt card with 2 suggestions + "CHAT IS FREE · DEEP RESEARCH SPENDS CREDITS (N LEFT)"; "Moving your book today" top-3 movers; Allocation donut (Equity / Mutual funds / Liquid) + "RISK REPORT →"; "News · your holdings"; "Coming up" events; PRO upgrade `GateBanner` for free plan "You've used X of Y free credits this month…") · `Persona Dashboards.dc.html` §1d/1e/1f (mobile Beginner: "Your money is worth ₹17,24,169 — up ₹8,130 today. A NORMAL, GOOD DAY. NOTHING NEEDS PANIC." + WORTH DOING + WHAT MOVED + one Sage prompt; Intermediate = default + TAX PREVIEW row + MOVING YOUR BOOK + INSIGHT; Advanced: "Terminal ● NSE OPEN" ticker line, 6 mono stat cells VALUE · DAY · XIRR · VAR95 · BETA · MTM F&O, POSITIONS dense rows, SIGNALS rows) · `app/s-v2plus.jsx` `HomePresetsScreen` (three preset cards with wireframe + chips; "Same data underneath. The layout changes presentation, never advice."; Apply; footer "MANUAL PRESET · THE PERSONA ENGINE TAKES OVER LATER · PERSISTS PER SURFACE").
+
+## Read first
+- `apps/api/src/routes/v1/{dashboard,holdings,positions,brokers,news,discover,credits,subscription,risk,tax,roast,me}.ts` — specifically `GET /v1/dashboard` (+ `?v=2` payload once W01 lands: stats, returns, taxPreview, roast, watchlist, insights, risk, exposure, usSummary), `GET /v1/dashboard/returns` (XIRR), `GET /v1/brokers/sync-status`, `GET /v1/news/feed?held=1`, `GET /v1/news/events`, `GET /v1/me/briefing` (login briefing insights), `GET /v1/risk`, `GET /v1/tax/report` (tax preview), `GET /v1/roast` (latest score), `GET /v1/me/ui-persona` (W14 — until then `layoutOverride` from `/v1/me`), `GET /v1/market/us/quotes`
+- `packages/types/src/dashboard` (`DashboardStats`, `PortfolioReturns`), W01 (the same persona semantics on web — keep the vocabulary rules identical)
+
+## Build
+1. **Data:** one `useHomeQuery()` composing `/v1/sync/summary` (fast paint) + `/v1/dashboard?v=2` (full) with MMKV persistence so cold start paints the last snapshot instantly (stale badge on the sync pill until refreshed); pull-to-refresh triggers `POST /v1/brokers/sync-all` then refetch; value masking persisted per device.
+2. **Intermediate (default) layout:** exactly the `HomeScreenV2` order above. Movers = top-3 by |day change| from holdings; allocation from `stats.portfolio` (equity/MF/liquid — liquid = MF category "Liquid"/cash proxy; if not derivable render two segments, never a made-up third); news filtered to held symbols; events from `/v1/news/events` filtered to held; upgrade teaser only for FREE and dismissible (persist).
+3. **Beginner layout:** sentence hero ("Your money is worth {total} — up {day} today." + verdict line computed by `home-copy-logic.ts`: "A NORMAL, GOOD DAY. NOTHING NEEDS PANIC." / "A ROUGH DAY — NOTHING YOU NEED TO DO TODAY." thresholds tested), WORTH DOING (max 2 action cards: broker attention → roast ready → idle cash → SIP nudge; priority logic shared with web W01 — port the same rules), WHAT MOVED in words ("rose a lot / rose / fell a bit" buckets), one Sage prompt "Ask Sage — is my money doing okay?"; **no XIRR/VaR/beta/drawdown words** (render test).
+4. **Advanced layout:** terminal header (NSE status + NIFTY/SENSEX/VIX/USDINR line from `/v1/market/indices`), 6 stat cells (VALUE · DAY · XIRR · VAR95 · BETA · MTM F&O — `—` when `/v1/risk` is gated/absent), POSITIONS dense rows (symbol · LTP · day% · P&L%), SIGNALS rows (from `/v1/strategies/signals` when W05 exists; else the honest empty line), no greeting.
+5. **Home presets screen** (`/homepresets`): three cards with wireframes + chips; Apply → `PATCH /v1/me/ui-preferences { layoutOverride }` (W14) or `PATCH /v1/me/preferences { layoutOverride }` (W00/W01 interim) — same key as web so the choice follows the user; toast "Layout: {preset}".
+6. **US drop-in (flag on + US assets):** row under the hero (dual currency via `usPair` port — primary per persona from `/v1/me` marketPersona), EOD/spot/opens-at line; hero day-change gets the honesty sub-line when mixed ("US as of yesterday's close").
+7. **States:** skeletons per section; no broker → hero shows "Connect a broker to see your money" + CTA + demo invite; partial API failures degrade per section with a small DataGap line, never a blank Home; offline → last snapshot + "offline" chip.
+
+## Non-goals
+Portfolio details (M13), Sage (M14), notifications (M19), persona inference (server).
+
+## Acceptance
+- Cold start paints the persisted snapshot in < 300 ms and refreshes silently; pull-to-refresh runs a sync and updates the `SyncPill`.
+- All three layouts render from the same query result (test: identical totals); Beginner vocabulary lint test; Advanced shows `—` for gated risk metrics.
+- Preset persists via the API and is reflected on web (manual check + contract test on the shared key).
+- Broker attention strip appears iff a connection is expired/errored; tapping opens Brokers (M19).
+- Screenshots (3 layouts × light/dark × iOS/Android); `verify:push`; `/code-review`.

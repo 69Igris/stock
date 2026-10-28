@@ -1,0 +1,98 @@
+{
+  "$comment": [
+    "MONEY-1499 (B8). The FIXED parity query set, committed BEFORE the first",
+    "v2 write — B0 §6: 'A query set fixed BEFORE the migration, so it cannot",
+    "be chosen to pass.' Editing this file after a parity run has been taken",
+    "invalidates that run; add to it only before the next one.",
+    "",
+    "Shaped like the real caller: `fetch-document-context` embeds",
+    "`${symbol}: ${query}` and searches the SYSTEM corpus, so each entry is a",
+    "symbol plus the kind of question a research turn actually asks. The",
+    "symbols span the docType mix B0 §1 measured — annual_report is 73.6% of",
+    "the collection, then corporate_filing, announcement, quarterly_result,",
+    "drhp and concall_ppt."
+  ],
+  "topK": 6,
+  "queries": [
+    { "symbol": "RELIANCE", "query": "revenue growth and segment performance" },
+    { "symbol": "TCS", "query": "attrition and headcount trends" },
+    { "symbol": "HDFCBANK", "query": "net interest margin and asset quality" },
+    { "symbol": "INFY", "query": "large deal wins and order book" },
+    { "symbol": "ICICIBANK", "query": "provisions and slippages" },
+    { "symbol": "SBIN", "query": "capital adequacy and tier 1 ratio" },
+    { "symbol": "BHARTIARTL", "query": "ARPU and subscriber additions" },
+    { "symbol": "ITC", "query": "cigarette volume and FMCG margins" },
+    { "symbol": "LT", "query": "order inflow and execution pipeline" },
+    { "symbol": "KOTAKBANK", "query": "deposit growth and CASA ratio" },
+    { "symbol": "AXISBANK", "query": "retail loan mix and credit cost" },
+    { "symbol": "MARUTI", "query": "volume guidance and commodity costs" },
+    { "symbol": "ASIANPAINT", "query": "gross margin and raw material prices" },
+    { "symbol": "HINDUNILVR", "query": "rural demand and pricing growth" },
+    { "symbol": "BAJFINANCE", "query": "AUM growth and credit costs" },
+    { "symbol": "SUNPHARMA", "query": "US generics and specialty pipeline" },
+    { "symbol": "TITAN", "query": "jewellery same store sales growth" },
+    {
+      "symbol": "ULTRACEMCO",
+      "query": "capacity expansion and realisation per tonne"
+    },
+    { "symbol": "WIPRO", "query": "guidance and constant currency growth" },
+    {
+      "symbol": "NESTLEIND",
+      "query": "volume growth and new product launches"
+    },
+    { "symbol": "POWERGRID", "query": "capitalisation and regulated equity" },
+    { "symbol": "NTPC", "query": "capacity addition and PLF" },
+    { "symbol": "ONGC", "query": "crude realisation and production" },
+    { "symbol": "TATAMOTORS", "query": "JLR margins and free cash flow" },
+    {
+      "symbol": "TATASTEEL",
+      "query": "EBITDA per tonne and Europe operations"
+    },
+    { "symbol": "JSWSTEEL", "query": "capex plan and net debt to EBITDA" },
+    {
+      "symbol": "ADANIENT",
+      "query": "segment capex and incubation businesses"
+    },
+    { "symbol": "HCLTECH", "query": "services versus products revenue split" },
+    { "symbol": "TECHM", "query": "margin recovery and utilisation" },
+    { "symbol": "DRREDDY", "query": "gRevlimid contribution and US pricing" },
+    { "symbol": "CIPLA", "query": "respiratory portfolio and India branded" },
+    {
+      "symbol": "DIVISLAB",
+      "query": "custom synthesis and capacity utilisation"
+    },
+    { "symbol": "GRASIM", "query": "paints entry and VSF spreads" },
+    { "symbol": "COALINDIA", "query": "e-auction premium and offtake" },
+    { "symbol": "BPCL", "query": "marketing margin and refining GRM" },
+    { "symbol": "IOC", "query": "inventory gain and petrochemical margins" },
+    { "symbol": "HINDALCO", "query": "Novelis shipments and aluminium LME" },
+    { "symbol": "BRITANNIA", "query": "distribution expansion and Hindi belt" },
+    {
+      "symbol": "EICHERMOT",
+      "query": "Royal Enfield exports and new launches"
+    },
+    { "symbol": "HEROMOTOCO", "query": "premium motorcycle mix and EV plans" },
+    {
+      "symbol": "BAJAJ-AUTO",
+      "query": "export recovery and three wheeler volumes"
+    },
+    { "symbol": "M&M", "query": "tractor demand and SUV order book" },
+    { "symbol": "SHRIRAMFIN", "query": "vehicle finance AUM and NIM" },
+    {
+      "symbol": "INDUSINDBK",
+      "query": "microfinance book and restructured assets"
+    },
+    { "symbol": "APOLLOHOSP", "query": "occupancy and ARPOB" },
+    {
+      "symbol": "DMART",
+      "query": "store additions and revenue per square foot"
+    },
+    {
+      "symbol": "PIDILITIND",
+      "query": "VAM prices and consumer bazaar growth"
+    },
+    { "symbol": "SBILIFE", "query": "VNB margin and APE growth" },
+    { "symbol": "HDFCLIFE", "query": "product mix and persistency" },
+    { "symbol": "ZOMATO", "query": "contribution margin and Blinkit losses" }
+  ]
+}

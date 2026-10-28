@@ -1,0 +1,1138 @@
+{
+  "ticket": "MONEY-1096",
+  "startedAt": "2026-08-08T19:03:12.961Z",
+  "finishedAt": "2026-08-08T19:04:03.320Z",
+  "budget": {
+    "max": 60,
+    "used": 51
+  },
+  "pacing": {
+    "minIntervalMs": 1000
+  },
+  "blockedHosts": [],
+  "verdictCounts": {
+    "ABSENT": 19,
+    "EMPTY": 12,
+    "ERROR": 1,
+    "HTML": 4,
+    "PRESENT": 40
+  },
+  "findings": [
+    {
+      "group": "nse-archives",
+      "feed": "NSE CM bhavcopy — legacy",
+      "pattern": "/content/historical/EQUITIES/{YYYY}/{MON}/cm{DDMMMYYYY}bhav.csv.zip",
+      "answer": "SPARSE — not a clean floor. Earliest confirmed file 1994-11-03, but 1 later probed date(s) are MISSING (1994-11-04). P3 must treat 404s inside the range as holes, not as the end of history.",
+      "evidence": [
+        "nse-archives/cm-legacy/1994-11-03",
+        "nse-archives/cm-legacy/1994-11-04",
+        "nse-archives/cm-legacy/1994-12-01"
+      ]
+    },
+    {
+      "group": "nse-archives",
+      "feed": "NSE MTO (delivery %)",
+      "pattern": "/archives/equities/mto/MTO_{DDMMYYYY}.DAT",
+      "answer": "floor is in (1999-04-01, 2003-04-01] — absent at 1999-04-01, present at 2003-04-01; narrowed to approximately (2002-09-27, 2003-04-01] (weekends skipped; exchange holidays NOT modelled, so the lower bound may still sit on a holiday)",
+      "evidence": [
+        "nse-archives/mto/1999-04-01",
+        "nse-archives/mto/2003-04-01",
+        "nse-archives/mto/2010-04-01",
+        "nse-archives/mto/2014-04-01"
+      ]
+    },
+    {
+      "group": "nse-archives",
+      "feed": "NSE PR bundle",
+      "pattern": "/archives/equities/bhavcopy/pr/PR{DDMMYY}.zip",
+      "answer": "NOT AVAILABLE — 404 at 1995-01-01, 2000-01-01, 2010-01-01",
+      "evidence": [
+        "nse-archives/pr/1995-01-01",
+        "nse-archives/pr/2000-01-01",
+        "nse-archives/pr/2010-01-01"
+      ]
+    },
+    {
+      "group": "nse-archives",
+      "feed": "NSE sec_bhavdata_full (price + delivery)",
+      "pattern": "/products/content/sec_bhavdata_full_{DDMMYYYY}.csv",
+      "answer": "floor is in (2019-07-01, 2019-10-01] — absent at 2019-07-01, present at 2019-10-01; narrowed to approximately (2019-09-18, 2019-10-01] (weekends skipped; exchange holidays NOT modelled, so the lower bound may still sit on a holiday)",
+      "evidence": [
+        "nse-archives/sec-bhavdata-full/2019-07-01",
+        "nse-archives/sec-bhavdata-full/2019-10-01",
+        "nse-archives/sec-bhavdata-full/2020-01-01"
+      ]
+    },
+    {
+      "group": "nse-archives",
+      "feed": "NSE CD UDiFF (currency)",
+      "pattern": "/archives/cd/bhav/BhavCopy_NSE_CD_0_0_0_{YYYYMMDD}_F_0000.csv.zip",
+      "answer": "available at every probed date; floor is at or before 2024-01-02 (not bracketed — probe earlier to pin it)",
+      "evidence": [
+        "nse-archives/udiff-cd/2024-01-02",
+        "nse-archives/udiff-cd/2024-07-01",
+        "nse-archives/udiff-cd/2025-01-02"
+      ]
+    },
+    {
+      "group": "nse-archives",
+      "feed": "NSE COM UDiFF (commodity)",
+      "pattern": "/content/com/BhavCopy_NSE_CO_0_0_0_{YYYYMMDD}_F_0000.csv.zip",
+      "answer": "available at every probed date; floor is at or before 2024-01-02 (not bracketed — probe earlier to pin it)",
+      "evidence": [
+        "nse-archives/udiff-com/2024-01-02",
+        "nse-archives/udiff-com/2024-07-01",
+        "nse-archives/udiff-com/2025-01-02"
+      ]
+    },
+    {
+      "group": "nse-api",
+      "feed": "NSE corporates-pit (insider trading) — BULK mode",
+      "pattern": "/api/corporates-pit?index=equities&from_date={DD-MM-YYYY}&to_date={DD-MM-YYYY}",
+      "answer": "still EMPTY with the page Referer AND EMPTY with the generic one — the Referer is NOT the blocker, so the PARAM SET is wrong. Capture the real XHR from /companies-listing/corporate-filings-insider-trading in DevTools.",
+      "evidence": [
+        "nse-api/corporates-pit/bulk-page-referer",
+        "nse-api/corporates-pit/bulk-generic-referer"
+      ]
+    },
+    {
+      "group": "nse-api",
+      "feed": "NSE integrated-filing-results",
+      "pattern": "/api/integrated-filing-results?index=equities&from_date={DD-MM-YYYY}&to_date={DD-MM-YYYY}",
+      "answer": "param set CONFIRMED — returns filings for a 30-day window (15066 bytes)",
+      "evidence": [
+        "nse-api/integrated-filing-results/bulk"
+      ]
+    },
+    {
+      "group": "nse-api",
+      "feed": "NSE archives door (fallback for nsearchives)",
+      "pattern": "/api/reports?archives=[{name,type,category,section}]&date={DD-Mon-YYYY}&mode=single",
+      "answer": "SERVES OLD DATES — usable as the P3 fallback when nsearchives throttles",
+      "evidence": [
+        "nse-api/reports/archives-door-2019"
+      ]
+    },
+    {
+      "group": "bse-www",
+      "feed": "BSE CM UDiFF (cash)",
+      "pattern": "/download/BhavCopy/Equity/BhavCopy_BSE_CM_0_0_0_{YYYYMMDD}_F_0000.CSV",
+      "answer": "REACHABLE from our egress (verified 20260807)",
+      "evidence": [
+        "bse-www/cm-udiff-live/2026-08-07"
+      ]
+    },
+    {
+      "group": "bse-www",
+      "feed": "BSE FO UDiFF (derivatives)",
+      "pattern": "/download/Bhavcopy/Derivative/BhavCopy_BSE_FO_0_0_0_{YYYYMMDD}_F_0000.CSV",
+      "answer": "PRESENT at 20260807",
+      "evidence": [
+        "bse-www/fo-udiff-live"
+      ]
+    },
+    {
+      "group": "bse-www",
+      "feed": "BSE gross delivery (SCBSEALL)",
+      "pattern": "/BSEDATA/gross/{YYYY}/SCBSEALL{DDMM}.zip",
+      "answer": "PRESENT at 0708",
+      "evidence": [
+        "bse-www/scbseall-live"
+      ]
+    },
+    {
+      "group": "bse-www",
+      "feed": "BSE CD UDiFF (currency)",
+      "pattern": "/download/Bhavcopy/Currency/BhavCopy_BSE_CD_0_0_0_{YYYYMMDD}_F_0000.CSV",
+      "answer": "HTML — the guessed path is NOT valid; do not register it",
+      "evidence": [
+        "bse-www/cd-udiff-live"
+      ]
+    },
+    {
+      "group": "bse-www",
+      "feed": "BSE CM bhavcopy — legacy (pre-UDiFF)",
+      "pattern": "/download/BhavCopy/Equity/EQ_ISINCODE_{DDMMYY}.zip",
+      "answer": "INDETERMINATE — no rung returned either a file or a 404. Verdicts: 2007-01-02=HTML, 2016-01-01=HTML, 2024-03-29=HTML. A 200 carrying an HTML page means the path did not resolve to a file; it is NOT evidence that the file is unavailable. Re-probe before concluding anything about this feed.",
+      "evidence": [
+        "bse-www/eq-isincode/2007-01-02",
+        "bse-www/eq-isincode/2016-01-01",
+        "bse-www/eq-isincode/2024-03-29"
+      ]
+    },
+    {
+      "group": "bse-www",
+      "feed": "BSE gross delivery — history",
+      "pattern": "/BSEDATA/gross/{YYYY}/SCBSEALL{DDMM}.zip",
+      "answer": "available at every probed date; floor is at or before 2007-01-04 (not bracketed — probe earlier to pin it)",
+      "evidence": [
+        "bse-www/scbseall/2007-01-04",
+        "bse-www/scbseall/2012-01-02",
+        "bse-www/scbseall/2018-01-01"
+      ]
+    },
+    {
+      "group": "bse-www",
+      "feed": "BSE EGR rows inside CM UDiFF",
+      "pattern": "(analysis of the CM UDiFF body — 0 extra requests)",
+      "answer": "NO EGR rows in the CM file (4939 data rows scanned; segments seen: CM; series seen: A/B/X/Z/XT/T/P/ZP/E/M/MT/IF). EGR needs its OWN feed entry in the P2 registry.",
+      "evidence": [
+        "bse-www/cm-udiff-live/2026-08-07"
+      ]
+    },
+    {
+      "group": "bse-api",
+      "feed": "BSE SENSEX daily history",
+      "pattern": "/ProduceCSVForDate/w?strIndex={NAME}&dtFromDate={DD/MM/YYYY}&dtToDate={DD/MM/YYYY}&period=D",
+      "answer": "history reaches 1986 (199 rows, 2-January-1986 → 24-December-1986) but is CLOSE-ONLY — open/high/low are blank for every row. P3 can build a level/returns series, NOT a daily range.",
+      "evidence": [
+        "bse-api/sensex/1986"
+      ]
+    },
+    {
+      "group": "bse-api",
+      "feed": "BSE all-index daily close",
+      "pattern": "/IndexArchDailyAll/w?fmdt={DD/MM/YYYY}&todt={DD/MM/YYYY}",
+      "answer": "EMPTY at 07/08/2026 — the guessed param set (fmdt/todt only) returns nothing; the real call likely needs strIndex/Indexcode. Capture it from the index page XHR before registering.",
+      "evidence": [
+        "bse-api/index-arch-daily-all"
+      ]
+    },
+    {
+      "group": "bse-api",
+      "feed": "BSE corporate announcements",
+      "pattern": "/AnnSubCategoryGetData/w?pageno={N}&strCat={CAT}&subcategory={SUB}&strPrevDate={YYYYMMDD}&strToDate={YYYYMMDD}&strType=C",
+      "answer": "param set NOT confirmed — even a recent 7-day window returned EMPTY, so the Jan-2011 result says nothing about archive depth. Capture the real XHR from the announcements page.",
+      "evidence": [
+        "bse-api/announcements/recent",
+        "bse-api/announcements/2011"
+      ]
+    },
+    {
+      "group": "bse-api",
+      "feed": "BSE announcement subcategories (incl. the transcript string)",
+      "pattern": "(derived from AnnSubCategoryGetData rows — 0 extra requests)",
+      "answer": "UNKNOWN — the announcements response carried no rows.",
+      "evidence": [
+        "bse-api/announcements/recent"
+      ]
+    },
+    {
+      "group": "bse-results",
+      "feed": "BSE results XBRL index (per scrip)",
+      "pattern": "/Result_Arch_ng/w?scrip_cd={BSE_SCRIP_CODE}",
+      "answer": "FOUND and CONFIRMED (MONEY-1255). BSE publishes a per-scrip results XBRL index. 530127 -> 133 rows / 55 standalone links; 500325 -> 204 rows / 53 standalone + 53 consolidated. Rows carry stand_xbrl_link and conso_xbrl_link (site-relative /XBRLFILES/... paths served from www.bseindia.com), Filing_Date_Time, Revised_Date_Time, Status (New|Revised), Revision_Reason, and Fld_QuarterName (Quarter|Year). Basis is a COLUMN PAIR here where NSE files two separate records, and the period TYPE is stated rather than inferred from a date. SHAPE CAUTION: keyed by scrip code, with NO date range and NO paging, so there is no market-wide 'filings between X and Y' call — an ingest must iterate scrips. Found by reading BSE's own Angular bundle (main-*.js names Result_Arch_ng) rather than by guessing, then verified live.",
+      "evidence": [
+        "bse-results/result-arch/530127",
+        "bse-results/result-arch/500325"
+      ]
+    },
+    {
+      "group": "bse-results",
+      "feed": "BSE results — daily filer discovery",
+      "pattern": "/NSTodayResults_ng/w  (no parameters)",
+      "answer": "Market-wide list of scrips that filed results TODAY (5 rows on 2026-08-26). Carries Scrip_cd, company_name, quarter_code, audited, DT_TM — and NO xbrl link, so a nightly ingest is two hops: today's filers, then one Result_Arch_ng per filer. It takes no date parameter, so a missed night cannot be re-asked for here; recovery is per-scrip via Result_Arch_ng, which returns a scrip's FULL history in one response.",
+      "evidence": [
+        "bse-results/ns-today-results"
+      ]
+    },
+    {
+      "group": "bse-results",
+      "feed": "BSE results XBRL instance",
+      "pattern": "https://www.bseindia.com{stand_xbrl_link|conso_xbrl_link}",
+      "answer": "Instances serve as text/xml and declare the two taxonomy families this repo ALREADY dispatches on — in-bse-fin (2018-03-31 / 2019-03-31 / 2020-03-31, a bseindia.com-HOSTED namespace) and in-capmkt (SEBI, 2025-01-31 / 2026-01-31). So BSE needs no new parser family; verified by parsing three captured instances in packages/core/__tests__/fixtures/xbrl/bse-*.xml. Five of the six directory x filename-prefix cells serve: FourOneUploadDocument/Main_Ind_As_*, FourOneUploadDocument/NonBanking_*, NBFCUploadDocument/NBFC_*, IFIndasUploadDocument/Integrated_Finance_Ind_As_*, IFOtherthanUploadDocument/IFOtherthan_*. See the next finding for the sixth.",
+      "evidence": [
+        "bse-results/instance/legacy-nonbanking-530127",
+        "bse-results/instance/legacy-nbfc-530127",
+        "bse-results/instance/integrated-indas-500325",
+        "bse-results/instance/legacy-mainindas-500325",
+        "bse-results/instance/integrated-otherthan-531500"
+      ]
+    },
+    {
+      "group": "bse-results",
+      "feed": "BSE index DEFECT — integrated-era NBFC filings",
+      "pattern": "/XBRLFILES/NBFCUploadDocument/Integrated_Finance_NBFC_*  ->  /XBRLFILES/IFNBFCUploadDocument/",
+      "answer": "BSE's index emits the WRONG DIRECTORY for exactly one cell. Integrated-era NBFC rows are indexed under /XBRLFILES/NBFCUploadDocument/Integrated_Finance_NBFC_* and every one of them 404s; the files are served from the sibling /XBRLFILES/IFNBFCUploadDocument/. The cell is narrow and the two dimensions had to be separated to see it: it is NOT the directory (NBFCUploadDocument/NBFC_* serves), NOT the era (IFIndas and IFOtherthan integrated files serve), NOT recency (Jan-2026 integrated files for 519421 and 532351 serve), and NOT the filer sector alone (legacy NBFC files serve). Verified 6/6 across three NBFCs (512437, 539773, 530127) and both in-capmkt versions. Two other sibling spellings 404, so IFNBFCUploadDocument is specific rather than a catch-all. The directory segment is CASE-INSENSITIVE (IIS). Implemented as bseInstanceUrlCandidates() in xbrl-filing-index.ts — a FALLBACK (indexed URL first, rewrite only on failure) so recoveries stay countable: if BSE fixes the index the count falls to zero; if BSE moves the sibling the FAILURE count rises instead. It is a WORKAROUND for someone else's bug, not a durable fact about their layout — re-test before deleting it.",
+      "evidence": [
+        "bse-results/instance/integrated-nbfc-530127-as-indexed",
+        "bse-results/instance/integrated-nbfc-512437-as-indexed",
+        "bse-results/instance/integrated-nbfc-539773-as-indexed",
+        "bse-results/instance/integrated-nbfc-530127-sibling",
+        "bse-results/instance/integrated-nbfc-512437-sibling",
+        "bse-results/instance/integrated-nbfc-539773-sibling",
+        "bse-results/instance/integrated-nbfc-wrong-sibling-ifindas",
+        "bse-results/instance/integrated-nbfc-wrong-sibling-long"
+      ]
+    },
+    {
+      "group": "bse-results",
+      "feed": "BSE XBRL-details listing (DISPROVED route to results)",
+      "pattern": "/GetCorXbrlDetails_ng/w?Flag={CATEGORY}&scripcode=&fromdate={YYYY/MM/DD}&todate={YYYY/MM/DD}",
+      "answer": "DISPROVED, with a control. Category 22 is literally named 'Financial Results' and returns ZERO rows at every date tried (a 2026 window, a 2024 window, market-wide and per-scrip), while category 7 returns 3,510 rows over the IDENTICAL range and date format. So the params are right and the empty is real: results XBRL is NOT reachable through this listing. Recorded rather than dropped because this is the first place anyone will look, and an empty 200 with no control beside it reads as 'wrong params' and gets re-derived forever. Note the endpoint states its own contract when dates are omitted ({\"Error\":[{\"message\":\"From Date and To Date are mandatory.\"}]}), which is the ONE place the registry's '200-with-no-rows means the params are wrong' rule held here.",
+      "evidence": [
+        "bse-results/cor-xbrl-details/flag22",
+        "bse-results/cor-xbrl-details/flag7-control",
+        "bse-results/cor-xbrl-details/flag22-hist2024",
+        "bse-results/cor-xbrl-details/flag22-nodates",
+        "bse-results/cor-xbrl-dropdown"
+      ]
+    },
+    {
+      "group": "bse-results",
+      "feed": "BSE announcement XBRL (NOT results) — a 200 that passes every shape check",
+      "pattern": "/Msource/90D/CorpXbrlGen.aspx?Bsenewid={NEWSID}&Scripcode={SCRIP}",
+      "answer": "Serves 200 text/xml with an <xbrli:xbrl root, reached from an announcement row whose category is literally 'Result' — and is NOT a results instance. The body is the in-bse-co ANNOUNCEMENT taxonomy: ScripCode, NameOfTheCompany, SubjectOfAnnouncement, AttachmentURL, CategoryOfAnnouncement. 1,645 bytes, zero financial facts. Anything validating on status + content-type + root element would archive these as results filings and project zeros. Also settles the three earlier 404s: XML_NAME (ANN_{scrip}_{GUID}) is NOT a filename — the announcement's attachment field is ATTACHMENTNAME (a bare GUID .pdf) and BSE builds that link as /xml-data/corpfiling/AttachLive/{ATTACHMENTNAME} (live) or /xml-data/corpfiling/CorpAttachment/{YYYY}/{M}/{ATTACHMENTNAME} (archived). The guessed DIRECTORY was right; the FIELD was wrong.",
+      "evidence": [
+        "bse-results/corp-xbrl-gen",
+        "bse-results/anndet-aspx"
+      ]
+    }
+  ],
+  "probes": [
+    {
+      "id": "nse-archives/cm-legacy/1994-11-03",
+      "group": "nse-archives",
+      "question": "Earliest NSE cash bhavcopy (legacy cm{DDMMMYYYY}bhav form)",
+      "url": "https://nsearchives.nseindia.com/content/historical/EQUITIES/1994/NOV/cm03NOV1994bhav.csv.zip",
+      "status": 200,
+      "contentType": "application/zip",
+      "bytes": 2841,
+      "preview": "hex:504b03041400000008006c37ac34864008186f0a0000f01f000013001500636d30334e4f5631393934626861762e6373765554090003f3e463448ed7464b557804006600d0079559d992e3a8127d9f0fe9274f850001d22396b1adb2b69154aef6fdff0fb9b900b6a17a22269a045ced6449324f2ede1ee3711e0e9b5f7bbf1de6c54f876b7fb91e86f9fbd00df3e60f83dbf6c3b2fa3b7fdce77d5f4fffec8f30bbbbe1b0f7a3df76372e87bfdcf178f0ff1cacd005551fd5415415cea1577f4ff3fd6fd1b63530",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "nse-archives/cm-legacy/1994-11-04",
+      "group": "nse-archives",
+      "question": "Earliest NSE cash bhavcopy (legacy cm{DDMMMYYYY}bhav form)",
+      "url": "https://nsearchives.nseindia.com/content/historical/EQUITIES/1994/NOV/cm04NOV1994bhav.csv.zip",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3815,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "nse-archives/cm-legacy/1994-12-01",
+      "group": "nse-archives",
+      "question": "Earliest NSE cash bhavcopy (legacy cm{DDMMMYYYY}bhav form)",
+      "url": "https://nsearchives.nseindia.com/content/historical/EQUITIES/1994/DEC/cm01DEC1994bhav.csv.zip",
+      "status": 200,
+      "contentType": "application/zip",
+      "bytes": 3094,
+      "preview": "hex:504b0304140000000800ac5dcd34610ff01d6c0b0000e922000013001500636d303144454331393934626861762e6373765554090003fb578e448ed7464b557804006600d0077d5ad99aab380ebe9f07e92bba3ebce34b07a88413b60652d535efff20a3c550c44ee63b489874c9abf46b71af3fc365ea8bb55dba762da6b91d8b5b77bd15fdf45dd4fdb4b6451fd6ad9897f68b3fb769db96e69fed27b6be425f6cddd0ae5b18e6e23fa1ae8bf69f422b530273e6a9854c9765214d214a5f424bfcddb4f5dfc27b",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "nse-archives/mto/1999-04-01",
+      "group": "nse-archives",
+      "question": "MTO (delivery quantity) archive floor",
+      "url": "https://nsearchives.nseindia.com/archives/equities/mto/MTO_01041999.DAT",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "nse-archives/mto/2003-04-01",
+      "group": "nse-archives",
+      "question": "MTO (delivery quantity) archive floor",
+      "url": "https://nsearchives.nseindia.com/archives/equities/mto/MTO_01042003.DAT",
+      "status": 200,
+      "contentType": "application/octet-stream",
+      "bytes": 24243,
+      "preview": "Security Wise Delivery Position - Compulsory Rolling Settlement 10,MTO,01042003,027649994,0000669 Trade Date <01-APR-2003>,Settlement Type <D>,Settlement No <2003063>,Settlement Date <04-APR-2003> Rec",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "nse-archives/mto/2010-04-01",
+      "group": "nse-archives",
+      "question": "MTO (delivery quantity) archive floor",
+      "url": "https://nsearchives.nseindia.com/archives/equities/mto/MTO_01042010.DAT",
+      "status": 200,
+      "contentType": "application/octet-stream",
+      "bytes": 49511,
+      "preview": "Security Wise Delivery Position - Compulsory Rolling Settlement 10,MTO,01042010,260744814,0001333 Trade Date <01-APR-2010>,Settlement Type <N>,Settlement No <2010060>,Settlement Date <06-APR-2010> Rec",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "nse-archives/mto/2014-04-01",
+      "group": "nse-archives",
+      "question": "MTO (delivery quantity) archive floor",
+      "url": "https://nsearchives.nseindia.com/archives/equities/mto/MTO_01042014.DAT",
+      "status": 200,
+      "contentType": "application/octet-stream",
+      "bytes": 52366,
+      "preview": "Security Wise Delivery Position - Compulsory Rolling Settlement 10,MTO,01042014,279360824,0001429 Trade Date <01-APR-2014>,Settlement Type <N>,Settlement No <2014063>,Settlement Date <04-APR-2014> Rec",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "nse-archives/mto/refine-2001-03-30",
+      "group": "nse-archives",
+      "question": "MTO (delivery quantity) archive floor — refinement",
+      "url": "https://nsearchives.nseindia.com/archives/equities/mto/MTO_30032001.DAT",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "nse-archives/mto/refine-2002-03-29",
+      "group": "nse-archives",
+      "question": "MTO (delivery quantity) archive floor — refinement",
+      "url": "https://nsearchives.nseindia.com/archives/equities/mto/MTO_29032002.DAT",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "nse-archives/mto/refine-2002-09-27",
+      "group": "nse-archives",
+      "question": "MTO (delivery quantity) archive floor — refinement",
+      "url": "https://nsearchives.nseindia.com/archives/equities/mto/MTO_27092002.DAT",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "nse-archives/pr/1995-01-01",
+      "group": "nse-archives",
+      "question": "PR daily-report bundle archive depth",
+      "url": "https://nsearchives.nseindia.com/archives/equities/bhavcopy/pr/PR010195.zip",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3815,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "nse-archives/pr/2000-01-01",
+      "group": "nse-archives",
+      "question": "PR daily-report bundle archive depth",
+      "url": "https://nsearchives.nseindia.com/archives/equities/bhavcopy/pr/PR010100.zip",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3815,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "nse-archives/pr/2010-01-01",
+      "group": "nse-archives",
+      "question": "PR daily-report bundle archive depth",
+      "url": "https://nsearchives.nseindia.com/archives/equities/bhavcopy/pr/PR010110.zip",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3815,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "nse-archives/sec-bhavdata-full/2019-07-01",
+      "group": "nse-archives",
+      "question": "sec_bhavdata_full (price+delivery) start date",
+      "url": "https://nsearchives.nseindia.com/products/content/sec_bhavdata_full_01072019.csv",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "nse-archives/sec-bhavdata-full/2019-10-01",
+      "group": "nse-archives",
+      "question": "sec_bhavdata_full (price+delivery) start date",
+      "url": "https://nsearchives.nseindia.com/products/content/sec_bhavdata_full_01102019.csv",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 213174,
+      "preview": "SYMBOL, SERIES, DATE1, PREV_CLOSE, OPEN_PRICE, HIGH_PRICE, LOW_PRICE, LAST_PRICE, CLOSE_PRICE, AVG_PRICE, TTL_TRD_QNTY, TURNOVER_LACS, NO_OF_TRADES, DELIV_QTY, DELIV_PER 20MICRONS, EQ, 01-Oct-2019, 40",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "nse-archives/sec-bhavdata-full/2020-01-01",
+      "group": "nse-archives",
+      "question": "sec_bhavdata_full (price+delivery) start date",
+      "url": "https://nsearchives.nseindia.com/products/content/sec_bhavdata_full_01012020.csv",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 208521,
+      "preview": "SYMBOL, SERIES, DATE1, PREV_CLOSE, OPEN_PRICE, HIGH_PRICE, LOW_PRICE, LAST_PRICE, CLOSE_PRICE, AVG_PRICE, TTL_TRD_QNTY, TURNOVER_LACS, NO_OF_TRADES, DELIV_QTY, DELIV_PER 20MICRONS, EQ, 01-Jan-2020, 35",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "nse-archives/sec-bhavdata-full/refine-2019-08-16",
+      "group": "nse-archives",
+      "question": "sec_bhavdata_full start date — refinement",
+      "url": "https://nsearchives.nseindia.com/products/content/sec_bhavdata_full_16082019.csv",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "nse-archives/sec-bhavdata-full/refine-2019-09-06",
+      "group": "nse-archives",
+      "question": "sec_bhavdata_full start date — refinement",
+      "url": "https://nsearchives.nseindia.com/products/content/sec_bhavdata_full_06092019.csv",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "nse-archives/sec-bhavdata-full/refine-2019-09-18",
+      "group": "nse-archives",
+      "question": "sec_bhavdata_full start date — refinement",
+      "url": "https://nsearchives.nseindia.com/products/content/sec_bhavdata_full_18092019.csv",
+      "status": 404,
+      "contentType": "text/html;charset=UTF-8",
+      "bytes": 3927,
+      "preview": "<!DOCTYPE html> <html lang=\"en\"> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"Content-Type\" content=\"text/h",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "nse-archives/udiff-cd/2024-01-02",
+      "group": "nse-archives",
+      "question": "NSE CD UDiFF (currency) backfill floor",
+      "url": "https://nsearchives.nseindia.com/archives/cd/bhav/BhavCopy_NSE_CD_0_0_0_20240102_F_0000.csv.zip",
+      "status": 200,
+      "contentType": "application/zip",
+      "bytes": 189015,
+      "preview": "hex:504b030414000000080061812558089ef95c6fe102002d72180029001c0042686176436f70795f4e53455f43445f305f305f305f32303234303130325f465f303030302e6373765554090003bedc9765bddc976575780b0001049f13000004c8000000c4fd5d9335b98d2608deef6f3919e6fc765e864e666a25eb92622545dbe8b2a76aa7a7adab6ac654b299e9fdf54bd0e927080284335e87aceba2fc2022f2d5e338f82608fce56fffe55f7efefbe337ffedff57feff9fffebbf95fff7b77f7efcfadffefd77",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "nse-archives/udiff-cd/2024-07-01",
+      "group": "nse-archives",
+      "question": "NSE CD UDiFF (currency) backfill floor",
+      "url": "https://nsearchives.nseindia.com/archives/cd/bhav/BhavCopy_NSE_CD_0_0_0_20240701_F_0000.csv.zip",
+      "status": 200,
+      "contentType": "application/zip",
+      "bytes": 172887,
+      "preview": "hex:504b03041400000008009193e158a46d8be86fa20200e086170029001c0042686176436f70795f4e53455f43445f305f305f305f32303234303730315f465f303030302e6373765554090003f9a78266f9a7826675780b0001049f13000004c8000000b4fd49b325cb712608eefbb704aed83c2cc10b3c362199c069008f525c66915d5929c964959090aacafef56de6eee71c9d4cdd22ae06177c5763827e6e3a9b9aea5ffffdbffccbeffef6edeffedbff6ffcffbffcd7ff31fedfbffff3b75ffedbbffdc3bffd",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "nse-archives/udiff-cd/2025-01-02",
+      "group": "nse-archives",
+      "question": "NSE CD UDiFF (currency) backfill floor",
+      "url": "https://nsearchives.nseindia.com/archives/cd/bhav/BhavCopy_NSE_CD_0_0_0_20250102_F_0000.csv.zip",
+      "status": 200,
+      "contentType": "application/zip",
+      "bytes": 177711,
+      "preview": "hex:504b03041400000008004696225af44ace1147b5020016c2180029001c0042686176436f70795f4e53455f43445f305f305f305f32303235303130325f465f303030302e63737655540900038c9276678b92766775780b0001049f13000004c8000000ccfd5b932f39721f08beef67399d16b8038fd95955bddd4656e57675d2968f1a6a472393c41923db6646fbe91740c4ff1f7e83479c939e5af181957e6efd7384dfe170ffdbbffd87fff8d3dfbffdf13fff7ffbfffffd3ffdb7fefffeed5fbefdf29ffff5cf",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "nse-archives/udiff-com/2024-01-02",
+      "group": "nse-archives",
+      "question": "NSE COM UDiFF (commodity) backfill floor",
+      "url": "https://nsearchives.nseindia.com/content/com/BhavCopy_NSE_CO_0_0_0_20240102_F_0000.csv.zip",
+      "status": 200,
+      "contentType": "application/zip",
+      "bytes": 77252,
+      "preview": "hex:504b0304140000000800d47d2358986d3231dc2c0100e950090029001c0042686176436f70795f4e53455f434f5f305f305f305f32303234303130325f465f303030302e6373765554090003073495651834956575780b0001049f13000004c8000000acfd5dd325398e1e08deef6f618639bfc9cbd4a98f2d6d7dbc9b55d9dad49da6b5a39149ea19eb2e9b19edaf5f824ebaf3100f839e07d56d162fe01115f12448800008027ffbd7fff49f7ff377f5effeebffaffcfad7fff23fca2ffffacfea77fff55ffef0",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "nse-archives/udiff-com/2024-07-01",
+      "group": "nse-archives",
+      "question": "NSE COM UDiFF (commodity) backfill floor",
+      "url": "https://nsearchives.nseindia.com/content/com/BhavCopy_NSE_CO_0_0_0_20240701_F_0000.csv.zip",
+      "status": 200,
+      "contentType": "application/zip",
+      "bytes": 111214,
+      "preview": "hex:504b03041400000008009215e25845c7f28d86b101002a780d0029001c0042686176436f70795f4e53455f434f5f305f305f305f32303234303730315f465f303030302e63737655540900033b1c83663b1c836675780b0001049f13000004c8000000bcfd5db32d398e1d08becf6f611ce3f7c7636a57664d6ab232cee447d9486fead2b45a26a9baad2aadbb35bf7e08d2e9ceed58bcf4d808ab2ab33880df9b275680240892c0c25ffee53ffde7bffb9bfa77fff5ff57fff9e7fff23fea3ffee59fd4effeeb3f",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "nse-archives/udiff-com/2025-01-02",
+      "group": "nse-archives",
+      "question": "NSE COM UDiFF (commodity) backfill floor",
+      "url": "https://nsearchives.nseindia.com/content/com/BhavCopy_NSE_CO_0_0_0_20250102_F_0000.csv.zip",
+      "status": 200,
+      "contentType": "application/zip",
+      "bytes": 120910,
+      "preview": "hex:504b03041400000008008104235a34e1e8ba66d70100e7130d0029001c0042686176436f70795f4e53455f434f5f305f305f305f32303235303130325f465f303030302e637376555409000399e3766798e3766775780b0001049f13000004c8000000acbd5bd325b99124f6aedf523c86fbe5b1b786a47ad5dd2c1559636abdad66a4d1dace8cd6489aa4d1af1780c4250ec2f3c3e913b5b356959e5fb13b3b0b09c4c5c3fd2f7ffd2ffffc0f7ffff49ffeebff577efdf3bffc5bf9e5affff4e90ffff5df7ffcf7",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "nse-api/daily-reports/EGR",
+      "group": "nse-api",
+      "question": "daily-reports?key=EGR — are any EGR files published yet?",
+      "url": "https://www.nseindia.com/api/daily-reports?key=EGR",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "bytes": 702,
+      "preview": "{\"PreviousDay\":[{\"fileHashKey\":\"EGR-NCL-CONTRACT-DELTA-3\",\"fileKey\":\"EGR-NCL-CONTRACT-DELTA\",\"fileSegment\":\"EGR\",\"displayName\":\"EGR-Bhavcopy File (DAT)\",\"fileActlName\":\"EG_BC06082026.DAT\",\"filePath\":\"",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "nse-api/monthly-reports/INDEX",
+      "group": "nse-api",
+      "question": "monthly-reports?key=INDEX — does this family exist?",
+      "url": "https://www.nseindia.com/api/monthly-reports?key=INDEX",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "bytes": 2,
+      "preview": "[]",
+      "verdict": "EMPTY"
+    },
+    {
+      "id": "nse-api/monthly-reports/CBM",
+      "group": "nse-api",
+      "question": "monthly-reports?key=CBM — does this family exist?",
+      "url": "https://www.nseindia.com/api/monthly-reports?key=CBM",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "bytes": 2,
+      "preview": "[]",
+      "verdict": "EMPTY"
+    },
+    {
+      "id": "nse-api/monthly-reports/TRI-PARTY",
+      "group": "nse-api",
+      "question": "monthly-reports?key=TRI-PARTY — does this family exist?",
+      "url": "https://www.nseindia.com/api/monthly-reports?key=TRI-PARTY",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "bytes": 2,
+      "preview": "[]",
+      "verdict": "EMPTY"
+    },
+    {
+      "id": "nse-api/monthly-reports/EBP",
+      "group": "nse-api",
+      "question": "monthly-reports?key=EBP — does this family exist?",
+      "url": "https://www.nseindia.com/api/monthly-reports?key=EBP",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "bytes": 2,
+      "preview": "[]",
+      "verdict": "EMPTY"
+    },
+    {
+      "id": "nse-api/corporates-pit/bulk-page-referer",
+      "group": "nse-api",
+      "question": "corporates-pit bulk mode, Referer = the insider-trading page that owns the XHR",
+      "url": "https://www.nseindia.com/api/corporates-pit?index=equities&from_date=08-07-2026&to_date=07-08-2026",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "bytes": 28,
+      "preview": "{\"acqNameList\":[],\"data\":[]}",
+      "verdict": "EMPTY"
+    },
+    {
+      "id": "nse-api/corporates-pit/bulk-generic-referer",
+      "group": "nse-api",
+      "question": "corporates-pit bulk mode, generic Referer — the control for the Referer hypothesis",
+      "url": "https://www.nseindia.com/api/corporates-pit?index=equities&from_date=08-07-2026&to_date=07-08-2026",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "bytes": 28,
+      "preview": "{\"acqNameList\":[],\"data\":[]}",
+      "verdict": "EMPTY"
+    },
+    {
+      "id": "nse-api/integrated-filing-results/bulk",
+      "group": "nse-api",
+      "question": "integrated-filing-results — bulk param set",
+      "url": "https://www.nseindia.com/api/integrated-filing-results?index=equities&from_date=08-07-2026&to_date=07-08-2026",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "bytes": 15066,
+      "preview": "{\"data\":[{\"attFileSize\":\"0 Bytes\",\"audited\":\"Un-Audited\",\"broadcast_Date\":\"07-Aug-2026 23:00:20\",\"cmName\":\"Excelsoft Technologies Limited\",\"consolidated\":\"Standalone\",\"creation_Date\":\"07-Aug-2026 23:0",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "nse-api/reports/debt-weekly",
+      "group": "nse-api",
+      "question": "Debt tab \"Weekly Reports\" XHR shape (guess-verify)",
+      "url": "https://www.nseindia.com/api/reports?archives=%5B%7B%22name%22%3A%22Weekly%20Reports%22%2C%22type%22%3A%22weekly-reports%22%2C%22category%22%3A%22debt%22%2C%22section%22%3A%22debt%22%7D%5D&date=07-Aug-2026&type=weekly-reports&mode=single",
+      "status": 404,
+      "contentType": "application/json; charset=utf-8",
+      "bytes": 54,
+      "preview": "{\"error\":\"Not Found, file is unavailable\",\"show\":true}",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "nse-api/reports/cm-mutual-fund",
+      "group": "nse-api",
+      "question": "Capital-Market \"Mutual Fund\" section XHR shape (guess-verify)",
+      "url": "https://www.nseindia.com/api/reports?archives=%5B%7B%22name%22%3A%22Mutual%20Fund%22%2C%22type%22%3A%22archives%22%2C%22category%22%3A%22capital-market%22%2C%22section%22%3A%22mutual-fund%22%7D%5D&date=07-Aug-2026&type=archives&mode=single",
+      "status": 404,
+      "contentType": "application/json; charset=utf-8",
+      "bytes": 54,
+      "preview": "{\"error\":\"Not Found, file is unavailable\",\"show\":true}",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "nse-api/reports/archives-door-2019",
+      "group": "nse-api",
+      "question": "Does /api/reports?archives=[…] serve OLD dates? (fallback when nsearchives 403s)",
+      "url": "https://www.nseindia.com/api/reports?archives=%5B%7B%22name%22%3A%22CM%20-%20Daily%20Volatility%22%2C%22type%22%3A%22archives%22%2C%22category%22%3A%22capital-market%22%2C%22section%22%3A%22equities%22%7D%5D&date=15-Mar-2019&mode=single",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 104958,
+      "preview": "Date,Symbol,Underlying Close Price (A),Underlying Previous Day Close Price (B),Underlying Log Returns (C) = LN(A/B),Previous Day Underlying Volatility (D),Current Day Underlying Daily Volatility (E) =",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "bse-www/cm-udiff-live/2026-08-07",
+      "group": "bse-www",
+      "question": "BSE CM UDiFF live availability from our egress",
+      "url": "https://www.bseindia.com/download/BhavCopy/Equity/BhavCopy_BSE_CM_0_0_0_20260807_F_0000.CSV",
+      "status": 200,
+      "contentType": "application/octet-stream",
+      "bytes": 845830,
+      "preview": "TradDt,BizDt,Sgmt,Src,FinInstrmTp,FinInstrmId,ISIN,TckrSymb,SctySrs,XpryDt,FininstrmActlXpryDt,StrkPric,OptnTp,FinInstrmNm,OpnPric,HghPric,LwPric,ClsPric,LastPric,PrvsClsgPric,UndrlygPric,SttlmPric,Op",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "bse-www/fo-udiff-live",
+      "group": "bse-www",
+      "question": "BSE F&O UDiFF live availability (note the lowercase-c `Bhavcopy` dir)",
+      "url": "https://www.bseindia.com/download/Bhavcopy/Derivative/BhavCopy_BSE_FO_0_0_0_20260807_F_0000.CSV",
+      "status": 200,
+      "contentType": "application/octet-stream",
+      "bytes": 141909,
+      "preview": "TradDt,BizDt,Sgmt,Src,FinInstrmTp,FinInstrmId,ISIN,TckrSymb,SctySrs,XpryDt,FininstrmActlXpryDt,StrkPric,OptnTp,FinInstrmNm,OpnPric,HghPric,LwPric,ClsPric,LastPric,PrvsClsgPric,UndrlygPric,SttlmPric,Op",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "bse-www/scbseall-live",
+      "group": "bse-www",
+      "question": "BSE gross-delivery SCBSEALL live availability",
+      "url": "https://www.bseindia.com/BSEDATA/gross/2026/SCBSEALL0708.zip",
+      "status": 200,
+      "contentType": "application/x-zip-compressed",
+      "bytes": 98757,
+      "preview": "hex:504b03041400000008004d9f075ddde0c8404381010046ef0600100000005343425345414c4c303730382e5458548cbdcd8e34bb7224b81f60de41bbd915c2ddf9bb145a77d18066d4a3ee16a077b90fdf6e8cd2973423eb9e3ab81074f278312319a4ff9a9bffcb3fffafbffdfd7ffeb77fffefffe39ffedbbffdcbdffefe2f7ffbd7fffe1f7ffbf7fffca7ffff7ffde7e75ffee39ffff5effff2cffff9fffccf7ffa8f7ffbd7fffdfffeedfb5ffed7fffef7ffefdf520082fff1f54fffe36ffffef57fff5f4f7f",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "bse-www/cd-udiff-live",
+      "group": "bse-www",
+      "question": "BSE Currency UDiFF — does this path exist at all? (guess-verify)",
+      "url": "https://www.bseindia.com/download/Bhavcopy/Currency/BhavCopy_BSE_CD_0_0_0_20260807_F_0000.CSV",
+      "status": 200,
+      "contentType": "text/html",
+      "bytes": 13850,
+      "preview": "<!DOCTYPE html><html lang=\"en\" data-critters-container=\"\"><head> <meta charset=\"utf-8\"> <title> LIVE Stock/Share Market | Indian Stock/Share Market LIVE | BSE SENSEX | BSE (formerly Bomb",
+      "verdict": "HTML"
+    },
+    {
+      "id": "bse-www/eq-isincode/2007-01-02",
+      "group": "bse-www",
+      "question": "BSE legacy EQ_ISINCODE zip availability post-UDiFF-cutover",
+      "url": "https://www.bseindia.com/download/BhavCopy/Equity/EQ_ISINCODE_020107.zip",
+      "status": 200,
+      "contentType": "text/html",
+      "bytes": 13850,
+      "preview": "<!DOCTYPE html><html lang=\"en\" data-critters-container=\"\"><head> <meta charset=\"utf-8\"> <title> LIVE Stock/Share Market | Indian Stock/Share Market LIVE | BSE SENSEX | BSE (formerly Bomb",
+      "verdict": "HTML"
+    },
+    {
+      "id": "bse-www/eq-isincode/2016-01-01",
+      "group": "bse-www",
+      "question": "BSE legacy EQ_ISINCODE zip availability post-UDiFF-cutover",
+      "url": "https://www.bseindia.com/download/BhavCopy/Equity/EQ_ISINCODE_010116.zip",
+      "status": 200,
+      "contentType": "text/html",
+      "bytes": 13850,
+      "preview": "<!DOCTYPE html><html lang=\"en\" data-critters-container=\"\"><head> <meta charset=\"utf-8\"> <title> LIVE Stock/Share Market | Indian Stock/Share Market LIVE | BSE SENSEX | BSE (formerly Bomb",
+      "verdict": "HTML"
+    },
+    {
+      "id": "bse-www/eq-isincode/2024-03-29",
+      "group": "bse-www",
+      "question": "BSE legacy EQ_ISINCODE zip availability post-UDiFF-cutover",
+      "url": "https://www.bseindia.com/download/BhavCopy/Equity/EQ_ISINCODE_290324.zip",
+      "status": 200,
+      "contentType": "text/html",
+      "bytes": 13850,
+      "preview": "<!DOCTYPE html><html lang=\"en\" data-critters-container=\"\"><head> <meta charset=\"utf-8\"> <title> LIVE Stock/Share Market | Indian Stock/Share Market LIVE | BSE SENSEX | BSE (formerly Bomb",
+      "verdict": "HTML"
+    },
+    {
+      "id": "bse-www/scbseall/2007-01-04",
+      "group": "bse-www",
+      "question": "SCBSEALL earliest year folder",
+      "url": "https://www.bseindia.com/BSEDATA/gross/2007/SCBSEALL0401.zip",
+      "status": 200,
+      "contentType": "application/x-zip-compressed",
+      "bytes": 58592,
+      "preview": "hex:504b0304140000000800008c243694d826dd5ee400005c2f0300100000005343425345414c4c303430312e54585484fdcbae2dbdce2506f60ba877c85ef53674bf340d67360cb8caaeb42b01bfcb79f8e2a0448964682e2ffcf8feb317e78c15a190781d1cfcafffd3fff9dffef37ffccffffd7ff9dfffcbfffcbffdd7fff69ffffadffed7ffe57ffcb7fffe7ffd97ffeffff97fdd7ffc8fffe97ffdcf7ffd9ffeafffd7fff15ffec7fff6bffefffedfff6dffe3fffcfffdf7ffcfff461fc007ffc7bffff2bfffb7",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "bse-www/scbseall/2012-01-02",
+      "group": "bse-www",
+      "question": "SCBSEALL earliest year folder",
+      "url": "https://www.bseindia.com/BSEDATA/gross/2012/SCBSEALL0201.zip",
+      "status": 200,
+      "contentType": "application/x-zip-compressed",
+      "bytes": 55432,
+      "preview": "hex:504b030414000000080079852240e51edaf006d8000028630300100000005343425345414c4c303230312e5458549cbdcb8e3fbdae1d360f9077f02cb38648dd87467c06069cd8f1e5007e97efe1434a254a5ca5fae5c41b1bc7de7f7657d745a278595ceb3ffcfbfffe2ffffcb7fff3bffec7fff2effecffffc1ffee59ffff02fffe93ffeebbffcd7fff9effe9ffffe3ff7fff8d77fff9ffef90ffffe7ffe1fffeddffdeb7ffe4fffe3fffa97e77ffcf7fff15fffefff2c3fa03ff8af7fffeebffccb7ffdfbdfff",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "bse-www/scbseall/2018-01-01",
+      "group": "bse-www",
+      "question": "SCBSEALL earliest year folder",
+      "url": "https://www.bseindia.com/BSEDATA/gross/2018/SCBSEALL0101.zip",
+      "status": 200,
+      "contentType": "application/x-zip-compressed",
+      "bytes": 63420,
+      "preview": "hex:504b0304140000000800fd88214c1ba6f47016f7000076d80300100024005343425345414c4c303130312e7478740a0020000000000001001800aff1a3f8f482d301352ea3f8f482d301352ea3f8f482d301ac7dcbce343d6ede3e40ee6176d935c483286969786661c0899db13380efe5bbf814553a91c52a2040fe00ce7c2fbbd93a523c3efceb3ffde7dffefcc73ffffd5ffefd2ffffc6f7ffddb9fbffeed5fffe51f7ffbfb7ffde57fffe77fed7ffce39ffef5cf5fffe9bffec77ffce51ffff6afffe77ffe6d",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "bse-api/sensex/1986",
+      "group": "bse-api",
+      "question": "SENSEX daily archive floor (ProduceCSVForDate)",
+      "url": "https://api.bseindia.com/BseIndiaAPI/api/ProduceCSVForDate/w?strIndex=SENSEX&dtFromDate=01/01/1986&dtToDate=31/12/1986&period=D",
+      "status": 200,
+      "contentType": "text/csv",
+      "bytes": 5157,
+      "preview": "Date,Open,High,Low,Close 2-January-1986,,,,549.43 3-January-1986,,,,561.01 7-January-1986,,,,564.35 8-January-1986,,,,570.53 9-January-1986,,,,577.64 10-January-1986,,,,593.08 13-January-1986,,",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "bse-api/index-arch-daily-all",
+      "group": "bse-api",
+      "question": "IndexArchDailyAll — all-index daily close, one recent date",
+      "url": "https://api.bseindia.com/BseIndiaAPI/api/IndexArchDailyAll/w?fmdt=07%2F08%2F2026&todt=07%2F08%2F2026",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "bytes": 2,
+      "preview": "{}",
+      "verdict": "EMPTY"
+    },
+    {
+      "id": "bse-api/announcements/recent",
+      "group": "bse-api",
+      "question": "BSE announcements, RECENT 7-day window — the control that proves the param set",
+      "url": "https://api.bseindia.com/BseIndiaAPI/api/AnnSubCategoryGetData/w?pageno=1&strCat=-1&subcategory=-1&strPrevDate=20260731&strToDate=20260807&strScrip=&strSearch=P&strType=C",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "bytes": 2,
+      "preview": "{}",
+      "verdict": "EMPTY"
+    },
+    {
+      "id": "bse-api/announcements/2011",
+      "group": "bse-api",
+      "question": "Earliest BSE announcements (strPrevDate=20110101)",
+      "url": "https://api.bseindia.com/BseIndiaAPI/api/AnnSubCategoryGetData/w?pageno=1&strCat=-1&subcategory=-1&strPrevDate=20110101&strToDate=20110131&strScrip=&strSearch=P&strType=C",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "bytes": 2,
+      "preview": "{}",
+      "verdict": "EMPTY"
+    },
+    {
+      "id": "bse-results/anndet-aspx",
+      "group": "bse-results",
+      "question": "Is the announcement DETAIL page server-rendered (would it carry an XBRL href)?",
+      "url": "https://www.bseindia.com/corporates/anndet_new.aspx?newsid=ad76ac5c-9839-43d0-b384-125514bc485d",
+      "status": 301,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 213,
+      "preview": "<head><title>Document Moved</title></head> ... redirects to the extension-less Angular SPA route",
+      "verdict": "ERROR"
+    },
+    {
+      "id": "bse-results/result-arch/530127",
+      "group": "bse-results",
+      "question": "Result_Arch_ng — does BSE publish a per-scrip results XBRL index?",
+      "url": "https://api.bseindia.com/BseIndiaAPI/api/Result_Arch_ng/w?scrip_cd=530127",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "bytes": 66850,
+      "preview": "{\"Table\":[{\"Year\":\"2026-2027\",\"Status\":\"New\",\"Quarter\":\"Standalone-Jun-26;JQ2026-2027;130.00;D\",\"stand_xbrl_link\":\"/XBRLFILES/NBFCUploadDocument/Integrated_Finance_NBFC_530127_1282026191518.xml\",\"conso_xbrl_link\":null,...",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "bse-results/result-arch/500325",
+      "group": "bse-results",
+      "question": "Result_Arch_ng on a dual-listed large cap (does conso_xbrl_link ever populate?)",
+      "url": "https://api.bseindia.com/BseIndiaAPI/api/Result_Arch_ng/w?scrip_cd=500325",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "bytes": 112788,
+      "preview": "204 rows; 53 stand + 53 conso links; conso e.g. /XBRLFILES/IFIndasUploadDocument/Integrated_Finance_Ind_As_500325_177202619498.xml",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "bse-results/ns-today-results",
+      "group": "bse-results",
+      "question": "NSTodayResults_ng — market-wide list of scrips that filed results today",
+      "url": "https://api.bseindia.com/BseIndiaAPI/api/NSTodayResults_ng/w",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "bytes": 1571,
+      "preview": "{\"Table\":[{\"Scrip_cd\":544853,\"company_name\":\"Juniper Green Energy Ltd\",\"quarter_code\":\"JQ2026-2027\",\"audited\":\"Unaudited\",...}]} — 5 rows, NO xbrl link field",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "bse-results/instance/legacy-nonbanking-530127",
+      "group": "bse-results",
+      "question": "Does an indexed /XBRLFILES instance serve? (legacy in-bse-fin)",
+      "url": "https://www.bseindia.com/XBRLFILES/FourOneUploadDocument/NonBanking_530127_2952019192952.xml",
+      "status": 200,
+      "contentType": "text/xml",
+      "bytes": 46783,
+      "preview": "xmlns:in-bse-fin=\"http://www.bseindia.com/xbrl/fin/2018-03-31/in-bse-fin\"",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "bse-results/instance/legacy-nbfc-530127",
+      "group": "bse-results",
+      "question": "Legacy NBFC family INSIDE the same directory that fails for integrated",
+      "url": "https://www.bseindia.com/XBRLFILES/NBFCUploadDocument/NBFC_530127_1392019184956.xml",
+      "status": 200,
+      "contentType": "text/xml",
+      "bytes": 35352,
+      "preview": "xmlns:in-bse-fin=\"http://www.bseindia.com/xbrl/fin/2019-03-31/in-bse-fin\" — proves the DIRECTORY is not the problem",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "bse-results/instance/integrated-indas-500325",
+      "group": "bse-results",
+      "question": "Integrated-era Ind-AS instance (dual-listed)",
+      "url": "https://www.bseindia.com/XBRLFILES/IFIndasUploadDocument/Integrated_Finance_Ind_As_500325_177202619498.xml",
+      "status": 200,
+      "contentType": "text/xml",
+      "bytes": 46571,
+      "preview": "xmlns:in-capmkt=\"http://www.sebi.gov.in/xbrl/2026-01-31/in-capmkt\", entry point IntegratedFinance_IndAS",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "bse-results/instance/legacy-mainindas-500325",
+      "group": "bse-results",
+      "question": "Legacy Main_Ind_As instance",
+      "url": "https://www.bseindia.com/XBRLFILES/FourOneUploadDocument/Main_Ind_As_500325_161202520532.xml",
+      "status": 200,
+      "contentType": "text/xml",
+      "bytes": 64187,
+      "preview": "xmlns:in-bse-fin=\"http://www.bseindia.com/xbrl/fin/2020-03-31/in-bse-fin\"",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "bse-results/instance/integrated-indas-519421",
+      "group": "bse-results",
+      "question": "Integrated-era Ind-AS on a BSE-listed small cap (is the era the problem?)",
+      "url": "https://www.bseindia.com/XBRLFILES/IFIndasUploadDocument/Integrated_Finance_Ind_As_519421_148202621513.xml",
+      "status": 200,
+      "contentType": "text/xml",
+      "bytes": 30863,
+      "preview": "in-capmkt 2026-01-31 — a Jan-2026 integrated file that serves, so recency is NOT the cause",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "bse-results/instance/integrated-indas-532351",
+      "group": "bse-results",
+      "question": "Integrated-era Ind-AS, second small cap",
+      "url": "https://www.bseindia.com/XBRLFILES/IFIndasUploadDocument/Integrated_Finance_Ind_As_532351_148202622648.xml",
+      "status": 200,
+      "contentType": "text/xml",
+      "bytes": 26308,
+      "preview": "in-capmkt 2026-01-31",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "bse-results/instance/integrated-otherthan-531500",
+      "group": "bse-results",
+      "question": "Integrated-era 'other than Ind-AS' family",
+      "url": "https://www.bseindia.com/XBRLFILES/IFOtherthanUploadDocument/IFOtherthan_531500_162202611654.xml",
+      "status": 200,
+      "contentType": "text/xml",
+      "bytes": 30631,
+      "preview": "in-capmkt 2025-01-31 — a THIRD integrated family, also serving",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "bse-results/instance/integrated-nbfc-530127-as-indexed",
+      "group": "bse-results",
+      "question": "Integrated-era NBFC AS THE INDEX GIVES IT",
+      "url": "https://www.bseindia.com/XBRLFILES/NBFCUploadDocument/Integrated_Finance_NBFC_530127_1282026191518.xml",
+      "status": 404,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 8409,
+      "preview": "ASP.NET 404 page — the index links to a path the site does not serve",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "bse-results/instance/integrated-nbfc-512437-as-indexed",
+      "group": "bse-results",
+      "question": "Same, different NBFC (is it company-specific?)",
+      "url": "https://www.bseindia.com/XBRLFILES/NBFCUploadDocument/Integrated_Finance_NBFC_512437_8112025151738.xml",
+      "status": 404,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 8409,
+      "preview": "404 — not company-specific",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "bse-results/instance/integrated-nbfc-539773-as-indexed",
+      "group": "bse-results",
+      "question": "Same, third NBFC",
+      "url": "https://www.bseindia.com/XBRLFILES/NBFCUploadDocument/Integrated_Finance_NBFC_539773_16102025181151.xml",
+      "status": 404,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 8411,
+      "preview": "404 — the failing cell is (integrated era x NBFC filer), not a directory and not an era",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "bse-results/instance/integrated-nbfc-530127-sibling",
+      "group": "bse-results",
+      "question": "THE FIX: same file under the sibling IF* directory",
+      "url": "https://www.bseindia.com/XBRLFILES/IFNBFCUploadDocument/Integrated_Finance_NBFC_530127_1282026191518.xml",
+      "status": 200,
+      "contentType": "text/xml",
+      "bytes": 27107,
+      "preview": "in-capmkt 2026-01-31 — integrated-era instances live in IF*UploadDocument; NBFC is the only family the index points at the LEGACY directory",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "bse-results/instance/integrated-nbfc-512437-sibling",
+      "group": "bse-results",
+      "question": "Sibling-directory fix on a second NBFC",
+      "url": "https://www.bseindia.com/XBRLFILES/IFNBFCUploadDocument/Integrated_Finance_NBFC_512437_8112025151738.xml",
+      "status": 200,
+      "contentType": "text/xml",
+      "bytes": 63819,
+      "preview": "in-capmkt 2025-01-31",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "bse-results/instance/integrated-nbfc-539773-sibling",
+      "group": "bse-results",
+      "question": "Sibling-directory fix on a third NBFC",
+      "url": "https://www.bseindia.com/XBRLFILES/IFNBFCUploadDocument/Integrated_Finance_NBFC_539773_16102025181151.xml",
+      "status": 200,
+      "contentType": "text/xml",
+      "bytes": 44330,
+      "preview": "in-capmkt 2025-01-31 — 6/6 recovered across 3 companies and both taxonomy versions",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "bse-results/instance/integrated-nbfc-wrong-sibling-ifindas",
+      "group": "bse-results",
+      "question": "Control: is it a catch-all IF directory, or that specific sibling?",
+      "url": "https://www.bseindia.com/XBRLFILES/IFIndasUploadDocument/Integrated_Finance_NBFC_530127_1282026191518.xml",
+      "status": 404,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 8412,
+      "preview": "404 — NOT a catch-all; the sibling is specific to the filer class",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "bse-results/instance/integrated-nbfc-wrong-sibling-long",
+      "group": "bse-results",
+      "question": "Control: a second plausible sibling spelling",
+      "url": "https://www.bseindia.com/XBRLFILES/IntegratedFinanceNBFCUploadDocument/Integrated_Finance_NBFC_530127_1282026191518.xml",
+      "status": 404,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 8426,
+      "preview": "404 — the working spelling is IFNBFCUploadDocument and nothing else tried",
+      "verdict": "ABSENT"
+    },
+    {
+      "id": "bse-results/corp-xbrl-gen",
+      "group": "bse-results",
+      "question": "CorpXbrlGen.aspx — is the ANNOUNCEMENT xbrl a results instance? (expected: no)",
+      "url": "https://www.bseindia.com/Msource/90D/CorpXbrlGen.aspx?Bsenewid=ad76ac5c-9839-43d0-b384-125514bc485d&Scripcode=530127",
+      "status": 200,
+      "contentType": "text/xml; charset=utf-8",
+      "bytes": 1645,
+      "preview": "xmlns:in-bse-co=\"http://www.bseindia.com/xbrl/co/2017-06-21/in-bse-co\" — announcement metadata only (ScripCode, NameOfTheCompany, SubjectOfAnnouncement, AttachmentURL). NO financial facts.",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "bse-results/cor-xbrl-dropdown",
+      "group": "bse-results",
+      "question": "GetCorXbrlDropdown_ng — the XBRL category vocabulary",
+      "url": "https://api.bseindia.com/BseIndiaAPI/api/GetCorXbrlDropdown_ng/w",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "bytes": 5899,
+      "preview": "67 categories; id 22 = \"Financial Results\", id 7 = \"Annual Reports (Pdf & XBRL)\"",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "bse-results/cor-xbrl-details/flag22-nodates",
+      "group": "bse-results",
+      "question": "GetCorXbrlDetails_ng category 22 with NO dates — does it state its contract?",
+      "url": "https://api.bseindia.com/BseIndiaAPI/api/GetCorXbrlDetails_ng/w?Flag=22&scripcode=530127&fromdate=&todate=",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "bytes": 62,
+      "preview": "{\"Error\":[{\"message\":\"From Date and To Date are mandatory.\"}]} — the endpoint states its own contract",
+      "verdict": "EMPTY"
+    },
+    {
+      "id": "bse-results/cor-xbrl-details/flag22",
+      "group": "bse-results",
+      "question": "GetCorXbrlDetails_ng category 22 'Financial Results', market-wide, dated",
+      "url": "https://api.bseindia.com/BseIndiaAPI/api/GetCorXbrlDetails_ng/w?Flag=22&scripcode=&fromdate=2026/08/12&todate=2026/08/13",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "bytes": 12,
+      "preview": "{\"Table\":[]}",
+      "verdict": "EMPTY"
+    },
+    {
+      "id": "bse-results/cor-xbrl-details/flag22-hist2024",
+      "group": "bse-results",
+      "question": "Same category over a PRE-integrated-filing window",
+      "url": "https://api.bseindia.com/BseIndiaAPI/api/GetCorXbrlDetails_ng/w?Flag=22&scripcode=&fromdate=2024/05/25&todate=2024/05/31",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "bytes": 12,
+      "preview": "{\"Table\":[]} — empty in 2024 too",
+      "verdict": "EMPTY"
+    },
+    {
+      "id": "bse-results/cor-xbrl-details/flag7-control",
+      "group": "bse-results",
+      "question": "CONTROL — a category that must have rows, identical date format",
+      "url": "https://api.bseindia.com/BseIndiaAPI/api/GetCorXbrlDetails_ng/w?Flag=7&scripcode=&fromdate=2026/08/12&todate=2026/08/13",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "bytes": 6613073,
+      "preview": "3,510 rows — proves YYYY/MM/DD parses and that category 22 is genuinely empty",
+      "verdict": "PRESENT"
+    },
+    {
+      "id": "bse-results/corprate-result-beta",
+      "group": "bse-results",
+      "question": "CorprateResultbeta — the stock page's results tab (any alternative xbrl url?)",
+      "url": "https://api.bseindia.com/BseIndiaAPI/api/CorprateResultbeta/w?scripcode=530127",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "bytes": 20640,
+      "preview": "Q1..Q4/HY/YR columns each \"Qname;JQ;qtrId;url\" where url is an HTML view (NBFC.aspx), NOT an xbrl path",
+      "verdict": "PRESENT"
+    }
+  ],
+  "supplements": [
+    {
+      "ticket": "MONEY-1255",
+      "group": "bse-results",
+      "addedAt": "2026-08-26",
+      "note": "The bse-results group was appended by the MONEY-1255 BSE-XBRL discovery pass, not produced by a full script run. It IS reproducible: probeBseResultsXbrl() was added to scripts/data/probe-exchange-archives.ts and runs with --only=bse-results. Instance probes there follow the index's OWN links rather than reconstructing these URLs, so a future run samples whatever BSE currently publishes and the specific filenames above may differ."
+    }
+  ]
+}

@@ -1,0 +1,1115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --sidebar-w: 16rem;
+    --topbar-h: 5.25rem;
+    --mobile-ticker-h: 1.75rem;
+    --mobile-header-h: 5.25rem;
+    /* MONEY-1151 — two related but distinct numbers, kept apart on purpose:
+       --mobile-nav-bar-h  how tall GlobalMobileBottomNav draws itself. The ONE
+                           definition of that height; .gmbn-nav and .gmbn-drawer
+                           both read it.
+       --mobile-nav-h      how much bottom space is currently *reserved* by that
+                           bar. 0 unless the bar is really on screen, so floating
+                           elements keep their desktop position everywhere else.
+                           Raised by the body:has() rule further down. */
+    --mobile-nav-bar-h: calc(60px + env(safe-area-inset-bottom, 0px));
+    --mobile-nav-h: 0px;
+    /* Playful palette (MONEY-485) — HSL equivalents of the cream/ink tokens
+       already used by .playful-page (marketing) and .auth-page (auth), so
+       the whole product shares one theme. shadcn tokens must stay HSL
+       triplets (Tailwind reads them as hsl(var(--token))). */
+    --background: 45 50% 94%; /* paper #f7f3e6 */
+    --foreground: 60 4% 11%; /* ink #1d1d1b */
+    --card: 47 68% 95%; /* paper-3 #fbf8eb */
+    --card-foreground: 60 4% 11%;
+    --popover: 47 68% 95%;
+    --popover-foreground: 60 4% 11%;
+    --primary: 142 76% 36%; /* emerald #16a34a */
+    --primary-foreground: 45 50% 94%;
+    --secondary: 44 49% 88%; /* paper-2 #efe7d0 */
+    --secondary-foreground: 60 5% 22%; /* ink-2 #3a3a35 */
+    --muted: 44 49% 88%;
+    --muted-foreground: 60 4% 40%; /* ink-3 #6b6b62 */
+    --accent: 44 49% 88%;
+    --accent-foreground: 60 5% 22%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 45 50% 94%;
+    --border: 45 25% 82%; /* rule-soft, opaque */
+    --input: 45 25% 82%;
+    --ring: 142 76% 36%;
+    --chart-1: 142 76% 36%;
+    --chart-2: 16 100% 60%; /* coral pop-1 */
+    --chart-3: 217 91% 60%;
+    --chart-4: 45 93% 47%; /* gold pop-2 */
+    --chart-5: 262 83% 58%;
+    --radius: 0.5rem;
+
+    /* Playful tokens - light (cream paper / ink). Matches .playful-page. */
+    --bg-primary: #f7f3e6;
+    --bg-secondary: #fbf8eb;
+    --bg-card: rgba(29, 29, 27, 0.025);
+    --bg-card-hover: rgba(22, 163, 74, 0.06);
+    --bg-elevated: #fbf8eb;
+    --bg-input: rgba(29, 29, 27, 0.04);
+    --border-default: rgba(29, 29, 27, 0.14);
+    --border-hover: rgba(22, 163, 74, 0.4);
+    --border-active: rgba(22, 163, 74, 0.6);
+    /* On-ink overlays: for inverse-of-page cards (dark card in light theme) */
+    --on-ink-soft: rgba(255, 255, 255, 0.06);
+    --on-ink-border: rgba(255, 255, 255, 0.16);
+    /* Semantic text sitting ON a `var(--ink)` fill — the INVERSE of
+       --semantic-*-text, because --ink flips with the theme and a surface
+       painted with it is the opposite lightness to the page. Here (light
+       theme) --ink is near-black, so these are the BRIGHT values; .dark
+       redefines them to the dark ones. Getting this backwards is not
+       hypothetical: the watchlist's selected row hardcoded the bright pair,
+       which read 9.69:1 in light mode and 1.50:1 in dark. */
+    --on-ink-positive: #4ade80;
+    --on-ink-negative: #ff8a8a;
+    /* Muted/meta text on an ink fill. --ink-4 is the muted tone for text on
+       PAPER; reusing it on ink puts ink-on-ink (3.58:1 light, 3.19:1 dark —
+       both under AA, on the smallest text in the row). */
+    --on-ink-muted: #a9a69b;
+    --text-primary: #1d1d1b;
+    --text-secondary: #3a3a35;
+    --text-dim: #6b6b62;
+    --text-muted: #9a9a92;
+    --text-inverse: #f7f3e6;
+    --accent-primary: #16a34a;
+    --accent-primary-dim: rgba(22, 163, 74, 0.08);
+    --accent-primary-glow: rgba(22, 163, 74, 0.12);
+    --accent-secondary: #2563eb;
+    --accent-tertiary: #7c3aed;
+    --semantic-positive: #16a34a;
+    --semantic-negative: #dc2626;
+    --semantic-warning: #d97706;
+    --semantic-info: #0284c7;
+    /* TEXT variants of the semantic pair. Same role, darker in light mode.
+       The fills above are chosen to read as FILLS (dots, bars, strokes); as
+       TEXT on cream they are too light — and the components that need this
+       usually sit on a faint tint of their own colour (e.g. the holdings
+       "LIVE MTM" strip is rgba(74,222,128,.06) over paper), which lifts the
+       background further. Measured against the worst of paper / paper-3 /
+       that tint: green-700 still only reaches 4.39:1, so positive is
+       green-800 (6.24:1) and negative is red-700 (5.44:1).
+       Same pattern as --pop-N-text in playful-app.css, and the same reason. */
+    --semantic-positive-text: #166534;
+    --semantic-negative-text: #b91c1c;
+    /* Amber-800. Note --pop-2-text (#8a5e00) is NOT interchangeable here: it
+       clears 4.5:1 on plain paper but only 4.47:1 on a 10% amber tint, which
+       is exactly where a warning label sits. */
+    --semantic-warning-text: #92400e;
+    --gradient-primary: linear-gradient(135deg, #10b981, #059669);
+    --gradient-hero: linear-gradient(
+      135deg,
+      #10b981,
+      #2563eb,
+      #7c3aed,
+      #10b981
+    );
+    --gradient-card: var(--paper-3);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+    --shadow-glow: 0 0 20px rgba(16, 185, 129, 0.12);
+    --shadow-glow-strong: 0 0 40px rgba(16, 185, 129, 0.18);
+    /* Scrim used by full-screen overlays (modals, walkthrough spotlight) */
+    --scrim-overlay: rgba(0, 0, 0, 0.45);
+    /* Segmented-control track / strip backgrounds. Subtle on light,
+       darker on dark so the pills inside read as embedded surfaces. */
+    --bg-segmented: rgba(0, 0, 0, 0.06);
+    --nav-bg-scrolled: rgba(247, 243, 230, 0.88);
+    --nav-blur: blur(20px);
+    --sidebar-background: 47 68% 95%; /* paper-3 */
+    --sidebar-foreground: 60 5% 22%; /* ink-2 */
+    --sidebar-primary: 142 76% 36%; /* emerald */
+    --sidebar-primary-foreground: 45 50% 94%;
+    --sidebar-accent: 44 49% 88%; /* paper-2 */
+    --sidebar-accent-foreground: 60 4% 11%;
+    --sidebar-border: 45 25% 82%;
+    --sidebar-ring: 142 76% 36%;
+  }
+
+  .dark {
+    /* Playful palette - dark (warm ink, matches html.dark .playful-page). */
+    --background: 45 22% 7%; /* paper #16140e */
+    --foreground: 39 48% 92%; /* ink #f4ede0 */
+    --card: 44 22% 10%; /* paper-2 #1f1c14 */
+    --card-foreground: 39 48% 92%;
+    --popover: 44 22% 10%;
+    --popover-foreground: 39 48% 92%;
+    --primary: 158 64% 52%; /* emerald #34d399 */
+    --primary-foreground: 45 22% 7%;
+    --secondary: 48 24% 8%; /* paper-3 #1a1810 */
+    --secondary-foreground: 39 20% 81%; /* ink-2 #d8d1c4 */
+    --muted: 48 24% 8%;
+    --muted-foreground: 41 9% 59%; /* ink-3 #a09a8d */
+    --accent: 44 22% 10%;
+    --accent-foreground: 39 48% 92%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 39 48% 92%;
+    --border: 44 14% 20%;
+    --input: 44 14% 20%;
+    --ring: 158 64% 52%;
+    --chart-1: 158 64% 52%;
+    --chart-2: 18 100% 68%; /* coral pop-1 dark */
+    --chart-3: 217 91% 60%;
+    --chart-4: 45 93% 58%; /* gold pop-2 dark */
+    --chart-5: 262 83% 70%;
+    --sidebar-background: 44 22% 10%;
+    --sidebar-foreground: 39 48% 92%;
+    --sidebar-primary: 158 64% 52%;
+    --sidebar-primary-foreground: 45 22% 7%;
+    --sidebar-accent: 44 18% 14%;
+    --sidebar-accent-foreground: 39 48% 92%;
+    --sidebar-border: 44 14% 20%;
+    --sidebar-ring: 158 64% 52%;
+
+    /* Playful tokens - dark (warm ink). Matches html.dark .playful-page. */
+    --bg-primary: #16140e;
+    --bg-secondary: #1f1c14;
+    --bg-card: rgba(244, 237, 224, 0.03);
+    --bg-card-hover: rgba(52, 211, 153, 0.06);
+    --bg-elevated: rgba(244, 237, 224, 0.05);
+    --bg-input: rgba(244, 237, 224, 0.04);
+    --border-default: rgba(244, 237, 224, 0.14);
+    --border-hover: rgba(52, 211, 153, 0.3);
+    --border-active: rgba(52, 211, 153, 0.5);
+    /* On-ink overlays: for inverse-of-page cards (light card in dark theme) */
+    --on-ink-soft: rgba(0, 0, 0, 0.06);
+    --on-ink-border: rgba(0, 0, 0, 0.16);
+    /* --ink is CREAM in this theme, so an on-ink surface is light and these
+       flip to the dark values (6.12:1 / 5.56:1 on cream). */
+    --on-ink-positive: #166534;
+    --on-ink-negative: #b91c1c;
+    --on-ink-muted: #5a564d;
+    --text-primary: #f4ede0;
+    --text-secondary: #d8d1c4;
+    --text-dim: #a09a8d;
+    --text-muted: #6a655a;
+    --text-inverse: #16140e;
+    --accent-primary: #34d399;
+    --accent-primary-dim: rgba(52, 211, 153, 0.12);
+    --accent-primary-glow: rgba(52, 211, 153, 0.15);
+    --accent-secondary: #3b82f6;
+    --accent-tertiary: #a78bfa;
+    --semantic-positive: #4ade80;
+    --semantic-negative: #f87171;
+    --semantic-warning: #fbbf24;
+    --semantic-info: #38bdf8;
+    /* On deep ink these already clear AAA as text (10.57:1 / 6.66:1), so the
+       text variants are the fills. Defined anyway rather than left to fall
+       through: a token that exists in only one theme is the exact shape of
+       the bug this pair was added to fix. */
+    --semantic-positive-text: #4ade80;
+    --semantic-negative-text: #f87171;
+    --semantic-warning-text: #fbbf24;
+    --gradient-primary: linear-gradient(135deg, #34d399, #10b981);
+    --gradient-hero: linear-gradient(
+      135deg,
+      #34d399,
+      #3b82f6,
+      #a78bfa,
+      #34d399
+    );
+    --gradient-card: var(--paper-3);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.35);
+    --shadow-lg: 0 25px 80px rgba(0, 0, 0, 0.45);
+    --shadow-glow: 0 0 30px rgba(52, 211, 153, 0.2);
+    --shadow-glow-strong:
+      0 0 50px rgba(52, 211, 153, 0.3), 0 0 80px rgba(52, 211, 153, 0.15);
+    /* Dark-theme scrim uses the navy base for better contrast against
+       the dark UI than a generic black overlay. */
+    --scrim-overlay: rgba(22, 20, 14, 0.72);
+    --bg-segmented: rgba(0, 0, 0, 0.25);
+    --nav-bg-scrolled: rgba(22, 20, 14, 0.88);
+    --nav-blur: blur(20px);
+  }
+  .theme {
+    --animate-marquee: marquee-magicui var(--duration) infinite linear;
+    --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    /* Page-wide horizontal overflow guard - applies to every route,
+       including legacy Sidebar pages (Screener, Discover, Settings, etc.)
+       that don't sit inside `.um-app`. Internal scrollers (tickers, wide
+       tables, filter panels) still scroll within their own containers. */
+    overflow-x: hidden;
+  }
+  html {
+    overflow-x: hidden;
+  }
+
+  /* MONEY-1151 — publish the bottom nav's real height so floating elements can
+     clear it instead of being painted over by it.
+     `:has()` rather than a bare media query because GlobalMobileBottomNav is
+     absent from the DOM entirely on marketing/auth routes (HIDDEN_PREFIXES);
+     keying off the element's presence keeps those pages at 0 and avoids the
+     hydration flash a JS-set variable would cause. The media query is still
+     needed because the bar is `display:none` at lg — and `:has()` matches
+     display:none elements. Browsers without `:has()` fall back to 0px, i.e.
+     today's behaviour, never anything worse.
+     `not all and (min-width: 1024px)` is the EXACT complement of Tailwind's
+     `lg`, which is what hides the bar. A max-width cap instead leaves a
+     fractional sliver (e.g. 1023.99px, reachable via browser zoom or a
+     fractional devicePixelRatio) where the bar is still displayed but no space
+     is reserved for it — the launcher drops back into the bar and the panels
+     stop subtracting it. */
+  @media not all and (min-width: 1024px) {
+    body:has(.gmbn-nav) {
+      --mobile-nav-h: var(--mobile-nav-bar-h);
+    }
+  }
+}
+
+/* Clerk theme overrides - force Clerk to follow CSS variables in both modes */
+.cl-card,
+.cl-modalContent {
+  background-color: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+.cl-formFieldInput,
+.cl-phoneNumberInput {
+  background-color: hsl(var(--muted)) !important;
+  border-color: hsl(var(--border)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+.cl-headerTitle,
+.cl-headerSubtitle,
+.cl-formFieldLabel,
+.cl-identityPreviewText {
+  color: hsl(var(--foreground)) !important;
+}
+
+.cl-headerSubtitle {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+.cl-socialButtonsBlockButton {
+  background-color: hsl(var(--muted)) !important;
+  border-color: hsl(var(--border)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+.cl-socialButtonsBlockButton:hover {
+  background-color: hsl(var(--accent)) !important;
+}
+
+.cl-dividerLine {
+  background-color: hsl(var(--border)) !important;
+}
+
+.cl-dividerText {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+.cl-userButtonPopoverCard {
+  background-color: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+.cl-userPreviewMainIdentifier,
+.cl-userPreviewSecondaryIdentifier {
+  color: hsl(var(--foreground)) !important;
+}
+
+.cl-userButtonPopoverActionButton {
+  color: hsl(var(--foreground)) !important;
+}
+
+.cl-userButtonPopoverActionButton:hover {
+  background-color: hsl(var(--muted)) !important;
+}
+
+.cl-userButtonPopoverFooter {
+  display: none !important;
+}
+
+/* Clerk profile/account modal */
+.cl-modalBackdrop {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.cl-profilePage,
+.cl-profileSection,
+.cl-profileSectionContent {
+  color: hsl(var(--foreground)) !important;
+}
+
+.cl-navbar {
+  background-color: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+.cl-navbarButton {
+  color: hsl(var(--foreground)) !important;
+}
+
+.cl-navbarButton:hover,
+.cl-navbarButton[data-active="true"] {
+  background-color: hsl(var(--muted)) !important;
+}
+
+.cl-pageScrollBox {
+  background-color: hsl(var(--card)) !important;
+}
+
+.cl-profileSectionTitle,
+.cl-profileSectionTitleText {
+  color: hsl(var(--foreground)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+.cl-profileSectionPrimaryButton {
+  color: hsl(var(--primary)) !important;
+}
+
+.cl-userPreview {
+  color: hsl(var(--foreground)) !important;
+}
+
+.cl-badge {
+  background-color: hsl(var(--muted)) !important;
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+.cl-menuButton,
+.cl-menuItem {
+  color: hsl(var(--foreground)) !important;
+}
+
+.cl-menuItem:hover {
+  background-color: hsl(var(--muted)) !important;
+}
+
+.cl-menuList {
+  background-color: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+.cl-accordionTriggerButton {
+  color: hsl(var(--foreground)) !important;
+}
+
+.cl-footer {
+  background-color: hsl(var(--card)) !important;
+}
+
+.cl-footerActionLink,
+.cl-footerActionText {
+  color: hsl(var(--primary)) !important;
+}
+
+/* Clerk internal text elements */
+.cl-formFieldAction,
+.cl-formFieldHintText,
+.cl-otpCodeFieldInput,
+.cl-alternativeMethodsBlockButton {
+  color: hsl(var(--foreground)) !important;
+}
+
+.cl-internal-b1zuq3 {
+  color: hsl(var(--foreground)) !important;
+}
+
+/* View transition for theme toggle animation */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-muted;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground/30 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted-foreground/50;
+}
+
+/* Trading colors */
+.text-profit {
+  @apply text-emerald-600 dark:text-emerald-400;
+}
+
+.text-loss {
+  @apply text-red-600 dark:text-red-400;
+}
+
+.bg-profit {
+  @apply bg-emerald-100 dark:bg-emerald-900/30;
+}
+
+.bg-loss {
+  @apply bg-red-100 dark:bg-red-900/30;
+}
+
+/* Market ticker marquee animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Skeleton shimmer stagger - cascading animation delays
+   for skeleton elements inside numbered sections.
+   Apply .skeleton-stagger to a parent; every .animate-shimmer
+   descendant of the nth direct child gets a progressive delay. */
+.skeleton-stagger > *:nth-child(1) .animate-shimmer {
+  animation-delay: 0s;
+}
+.skeleton-stagger > *:nth-child(2) .animate-shimmer {
+  animation-delay: 0.1s;
+}
+.skeleton-stagger > *:nth-child(3) .animate-shimmer {
+  animation-delay: 0.2s;
+}
+.skeleton-stagger > *:nth-child(4) .animate-shimmer {
+  animation-delay: 0.3s;
+}
+.skeleton-stagger > *:nth-child(5) .animate-shimmer {
+  animation-delay: 0.4s;
+}
+.skeleton-stagger > *:nth-child(6) .animate-shimmer {
+  animation-delay: 0.5s;
+}
+.skeleton-stagger > *:nth-child(7) .animate-shimmer {
+  animation-delay: 0.6s;
+}
+.skeleton-stagger > *:nth-child(n + 8) .animate-shimmer {
+  animation-delay: 0.65s;
+}
+
+/* Ensure staggered shimmer elements fill backwards so they
+   don't flash before their delay kicks in */
+.skeleton-stagger .animate-shimmer {
+  animation-fill-mode: backwards;
+}
+
+/* Text selection - gold fill + constant-dark ink.
+   Was a dark-only emerald tint with near-white text (#f1f5f9), added when the
+   app was dark-only. MONEY-485 introduced light mode by re-pointing TOKENS, and
+   these were hardcoded hex, so they were left behind: on cream paper the 30%
+   tint composites to ~#bce9cf, putting #f1f5f9 text at ~1.2:1 — selected text
+   was invisible in light mode.
+   --pop-2 is gold in BOTH themes and --on-pop is deliberately never flipped in
+   .dark, so one rule serves both (~10:1 light, ~12:1 dark) — the same pairing
+   .playful-page / .ssx already scope for themselves, and the same pairing the
+   active chat row uses. The fill is also OPAQUE now, so contrast no longer
+   depends on whatever surface happens to sit behind the selection. */
+::selection {
+  background: var(--pop-2);
+  color: var(--on-pop);
+}
+
+::-moz-selection {
+  background: var(--pop-2);
+  color: var(--on-pop);
+}
+
+/* =========================================================================
+   Terminal Luxe - Keyframe Animations
+   ========================================================================= */
+@keyframes um-gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes um-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes um-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+@keyframes um-fade-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes um-tick {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* =========================================================================
+   Terminal Luxe - Utility Classes
+   ========================================================================= */
+@layer utilities {
+  .um-gradient-text {
+    background: var(--gradient-hero);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: um-gradient-shift 5s ease infinite;
+  }
+
+  .um-numeric {
+    font-family: var(--font-jetbrains), ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+
+  .um-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--accent-primary);
+  }
+
+  .um-positive {
+    color: var(--semantic-positive);
+  }
+
+  .um-negative {
+    color: var(--semantic-negative);
+  }
+}
+
+@theme inline {
+  @keyframes marquee-magicui {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+  @keyframes marquee-vertical {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(calc(-100% - var(--gap)));
+    }
+  }
+}
+
+/* =========================================================================
+   Terminal Luxe - Shell, Card, Table, Button, Input primitives
+   Used by Holdings, Tradebook, FIRE, Brokers (MONEY-187/188/191/193)
+   ========================================================================= */
+@keyframes um-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes um-pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+@keyframes um-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes um-ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.um-app {
+  padding-left: 248px;
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  /* Playful dotted-paper texture (matches the design's .pf-app surface). */
+  background-image:
+    radial-gradient(var(--dot-fg) 1px, transparent 1.5px),
+    radial-gradient(var(--dot-fg-2) 1px, transparent 1.5px);
+  background-size:
+    7px 7px,
+    11px 11px;
+  background-position:
+    0 0,
+    3px 3px;
+  transition: padding-left 0.2s ease;
+  /* Lock the page to the viewport - any internal element with intrinsic
+     overflow (tickers, wide tables) must scroll inside its own container,
+     never push the body wider than the screen. */
+  overflow-x: hidden;
+}
+.um-main {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  /* Mirror the .um-app guard so a stale .um-content child can't pierce it. */
+  overflow-x: hidden;
+}
+.um-content {
+  padding: 20px 24px 48px;
+  max-width: 1360px;
+  margin: 0 auto;
+  animation: um-fade-in 0.3s ease;
+  min-width: 0;
+}
+
+@media (max-width: 1100px) {
+  .um-app {
+    padding-left: 0;
+  }
+  .um-sidebar-desktop {
+    display: none !important;
+  }
+  .um-mobile-only {
+    display: flex !important;
+    /* MONEY-1171 — flex defaults to `row`, so every mobile card stack laid its
+       cards out SIDE BY SIDE across the viewport. On Holdings that put
+       TMCV | ADANIPOWER | IDEA across a 390px screen with P/L values printing
+       over the next card's symbol, and cards clipping mid-card at the right
+       edge. For a portfolio app that is a correctness-of-display failure: a
+       value could not be attributed to the right instrument.
+
+       Every consumer of this class is a `um-mobile-only pf-card` stack — the
+       three Holdings tabs plus tradebook and tradebook/import/history — so
+       column is correct for all of them, and the two tradebook screens had the
+       same defect unreported.
+
+       Declared without `!important` on purpose: `display` needs it to beat the
+       inline `display: none` these containers carry as their desktop default,
+       but direction has no competing declaration, so leaving it normal keeps a
+       future per-instance override possible. */
+    flex-direction: column;
+  }
+  /* MONEY-1171 — the complement of .um-mobile-only, at the SAME boundary.
+     .um-hide-mobile hides at <=720px while .um-mobile-only shows at <=1100px,
+     so any table/cards pair split across those two classes double-renders
+     between 721 and 1100px. Pairs must use this class opposite
+     .um-mobile-only so exactly one half is ever visible. */
+  .um-hide-lt-1100 {
+    display: none !important;
+  }
+  .um-content {
+    padding: 16px 16px 80px;
+  }
+}
+@media (min-width: 1101px) {
+  .um-mobile-only {
+    display: none !important;
+  }
+  .um-mobile-trigger {
+    display: none !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .um-stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .um-2col,
+  .um-2col-sticky {
+    grid-template-columns: 1fr !important;
+  }
+  .um-hide-mobile {
+    display: none !important;
+  }
+  .um-table-wrap {
+    border-radius: 10px !important;
+  }
+  .um-topbar-search {
+    display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .um-stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+  .um-stats-grid-tight {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Playful card chrome (MONEY-485): solid paper, hard ink border + offset
+   shadow, matching the .pf-card design language. Propagates to every page
+   that uses the shared Terminal-Luxe primitives. */
+.um-card {
+  background: var(--paper-3);
+  border: 1.5px solid var(--ink);
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft);
+}
+.um-card-pad {
+  padding: 18px;
+}
+
+.um-table-wrap {
+  background: var(--paper-3);
+  border: 1.5px solid var(--ink);
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+.um-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.um-table thead tr {
+  background: var(--rule-softer);
+  border-bottom: 1.5px solid var(--rule-soft);
+}
+.um-table th {
+  padding: 11px 14px;
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--ink-3);
+  font-weight: 700;
+  text-align: left;
+  text-transform: uppercase;
+}
+.um-table td {
+  padding: 11px 14px;
+}
+.um-table tbody tr {
+  border-bottom: 1px dashed var(--rule-soft);
+  transition: background 0.12s ease;
+}
+.um-table tbody tr:last-child {
+  border-bottom: none;
+}
+.um-table tbody tr:hover {
+  background: var(--rule-softer);
+}
+.um-table .num {
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.um-table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.um-table-scroll table {
+  min-width: 700px;
+}
+
+.um-mobile-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(6, 11, 24, 0.92);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border-default);
+  z-index: 45;
+  padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+  justify-content: space-around;
+}
+@media (max-width: 1100px) {
+  .um-mobile-nav {
+    display: flex;
+  }
+  .um-app {
+    padding-bottom: 64px;
+  }
+}
+.um-mobile-nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 8px 2px;
+  background: transparent;
+  border: 0;
+  color: var(--text-muted);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition:
+    color 0.15s,
+    background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.um-mobile-nav-item.active {
+  color: #34d399;
+  background: rgba(52, 211, 153, 0.08);
+}
+
+/* Center "+" chat slot - emerald bubble that protrudes above the nav row.
+   Always visible because the GlobalMobileBottomNav is the global bottom
+   chrome from MONEY-187 onward. */
+.um-mobile-nav-chat {
+  flex: 0 0 auto;
+  background: transparent;
+  border: 0;
+  padding: 0 4px;
+  margin-top: -22px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.um-mobile-nav-chat-bubble {
+  display: inline-flex;
+  width: 52px;
+  height: 52px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #34d399, #10b981);
+  color: #16140e;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 4px 20px rgba(52, 211, 153, 0.35),
+    0 0 30px rgba(52, 211, 153, 0.2);
+  transition: transform 0.15s;
+}
+.um-mobile-nav-chat:hover .um-mobile-nav-chat-bubble,
+.um-mobile-nav-chat:active .um-mobile-nav-chat-bubble {
+  transform: scale(1.05);
+}
+
+/* The global nav sits a hair higher than the legacy in-shell nav so the
+   chat bubble's lift doesn't get clipped by safe-area insets. */
+.um-global-bottom-nav {
+  padding-top: 4px;
+}
+
+/* Holdings / Tradebook / FIRE all use the same 2-up donut row pattern.
+   Stack to a single column under 760px so the right-hand card doesn't
+   clip on phones. Lives at the global level so all three tabs (Stocks,
+   Funds, Positions) get the breakpoint regardless of which is mounted. */
+@media (max-width: 760px) {
+  .um-holdings-viz {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.um-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 90;
+  animation: um-fade-in 0.15s ease;
+}
+
+.um-section-label {
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.um-input {
+  width: 100%;
+  padding: 9px 12px;
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  border-radius: 8px;
+  color: var(--ink);
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+  font-size: 13px;
+  font-weight: 600;
+  outline: none;
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s;
+}
+.um-input:focus {
+  box-shadow: 3px 3px 0 var(--ink);
+  transform: translate(-1px, -1px);
+}
+
+/* Playful buttons: hard ink border + offset-shadow hover. */
+.um-btn {
+  padding: 8px 13px;
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  color: var(--ink);
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s;
+  white-space: nowrap;
+  font-family: inherit;
+}
+.um-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink);
+  color: var(--ink);
+}
+.um-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.um-btn-primary {
+  background: var(--emerald);
+  color: #16140e;
+  border: 1.5px solid var(--ink);
+  box-shadow: none;
+}
+.um-btn-primary:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink);
+  color: #16140e;
+}
+.um-btn-acc {
+  background: rgba(52, 211, 153, 0.1);
+  border: 1px solid rgba(52, 211, 153, 0.25);
+  color: #34d399;
+}
+.um-btn-acc:hover {
+  background: rgba(52, 211, 153, 0.15);
+  border-color: rgba(52, 211, 153, 0.4);
+  color: #34d399;
+}
+.um-btn-danger {
+  background: rgba(248, 113, 113, 0.08);
+  border: 1px solid rgba(248, 113, 113, 0.25);
+  color: #f87171;
+}
+
+.um-pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #4ade80;
+  box-shadow: 0 0 8px #4ade80;
+  animation: um-pulse-dot 1.6s infinite;
+  flex-shrink: 0;
+}
+.um-pulse-dot.warn {
+  background: #fbbf24;
+  box-shadow: 0 0 8px #fbbf24;
+}
+.um-pulse-dot.neg {
+  background: #f87171;
+  box-shadow: 0 0 8px #f87171;
+}
+
+.um-brand-dot {
+  color: #34d399;
+}
+
+.um-mono-lg {
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  color: var(--text-primary);
+}
+.um-mono-md {
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+  font-size: 13px;
+  font-weight: 500;
+}
+.um-mono-sm {
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+  font-size: 11px;
+}
+
+.um-fire-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #34d399;
+  border: 2px solid #16140e;
+  box-shadow:
+    0 0 0 1px #34d399,
+    0 0 12px rgba(52, 211, 153, 0.4);
+  cursor: pointer;
+}
+.um-fire-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #34d399;
+  border: 2px solid #16140e;
+  box-shadow:
+    0 0 0 1px #34d399,
+    0 0 12px rgba(52, 211, 153, 0.4);
+  cursor: pointer;
+}

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/usemoney-play-design-system-67522a6c-d1c3-4617-97de-fcd968490366/colors_and_type.css">
+  <style>
+    html,body{margin:0;padding:0}
+    body{background:var(--paper);background-image:radial-gradient(var(--dot-fg) 1px,transparent 1.5px),radial-gradient(var(--dot-fg-2) 1px,transparent 1.5px);background-size:7px 7px,11px 11px;font-family:var(--font-sans);color:var(--ink)}
+    a{color:var(--emerald-text);text-decoration:none}a:hover{color:var(--ink)}
+  </style>
+</helmet>
+<div style="max-width:1060px;margin:0 auto;padding:52px 28px 110px">
+  <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:14px">
+    <div style="min-width:0;flex:1">
+      <div style="display:inline-flex;align-items:center;gap:7px;font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--emerald-text);letter-spacing:1.4px;text-transform:uppercase"><span style="width:6px;height:6px;border-radius:99px;background:var(--emerald)"></span>PART 2 · CORE SURFACES V2 · INTERACTIVE MOCKUPS</div>
+      <h1 style="font-weight:800;font-size:42px;line-height:1.02;letter-spacing:-2px;margin:12px 0 8px">Four surfaces. <span style="font-family:var(--font-serif);font-style:italic;font-weight:400">Zero relearning.</span></h1>
+      <p style="font-size:14.5px;line-height:1.6;color:var(--ink-2);max-width:640px;margin:0">Built to the approved <a href="Spec v2 - Core Surfaces.dc.html">Spec v2</a>. Full tap-through: tabs, scans running in place, view switcher, gates, dark mode (synced across pages), responsive to 375px. Sidebar links cross-navigate between all four.</p>
+    </div>
+    <span style="background:var(--pop-2);border:2px solid var(--ink);border-radius:10px;padding:9px 13px;transform:rotate(3deg);box-shadow:3px 3px 0 var(--ink);font-family:var(--font-serif);font-style:italic;font-size:13px;color:#1d1d1b"><b>actually clickable:</b> scans · lifecycle · personas</span>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:30px">
+    <sc-for list="{{ cards }}" as="c" hint-placeholder-count="4">
+      <a href="{{ c.href }}" style="border:2px solid var(--ink);border-radius:14px;background:var(--paper-3);box-shadow:4px 4px 0 var(--ink);overflow:hidden;color:var(--ink);display:flex;flex-direction:column" style-hover="transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)">
+        <div style="background:var(--ink);color:var(--paper);padding:11px 18px;display:flex;align-items:center;gap:10px"><span style="font-family:var(--font-mono);font-weight:800;font-size:13px;background:{{ c.tag }};color:#1d1d1b;border-radius:6px;padding:1px 8px;transform:rotate(-2deg)">{{ c.n }}</span><b style="font-size:15.5px">{{ c.title }}</b><span style="margin-left:auto;font-family:var(--font-mono);font-size:9px;opacity:0.7">{{ c.route }}</span></div>
+        <div style="padding:14px 18px 16px;display:flex;flex-direction:column;gap:10px;flex:1">
+          <div style="font-size:13px;line-height:1.55;color:var(--ink-2)">{{ c.desc }}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:auto">
+            <sc-for list="{{ c.chips }}" as="ch" hint-placeholder-count="3"><span style="font-family:var(--font-mono);font-size:8.5px;font-weight:700;letter-spacing:0.4px;border:1.5px solid var(--ink);border-radius:5px;padding:2px 7px;background:var(--paper)">{{ ch }}</span></sc-for>
+          </div>
+          <div style="font-family:var(--font-mono);font-size:10px;font-weight:800;color:var(--emerald-text)">OPEN →</div>
+        </div>
+      </a>
+    </sc-for>
+  </div>
+  <div style="margin-top:26px;border:2px solid var(--ink);border-radius:13px;background:var(--paper-3);box-shadow:3px 3px 0 var(--ink);padding:16px 20px">
+    <div style="font-family:var(--font-mono);font-size:10px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">THINGS TO TRY</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:6px 22px;font-size:12.5px;line-height:1.7;color:var(--ink-2);margin-top:8px">
+      <span>› Screener: click scans in the left rail — rules land as read-only chips, results in place</span>
+      <span>› Screener: switch INDIA → US for the waitlist gate; the demo link flips the flag</span>
+      <span>› Screener: type “undervalued large caps” in the search box, hit the gold row</span>
+      <span>› Strategies: open “12-month momentum” — all four tabs live (FORWARD)</span>
+      <span>› Strategies: open “My defensive flexi-cap” — teaching empty states (DRAFT)</span>
+      <span>› Both: VIEW switcher → Beginner / Intermediate / Advanced presets</span>
+      <span>› Dashboard: LAYOUT menu swaps all three personas over the same data</span>
+      <span>› Settings → Developer: copy config, send a test ping, provenance badges</span>
+      <span>› Anywhere: ☾ toggles dark — it follows you across pages</span>
+      <span>› US Launch: flip NRI ↔ LRS — currency order, connect path and the LRS card follow</span>
+      <span>› Dashboard / Screener: FLAG button shows the US deltas dropping in and out</span>
+    </div>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:22px;font-size:12.5px">
+    <a href="Spec v2 - Core Surfaces.dc.html" style="border:2px solid var(--ink);border-radius:9px;background:var(--paper);padding:8px 13px;font-weight:800;box-shadow:2px 2px 0 var(--ink);color:var(--ink)">Spec v2 (approved) →</a>
+    <a href="UseMoney Modules A-H.html" style="border:2px solid var(--ink);border-radius:9px;background:var(--paper);padding:8px 13px;font-weight:800;box-shadow:2px 2px 0 var(--ink);color:var(--ink)">Modules A–H hub (prior) →</a>
+    <a href="UseMoney Mobile.html" style="border:2px solid var(--ink);border-radius:9px;background:var(--paper);padding:8px 13px;font-weight:800;box-shadow:2px 2px 0 var(--ink);color:var(--ink)">Mobile app v2.1 →</a>
+    <a href="Decisions - US Launch.dc.html" style="border:2px solid var(--ink);border-radius:9px;background:var(--pop-2);padding:8px 13px;font-weight:800;box-shadow:2px 2px 0 var(--ink);color:#1d1d1b">Decisions log →</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return { cards: [
+      { n: "01", tag: "var(--pop-2)", title: "Unified Screener", route: "/DISCOVER/SCREENER", href: "v2 Screener.dc.html", desc: "Stocks | MF | ETFs with the new INDIA | US market pill. Scans are native — a left-rail library that runs in place; saved screens merged in. One search box: tickers or plain English.", chips: ["SCANS NATIVE", "US GATE + FLAG", "AI FILTER INPUT", "DATAGAP", "VIEW PRESETS"] },
+      { n: "02", tag: "var(--pop-3)", title: "Strategies", route: "/STRATEGIES", href: "v2 Strategies.dc.html", desc: "Catalog | Custom | Signals, and a detail page that is the strategy's whole life: Overview · Backtest · Signals · Forward Run, driven by one lifecycle chip. Real stats or an honest “not yet backtested.”", chips: ["4 TABS", "LIFECYCLE", "GLOBAL FEED", "SHADOW P&L", "SCREENER BRIDGE"] },
+      { n: "03", tag: "var(--pop-4)", title: "Dashboard ×3", route: "/DASHBOARD", href: "v2 Dashboard.dc.html", desc: "Same data, three densities. Beginner: words and one next step. Intermediate: today's layout + tax preview. Advanced: a 3-column terminal, max data-ink. Opens on Advanced.", chips: ["3 PERSONAS", "LAYOUT MENU", "SAME DATA", "SAGE EVERYWHERE"] },
+      { n: "05", tag: "var(--pop-3)", title: "US Launch", route: "/BROKERS · /STOCK/AAPL · /TAX/LRS", href: "v2 US Launch.dc.html", desc: "Eight screens: SnapTrade link + statement import, US stock page (EOD, SEC-filed), dashboard and holdings deltas, LRS/TCS tracker, onboarding fork and Market preferences. NRI/LRS persona switch, flag on/off.", chips: ["SNAPTRADE", "EOD ONLY", "RBI REF + SPOT FX", "FLAG-GATED", "NRI · LRS"] },
+      { n: "06", tag: "var(--pop-5)", title: "US stock page", route: "/STOCK/AAPL", href: "v2 US Launch.dc.html#stock", desc: "Apple as filed: previous-close quote with provenance, key ratios stamped with their filing, standardized financials, insiders and 13F holders. No order entry, ever.", chips: ["EDGAR", "PROVENANCE", "NO VENDOR NAMED"] },
+      { n: "07", tag: "var(--emerald)", title: "StockSage · US deltas", route: "/STOCKSAGE", href: "v2 StockSage.dc.html", desc: "The shipped chat, unchanged in structure: composer, @ picker (Recent · Stocks · Funds · Brokers · Commands), preview-plan confirm, JobProgress, sources rail. Eight US deltas marked in place, each tied to a flag.", chips: ["@ MARKET PILL", "SNAPTRADE ACCOUNTS", "GATE BEFORE SPEND", "EDGAR SOURCES", "2 FLAGS"] },
+      { n: "04", tag: "var(--pop-1)", title: "Settings → Developer", route: "/SETTINGS/DEVELOPER", href: "v2 Settings Developer.dc.html", desc: "Module H, re-anchored: API keys, MCP connect with a copy-paste config, usage, and the provenance-badged tool catalog. One settings section — no new top-level area.", chips: ["API KEYS", "MCP CONFIG", "PROVENANCE", "NOT TOP-LEVEL"] },
+    ] };
+  }
+}
+</script>
+</body>
+</html>

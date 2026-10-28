@@ -1,0 +1,325 @@
+.vs-bar {
+  display: grid;
+  grid-template-columns: 1fr 60px 1fr;
+  gap: 18px;
+  align-items: center;
+  padding: 28px;
+  border-radius: 14px;
+  background: var(--paper-3);
+  border: 2px solid var(--ink);
+  margin-top: 36px;
+}
+.vs-bar .side {
+  padding: 18px 22px;
+  border-radius: 12px;
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  text-align: center;
+}
+.vs-bar .side.us {
+  background: var(--pop-2);
+  color: #1d1d1b;
+}
+.vs-bar .side.us .h,
+.vs-bar .side.us .n {
+  color: #1d1d1b;
+}
+.vs-bar .side .h {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.vs-bar .side .n {
+  margin-top: 4px;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+  color: var(--ink);
+}
+.vs-bar .side .n .ser {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+}
+.vs-bar .vs {
+  text-align: center;
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-size: 40px;
+  color: var(--ink-3);
+}
+
+.ctbl-wrap {
+  overflow-x: auto;
+  margin-top: 30px;
+}
+.ctbl-note {
+  margin-top: 18px;
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--ink-3);
+  line-height: 1.5;
+  max-width: 720px;
+}
+.ctbl-note a {
+  color: var(--emerald);
+  text-decoration: underline;
+}
+.ctbl {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.ctbl thead th {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 18px 18px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-align: center;
+}
+.ctbl thead th:first-child {
+  text-align: left;
+}
+.ctbl thead th.us {
+  background: var(--pop-2);
+  color: #1d1d1b;
+  position: relative;
+}
+.ctbl thead th.us::after {
+  content: "★";
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  font-size: 14px;
+  color: var(--ink);
+}
+.ctbl tbody td {
+  padding: 13px 18px;
+  font-size: 14px;
+  color: var(--ink-2);
+  text-align: center;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.ctbl tbody td:first-child {
+  color: var(--ink);
+  font-weight: 600;
+  text-align: left;
+}
+.ctbl tbody td.us {
+  background: var(--emerald-bg);
+  color: var(--emerald);
+  font-weight: 700;
+}
+.ctbl tbody tr:nth-child(even) td:not(.us) {
+  background: var(--rule-softer);
+}
+.ctbl tbody tr:last-child td {
+  border-bottom: 0;
+}
+.ctbl .ok {
+  color: var(--emerald);
+  font-weight: 700;
+}
+.ctbl .no {
+  color: var(--ink-4);
+}
+.ctbl .sec-row td {
+  background: var(--paper-3);
+  color: var(--ink);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 12px 18px;
+  text-align: left;
+}
+
+.verses {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+.vcard {
+  padding: 28px 30px;
+  border-radius: 14px;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s,
+    background 0.12s;
+}
+.vcard:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-hard);
+  background: var(--paper-3);
+}
+.vcard .vs-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.vcard .vs-name {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  border: 1.5px solid var(--ink);
+}
+.vcard .vs-name.them {
+  background: var(--paper-3);
+  color: var(--ink-2);
+}
+.vcard .vs-name.us {
+  background: var(--pop-2);
+  color: #1d1d1b;
+}
+.vcard .vs-divider {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--ink-3);
+}
+.vcard h3 {
+  margin-top: 14px;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+  color: var(--ink);
+}
+.vcard h3 .ser {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+}
+.vcard p {
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+.vcard p strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+.vcard .vsr {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.vcard .vsr .col {
+  padding: 14px;
+  border-radius: 10px;
+  border: 1.5px solid var(--ink);
+  background: var(--paper);
+}
+.vcard .vsr .col.us {
+  background: var(--emerald-bg);
+  border-color: var(--emerald);
+}
+.vcard .vsr .col h5 {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  color: var(--ink-3);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.vcard .vsr .col.us h5 {
+  color: var(--emerald);
+}
+.vcard .vsr .col ul {
+  list-style: none;
+  margin-top: 8px;
+  padding: 0;
+}
+.vcard .vsr .col ul li {
+  padding: 3px 0;
+  font-size: 13px;
+  color: var(--ink-2);
+  display: flex;
+  gap: 6px;
+}
+.vcard .vsr .col ul li::before {
+  content: "·";
+  color: var(--ink-3);
+}
+.vcard .vsr .col.us ul li::before {
+  content: "✓";
+  color: var(--emerald);
+  font-weight: 700;
+  font-family: "JetBrains Mono", monospace;
+}
+
+.verdict {
+  margin-top: 40px;
+  padding: 32px 36px;
+  border-radius: 14px;
+  background: var(--paper-3);
+  border: 2px dashed var(--ink);
+}
+.verdict h3 {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+}
+.verdict h3 .ser {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+}
+.verdict p {
+  margin-top: 12px;
+  font-size: 15px;
+  color: var(--ink-2);
+  line-height: 1.6;
+  max-width: 720px;
+}
+
+@media (max-width: 1000px) {
+  .verses {
+    grid-template-columns: 1fr;
+  }
+  .vs-bar {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .vs-bar .vs {
+    transform: rotate(90deg);
+  }
+  .vcard .vsr {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  /* The 8-column comparison table has no min-width, so on a phone the browser
+     crushes it to fit (first column collapses, ugly mid-word wraps) instead of
+     letting .ctbl-wrap (overflow-x:auto) scroll. Give it a real min-width so it
+     scrolls cleanly, and tighten the cell padding. */
+  .ctbl {
+    min-width: 720px;
+  }
+  .ctbl thead th,
+  .ctbl tbody td {
+    padding: 10px 10px;
+    font-size: 12.5px;
+  }
+}

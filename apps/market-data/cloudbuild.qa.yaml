@@ -1,0 +1,206 @@
+# usemoney-market-data — qa (MONEY-1466 / A1)
+#
+# `services replace` with an inline YAML rather than `run deploy`, because the
+# Datadog sidecar is a MULTI-CONTAINER service and `run deploy` cannot express
+# one. Same pattern as workers/cloudbuild.qa.yaml.
+#
+# APM IS REAL HERE. This runs on Cloud Run with a `datadog-agent` sidecar, so
+# spans have somewhere to go — unlike apps/api on Vercel, whose spans die at the
+# writer and which therefore sets DD_APM_TRACING_ENABLED=false. Copying that
+# wiring here would silently discard every span from the service whose entire
+# purpose is latency.
+
+substitutions:
+  _REGION: "asia-south1"
+  _SERVICE_NAME: "usemoney-market-data-qa"
+  _MIN_INSTANCES: "0"
+
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - "build"
+      - "-f"
+      - "apps/market-data/Dockerfile"
+      - "-t"
+      - "gcr.io/$PROJECT_ID/usemoney-market-data:qa-$COMMIT_SHA"
+      - "-t"
+      - "gcr.io/$PROJECT_ID/usemoney-market-data:qa-latest"
+      - "."
+
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "--all-tags", "gcr.io/$PROJECT_ID/usemoney-market-data"]
+
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: bash
+    args:
+      - "-c"
+      - |
+        cat > /tmp/service.yaml <<'YAML'
+        apiVersion: serving.knative.dev/v1
+        kind: Service
+        metadata:
+          name: SERVICE_NAME_PLACEHOLDER
+          annotations:
+            run.googleapis.com/launch-stage: BETA
+            # INTERNAL + LOAD BALANCER only. The service is reached through the
+            # external HTTPS LB so Cloud CDN can answer from the edge; a
+            # publicly-ingressable origin would let callers bypass the CDN
+            # entirely and turn every request into an origin hit.
+            run.googleapis.com/ingress: internal-and-cloud-load-balancing
+        spec:
+          template:
+            metadata:
+              annotations:
+                autoscaling.knative.dev/minScale: "MIN_PLACEHOLDER"
+                autoscaling.knative.dev/maxScale: "10"
+                run.googleapis.com/container-dependencies: '{"market-data":["datadog-agent"]}'
+            spec:
+              # 80. This service is I/O-bound and cache-fronted: most requests
+              # are a constant or a single Mongo read, so threads spend their
+              # time waiting rather than computing. A low concurrency would
+              # scale out on idle connections and pay cold starts for nothing.
+              containerConcurrency: 80
+              timeoutSeconds: 30
+              serviceAccountName: market-data@$PROJECT_ID.iam.gserviceaccount.com
+              containers:
+                - name: market-data
+                  image: gcr.io/$PROJECT_ID/usemoney-market-data:qa-$COMMIT_SHA
+                  ports:
+                    - containerPort: 8080
+                  env:
+                    # REQUIRED by @usemoney/storage: `getStorageClient()`
+                    # THROWS without it, which the tile reader surfaces as
+                    # "tile store unavailable" for every symbol. Found by
+                    # curling a real chart after the store registered fine —
+                    # registered and uncredentialed are different states, and
+                    # only the second one looks like a working deploy.
+                    #
+                    # NO key file: credentials fall through to ADC, which on
+                    # Cloud Run resolves the attached service account. That SA
+                    # (market-data@) already holds objectViewer on the lake
+                    # bucket, so mounting GCP_SERVICE_ACCOUNT_KEY_BASE64 here
+                    # would add a secret for reach it already has.
+                    - name: GCP_PROJECT_ID
+                      value: "stock-book-483718"
+                    # MONEY-1478 — READS MUST NOT ENQUEUE A BACKFILL FROM
+                    # THIS ORIGIN. `/udf/history?symbol=MF:<code>` is ANONYMOUS
+                    # and CDN-fronted; `getMfNavHistory` publishes to
+                    # `mf-nav-backfill` whenever a scheme has fewer than two
+                    # stored rows, and the in-process dedupe is keyed ON THE
+                    # SCHEME CODE — so `MF:1`, `MF:2`, `MF:3` … bypass it
+                    # entirely, one publish each, from an unauthenticated
+                    # caller. The worker then fetches api.mfapi.in per message.
+                    # The route also refuses an unknown scheme code before the
+                    # read; this is the second half, set EXPLICITLY rather than
+                    # left absent (MONEY-1214: absent and "off" must not be the
+                    # same state). apps/web keeps the on-read backfill — it is
+                    # Clerk-gated there.
+                    - name: MF_NAV_BACKFILL_ON_READ
+                      value: "off"
+                    - name: NODE_ENV
+                      value: "qa"
+                    - name: DD_ENV
+                      value: "qa"
+                    - name: DD_SERVICE
+                      value: usemoney-market-data
+                    - name: DD_VERSION
+                      value: "$COMMIT_SHA"
+                    - name: DD_TRACE_ENABLED
+                      value: "true"
+                    - name: DD_TRACE_AGENT_URL
+                      value: http://localhost:8126
+                    # MONEY-1469 — the APP container needs this too, not
+                    # only the sidecar. The TypeScript metrics path wraps
+                    # `datadog-metrics`, which posts to the HTTP API and is
+                    # gated on DD_API_KEY alone (packages/datadog/src/metrics.ts
+                    # :18) — it does NOT use the sidecar's DogStatsD port.
+                    # Without it every `stockbook.quote.*` counter no-ops
+                    # silently, which renders as NO DATA and is indistinguish-
+                    # able from a healthy idle service: MONEY-1238, committed by
+                    # the very file whose header cites it. `workers` mounts it on
+                    # both containers for the same reason.
+                    - name: DD_API_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: DD_API_KEY_PLACEHOLDER
+                          key: latest
+                    - name: DATABASE_URL
+                      valueFrom:
+                        secretKeyRef:
+                          name: DATABASE_URL_PLACEHOLDER
+                          key: latest
+                    - name: REDIS_URL
+                      valueFrom:
+                        secretKeyRef:
+                          name: REDIS_URL_PLACEHOLDER
+                          key: latest
+                    - name: MARKET_DATA_TOKEN_SECRET
+                      valueFrom:
+                        secretKeyRef:
+                          name: MARKET_DATA_TOKEN_SECRET_PLACEHOLDER
+                          key: latest
+                  # 512Mi. The service holds no dataset in memory — it returns
+                  # constants and, from A2, streams tiles from GCS.
+                  resources:
+                    limits:
+                      memory: 512Mi
+                      cpu: "1"
+                  startupProbe:
+                    httpGet:
+                      path: /health/live
+                      port: 8080
+                    periodSeconds: 5
+                    failureThreshold: 6
+                  # BOTH PROBES ARE /health/live, AND THERE IS NO THIRD ONE.
+                  # Cloud Run offers a startupProbe and a livenessProbe and
+                  # NOTHING ELSE — no readiness probe — and a serverless NEG has
+                  # no health check either, so nothing in this stack can park an
+                  # instance. /health/ready exists for an operator to curl; see
+                  # src/routes/health.ts. Pointing the STARTUP probe at it is
+                  # the A2 change, once this service's answers actually depend
+                  # on Mongo and Redis rather than being constants.
+                  livenessProbe:
+                    httpGet:
+                      path: /health/live
+                      port: 8080
+                    periodSeconds: 30
+                - name: datadog-agent
+                  image: gcr.io/datadoghq/serverless-init:latest
+                  env:
+                    - name: DD_SITE
+                      value: us5.datadoghq.com
+                    - name: DD_ENV
+                      value: "qa"
+                    - name: DD_SERVICE
+                      value: usemoney-market-data
+                    - name: DD_APM_ENABLED
+                      value: "true"
+                    - name: DD_HEALTH_PORT
+                      value: "5555"
+                    - name: DD_VERSION
+                      value: "$COMMIT_SHA"
+                    - name: DD_API_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: DD_API_KEY_PLACEHOLDER
+                          key: latest
+                  startupProbe:
+                    tcpSocket:
+                      port: 5555
+                    periodSeconds: 10
+                    failureThreshold: 5
+                  resources:
+                    limits:
+                      memory: 256Mi
+                      cpu: "0.5"
+        YAML
+        sed -i "s/SERVICE_NAME_PLACEHOLDER/${_SERVICE_NAME}/; s/MIN_PLACEHOLDER/${_MIN_INSTANCES}/; \
+                s/DATABASE_URL_PLACEHOLDER/DATABASE_URL_QA/; \
+                s/REDIS_URL_PLACEHOLDER/REDIS_URL_QA/; \
+                s/MARKET_DATA_TOKEN_SECRET_PLACEHOLDER/MARKET_DATA_TOKEN_SECRET_QA/; \
+                s/DD_API_KEY_PLACEHOLDER/DD_API_KEY_QA/" /tmp/service.yaml
+        gcloud run services replace /tmp/service.yaml --region=${_REGION}
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: "E2_HIGHCPU_8"

@@ -1,0 +1,81 @@
+{
+  "$comment": [
+    "MONEY-1499 (data-platform B8). The Atlas Search / Vector Search index",
+    "definitions for this cluster, IN CODE. Until this file existed they lived",
+    "only in the Atlas UI, which means no diff, no review and no way to",
+    "recreate them. Applied by `scripts/ops/apply-atlas-search-indexes.ts`.",
+    "",
+    "`manage` is per index and there are two values, because they carry very",
+    "different risk:",
+    "  apply        create it if absent, update it if the definition differs.",
+    "  verify-only  report a difference and change NOTHING. The v1 index sits",
+    "               on a 67 GiB collection that the research agent queries",
+    "               inside a chat turn; an `updateSearchIndex` there triggers a",
+    "               rebuild, so this file records what is live rather than",
+    "               asserting it.",
+    "",
+    "`dtype` is what the STORED field holds, and it is not cosmetic — it picks",
+    "the rules `checkVectorIndexField` applies. int8 + `quantization: scalar`",
+    "is the combination Atlas answers by SILENTLY SKIPPING every vector."
+  ],
+  "indexes": [
+    {
+      "collection": "document_embeddings",
+      "name": "document_embeddings_vector_index",
+      "type": "vectorSearch",
+      "manage": "verify-only",
+      "dtype": "array",
+      "note": "v1, live since MONEY-613. B0 §7 read it back as type=vectorSearch, dims=768, similarity=cosine, quantization=absent. Its FILTER fields were not printed by that run, so they are declared here as the set the readers actually send (apps/web/lib/gemini/vector-store.ts filters on userId AND docType) — if the live index turns out to declare fewer, --verify prints the difference rather than correcting it.",
+      "definition": {
+        "fields": [
+          {
+            "type": "vector",
+            "path": "embedding",
+            "numDimensions": 768,
+            "similarity": "cosine"
+          },
+          { "type": "filter", "path": "userId" },
+          { "type": "filter", "path": "docType" }
+        ]
+      }
+    },
+    {
+      "collection": "document_embeddings_v2",
+      "name": "document_embeddings_v2_vector_index",
+      "type": "vectorSearch",
+      "manage": "apply",
+      "dtype": "int8",
+      "note": "v2. Same dims and the SAME similarity as v1 — the vendor's own supported-similarity table allows cosine for binData(int8) (euclidean-only is the int1 rule), so B0 §5's open gate closes without a normalization pass or a move to dotProduct. `quantization` is ABSENT on purpose: automatic quantization over an already-quantized field makes Atlas skip every vector.",
+      "definition": {
+        "fields": [
+          {
+            "type": "vector",
+            "path": "embedding",
+            "numDimensions": 768,
+            "similarity": "cosine"
+          },
+          { "type": "filter", "path": "userId" },
+          { "type": "filter", "path": "docType" }
+        ]
+      }
+    },
+    {
+      "collection": "document_embeddings_v2_probe",
+      "name": "document_embeddings_v2_probe_index",
+      "type": "vectorSearch",
+      "manage": "probe",
+      "dtype": "int8",
+      "note": "The canary. One synthetic row, so `--probe` can prove that (1) Prisma's $runCommandRaw carries an extended-JSON binary of subtype 9 into Mongo intact and (2) Atlas accepts a BinData queryVector through the same transport — WITHOUT writing into v2 and without a six-hour backfill discovering it. Neither is provable by reading; both are silent when wrong.",
+      "definition": {
+        "fields": [
+          {
+            "type": "vector",
+            "path": "embedding",
+            "numDimensions": 768,
+            "similarity": "cosine"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "us-fundamentals"
+version = "0.1.0"
+description = "UseMoney US fundamentals engine — SEC EDGAR ingestion (MONEY-979)"
+readme = "README.md"
+# 3.12 is the TARGET and the only version CI and the Dockerfile use. edgartools
+# itself allows >=3.10, but nothing here is tested below 3.12 and the syntax
+# assumes it (PEP 695-free but `X | None` everywhere, `datetime.UTC`).
+requires-python = ">=3.12"
+
+dependencies = [
+  # ── PINNED EXACTLY ─────────────────────────────────────────────────────────
+  # edgartools is a PARSER whose output we store as numbers. A silent minor
+  # upgrade can change a standardised concept mapping and therefore change a
+  # reported revenue with no test failing anywhere — so the version is pinned
+  # and T4 adds a tripwire test asserting `edgar.__version__`.
+  "edgartools==5.53.0",
+  # pyrate-limiter 4.4.0 is the version that ships
+  # `RedisBucket.init(rates, redis, bucket_key)`. edgartools carries its own
+  # floor; ours is exact because T3 REPLACES edgartools' in-process
+  # InMemoryBucket limiter with a Redis-backed one, which is an internal API.
+  "pyrate-limiter==4.4.0",
+  # pypdf is the ONLY reader of a PDF exhibit's text (MONEY-1350) — edgartools
+  # renders none — so a version whose extraction changes silently changes an
+  # exhibit's stored text and its sha256, which is what the reparse-writes-
+  # nothing guarantee compares.
+  "pypdf==6.17.0",
+  # ── FLOORS ─────────────────────────────────────────────────────────────────
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.30",
+  "pymongo>=4.8",
+  "redis>=5.0",
+  "google-cloud-pubsub>=2.23",
+  "google-cloud-storage>=2.18",
+  "google-auth>=2.33",
+  "orjson>=3.10",
+  "pydantic>=2",
+  "httpx>=0.27",
+  # APM to the Datadog sidecar (localhost:8126) — same arrangement as the
+  # workers service. `datadog` is the DogStatsD client for the counters in
+  # app/store/outcome.py; the two are different products and both are needed.
+  "ddtrace>=2.11",
+  "datadog>=0.49",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3",
+  "pytest-asyncio>=0.24",
+  "respx>=0.21",
+  "ruff>=0.6",
+  "mypy>=1.11",
+  # `scripts/quant/read_candles.py` (MONEY-1384 B0) imports pandas at module
+  # scope and needs pyarrow for `to_parquet`, and `tests/test_read_candles.py`
+  # `exec_module`s that script AT COLLECTION — so an undeclared pandas is an
+  # ImportError for the whole test FILE, not a skipped feature. Both were
+  # reaching the venv only transitively through `edgartools==5.53.0`, which is a
+  # dependency of a PARSER we pin exactly precisely so its closure can move.
+  #
+  # `dev`, not `dependencies`: the reader is a research script run from this
+  # venv and the Cloud Run service imports neither, so declaring them at runtime
+  # would add ~150 MB to an image that would never call them.
+  #
+  # Upper bounds are the majors we have not run: constraints.txt ships
+  # pandas 3.0.5 / pyarrow 25.0.1 and the venv resolves exactly those. (pymongo
+  # is already declared above at `>=4.8` — it needed nothing here.)
+  "pandas>=2.2,<4",
+  "pyarrow>=17,<26",
+]
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+  "E",   # pycodestyle
+  "F",   # pyflakes
+  "I",   # isort
+  "UP",  # pyupgrade
+  "B",   # bugbear
+  "SIM", # simplify
+  "RUF",
+]
+# E501 is handled by the formatter; a long URL or a measured-fact comment is not
+# a defect worth failing a build over.
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests deliberately construct oddly-shaped inputs and assert on them.
+"tests/*" = ["B011"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Markers are declared so `-m "not slow"` in CI is a filter and not a typo that
+# silently selects everything (pytest treats an unknown marker as a warning by
+# default; --strict-markers makes it an error).
+addopts = "--strict-markers"
+markers = [
+  "slow: takes more than a couple of seconds; excluded from the fast CI lane",
+  "redis: needs a REAL Redis (CI service container). The shared SEC limiter cannot be faked — a fakeredis has no cross-process semantics, which is the entire property under test",
+  "network: reaches a real external host. Never run in CI; run by hand when re-measuring a documented fact",
+]
+asyncio_mode = "auto"

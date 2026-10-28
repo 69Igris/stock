@@ -1,0 +1,959 @@
+# GCP Cloud Build - Workers Production Environment
+# Trigger: Push to 'main' branch or tag 'v*'
+
+substitutions:
+  _REGION: "asia-south1"
+  _SERVICE_NAME: "stockbook-workers-prod"
+  # MONEY-1235 — the suffix every per-environment Cloud Run JOB carries
+  # (feed-parse-prod, xbrl-backfill-prod, ...). Used ONLY to name jobs in the
+  # re-pin step at the bottom; the image tag itself is written out literally so
+  # it stays character-identical to the tag the build step pushes.
+  _ENV: "prod"
+
+steps:
+  # Build Docker image
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - "build"
+      - "-t"
+      - "gcr.io/$PROJECT_ID/stockbook-workers:prod-$COMMIT_SHA"
+      - "-t"
+      - "gcr.io/$PROJECT_ID/stockbook-workers:prod-latest"
+      - "-t"
+      - "gcr.io/$PROJECT_ID/stockbook-workers:latest"
+      - "--build-arg"
+      - "DD_VERSION=$COMMIT_SHA"
+      - "-f"
+      - "workers/Dockerfile"
+      - "."
+
+  # Push images
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "--all-tags", "gcr.io/$PROJECT_ID/stockbook-workers"]
+
+  # Deploy to Cloud Run with Datadog sidecar
+  # Uses gcloud run services replace with a YAML service definition
+  # for multi-container (sidecar) support. The Datadog serverless-init
+  # container runs the local agent that dd-trace needs (localhost:8126).
+  # ─────────────────────────────────────────────────────────────────
+  # NOTE: the service.yaml heredoc below is ONE Cloud Build arg, and
+  # Cloud Build caps a single arg at 10,000 characters. It was already
+  # at 11,600 and failing with:
+  #   invalid build: invalid .steps field: build step 2 arg 1 too long
+  # The commentary that used to live INSIDE the heredoc is reproduced
+  # here instead — comments out here cost nothing, comments in there
+  # count toward the cap. Keep it that way, and re-check with:
+  #   python3 -c "…" (see scripts/README.md) after adding env vars.
+  #
+  # Relocated commentary:
+  # Studio render (/jobs/studio-render): Veo + Google TTS via the
+  # Cloud Run service SA (already has aiplatform.user). Output/fonts/
+  # chromium paths are baked into the Dockerfile ENV.
+  # Dodo Payments (MONEY-764): account-deletion runs on the
+  # worker and does a best-effort Dodo subscription cancel —
+  # without these, isDodoConfigured() was false and every
+  # deletion silently skipped the cancel (deleted users kept
+  # getting billed). Live-mode key for prod.
+  # MONEY-626: research synthesis runs in this worker and
+  # routes founder-gated Claude models. ANTHROPIC_API_KEY_PROD
+  # currently holds the SAME dev key as QA (interim) — rotate
+  # to a prod-scoped key before opening Claude beyond the
+  # founder. Absent → the router falls back to Gemini.
+  # MONEY-650 - Gemini Developer API key. When set,
+  # @usemoney/core/gemini calls the Developer API; absent,
+  # it falls back to Vertex. NOTE: GOOGLE_GENAI_API_KEY_PROD
+  # currently holds the QA-SA key — rotate to a prod-SA-bound
+  # key before prod launch.
+  # MONEY-1085 / MONEY-1097 - arm the raw exchange-feed archive.
+  #
+  # PROD is the ARCHIVE side: it fetches each NSE/BSE file once
+  # and writes the bytes to gs://stockbook-content-prod/feeds/
+  # so they can be parsed later (P4) and replayed by QA. Until
+  # this was set the whole archive was inert - bhavcopy-sync and
+  # report-archive-sync fetched normally and stored NOTHING,
+  # which is why report-archive-sync reports `fetched` rather
+  # than `archived` for those runs.
+  #
+  # MUST sit beside GCP_STORAGE_BUCKET: initFeedArchive()
+  # (workers/src/lib/feed-archive-store.ts) requires BOTH and
+  # logs "feed archive stays OFF" if either is missing.
+  #
+  # It belongs HERE rather than in a `gcloud run services
+  # update`: line ~293 deploys with `gcloud run services
+  # replace`, which is declarative and replaces the entire
+  # container spec - so any env var set out-of-band is silently
+  # erased by the next build, and the only symptom would be
+  # archived counts quietly going to zero.
+  # MONEY-783 - Document AI PDF text extraction (stock-document-extract).
+  # PROCESSOR_ID is the Document OCR processor id; when unset the
+  # worker falls back to pdf-parse so it works pre-provisioning.
+  # MONEY-864: unsubscribe-link signing for individual newsletter sends.
+  # MONEY-144 - account-deletion worker calls
+  # Clerk.users.lockUser; clerk-delete-sweep worker
+  # calls Clerk.users.deleteUser. Both need the Clerk
+  # secret key.
+  # ─────────────────────────────────────────────────────────────────
+  # MONEY-1255 - DOC_FINANCIALS_APPLY arms the document-financials projection
+  # to WRITE into stock_financials. It ships PRESENT and "false": absent and
+  # "false" must NOT be the same state, because absent is exactly how
+  # MF_METADATA_PROVIDER disabled its job silently for months (MONEY-1214).
+  # Compared against the LITERAL string, never Boolean() - Boolean("false") is
+  # true, which would arm the one configuration meant to keep it off.
+  #
+  # MONEY-1314 - DOC_PARSE_MODEL names the model the document lane runs on, and
+  # DOC_PARSE_BUDGET_MS its per-document wall clock. Both were in NEITHER spec,
+  # so the lane was un-overridable in prod and QA except by code change and
+  # silently pinned to gemini-3.5-flash — four times gemini-3.7-flash's batch
+  # rate across ~48,000 documents. `resolveDocParseModel` also IGNORES an id
+  # that is not in the model registry, warning and falling back, so a typo here
+  # costs 4x with a log line as the only symptom.
+  #
+  # NOTE these two carry NO comment inside the container spec below, and that is
+  # not an oversight: the spec is heredoc'd into a `gcloud run services replace`
+  # ARGUMENT, whose length the OS caps. Prose inside it is charged against the
+  # deploy — `cloudbuild-arg-limit.test.ts` failed at 30 chars of headroom when
+  # this explanation was written there instead of here.
+  #
+  # MONEY-1314 - DOC_CONVERT_CONTAINER_MI must EQUAL this service's `memory:`
+  # limit below. The PDF converter refuses a document whose estimated peak RSS
+  # (2.3-4.8x file size) would not fit, and it sizes that ceiling from THIS
+  # value. It was derived against 2048 MiB - what the backfill JOB gets - while
+  # this service ran 1Gi, so the ceiling sat ABOVE the container limit and a
+  # ~200 MB annual report passed the guard and OOM-killed the container, taking
+  # every other in-flight message with it. `doc-convert-memory.test.ts` keeps
+  # the two in agreement.
+  #
+  # MONEY-1373 - THE `memory:` LIMIT IS 4Gi BECAUSE OF THE CANDLE EVICTION
+  # LEAVES, not because of the converter. `candle-evict` fans out one message
+  # per (symbol, timeframe) intraday unit; a leaf holds ONE DECODED cold shard
+  # while it rewrites it, and a 242,000-bar M1 year-shard measured 160-250 MB of
+  # resident heap on node 22 (2026-09-07, real encode/decode). Cloud Run admits
+  # `containerConcurrency: 10` messages per container, and the 507 M1 leaves are
+  # published last as one burst, so ten of them on one instance is the expected
+  # steady state of that phase rather than a tail: 250 MB x 10 = 2500 MiB.
+  # 1Gi could not hold two, and an OOM kill takes every other in-flight message
+  # with it. `candle-evict-logic.test.ts` asserts the inequality against BOTH
+  # numbers read out of this file, so lowering either one fails the suite.
+  #
+  # DOC_INGEST_REALTIME arms the store-time announce for the ingest lane. It
+  # ships PRESENT and "false" - four artifacts in this branch assert it "ships
+  # false" and it was in NEITHER spec, which is exactly how MF_METADATA_PROVIDER
+  # disabled its job silently for months. Compared to the LITERAL string, never
+  # Boolean(): Boolean("false") is true.
+  #
+  # MONEY-1324 (P17) - US_FILING_INSIGHT_APPLY arms the 8-K/6-K exhibit insight
+  # fan-out. Same discipline as the line above and the two XBRL arms: PRESENT
+  # and "false" in BOTH specs (absent and explicitly-false must not be one
+  # state), compared to the LITERAL string, and read PER CALL rather than into a
+  # module const - a module-level read freezes at import and a warm Cloud Run
+  # container then treats a redeployed switch as no switch at all.
+  #
+  # DISARMED IS NOT INERT HERE. The `us-filing-insight-sweep` cron still runs
+  # every 10 minutes, still diffs the cohort and still reports its queue depth
+  # through job-outcome; it only stops short of publishing, so no leaf runs and
+  # no PAID model call is spent. That is deliberate: the number the arming
+  # decision will be made on is the queue depth, and a lane whose off state
+  # emits no series at all is a lane nobody can watch fill up.
+  #
+  # IT SHIPS FALSE AS A DEPLOY DECISION, not as an unfinished wire. The lane is
+  # complete: routes/us-filing-insight.ts injects the real analyser, and the
+  # per-document processor would default to a stub that THROWS if it did not.
+  # What arming buys is SPEND - one paid Gemini call per document - so the
+  # founder flips it against a measured queue depth rather than discovering the
+  # bill. It is one deploy, in one env at a time, and nothing about it is
+  # one-way except the money: a READY row stamps `sourceTextHash`, so a document
+  # already read is never re-read and re-charged.
+  #
+  # MONEY-1214 - MF_METADATA_PROVIDER turns the AMFI metadata provider ON.
+  # `mf-metadata-weekly` had been ENABLED and firing every Sunday 21:00 IST
+  # while this var was unset ANYWHERE, so `isAmfiFundMetadataEnabled()`
+  # returned false, no provider registered, and the run logged "No MF metadata
+  # provider is configured" and exited. All 14,225 funds carry 0 expenseRatio /
+  # 0 aum / 0 launchDate as a result - a job reporting success while writing
+  # nothing, the same shape as MONEY-1211's tier selector.
+  #
+  # MONEY-1220 - XBRL_PROJECTION_APPLY is the XBRL write arm. It ships
+  # PRESENT-BUT-OFF on purpose: an absent var and a "false" var must not be the
+  # same thing. "Absent" is exactly how MF_METADATA_PROVIDER above disabled its
+  # job silently for months. Flipping it to "true" is a deliberate deploy whose
+  # precondition is an F3 reconcile reading READY for every field -
+  # StockFinancials has no `source` in its unique key, so the first XBRL write
+  # for a period destroys the value it replaced.
+  #
+  # MONEY-1286 - XBRL_RATIOS_APPLY is the RATIOS write arm, and it is now a
+  # SEPARATE switch from XBRL_PROJECTION_APPLY above. Both jobs used to read the
+  # projection flag, so one variable decided two irreversible writes into two
+  # different tables. Both gates were then run against prod on 2026-08-30 and
+  # DISAGREED:
+  #
+  #   `xbrlratios prod`  PASS      - roe READY at 666/697 (95.6%), none BLOCKED
+  #   `xbrlrecon prod`   NOT READY - totalLiabilities disagrees on 17.2% of
+  #                                  pairs, totalAssets/totalEquity 6.9%,
+  #                                  netIncome 5.9%, against a 5.0% floor
+  #
+  # The evidence supports arming the ratios half and NOT the financials half,
+  # and with one flag that state could not be expressed at all: arming what
+  # passed would have armed what failed, into a table whose unique key carries
+  # no `source`, so the first write destroys the value the reconcile still needs
+  # to compare against.
+  #
+  # It ships PRESENT-BUT-OFF in BOTH specs for now, the same discipline as
+  # XBRL_PROJECTION_APPLY: an absent var and a "false" var must not be the same
+  # thing ("absent" is how MF_METADATA_PROVIDER disabled its job silently for
+  # months, MONEY-1214). Prod flips to "true" as a deliberate deploy once
+  # MONEY-1288 widens the gate; QA stays "false" because a QA write would be
+  # dropped by the next sync-prod-to-qa restore anyway. Compared against the
+  # LITERAL string, never Boolean() - Boolean("false") is true.
+  #
+  # MONEY-1346 - DOC_RATIOS_APPLY is a THIRD arm, and it is separate from
+  # XBRL_RATIOS_APPLY for a reason that is the opposite of the one above.
+  #
+  # The `xbrl-ratios` job now also derives ratios for companies that have NO
+  # XBRL FILING AT ALL, from `document_financial_extracts` - a model's reading
+  # of the company's own annual report. Measured on prod 2026-09-05: 1,248
+  # Indian symbols hold EXTRACTED ANNUAL extract rows, hold no filing, and hold
+  # ZERO `stock_ratios` rows. Not written badly - never CONSIDERED, because the
+  # candidate query selected `xbrlFilings: { some: {} }`.
+  #
+  # That cohort has NO INCUMBENT ROW TODAY, so every write it makes is a pure
+  # CREATE. Nothing is displaced and nothing is destroyed, so the one-way-door
+  # argument that gates XBRL_RATIOS_APPLY - the first XBRL write replaces the
+  # vendor row, after which the gate can never again produce arming evidence -
+  # has no analogue here. It can therefore be armed on its own evidence, which a
+  # shared flag would have made impossible.
+  #
+  # TODAY is load-bearing. That is a measurement of the DATA (0 of 1,241 active
+  # extract-only instruments hold a ratios row), not a property of the query,
+  # which admits any active instrument with an EXTRACTED ANNUAL extract and no
+  # filing. So every run reports `fallback:displacedIncumbent=N`; a non-zero N
+  # means the premise above has expired and this paragraph has to be re-made
+  # rather than re-read.
+  #
+  # Writes are stamped `DOC_PDF`, which ranks BELOW `NSE_XBRL` in
+  # FINANCIALS_AUTHORITY, so a filing-derived row can never be displaced by a
+  # reading of a filing - guarded at each write and counted
+  # (`fallback:authorityBlocked` in the job-outcome line).
+  #
+  # Same discipline as the two above: PRESENT and "false" in BOTH specs, so
+  # absent and off are never the same state (MONEY-1214); compared against the
+  # LITERAL string, never Boolean() - Boolean("false") is true; read PER CALL,
+  # never a module-scope const.
+  #
+  # MONEY-980 / MONEY-1262 - TIINGO_API_KEY is the US price backbone's token,
+  # sent as `Authorization: Token <key>`. TIINGO_PLAN sits BESIDE it as a PLAIN
+  # env var rather than a secret because it is not one: it names which rate
+  # ceilings to obey (COMMERCIAL 20,000/hr / 150,000/day / 100 GB, or
+  # REDISTRIBUTION 80,000/hr / 1,200,000/day / 1 TB) and an operator has to be
+  # able to read it at a glance. It is set EXPLICITLY in both specs even though
+  # `resolveTiingoPlan` already defaults to COMMERCIAL, because "absent" and
+  # "explicitly commercial" must not be the same state - that is the
+  # MF_METADATA_PROVIDER lesson two paragraphs up, applied before it can happen
+  # again. Unset or misspelled resolves to the LOWER pair on purpose: guessing
+  # high walks a run into a 429 wall mid-page, guessing low only runs slower.
+  #
+  #
+  # MONEY-980 - CANDLE_EVICT / CANDLE_EVICT_APPLY: the candle store's DELETER.
+  # Two switches because they answer two questions. CANDLE_EVICT="off" kills the
+  # job in this environment; CANDLE_EVICT_APPLY="true" arms the DELETES, and
+  # without it the job selects, verifies against the cold shards and reports
+  # exactly what it WOULD remove. Both compare against a LITERAL string, never
+  # Boolean(): Boolean("false") is true, which would arm the one configuration
+  # meant to keep the deletes off.
+  #
+  # Both ship PRESENT, ON and DISARMED. Present, because an absent var and a
+  # "false" var must not be the same state - "absent" is exactly how
+  # MF_METADATA_PROVIDER disabled its job silently for months (MONEY-1214).
+  # Disarmed, because this is the only job in the repo that DELETES price
+  # history: arming it is a deliberate deploy, with the same shape as
+  # XBRL_PROJECTION_APPLY, and its precondition is a dry run whose keptNoShard
+  # and keptNotInShard both read 0.
+  # MONEY-980 TASK B2 - the four legs of `us-instrument-master-sync`, each with
+  # its own switch. Before this there was NO way to stop the US master in an
+  # environment short of unsetting TIINGO_API_KEY, which kills every Tiingo path
+  # in the repo - EOD prices, corporate actions, news, the search enricher - to
+  # disable one leg. EDGAR_CIK_ENRICH and TIINGO_SEARCH_ENRICH already gated
+  # their own enrichers in CODE but appeared in NEITHER spec, which is the
+  # MF_METADATA_PROVIDER shape (a var that is off-by-absence is a var nobody can
+  # see); all four are now PRESENT, so an operator reads the state instead of
+  # inferring it.
+  #
+  #   US_MASTER_SYNC        the 74,125-row reconcile AND the stale sweep
+  #   US_NAME_ENRICH        company names from /tiingo/daily/<ticker>
+  #   TIINGO_SEARCH_ENRICH  permaTicker from /tiingo/utilities/search
+  #   EDGAR_CIK_ENRICH      ticker -> CIK from SEC's company_tickers.json
+  #
+  # All four are compared against the LITERAL string "off", never Boolean():
+  # Boolean("false") is true, which would arm the one configuration meant to
+  # keep a job off. "off" is therefore the ONLY disabling value and absent means
+  # ON - matching EDGAR_CIK_ENRICH's long-standing semantics rather than
+  # inventing a second convention for the same job.
+  #
+  # PROD ships the two WRITE legs OFF. `us_instruments` is a new collection and
+  # the first reconcile CREATES 74,125 rows, so arming it is a deliberate act
+  # with the same shape as XBRL_PROJECTION_APPLY. The two read-mostly enrichers
+  # ship ON and are harmless no-ops against an empty table.
+  #
+  # These blocks live ABOVE the step for the reason the next comment gives -
+  # they used to sit INSIDE the heredoc, where they cost 900 characters of the
+  # 10,000-character arg budget that the two new env entries below now need.
+  # This commentary lives ABOVE the step deliberately. Everything inside the
+  # heredoc becomes ONE Cloud Build arg with a hard 10,000-character ceiling,
+  # where a comment costs exactly as much as configuration. Putting these lines
+  # inline is what pushed both files under the safety margin.
+  # -----------------------------------------------------------------
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: bash
+    args:
+      - "-c"
+      - |
+        cat > /tmp/service.yaml << EOF
+        apiVersion: serving.knative.dev/v1
+        kind: Service
+        metadata:
+          name: ${_SERVICE_NAME}
+          annotations:
+            run.googleapis.com/ingress: internal
+        spec:
+          template:
+            metadata:
+              annotations:
+                autoscaling.knative.dev/minScale: "1"
+                autoscaling.knative.dev/maxScale: "20"
+                run.googleapis.com/container-dependencies: '{"stockbook-workers":["datadog-agent"]}'
+            spec:
+              containerConcurrency: 10
+              timeoutSeconds: 3600
+              serviceAccountName: stockbook-api@$PROJECT_ID.iam.gserviceaccount.com
+              containers:
+                - name: stockbook-workers
+                  image: gcr.io/$PROJECT_ID/stockbook-workers:prod-$COMMIT_SHA
+                  ports:
+                    - containerPort: 8080
+                  env:
+                    - name: NODE_ENV
+                      value: production
+                    - name: DD_TRACE_ENABLED
+                      value: "true"
+                    - name: DD_SERVICE
+                      value: stockbook-workers
+                    - name: DD_ENV
+                      value: production
+                    - name: DD_VERSION
+                      value: "$COMMIT_SHA"
+                    - name: DD_TRACE_AGENT_URL
+                      value: "http://localhost:8126"
+                    - name: DD_LLMOBS_ENABLED
+                      value: "1"
+                    - name: VEO_MODEL
+                      value: veo-3.0-generate-001
+                    - name: TTS_VOICE_HI
+                      value: hi-IN-Neural2-A
+                    - name: TTS_VOICE_EN
+                      value: en-IN-Neural2-A
+                    - name: DATABASE_URL
+                      valueFrom:
+                        secretKeyRef:
+                          name: DATABASE_URL_PROD
+                          key: latest
+                    - name: REDIS_URL
+                      valueFrom:
+                        secretKeyRef:
+                          name: REDIS_URL_PROD
+                          key: latest
+                    - name: ENCRYPTION_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: ENCRYPTION_KEY_PROD
+                          key: latest
+                    - name: NEXT_PUBLIC_DODO_MODE
+                      value: live
+                    - name: DODO_PAYMENTS_API_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: DODO_PAYMENTS_API_KEY_PROD
+                          key: latest
+                    - name: ANTHROPIC_API_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: ANTHROPIC_API_KEY_PROD
+                          key: latest
+                    - name: ZERODHA_API_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: ZERODHA_API_KEY_PROD
+                          key: latest
+                    - name: ZERODHA_API_SECRET
+                      valueFrom:
+                        secretKeyRef:
+                          name: ZERODHA_API_SECRET_PROD
+                          key: latest
+                    - name: UPSTOX_API_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: UPSTOX_API_KEY_PROD
+                          key: latest
+                    - name: UPSTOX_API_SECRET
+                      valueFrom:
+                        secretKeyRef:
+                          name: UPSTOX_API_SECRET_PROD
+                          key: latest
+                    - name: ANGEL_API_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: ANGEL_API_KEY_PROD
+                          key: latest
+                    - name: DHAN_CLIENT_ID
+                      valueFrom:
+                        secretKeyRef:
+                          name: DHAN_CLIENT_ID_PROD
+                          key: latest
+                    - name: DHAN_API_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: DHAN_API_KEY_PROD
+                          key: latest
+                    - name: FYERS_APP_ID
+                      valueFrom:
+                        secretKeyRef:
+                          name: FYERS_APP_ID_PROD
+                          key: latest
+                    - name: FYERS_SECRET_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: FYERS_SECRET_KEY_PROD
+                          key: latest
+                    - name: GCP_PROJECT_ID
+                      value: "stock-book-483718"
+                    - name: GCP_SERVICE_ACCOUNT_KEY_BASE64
+                      valueFrom:
+                        secretKeyRef:
+                          name: GCP_SERVICE_ACCOUNT_KEY_BASE64
+                          key: latest
+                    - name: GOOGLE_GENAI_API_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: GOOGLE_GENAI_API_KEY_PROD
+                          key: latest
+                    - name: GCP_STORAGE_BUCKET
+                      value: "stockbook-content-prod"
+                    - name: FEED_ARCHIVE_MODE
+                      value: "archive"
+                    - name: MF_METADATA_PROVIDER
+                      value: "amfi"
+                    - name: XBRL_PROJECTION_APPLY
+                      value: "false"
+                    - name: XBRL_RATIOS_APPLY
+                      value: "false"
+                    - name: DOC_RATIOS_APPLY
+                      value: "false"
+                    - name: DOC_FINANCIALS_APPLY
+                      value: "false"
+                    - name: DOC_PARSE_MODEL
+                      value: "gemini-3.7-flash"
+                    - name: DOC_CONVERT_CONTAINER_MI
+                      value: "4096"
+                    - name: DOC_INGEST_REALTIME
+                      value: "false"
+                    - name: DOC_VISION_APPLY
+                      value: "false"
+                    - name: DOC_PARSE_BUDGET_MS
+                      value: "240000"
+                    - name: US_FILING_INSIGHT_APPLY
+                      value: "false"
+                    - name: DOCUMENT_AI_PROCESSOR_ID
+                      value: ""
+                    - name: DOCUMENT_AI_LOCATION
+                      value: "us"
+                    - name: TIINGO_API_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: TIINGO_API_KEY_PROD
+                          key: latest
+                    - name: TIINGO_PLAN
+                      value: "COMMERCIAL"
+                    - name: CANDLE_EVICT
+                      value: "on"
+                    - name: CANDLE_EVICT_APPLY
+                      value: "false"
+                    - name: US_MASTER_SYNC
+                      value: "on"
+                    - name: US_NAME_ENRICH
+                      value: "off"
+                    - name: TIINGO_SEARCH_ENRICH
+                      value: "on"
+                    - name: EDGAR_CIK_ENRICH
+                      value: "on"
+                    - name: GCP_PUBLIC_STORAGE_BUCKET
+                      value: "stockbook-public-content"
+                    - name: EMAIL_FROM
+                      value: "Shaswat Deep <shaswat@email.usemoney.ai>"
+                    - name: EMAIL_REPLY_TO
+                      value: "founder@usemoney.ai"
+                    - name: EMAIL_UNSUBSCRIBE_SECRET
+                      valueFrom:
+                        secretKeyRef:
+                          name: EMAIL_UNSUBSCRIBE_SECRET_PROD
+                          key: latest
+                    - name: PUBSUB_ENV
+                      value: "prod"
+                    - name: CLOUD_RUN_URL
+                      value: "https://stockbook-workers-prod-w7eyeklrua-el.a.run.app"
+                    - name: RESEND_API_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: RESEND_API_KEY_PROD
+                          key: latest
+                    - name: RESEND_AUDIENCE_FREE_ID
+                      valueFrom:
+                        secretKeyRef:
+                          name: RESEND_AUDIENCE_FREE_ID_PROD
+                          key: latest
+                    - name: RESEND_AUDIENCE_PAID_ID
+                      valueFrom:
+                        secretKeyRef:
+                          name: RESEND_AUDIENCE_PAID_ID_PROD
+                          key: latest
+                    - name: RESEND_AUDIENCE_DOWNGRADED_ID
+                      valueFrom:
+                        secretKeyRef:
+                          name: RESEND_AUDIENCE_DOWNGRADED_ID_PROD
+                          key: latest
+                    - name: RESEND_AUDIENCE_USEMONEY_SECURITY_ID
+                      valueFrom:
+                        secretKeyRef:
+                          name: RESEND_AUDIENCE_USEMONEY_SECURITY_ID_PROD
+                          key: latest
+                    - name: RESEND_AUDIENCE_MARKETING_ID
+                      valueFrom:
+                        secretKeyRef:
+                          name: RESEND_AUDIENCE_MARKETING_ID_PROD
+                          key: latest
+                    - name: RESEND_AUDIENCE_NEWSLETTER_ID
+                      valueFrom:
+                        secretKeyRef:
+                          name: RESEND_AUDIENCE_NEWSLETTER_ID_PROD
+                          key: latest
+                    - name: DD_API_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: DD_API_KEY_PROD
+                          key: latest
+                    - name: CLERK_SECRET_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: CLERK_SECRET_KEY_PROD
+                          key: latest
+                  resources:
+                    limits:
+                      memory: 4Gi
+                      cpu: "2"
+                - name: datadog-agent
+                  image: gcr.io/datadoghq/serverless-init:latest
+                  env:
+                    - name: DD_SITE
+                      value: us5.datadoghq.com
+                    - name: DD_ENV
+                      value: production
+                    - name: DD_SERVICE
+                      value: stockbook-workers
+                    - name: DD_APM_ENABLED
+                      value: "true"
+                    - name: DD_HEALTH_PORT
+                      value: "5555"
+                    - name: DD_VERSION
+                      value: "$COMMIT_SHA"
+                    - name: DD_API_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: DD_API_KEY_PROD
+                          key: latest
+                  startupProbe:
+                    tcpSocket:
+                      port: 5555
+                    periodSeconds: 10
+                    failureThreshold: 5
+                  resources:
+                    limits:
+                      memory: 256Mi
+                      cpu: "0.5"
+        EOF
+        gcloud run services replace /tmp/service.yaml --region=${_REGION}
+
+  # ─────────────────────────────────────────────────────────────────
+  # RE-PIN THE CLOUD RUN JOBS (MONEY-1235)
+  #
+  # Cloud Run JOBS pin their image at PROVISION time. The
+  # `gcloud run services replace` above moves the SERVICE and nothing else: a
+  # job keeps executing whatever tag it was created with until somebody re-runs
+  # a setup script, and nobody re-runs a setup script on a Tuesday.
+  #
+  # This is neither hypothetical nor rare. All four of feed-parse-prod /
+  # fo-summary-prod / feed-backfill-prod / xbrl-backfill-prod drifted to a stale
+  # image across ALL FOUR releases of the MONEY-1234/MONEY-1235 cycle and had to
+  # be re-pinned BY HAND every time. The first occurrence (2026-08-18) left
+  # `feed-parse-prod` four days behind the service: it ran nightly, exited 0,
+  # reported SUCCEEDED_COUNT 1, and silently skipped four bond feed families it
+  # had never heard of — `bond_master` and `bond_eod` sat at 0 rows
+  # (MONEY-1210 / MONEY-1205; MONEY-1189 was the same class one ticket earlier).
+  # A drifted job does not fail. It succeeds at running last release's code,
+  # which is the failure mode with no symptom.
+  #
+  # ONLY `--image` IS TOUCHED, and that restriction is load-bearing.
+  # `gcloud run jobs update --set-env-vars` REPLACES a job's env list rather
+  # than merging into it, and the env/secret block for these jobs is owned by
+  # scripts/ops/setup-feed-backfill-job.sh and
+  # scripts/ops/setup-xbrl-backfill-job.sh (FEED_ARCHIVE_MODE per env,
+  # GCP_STORAGE_BUCKET, DATABASE_URL, GCP_SERVICE_ACCOUNT_KEY_BASE64). Two
+  # writers over one job's env is the "whichever ran last wins, silently" bug
+  # that split setup-xbrl-backfill-job.sh out of setup-feed-backfill-job.sh in
+  # the first place; a re-pin that also rewrote env would reintroduce it on
+  # EVERY release, with the loser being a whole environment's archive mode.
+  # DD_VERSION is likewise never passed here — it is baked into the image layer
+  # by the `--build-arg DD_VERSION=$COMMIT_SHA` above, and making it a property
+  # of the JOB SPEC is exactly the forge that would let a stale-pinned job
+  # report a fresh SHA.
+  #
+  # FIRST PROVISIONING STILL BELONGS TO THE SETUP SCRIPTS. `jobs update` fails
+  # on a job that does not exist yet, so a miss is WARNED and the release
+  # continues — but it is warned loudly and summarised at the end, because a
+  # silent skip here would be indistinguishable from the drift this step exists
+  # to end.
+  #
+  # THE LIST IS EVERY JOB ON THIS IMAGE, and the COUNT is deliberately not
+  # written here. It read TWELVE against a loop that had grown well past
+  # it, and the first attempt to fix that wrote a fresh literal which was
+  # stale in the same commit — which is the drift this step exists to end,
+  # one layer up. The authority is the loop below and the test that
+  # derives from workers/tsup.config.ts; neither needs a number in prose.
+  # `workers/tsup.config.ts` declares the entry points that bundle a script (the other two, `index` and `tiingo-realtime`, are the
+  # SERVICE and the realtime service, not jobs), and
+  # `packages/core/__tests__/ops/job-build-provenance.test.ts` requires every
+  # one of them to appear in BOTH re-pin loops or in a reason-carrying
+  # exemption map. The exemption map is EMPTY.
+  #
+  # It read "every job on this image" while being FALSE BY FOUR until
+  # MONEY-1317 measured it. `bse-backfill`, `tiingo-us-backfill`,
+  # `tiingo-us-corp-actions-backfill` and `tiingo-us-news-seed` were all real,
+  # provisioned Cloud Run jobs on this image and in no loop — confirmed against
+  # the deployed state on 2026-09-02, which lists `bse-backfill-prod`,
+  # `tiingo-us-eod-backfill-prod`, `tiingo-us-corp-actions-backfill-prod` and
+  # `tiingo-us-news-seed-prod`. The exclusion existed only as a test comment
+  # reading "24h+ one-shots provisioned per campaign", which does not
+  # distinguish them from `feed-backfill` and `feed-repair` — also
+  # `--task-timeout=86400`, also one-shots, also hand-provisioned, and both in
+  # the loop since MONEY-1250. A reason that does not separate the two groups
+  # is not a reason.
+  #
+  # "IT HAS NO SCHEDULE" IS AN ARGUMENT FOR INCLUSION rather than against it.
+  # This paragraph used to exempt `feed-repair` as one-shot, hand-provisioned
+  # and owned by no setup script; MONEY-1250 put it in the loop and left the
+  # exemption standing, and MONEY-1317 found `doc-ingest-backfill` missing on
+  # the same reasoning. An on-demand job is the WORST case for drift: it runs
+  # rarely enough that nobody correlates the release with the result, and
+  # `feed-repair` is a job whose entire purpose is rewriting objects in place.
+  #
+  # RE-PINNING DOES NOT DISTURB A RUNNING WALK. An execution is created from
+  # the job spec at execute time and keeps its own image, so `jobs update`
+  # lands on the NEXT execution — which is exactly what a 24h Tiingo or BSE
+  # shard wants: finish this shard on the image it started with, start the next
+  # one on the current release.
+  #
+  # `feed-repair` is now genuinely provisionable — MONEY-1317 added its
+  # `deploy_job` call to scripts/ops/setup-feed-backfill-job.sh, which
+  # build-provenance.ts had been naming in alerts for a job it never created.
+  #
+  # HOW TO VERIFY — the pin is the CLAIM, the log line is the EVIDENCE. Each of
+  # these jobs calls reportBuildProvenance() and prints a `[build-provenance]`
+  # line naming the commit it is ACTUALLY running as its first line of output.
+  # That SHA must equal this build's $COMMIT_SHA, which is also the service's
+  # DD_VERSION:
+  #
+  #   gcloud run jobs describe feed-parse-prod --region=asia-south1 \
+  #     --format='value(spec.template.spec.template.spec.containers[0].image)'
+  #   gcloud logging read \
+  #     'resource.type=cloud_run_job AND resource.labels.job_name="feed-parse-prod"
+  #      AND textPayload:"build-provenance" AND timestamp>="2026-08-21T12:00:00Z"' \
+  #     --limit=5 --project=stock-book-483718
+  #
+  # The explicit `timestamp>=` term is not optional. `--freshness` does NOT
+  # bound the query — measured this cycle, a `--freshness=10m` read returned
+  # lines 11 hours old — so a wait-loop polling for a provenance line matches a
+  # PRE-EXISTING entry instantly and reports the old revision as if it were the
+  # new one. See docs/reference/xbrl-switchover-runbook.md.
+  # ─────────────────────────────────────────────────────────────────
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: bash
+    args:
+      - "-c"
+      - |
+        set -uo pipefail
+        # Character-identical to the tag the build step pushes, the deploy step
+        # pins, and the `images:` block lists. Change one, change all four.
+        IMAGE="gcr.io/$PROJECT_ID/stockbook-workers:prod-$COMMIT_SHA"
+        echo "Re-pinning Cloud Run jobs (${_ENV}) to $${IMAGE}"
+        NOT_PINNED=""
+        # THE LOOP LIST IS THE GUARD, and it is keyed on the JOB BASE NAME.
+        # That is the same string as the tsup entry point for thirteen of the
+        # fourteen and is NOT for `tiingo-us-backfill`, which deploys as
+        # `tiingo-us-eod-backfill-{env}` (setup-tiingo-backfill-job.sh:366).
+        # Keying on the entry point would put `tiingo-us-backfill-{env}` here —
+        # a job that does not exist and never will, warning on every build
+        # forever while the real one drifts. MONEY-1317.
+        #
+        # `feed-repair` (MONEY-1250), `doc-ingest-backfill` (MONEY-1314) and
+        # the four one-shots after them (MONEY-1317) each shipped OUTSIDE this
+        # loop: built into every image, provisioned, on no schedule — so each
+        # sat releases behind and nothing ever failed. The two `databento-*`
+        # jobs (MONEY-1373) are the same shape — founder-run, on no schedule,
+        # and therefore the ones most likely to be reached for months after the
+        # image they were pinned to — so they go in from birth rather than
+        # being added by the ticket that discovers they are stale. An on-demand
+        # job goes stale silently and only bites whoever finally reaches for
+        # it, mid-drain.
+        for BASE in feed-parse fo-summary feed-backfill feed-repair xbrl-backfill xbrl-projection-drain xbrl-reparse doc-ingest-backfill bse-backfill tiingo-us-eod-backfill tiingo-us-corp-actions-backfill tiingo-us-news-seed databento-harvest databento-append tile-build-d1-in tile-build-d1-us ledger-backfill-databento ledger-backfill-tiingo embeddings-v2-backfill lake-load-databento lake-release event-lake-sink lake-replay-in lake-replay-us filing-registry-sync corp-action-lake-sink identity-sync lake-gold; do
+          JOB="$${BASE}-${_ENV}"
+          if gcloud run jobs update "$${JOB}" --image="$${IMAGE}" --region=${_REGION} --quiet; then
+            echo "  OK       $${JOB} -> $${IMAGE}"
+          else
+            NOT_PINNED="$${NOT_PINNED} $${JOB}"
+            echo "  WARNING  $${JOB} was NOT re-pinned and is still on its previous image."
+          fi
+        done
+        # ONE remediation line PER MISSING JOB, printed once at the end rather
+        # than the whole provisioning table on every miss. On QA that is the
+        # difference between a few lines and dozens: most of the loop's jobs
+        # are not provisioned in QA, and a wall of identical text is a warning
+        # nobody reads. The `case` is the same entry-point -> setup-script map
+        # as SETUP_SCRIPT_BY_ENTRYPOINT in packages/core/src/ops/build-provenance.ts,
+        # which is what a `[build-provenance]` alert from the job itself names —
+        # the two must agree, and `*` prints an honest "unmapped" rather than a
+        # guessed filename, which is the rule that map exists to enforce.
+        if [ -n "$${NOT_PINNED}" ]; then
+          echo "WARNING: still on a previous image:$${NOT_PINNED}"
+          echo "WARNING: their next run will report a stale SHA in [build-provenance]."
+          echo "WARNING: if one is not provisioned yet, create it ONCE with:"
+          for JOB in $${NOT_PINNED}; do
+            BASE="$${JOB%-${_ENV}}"
+            case "$${BASE}" in
+              feed-backfill|feed-parse|fo-summary|feed-repair)
+                SETUP="setup-feed-backfill-job.sh" ;;
+              xbrl-backfill)          SETUP="setup-xbrl-backfill-job.sh" ;;
+              xbrl-projection-drain)  SETUP="setup-xbrl-projection-drain-job.sh" ;;
+              xbrl-reparse)           SETUP="setup-xbrl-reparse-job.sh" ;;
+              doc-ingest-backfill)    SETUP="setup-doc-ingest-backfill-job.sh" ;;
+              bse-backfill)           SETUP="setup-bse-backfill-job.sh" ;;
+              tiingo-us-*)            SETUP="setup-tiingo-backfill-job.sh" ;;
+              databento-*)            SETUP="setup-databento-jobs.sh" ;;
+              # MONEY-1499 review — FIVE bases reached `*` and printed
+              # "UNMAPPED: add it to SETUP_SCRIPT_BY_ENTRYPOINT" while already
+              # being in it. That message is wrong in both directions at the one
+              # moment it fires, and it withholds the one thing the operator
+              # needs. NOTE `databento-*` does NOT match `ledger-backfill-*`.
+              tile-build-d1-*)        SETUP="setup-tile-build-job.sh" ;;
+              ledger-backfill-databento) SETUP="setup-databento-jobs.sh" ;;
+              ledger-backfill-tiingo) SETUP="setup-tiingo-backfill-job.sh" ;;
+              embeddings-v2-backfill) SETUP="setup-embeddings-v2-job.sh" ;;
+              # MONEY-1609 — the lake-writer@ jobs. lake-load-databento rides the
+              # Databento script (same bucket and inventory), the rest one lake script.
+              lake-load-databento)    SETUP="setup-databento-jobs.sh" ;;
+              lake-release|event-lake-sink|lake-replay-in|lake-replay-us|filing-registry-sync|corp-action-lake-sink|identity-sync)
+                SETUP="setup-lake-jobs.sh" ;;
+              lake-gold)              SETUP="setup-dataform.sh" ;;
+              *)                      SETUP="" ;;
+            esac
+            if [ -n "$${SETUP}" ]; then
+              echo "  WARNING    $${JOB}  ->  ./scripts/ops/$${SETUP} ${_ENV}"
+            else
+              echo "  WARNING    $${JOB}  ->  UNMAPPED: add it to SETUP_SCRIPT_BY_ENTRYPOINT and to this case"
+            fi
+          done
+        fi
+        # Never fails the release. A job that is not provisioned yet must not
+        # block a deploy of the SERVICE, and the pin is proven by the
+        # [build-provenance] line rather than by this step's exit code.
+        exit 0
+
+  # ─────────────────────────────────────────────────────────────────
+  # THE ALWAYS-ON REALTIME SOCKET HOLDER (MONEY-1309)
+  #
+  # Its OWN Cloud Run service on the SAME image, selected by a `command`
+  # override. Not a second entry inside stockbook-workers, and not a second
+  # Dockerfile.
+  #
+  # WHY A SEPARATE SERVICE — the blocking reason is CPU throttling. Cloud Run
+  # throttles a container's CPU to near-zero BETWEEN REQUESTS unless
+  # `run.googleapis.com/cpu-throttling: "false"` is set, and stockbook-workers
+  # is request-driven and does not set it. A websocket living there would be
+  # starved between Pub/Sub pushes: missed heartbeats, a watchdog that fires, a
+  # reconnect loop that thrashes — and every reconnect buys a full REST snapshot
+  # against a METERED api. That service is also maxScale 20, so nineteen
+  # instances would run a leader-candidate loop only to lose it.
+  #
+  # WHY ITS OWN STEP rather than more lines in the heredoc above: that heredoc
+  # is ONE Cloud Build arg against a hard 10,000-character ceiling and already
+  # measures 11,131 characters. A separate step gets its own budget, and this
+  # spec is kept deliberately thin — only the env the socket holder actually
+  # reads, not a copy of the worker's ~50 entries.
+  #
+  # minScale = maxScale = 1, and the leader lock is STILL required: Cloud Run
+  # overlaps revisions during a deploy, so the new instance starts before the
+  # old one drains and there is a window with two processes and one socket
+  # budget. Without the lock that window double-writes bars.
+  #
+  # `containerConcurrency: 1` because nothing calls it but the health probe.
+  # -----------------------------------------------------------------
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: bash
+    args:
+      - "-c"
+      - |
+        cat > /tmp/tiingo-realtime.yaml << EOF
+        apiVersion: serving.knative.dev/v1
+        kind: Service
+        metadata:
+          name: tiingo-realtime-prod
+          annotations:
+            run.googleapis.com/ingress: internal
+        spec:
+          template:
+            metadata:
+              annotations:
+                autoscaling.knative.dev/minScale: "1"
+                autoscaling.knative.dev/maxScale: "1"
+                run.googleapis.com/cpu-throttling: "false"
+                # MONEY-1357 — the socket holder must not start before the agent
+                # that receives its traces. The same declaration stockbook-workers
+                # carries; without it a cold start drops its first spans against a
+                # port nothing is listening on yet.
+                run.googleapis.com/container-dependencies: '{"tiingo-realtime":["datadog-agent"]}'
+            spec:
+              containerConcurrency: 1
+              timeoutSeconds: 3600
+              serviceAccountName: stockbook-api@$PROJECT_ID.iam.gserviceaccount.com
+              containers:
+                - name: tiingo-realtime
+                  image: gcr.io/$PROJECT_ID/stockbook-workers:prod-$COMMIT_SHA
+                  command: ["node", "dist/tiingo-realtime.js"]
+                  ports:
+                    - containerPort: 8082
+                  # WITHOUT THIS, `/health` IS NEVER CALLED. Cloud Run
+                  # auto-injects a startupProbe when none is declared and NEVER
+                  # injects a livenessProbe — verified across all six services in
+                  # this project. The startup probe is a TCP check that passes the
+                  # instant `server.listen` binds, and nothing looks again for the
+                  # life of the instance. So `UNHEALTHY_AFTER_MS` and the 503 in
+                  # main.ts would be dead code: a leader holding a socket that
+                  # receives nothing is exactly the failure the probe exists for.
+                  # (`HEALTHCHECK` in the Dockerfile is a Docker directive Cloud
+                  # Run ignores, and it targets 8080, which this container does
+                  # not listen on.)
+                  livenessProbe:
+                    httpGet:
+                      path: /health
+                      port: 8082
+                    periodSeconds: 30
+                    failureThreshold: 3
+                  env:
+                    - name: NODE_ENV
+                      value: prod
+                    - name: TIINGO_PLAN
+                      value: COMMERCIAL
+                    - name: TIINGO_RT_MAX_SYMBOLS
+                      value: "3000"
+                    # REQUIRED BY THE ARCHIVE. `archiveEnabled()` is
+                    # `TIINGO_RT_ARCHIVE !== "off" && Boolean(GCP_STORAGE_BUCKET)`,
+                    # so without these the flag reads "on" and every tick is
+                    # silently dropped — the exact "a prefix nothing writes to"
+                    # state MONEY-1309 set out to end. `uploadFile` also throws
+                    # without GCP_PROJECT_ID.
+                    - name: GCP_PROJECT_ID
+                      value: "stock-book-483718"
+                    - name: GCP_STORAGE_BUCKET
+                      value: "stockbook-content-prod"
+                    - name: TIINGO_RT_ARCHIVE
+                      value: "on"
+                    - name: TIINGO_RT_BOATS
+                      value: "off"
+                    - name: TIINGO_BUDGET_CONSUMERS
+                      value: "3"
+                    # MONEY-1357 — this service was DARK. The image bakes
+                    # DD_TRACE_ENABLED=true and DD_SERVICE=stockbook-workers, so
+                    # dd-trace booted against an agent that was not here and every
+                    # span was dropped, while datadog-metrics no-op'd for want of a
+                    # key. It gets its OWN name: a 24x5 socket holder and a
+                    # request-driven worker pool are not one service on a service map.
+                    - name: DD_TRACE_ENABLED
+                      value: "true"
+                    - name: DD_SERVICE
+                      value: tiingo-realtime
+                    - name: DD_ENV
+                      value: production
+                    - name: DD_VERSION
+                      value: "$COMMIT_SHA"
+                    - name: DD_TRACE_AGENT_URL
+                      value: "http://localhost:8126"
+                    - name: DD_API_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: DD_API_KEY_PROD
+                          key: latest
+                    - name: TIINGO_API_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: TIINGO_API_KEY_PROD
+                          key: latest
+                    - name: DATABASE_URL
+                      valueFrom:
+                        secretKeyRef:
+                          name: DATABASE_URL_PROD
+                          key: latest
+                    - name: REDIS_URL
+                      valueFrom:
+                        secretKeyRef:
+                          name: REDIS_URL_PROD
+                          key: latest
+                  resources:
+                    limits:
+                      memory: 1Gi
+                      cpu: "1"
+                - name: datadog-agent
+                  image: gcr.io/datadoghq/serverless-init:latest
+                  env:
+                    - name: DD_SITE
+                      value: us5.datadoghq.com
+                    - name: DD_ENV
+                      value: production
+                    - name: DD_SERVICE
+                      value: tiingo-realtime
+                    - name: DD_APM_ENABLED
+                      value: "true"
+                    - name: DD_HEALTH_PORT
+                      value: "5555"
+                    - name: DD_VERSION
+                      value: "$COMMIT_SHA"
+                    - name: DD_API_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: DD_API_KEY_PROD
+                          key: latest
+                  startupProbe:
+                    tcpSocket:
+                      port: 5555
+                    periodSeconds: 10
+                    failureThreshold: 5
+                  resources:
+                    limits:
+                      memory: 256Mi
+        EOF
+        gcloud run services replace /tmp/tiingo-realtime.yaml --region=${_REGION}
+
+images:
+  - "gcr.io/$PROJECT_ID/stockbook-workers:prod-$COMMIT_SHA"
+  - "gcr.io/$PROJECT_ID/stockbook-workers:prod-latest"
+  - "gcr.io/$PROJECT_ID/stockbook-workers:latest"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: "E2_HIGHCPU_8"
+
+timeout: "1200s"

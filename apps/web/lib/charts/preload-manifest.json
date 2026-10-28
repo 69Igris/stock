@@ -1,0 +1,21 @@
+[
+  {
+    "href": "/charting_library/charting_library.standalone.js",
+    "as": "script"
+  },
+  {
+    "href": "/charting_library/bundles/runtime.1d04bf6efb0933523590.js",
+    "as": "script",
+    "crossOrigin": "anonymous"
+  },
+  {
+    "href": "/charting_library/bundles/8224.a47a4a1d886aaa664d1e.js",
+    "as": "script",
+    "crossOrigin": "anonymous"
+  },
+  {
+    "href": "/charting_library/bundles/library.257d05210b16f5ddbfc2.js",
+    "as": "script",
+    "crossOrigin": "anonymous"
+  }
+]

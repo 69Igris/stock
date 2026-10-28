@@ -1,0 +1,48 @@
+/* ====================================================================
+   Research live-stream progress — smooth incremental reveal (#215a)
+   Pure transform/opacity animations (theme-agnostic) so streamed
+   tool-result data fades/slides in instead of popping abruptly as each
+   research task completes during polling.
+   Respects prefers-reduced-motion.
+   ==================================================================== */
+
+/* A newly-revealed task step (incremental reveal): slide up + fade in. */
+@keyframes rp-step-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rp-step-enter {
+  animation: rp-step-in 0.28s ease-out both;
+}
+
+/* The result data block (tables / metric cards / news) for a task that
+   just transitioned running → completed. Eases in on first paint so the
+   data doesn't snap into view. */
+@keyframes rp-data-in {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rp-data-reveal {
+  animation: rp-data-in 0.32s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rp-step-enter,
+  .rp-data-reveal {
+    animation: none;
+  }
+}

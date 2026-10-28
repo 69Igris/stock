@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/usemoney-play-design-system-67522a6c-d1c3-4617-97de-fcd968490366/colors_and_type.css">
+  <link rel="stylesheet" href="_ds/usemoney-play-design-system-67522a6c-d1c3-4617-97de-fcd968490366/styles/playful-app.css">
+  <script src="_ds/usemoney-play-design-system-67522a6c-d1c3-4617-97de-fcd968490366/_ds_bundle.js"></script>
+  <script src="app/data.js"></script>
+  <script src="web/wdata.js"></script>
+  <script src="web/v2data.js"></script>
+  <style>
+    html,body{margin:0;padding:0}
+    :root{--gain-text:#0f7a34;--loss-text:#b91c1c}
+    html.dark{--gain-text:#34d399;--loss-text:#ff6b35}
+    body{background:var(--paper);font-family:var(--font-sans);color:var(--ink)}
+    a{color:var(--emerald-text);text-decoration:none}a:hover{color:var(--ink)}
+  </style>
+</helmet>
+<div style="display:flex;min-height:100vh;background:var(--paper);background-image:radial-gradient(var(--dot-fg) 1px,transparent 1.5px),radial-gradient(var(--dot-fg-2) 1px,transparent 1.5px);background-size:7px 7px,11px 11px;color:var(--ink);font-family:var(--font-sans)">
+  <sc-if value="{{ isDesk }}" hint-placeholder-val="{{ true }}">
+    <div style="width:236px;flex-shrink:0;border-right:2px solid var(--ink);background:var(--paper-3);display:flex;flex-direction:column;height:100vh;position:sticky;top:0">
+      <a href="UseMoney v2 Hub.dc.html" style="padding:15px 18px 13px;border-bottom:1.5px solid var(--rule-soft);display:flex;align-items:center;gap:10px;color:var(--ink)">
+        <span style="width:28px;height:28px;border-radius:7px;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-family:var(--font-mono);font-weight:800;font-size:14px;transform:rotate(-3deg)">U</span>
+        <span style="font-weight:800;font-size:15px;letter-spacing:-0.3px">UseMoney<span style="color:var(--emerald-text)"> AI</span></span>
+      </a>
+      <div style="flex:1;overflow-y:auto;padding:4px 14px 10px">
+        <sc-for list="{{ nav }}" as="sec" hint-placeholder-count="4">
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;padding:12px 3px 5px"><span style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:1.6px;color:var(--ink-3)">{{ sec.label }}</span><span style="flex:1;height:1.5px;background:var(--ink);opacity:0.18"></span></div>
+            <sc-for list="{{ sec.items }}" as="it" hint-placeholder-count="4">
+              <a href="{{ it.href }}" title="{{ it.tip }}" style="{{ it.rowStyle }}">
+                <span style="{{ it.icStyle }}"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="{{ it.icStroke }}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ it.d }}"></path></svg></span>
+                <span style="font-size:12.5px">{{ it.label }}</span>
+                <sc-if value="{{ it.badge }}" hint-placeholder-val="{{ false }}"><span style="margin-left:auto;font-family:var(--font-mono);font-size:8px;font-weight:800;letter-spacing:0.6px;background:{{ it.badgeBg }};color:#0b0b09;border:1.5px solid var(--ink);border-radius:5px;padding:1px 5px">{{ it.badge }}</span></sc-if>
+              </a>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+      <div style="flex-shrink:0;border-top:1.5px solid var(--rule-soft);padding:10px 14px;display:flex;align-items:center;gap:9px">
+        <span style="width:28px;height:28px;border-radius:9px;background:var(--pop-2);border:2px solid var(--ink);display:grid;place-items:center;font-family:var(--font-mono);font-weight:800;font-size:11px;transform:rotate(-3deg);color:#1d1d1b">RV</span>
+        <div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:800">Rahul Verma</div><div style="font-family:var(--font-mono);font-size:8.5px;color:var(--ink-3)">FREE · ⚡ 2 CREDITS</div></div>
+      </div>
+    </div>
+  </sc-if>
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+    <div style="border-bottom:2px solid var(--ink);background:var(--paper);padding:12px 22px 11px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;position:sticky;top:0;z-index:40">
+      <div style="min-width:0">
+        <div style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:1.4px;color:var(--emerald-text)">● ACCOUNT / SETTINGS / DEVELOPER</div>
+        <div style="font-weight:800;font-size:21px;letter-spacing:-0.7px;margin-top:2px">Settings <span style="font-family:var(--font-serif);font-style:italic;font-weight:400;color:var(--ink-2)">the boring pages, done right.</span></div>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:9px;flex-shrink:0">
+        <button onClick="{{ toggleDark }}" title="Toggle dark mode" style="width:34px;height:34px;border-radius:10px;border:2px solid var(--ink);background:var(--paper-3);display:grid;place-items:center;cursor:pointer;box-shadow:2px 2px 0 var(--ink);color:var(--ink)"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="{{ darkIcon }}"></path></svg></button>
+        <span style="display:inline-flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:10px;font-weight:800;border:2px solid var(--ink);border-radius:99px;background:var(--pop-2);color:#1d1d1b;padding:5px 11px;box-shadow:2px 2px 0 var(--ink)">⚡ 2</span>
+      </div>
+    </div>
+    <div style="flex:1;padding:20px 22px 90px;max-width:1150px;width:100%;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start">
+      <div style="width:190px;flex-shrink:0;border:2px solid var(--ink);border-radius:12px;background:var(--paper);box-shadow:3px 3px 0 var(--ink);overflow:hidden">
+        <sc-for list="{{ snav }}" as="s" hint-placeholder-count="6"><div style="{{ s.style }}">{{ s.label }}<sc-if value="{{ s.tag }}" hint-placeholder-val="{{ false }}"><span style="margin-left:auto;font-family:var(--font-mono);font-size:7.5px;font-weight:800;background:var(--pop-2);color:#1d1d1b;border:1.5px solid var(--ink);border-radius:4px;padding:1px 4px">{{ s.tag }}</span></sc-if></div></sc-for>
+      </div>
+      <div style="flex:1;min-width:300px;display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px">
+          <div>
+            <div style="font-weight:800;font-size:19px;letter-spacing:-0.5px">Developer</div>
+            <div style="font-size:12.5px;color:var(--ink-3);margin-top:2px">API keys, MCP, and the tool catalog. Read-only by design — no tool can place an order.</div>
+          </div>
+          <span style="margin-left:auto;background:var(--pop-2);border:2px solid var(--ink);border-radius:9px;padding:7px 12px;transform:rotate(2deg);box-shadow:3px 3px 0 var(--ink);font-family:var(--font-serif);font-style:italic;font-size:12px;color:#1d1d1b"><b>moved:</b> was “Dev Console” — now it lives here</span>
+        </div>
+        <div style="border:2px solid var(--ink);border-radius:13px;background:var(--paper);box-shadow:3px 3px 0 var(--ink);overflow:hidden">
+          <div style="display:flex;align-items:center;padding:10px 16px;border-bottom:2px solid var(--ink);background:var(--paper-3)"><span style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1.2px">API KEYS</span><span onClick="{{ noop }}" style="margin-left:auto;font-family:var(--font-mono);font-size:9.5px;font-weight:800;color:var(--emerald-text);cursor:pointer">+ CREATE KEY</span></div>
+          <sc-for list="{{ keys }}" as="k" hint-placeholder-count="3">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:9px;padding:11px 16px;border-bottom:1.5px solid var(--rule-soft)">
+              <span style="width:7px;height:7px;border-radius:99px;background:{{ k.dot }};flex-shrink:0"></span>
+              <span style="min-width:150px"><b style="font-size:12.5px">{{ k.name }}</b><span style="display:block;font-family:var(--font-mono);font-size:9.5px;color:var(--ink-3);margin-top:1px">{{ k.id }}</span></span>
+              <span style="display:flex;gap:5px;flex-wrap:wrap;flex:1"><sc-for list="{{ k.scopes }}" as="sc" hint-placeholder-count="2"><span style="font-family:var(--font-mono);font-size:8px;font-weight:700;border:1.5px solid var(--rule-soft);border-radius:4px;padding:2px 6px;color:var(--ink-2);background:var(--paper-2)">{{ sc }}</span></sc-for></span>
+              <span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-3)">LAST {{ k.last }}</span>
+              <span style="font-family:var(--font-mono);font-size:9px;font-weight:800;color:{{ k.actC }};cursor:pointer">{{ k.act }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:16px">
+          <div style="flex:1.3;min-width:300px;border:2px solid var(--ink);border-radius:13px;background:var(--paper);box-shadow:3px 3px 0 var(--ink);overflow:hidden">
+            <div style="display:flex;align-items:center;padding:10px 16px;border-bottom:2px solid var(--ink);background:var(--paper-3)"><span style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1.2px">CONNECT VIA MCP</span><span style="margin-left:auto;font-family:var(--font-mono);font-size:8.5px;color:var(--ink-3)">CLAUDE · CURSOR · ANY MCP CLIENT</span></div>
+            <div style="padding:13px 16px">
+              <code style="display:block;font-family:var(--font-mono);font-size:10.5px;line-height:1.7;background:var(--ink);color:var(--paper);border-radius:9px;padding:12px 14px;white-space:pre-wrap">{{ snippet }}</code>
+              <div style="display:flex;flex-wrap:wrap;gap:9px;margin-top:11px;align-items:center">
+                <button onClick="{{ copySnippet }}" style="border:2px solid var(--ink);border-radius:8px;background:var(--paper);color:var(--ink);font-weight:800;font-size:11.5px;padding:7px 13px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)">{{ copyLabel }}</button>
+                <button onClick="{{ ping }}" style="border:2px solid var(--ink);border-radius:8px;background:var(--ink);color:var(--paper);font-weight:800;font-size:11.5px;padding:7px 13px;cursor:pointer;box-shadow:2px 2px 0 var(--emerald)">Send test ping</button>
+                <sc-if value="{{ pinged }}" hint-placeholder-val="{{ false }}"><span style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;color:var(--emerald-text)">● 200 OK · 84MS · TOOLS LISTED: 5</span></sc-if>
+              </div>
+            </div>
+          </div>
+          <div style="flex:1;min-width:250px;border:2px solid var(--ink);border-radius:13px;background:var(--paper);box-shadow:3px 3px 0 var(--ink);padding:14px 16px">
+            <div style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">USAGE — 30 DAYS</div>
+            <div style="display:flex;gap:18px;margin-top:10px">
+              <span><span style="font-family:var(--font-mono);font-size:19px;font-weight:800">{{ calls }}</span><span style="display:block;font-family:var(--font-mono);font-size:8px;color:var(--ink-3);letter-spacing:0.8px;margin-top:2px">TOOL CALLS</span></span>
+              <span><span style="font-family:var(--font-mono);font-size:19px;font-weight:800">{{ credits }}</span><span style="display:block;font-family:var(--font-mono);font-size:8px;color:var(--ink-3);letter-spacing:0.8px;margin-top:2px">CREDITS SPENT</span></span>
+            </div>
+            <svg viewBox="0 0 100 30" style="width:100%;height:44px;display:block;margin-top:10px" preserveAspectRatio="none"><path d="{{ usagePath }}" fill="none" stroke="var(--emerald)" stroke-width="2"></path></svg>
+            <div style="font-family:var(--font-mono);font-size:8.5px;color:var(--ink-3);margin-top:6px">RATE LIMIT 60/MIN · BILLING VIA CREDITS, NOTHING HIDDEN</div>
+          </div>
+        </div>
+        <div style="border:2px solid var(--ink);border-radius:13px;background:var(--paper);box-shadow:3px 3px 0 var(--ink);overflow:hidden">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px 16px;border-bottom:2px solid var(--ink);background:var(--paper-3)"><span style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1.2px">TOOL CATALOG</span><span style="font-family:var(--font-mono);font-size:8.5px;color:var(--ink-3)">EVERY TOOL CARRIES ITS DATA PROVENANCE</span></div>
+          <sc-for list="{{ tools }}" as="t" hint-placeholder-count="5">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:11px 16px;border-bottom:1.5px solid var(--rule-soft)" style-hover="background:var(--paper-3)">
+              <code style="font-family:var(--font-mono);font-size:11.5px;font-weight:700;min-width:170px">{{ t.n }}</code>
+              <span style="font-size:11.5px;color:var(--ink-2);flex:1;min-width:180px">{{ t.d }}</span>
+              <span style="{{ t.provStyle }}">{{ t.prov }}</span>
+              <span style="font-family:var(--font-mono);font-size:9.5px;color:var(--ink-3);min-width:80px;text-align:right">{{ t.calls }} CALLS/MO</span>
+            </div>
+          </sc-for>
+          <div style="padding:9px 16px;font-family:var(--font-mono);font-size:8.5px;color:var(--ink-3);background:var(--paper-3);border-top:2px solid var(--ink)">CONSENTED-BROKER = USER'S OWN SYNCED DATA · BHAVCOPY-DERIVED = NSE EOD PUBLIC · PURE-COMPUTE = MATH ONLY · EDGAR = SEC FILINGS</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <sc-if value="{{ isMob }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;left:0;right:0;bottom:0;z-index:70;display:flex;background:var(--paper);border-top:2px solid var(--ink);padding-bottom:env(safe-area-inset-bottom,0px)">
+      <a href="v2 Dashboard.dc.html" style="flex:1;text-align:center;padding:9px 0 7px;color:var(--ink-3);font-family:var(--font-mono);font-size:8.5px;font-weight:800">HOME</a>
+      <a href="v2 Screener.dc.html" style="flex:1;text-align:center;padding:9px 0 7px;color:var(--ink-3);font-family:var(--font-mono);font-size:8.5px;font-weight:800">SCREENER</a>
+      <a href="v2 Strategies.dc.html" style="flex:1;text-align:center;padding:9px 0 7px;color:var(--ink-3);font-family:var(--font-mono);font-size:8.5px;font-weight:800">STRATEGIES</a>
+      <a href="#" style="flex:1;text-align:center;padding:9px 0 7px;color:var(--ink-3);font-family:var(--font-mono);font-size:8.5px;font-weight:800">SAGE</a>
+      <a href="#" style="flex:1;text-align:center;padding:9px 0 7px;color:var(--paper);background:var(--ink);font-family:var(--font-mono);font-size:8.5px;font-weight:800">YOU</a>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { ready: false, isDesk: true, dark: false, copied: false, pinged: false };
+  componentDidMount() {
+    try { const d = localStorage.getItem("um-v2-dark") === "1"; document.documentElement.classList.toggle("dark", d); this.setState({ dark: d }); } catch (e) {}
+    this.mq = window.matchMedia("(min-width: 1024px)");
+    const sync = () => this.setState({ isDesk: this.mq.matches });
+    this.mq.addEventListener("change", sync); sync();
+    this.poll = setInterval(() => { if (window.API_KEYS) { clearInterval(this.poll); this.setState({ ready: true }); } }, 60);
+    window.addEventListener("storage", this.onStore = (e) => { if (e.key === "um-v2-dark") { const d = e.newValue === "1"; document.documentElement.classList.toggle("dark", d); this.setState({ dark: d }); } });
+  }
+  componentWillUnmount() { clearInterval(this.poll); window.removeEventListener("storage", this.onStore); }
+  spark(series, w, h) { if (!series || !series.length) return ""; const mn = Math.min(...series), mx = Math.max(...series), rg = mx - mn || 1; return series.map((v, i) => (i ? "L" : "M") + (i / (series.length - 1) * w).toFixed(1) + " " + (h - 2 - (v - mn) / rg * (h - 4)).toFixed(1)).join(""); }
+  renderVals() {
+    const S = this.state, KEYS = window.API_KEYS || [], TOOLS = window.MCP_TOOLS || [], USAGE = window.USAGE || { calls: 0, credits: 0, series: [] };
+    const mono = "font-family:var(--font-mono);";
+    const IC = { grid: "M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z", spark: "M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2z", pie: "M21 12A9 9 0 1 1 12 3v9z", eye: "M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z", book: "M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5zM4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5", flame: "M12 22c4 0 7-2.7 7-7 0-3-2-5.5-3.5-7C14 6 13 4 13 2c-3 2-4 5-4 7-1-1-1.5-2-1.5-3.5C5.5 7.5 5 9.8 5 12c0 6 3.4 10 7 10z", act: "M22 12h-4l-3 9L9 3l-3 9H2", search: "M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM21 21l-4.3-4.3", zap: "M13 2 3 14h7l-1 8 11-12h-8l1-8z", brain: "M12 4a3 3 0 0 0-3 3v10a3 3 0 1 0 6 0V7a3 3 0 0 0-3-3zM6 9a3 3 0 0 0 0 6M18 9a3 3 0 0 1 0 6", news: "M4 22h16a2 2 0 0 0 2-2V4H6v16a2 2 0 0 1-4 0V9h4M10 8h8M10 12h8M10 16h5", target: "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12zM12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z", calc: "M5 2h14a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zM8 6h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h8", shield: "M12 22s8-3.5 8-10V5l-8-3-8 3v7c0 6.5 8 10 8 10z", receipt: "M4 2v20l2-1.5L8 22l2-1.5L12 22l2-1.5L16 22l2-1.5L20 22V2l-2 1.5L16 2l-2 1.5L12 2l-2 1.5L8 2 6 3.5zM8 8h8M8 12h8M8 16h5", link: "M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7", cog: "M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19 12a7 7 0 0 1-.1 1.2l2 1.6-2 3.4-2.4-1a7 7 0 0 1-2 1.2L14 21h-4l-.4-2.6a7 7 0 0 1-2-1.2l-2.4 1-2-3.4 2-1.6A7 7 0 0 1 5 12a7 7 0 0 1 .1-1.2l-2-1.6 2-3.4 2.4 1a7 7 0 0 1 2-1.2L10 3h4l.4 2.6a7 7 0 0 1 2 1.2l2.4-1 2 3.4-2 1.6c.1.4.2.8.2 1.2z", bell: "M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M10.3 21a2 2 0 0 0 3.4 0" };
+    const NC = { emerald: "var(--emerald)", pink: "var(--pop-4)", blue: "var(--pop-3)", coral: "var(--pop-1)", gold: "var(--pop-2)" };
+    const mk = (id, label, ic, tint, badge, href) => {
+      const act = id === "settings";
+      return { label, badge: badge || false, badgeBg: badge === "AI" ? "var(--emerald)" : "var(--pop-2)", d: IC[ic], href: href || "#", tip: href ? "" : "Not part of this mockup",
+        rowStyle: "display:flex;align-items:center;gap:10px;padding:6.5px 9px;border-radius:9px;cursor:pointer;margin-bottom:1px;text-decoration:none;font-weight:" + (act ? 800 : 650) + ";background:" + (act ? "var(--ink)" : "transparent") + ";color:" + (act ? "var(--paper)" : "var(--ink-2)"),
+        icStyle: "width:22px;height:22px;border-radius:6px;border:1.5px solid " + (act ? "var(--paper)" : "var(--ink)") + ";background:" + (tint ? NC[tint] : (act ? "var(--ink)" : "var(--paper)")) + ";display:grid;place-items:center;flex-shrink:0",
+        icStroke: tint ? "#1d1d1b" : (act ? "var(--paper)" : "var(--ink-2)") };
+    };
+    const nav = [
+      { label: "WORKSPACE", items: [mk("dashboard", "Dashboard", "grid", null, null, "v2 Dashboard.dc.html"), mk("stocksage", "StockSage", "spark", "emerald", "AI"), mk("holdings", "Holdings", "pie"), mk("watchlists", "Watchlists", "eye"), mk("tradebook", "Tradebook", "book"), mk("roast", "Portfolio Roast", "flame", "pink")] },
+      { label: "DISCOVER", items: [mk("markets", "Markets", "act", "blue"), mk("screener", "Screener", "search", null, null, "v2 Screener.dc.html"), mk("strategies", "Strategies", "zap", "gold", "LAB", "v2 Strategies.dc.html"), mk("research", "Research List", "brain"), mk("news", "News & Events", "news")] },
+      { label: "TOOLS", items: [mk("fire", "FIRE Calculator", "target", "coral"), mk("calculators", "Calculators", "calc"), mk("risk", "Risk Report", "shield"), mk("tax", "Tax Report", "receipt")] },
+      { label: "ACCOUNT", items: [mk("brokers", "Brokers", "link"), mk("settings", "Settings", "cog", null, null, "v2 Settings Developer.dc.html"), mk("notifications", "Notifications", "bell")] },
+    ];
+    const snavDef = [["Profile", false], ["Brokers", false], ["Plan & credits", false], ["Notifications", false], ["Privacy & memory", false], ["Developer", "NEW"]];
+    const snav = snavDef.map(([label, tag]) => ({ label, tag, style: "display:flex;align-items:center;gap:6px;padding:10px 14px;border-bottom:1.5px solid var(--rule-soft);font-size:12.5px;cursor:pointer;font-weight:" + (label === "Developer" ? 800 : 600) + ";background:" + (label === "Developer" ? "var(--ink)" : "var(--paper)") + ";color:" + (label === "Developer" ? "var(--paper)" : "var(--ink-2)") }));
+    const provBg = { "CONSENTED-BROKER": "var(--emerald)", "BHAVCOPY-DERIVED": "var(--pop-2)", "PURE-COMPUTE": "var(--paper-2)", "EDGAR": "var(--pop-3)" };
+    return {
+      isDesk: S.isDesk, isMob: !S.isDesk, nav, snav, noop: () => {},
+      toggleDark: () => { const dark = !S.dark; document.documentElement.classList.toggle("dark", dark); try { localStorage.setItem("um-v2-dark", dark ? "1" : "0"); } catch (e) {} this.setState({ dark }); },
+      darkIcon: S.dark ? "M12 3v2M12 19v2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M3 12h2M19 12h2M5.2 18.8l1.4-1.4M17.4 6.6l1.4-1.4M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10z" : "M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z",
+      keys: KEYS.map(k => ({ name: k.name, id: k.id, scopes: k.scopes.map(s => s.toUpperCase()), last: (k.last || "—").toUpperCase(), dot: k.live ? "var(--emerald)" : "var(--pop-1)", act: k.live ? "REVOKE" : "REVOKED", actC: k.live ? "var(--ink-3)" : "var(--pop-1)" })),
+      snippet: '{\n  "mcpServers": {\n    "usemoney": {\n      "url": "https://mcp.usemoney.ai/v1",\n      "headers": { "Authorization": "Bearer um_live_4f2…9a1" }\n    }\n  }\n}',
+      copyLabel: S.copied ? "Copied ✓" : "Copy config", copySnippet: () => { this.setState({ copied: true }); setTimeout(() => this.setState({ copied: false }), 1600); },
+      ping: () => this.setState({ pinged: true }), pinged: S.pinged,
+      calls: USAGE.calls.toLocaleString("en-IN"), credits: String(USAGE.credits), usagePath: this.spark(USAGE.series, 100, 30),
+      tools: TOOLS.map(t => ({ n: t.n, d: t.d, prov: t.prov, calls: t.calls.toLocaleString("en-IN"), provStyle: mono + "font-size:8px;font-weight:800;letter-spacing:0.5px;border:1.5px solid var(--ink);border-radius:5px;padding:2px 7px;color:#1d1d1b;background:" + (provBg[t.prov] || "var(--paper-2)") })),
+    };
+  }
+}
+</script>
+</body>
+</html>

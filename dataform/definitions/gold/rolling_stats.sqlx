@@ -1,0 +1,140 @@
+config {
+  type: "table",
+  schema: datasets.gold(),
+  name: "rolling_stats",
+  description: "20/50/200-session SMAs, 52-week high/low, 20-session average volume, 30-session realised volatility. All on the ADJUSTED series. A TABLE rebuilt whole on every run (MONEY-1606) — see the note below on why not incremental.",
+  bigquery: {
+    partitionBy: "DATE_TRUNC(session_date, MONTH)",
+    clusterBy: ["market", "listing_id"]
+  },
+  columns: {
+    sma_20: "simple moving average of adj_close over 20 SESSIONS",
+    sma_50: "…over 50 sessions",
+    sma_200: "…over 200 sessions",
+    high_52w: "highest adj_high over 252 sessions — the conventional trading-year count, NOT 52 calendar weeks",
+    low_52w: "lowest adj_low over 252 sessions",
+    avg_volume_20: "mean adj_volume over 20 sessions",
+    realised_vol_30d: "sample stddev of log_return over 30 sessions, ANNUALISED by sqrt(252)",
+    sessions_in_window: "how many rows the widest window actually had. A 200-SMA over 12 sessions is a number, and without this nothing says so",
+    isin: "the ISIN the exchange printed on this session's bar (silver price_bar_d1). NULL for every US bar. query_lake's universe_top_by groups on the FULL ISIN, so one security listed on NSE and BSE ranks once — never on the issuer code (chars 3-7), which merges an issuer's ETFs, bonds and DVRs"
+  },
+  assertions: {
+    uniqueKey: ["market", "listing_id", "session_date"],
+    nonNull: ["market", "listing_id", "session_date"]
+  },
+  tags: ["gold", "bars"]
+}
+
+/*
+ * EVERY WINDOW IS COUNTED IN SESSIONS (`ROWS`), NOT IN CALENDAR DAYS (`RANGE`).
+ *
+ * "20-day SMA" means twenty TRADING days everywhere in this business, and a
+ * RANGE window over `session_date` would silently shorten every window across a
+ * holiday week and across India's and America's different holiday calendars —
+ * two markets share this table.
+ *
+ * `252` for "52 weeks" is the same convention: 52 calendar weeks of NSE or NYSE
+ * sessions is ~250-253, and the alternative (RANGE BETWEEN INTERVAL 364 DAY)
+ * makes the number depend on which holidays fell inside the window.
+ *
+ * A PARTIAL WINDOW STILL PRODUCES A NUMBER, and that is the trap this table
+ * exposes rather than hides. BigQuery's `AVG` over `ROWS BETWEEN 199 PRECEDING
+ * AND CURRENT ROW` averages whatever is there — so a listing with 12 sessions
+ * has an `sma_200`, it just is not a 200-session average. `sessions_in_window`
+ * is the column that says so; a reader wanting strictness filters on it. NOT
+ * nulled out here, because a chart legitimately wants the short-window value
+ * near a listing's start and a screener legitimately does not, and only one of
+ * those two can be served by dropping it.
+ *
+ * REALISED VOL IS SAMPLE, NOT POPULATION (`STDDEV_SAMP`): these are 30 draws
+ * from a process, not the whole population of its returns. It is ANNUALISED by
+ * sqrt(252) so the number is comparable with every other volatility anybody
+ * will put beside it; the unannualised daily figure is `realised_vol_30d /
+ * SQRT(252)` and is not stored twice.
+ *
+ * ## A TABLE, REBUILT WHOLE EVERY RUN — NOT INCREMENTAL — MONEY-1606
+ *
+ * As a view, every read recomputed the whole adjusted history of the market:
+ * query_lake's `rolling_stats_for` dry-ran at 1.61 GB for ONE listing on
+ * 2026-09-23, against its 2 GiB cap, over India's bars alone. Materialised,
+ * partitioned by month and clustered by (market, listing_id), that read prunes
+ * to a month or two of one listing.
+ *
+ * NOT `incremental`, for the reason `adjusted_bar_d1.sqlx` stays a view: every
+ * number here is on the back-adjusted basis, and one new split multiplies
+ * every EARLIER adjusted price of that listing by its factor. An incremental
+ * table would append tomorrow's rows on the new basis and keep ten years of
+ * SMAs and 52-week ranges on the old one — a step at the ex-date, on real
+ * prices, with nothing reporting an error. And since every listing gains a bar
+ * every session, "re-measure the listings that changed" is every listing
+ * anyway. A full rebuild costs one scan of the view per run — what a single
+ * `rolling_stats_for` call cost before this change — and cannot drift from
+ * the adjustment, which still has exactly one definition: this reads
+ * `returns_daily` -> `adjusted_bar_d1` -> `includes/adjustment.js`.
+ *
+ * MONTH partitions, like price_bar_d1: US history reaches back to 1962, and a
+ * day-partitioned CREATE ... AS SELECT would write ~23,000 partitions against
+ * BigQuery's 4,000-per-job ceiling.
+ *
+ * IT IS ONLY AS FRESH AS ITS LAST REBUILD, and the rebuild does not follow
+ * the loads. The two scheduled runs are 06:45 and 20:15 IST
+ * (setup-dataform.sh); India's bars last landed in silver at 22:40-22:41 IST
+ * on 2026-09-22 (a lake-replay-in batch covering 09-15..09-22), after the
+ * 20:15 slot, so they reached no gold table until the next morning's 06:45
+ * run. Until a load triggers its own rebuild, read `session_date` on the row
+ * rather than assuming it is yesterday's.
+ */
+
+WITH stats AS (
+SELECT
+  market,
+  listing_id,
+  symbol,
+  exchange,
+  session_date,
+  adj_close,
+  adj_volume,
+  adjustment_policy_version,
+
+  AVG(CAST(adj_close AS FLOAT64)) OVER w20 AS sma_20,
+  AVG(CAST(adj_close AS FLOAT64)) OVER w50 AS sma_50,
+  AVG(CAST(adj_close AS FLOAT64)) OVER w200 AS sma_200,
+
+  -- adj_HIGH and adj_LOW, not adj_close. A 52-week high is the highest
+  -- INTRADAY high; computed from closes it is always lower, always plausible,
+  -- and never the number anyone meant.
+  MAX(adj_high) OVER w252 AS high_52w,
+  MIN(adj_low) OVER w252 AS low_52w,
+
+  AVG(CAST(adj_volume AS FLOAT64)) OVER w20 AS avg_volume_20,
+
+  STDDEV_SAMP(log_return) OVER w30 * SQRT(252) AS realised_vol_30d,
+
+  COUNT(1) OVER w252 AS sessions_in_window
+FROM ${ref("returns_daily")}
+WINDOW
+  w20  AS (PARTITION BY market, listing_id ORDER BY session_date ROWS BETWEEN 19 PRECEDING AND CURRENT ROW),
+  w30  AS (PARTITION BY market, listing_id ORDER BY session_date ROWS BETWEEN 29 PRECEDING AND CURRENT ROW),
+  w50  AS (PARTITION BY market, listing_id ORDER BY session_date ROWS BETWEEN 49 PRECEDING AND CURRENT ROW),
+  w200 AS (PARTITION BY market, listing_id ORDER BY session_date ROWS BETWEEN 199 PRECEDING AND CURRENT ROW),
+  w252 AS (PARTITION BY market, listing_id ORDER BY session_date ROWS BETWEEN 251 PRECEDING AND CURRENT ROW)
+),
+-- The session's ISIN, from the bars themselves: every India bar since the
+-- bhavcopy began carrying one has it (51,071 of 51,071 NSE and 75,586 of
+-- 75,586 BSE rows in September 2026), where silver `listing` knows 3,519 of
+-- 10,837 NSE ISINs. MAX over the session's rows: the sources that carry an
+-- ISIN agree on it, and the ones that do not (Yahoo) carry NULL.
+isin_by_session AS (
+  SELECT market, listing_id, session_date, MAX(isin) AS isin
+  FROM ${ref("price_bar_d1")}
+  WHERE isin IS NOT NULL
+  GROUP BY market, listing_id, session_date
+)
+SELECT
+  s.*,
+  i.isin
+FROM stats s
+LEFT JOIN isin_by_session i
+  ON i.market = s.market
+ AND i.listing_id = s.listing_id
+ AND i.session_date = s.session_date

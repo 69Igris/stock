@@ -1,0 +1,28 @@
+{
+  "name": "@usemoney/security",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./encryption": "./src/encryption.ts",
+    "./rate-limit": "./src/rate-limit.ts",
+    "./cron-auth": "./src/cron-auth.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "type-check": "tsc --noEmit",
+    "test": "node --import tsx ../../scripts/test-timeout.ts --import tsx --test --test-timeout=30000 \"__tests__/**/*.test.ts\"",
+    "lint": "eslint . --max-warnings 0"
+  },
+  "dependencies": {
+    "lru-cache": "^11.2.4"
+  },
+  "devDependencies": {
+    "@usemoney/typescript-config": "*",
+    "@types/node": "^22.15.3",
+    "typescript": "5.9.2"
+  }
+}

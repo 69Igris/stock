@@ -1,0 +1,262 @@
+/*
+ * GlobalMobileBottomNav — playful skin (MONEY-484)
+ * Prefix: gmbn-  (global mobile bottom nav)
+ * Theme: CSS vars from playful-app.css (:root / html.dark)
+ * Never hardcode colours here — always use var(--*).
+ */
+
+/* ── Nav bar ──────────────────────────────────────────────────────────── */
+.gmbn-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: stretch;
+  background: var(--paper);
+  border-top: 2px solid var(--ink);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  /* Defined once in globals.css as --mobile-nav-bar-h, which the launchers and
+     ScrollToTop clear off via --mobile-nav-h (MONEY-1151). Do NOT read
+     --mobile-nav-h here: that one is 0 unless this bar is mounted, so using it
+     would collapse the bar to nothing.
+     The literal is repeated as a var() FALLBACK, not as a second definition:
+     this stylesheet is imported by its own component and was self-contained
+     before, so without it an unavailable globals.css makes the declaration
+     invalid at computed-value time and the height silently becomes `auto`,
+     breaking the 60px contract every clearance calculation depends on. */
+  height: var(
+    --mobile-nav-bar-h,
+    calc(60px + env(safe-area-inset-bottom, 0px))
+  );
+}
+
+/* Mobile-only: the desktop sidebar appears at lg (>=1024px), so the bottom
+   nav must hide there. The component carries `lg:hidden`, but this co-located
+   rule's plain `display:flex` would otherwise out-order that Tailwind utility
+   and leak the bar onto desktop (it sits next to the visible sidebar, #99). */
+@media (min-width: 1024px) {
+  .gmbn-nav {
+    display: none;
+  }
+}
+
+/* ── Primary slot button ──────────────────────────────────────────────── */
+.gmbn-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 8px 0 6px;
+  color: var(--ink-3);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 0.12s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.gmbn-item:hover {
+  color: var(--ink-2);
+}
+
+/* Active state: emerald icon pill + emerald label colour */
+.gmbn-item.active {
+  color: var(--emerald);
+}
+
+.gmbn-item.active .gmbn-ic {
+  background: var(--emerald-bg);
+  border-radius: 8px;
+}
+
+/* Icon wrapper – same pill geometry as .pf-btab a .ic */
+.gmbn-ic {
+  width: 32px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  transition: background 0.12s ease;
+}
+
+/* ── Center chat (+) button ───────────────────────────────────────────── */
+.gmbn-chat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px 0 4px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.gmbn-chat-bubble {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--emerald);
+  color: var(--paper);
+  display: grid;
+  place-items: center;
+  box-shadow: var(--shadow-soft);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.gmbn-chat:hover .gmbn-chat-bubble,
+.gmbn-chat:active .gmbn-chat-bubble {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hard);
+}
+
+/* ── More drawer backdrop ─────────────────────────────────────────────── */
+.gmbn-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 48;
+  background: rgba(0, 0, 0, 0.35);
+  animation: gmbn-fade-in 0.15s ease;
+}
+
+/* ── More drawer panel ────────────────────────────────────────────────── */
+.gmbn-drawer {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  /* Same fallback rationale as .gmbn-nav's height above. */
+  bottom: calc(
+    var(--mobile-nav-bar-h, calc(60px + env(safe-area-inset-bottom, 0px))) + 8px
+  );
+  z-index: 49;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 16px;
+  box-shadow: var(--shadow-hard);
+  padding: 6px;
+  animation: gmbn-slide-up 0.18s ease;
+  max-height: calc(100vh - 160px);
+  overflow-y: auto;
+}
+
+/* ── Drawer header ────────────────────────────────────────────────────── */
+.gmbn-drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px 6px;
+}
+
+.gmbn-drawer-title {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.gmbn-drawer-close {
+  width: 26px;
+  height: 26px;
+  border: 1.5px solid var(--rule-soft);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ink-3);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition:
+    border-color 0.1s ease,
+    color 0.1s ease;
+}
+
+.gmbn-drawer-close:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+/* ── Drawer grid ──────────────────────────────────────────────────────── */
+.gmbn-drawer-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+}
+
+/* ── Drawer item button ───────────────────────────────────────────────── */
+.gmbn-drawer-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 12px;
+  border-radius: 9px;
+  border: 1.5px solid var(--rule-softer);
+  background: transparent;
+  color: var(--ink-2);
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    border-color 0.1s ease,
+    background 0.1s ease,
+    color 0.1s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.gmbn-drawer-item:hover {
+  border-color: var(--ink);
+  background: var(--paper-2);
+}
+
+.gmbn-drawer-item.active {
+  background: var(--emerald-bg);
+  border-color: var(--emerald);
+  color: var(--emerald);
+}
+
+/* ── Drawer footer hint ───────────────────────────────────────────────── */
+.gmbn-drawer-hint {
+  margin-top: 5px;
+  padding: 8px 10px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10.5px;
+  color: var(--ink-4);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── Animations ───────────────────────────────────────────────────────── */
+@keyframes gmbn-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes gmbn-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

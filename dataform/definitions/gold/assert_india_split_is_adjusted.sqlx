@@ -1,0 +1,154 @@
+config {
+  type: "assertion",
+  schema: datasets.gold(),
+  name: "assert_india_split_is_adjusted",
+  description: "A real Indian 10:1 split must actually move the adjusted price. The one assertion that can see a zeroed adjustment — assert_latest_bar_is_unadjusted structurally cannot.",
+  tags: ["gold", "bars"]
+}
+
+/*
+ * WHY THIS EXISTS, AND WHY THE OTHER ASSERTION COULD NEVER HAVE CAUGHT IT
+ *
+ * MONEY-1516: every India bar carries `div_cash` and `split_factor` NULL —
+ * bhavcopy publishes no corporate actions — and `NULL > 0` is NULL rather than
+ * true, so every CASE in the adjustment took its ELSE. `adj_close = close` for
+ * all 14.3M rows, and the whole gold layer reported success.
+ *
+ * `assert_latest_bar_is_unadjusted` passed throughout and always would have:
+ * under CRSP back-adjustment the NEWEST bar is unadjusted BY CONSTRUCTION, so
+ * "the newest bar equals its raw close" is exactly as true of a correct series
+ * as of one where the adjustment never ran. An assertion whose subject is the
+ * one row a defect cannot reach is not a weak assertion, it is a blind one.
+ * This asserts on a row the defect DOES reach: a bar BEFORE a known split.
+ *
+ * ## THE PIN
+ *
+ * TATASTEEL:NSE:unknown (the one India spelling since MONEY-1522), 1:10 split, `corporate_action.ex_date` 2022-07-28, `ratio` 10,
+ * source NSE, one row, no duplicate. Re-measured on prod 2026-09-23 AFTER the
+ * MONEY-1516 part (a) reload, and the raw bars bracket the ex-date exactly:
+ *
+ *     2022-07-26  949.50   cum
+ *     2022-07-27  959.40   cum
+ *     2022-07-28  100.35   EX   <- ex_date, and the first ex-priced session
+ *
+ * THAT ex_date USED TO READ 2022-07-27 and this file said so. It was one day
+ * early, like 48,224 of the 59,087 rows, because the loader rendered an
+ * IST-midnight Date through toISOString(). Do not "correct" it back.
+ *
+ * With the join, 2022-07-26 reads `close` 949.50, `adj_close` 86.30,
+ * `split_factor_cum` 0.1 and `price_factor` 0.0909 — 0.1 from the split times
+ * 0.909 from the four dividends since. WITHOUT the join, `price_factor` is
+ * exactly 1 and `adj_close` equals `close`, which is the state this assertion
+ * exists to refuse.
+ *
+ * ## TWO ROWS, BECAUSE ONE OF THEM CANNOT SEE A DOUBLE ADJUSTMENT
+ *
+ * The cum bar alone is blind to the defect that MOST threatens this join. The
+ * carrier rule is "the first bar ON OR AFTER ex_date"; it was "STRICTLY AFTER"
+ * while the ex-dates were a day early, and the two errors cancelled. Fixing
+ * the dates without fixing the rule divides the EX bar as well — a 10x error
+ * on a real price — and 2022-07-26 reads identically either way, because it
+ * sits before the carrier under both.
+ *
+ * So the EX bar is pinned too, on `split_factor_cum`, which is the column that
+ * separates them: no split lies after 2022-07-28 (only four dividends), so it
+ * must be exactly 1 there and 0.1 on 2022-07-26. Under the superseded rule the
+ * ex bar carries 0.1 — ten times off, and a plausible-looking price.
+ *
+ * ## THE THRESHOLD IS A CEILING, NOT THE MEASURED VALUE
+ *
+ * `price_factor < 0.2` rather than `= 0.0909`, because every future TATASTEEL
+ * dividend shrinks it further — a pinned equality would go red on the next
+ * ex-date for a reason that has nothing to do with this defect. Dividends can
+ * only ever push it DOWN, so 0.2 is a bound nothing legitimate crosses, and it
+ * is still 5x away from the `1` a missing join produces.
+ *
+ * ## IT IS PROD-ONLY, AND THAT IS NOT CAUTION — MONEY-1516 review (#9)
+ *
+ * This assertion is EXISTENTIAL: it names one listing, one session, and calls
+ * an absent row a failure. That is exactly right on prod and fatal in QA,
+ * where `lake_silver_qa.price_bar_d1` and `lake_silver_qa.corporate_action`
+ * both hold ZERO rows (measured 2026-09-23 — prod holds 57,316 actions).
+ *
+ * `setup-dataform.sh` schedules the QA `lake-gold` job twice daily over the
+ * `gold` tag and this file carries that tag, so both runs would execute it,
+ * red for ever, on a message that reads like the join broke
+ * when it means QA has no India lake. By this repo's own MONEY-1238 rule a
+ * permanently-red assertion gets MUTED — and there is one definition and one
+ * assertion name, so muting it in QA silences the only check anywhere that can
+ * see a zeroed India adjustment on PROD.
+ *
+ * So the whole SELECT is gated on `vars.env`. Its sibling
+ * `assert_no_double_adjustment_witness` is UNIVERSALLY quantified and passes
+ * vacuously on empty data, so it needs no gate and does not get one.
+ *
+ * ## IT FAILS WHEN THE ROW IS ABSENT
+ *
+ * A bare `SELECT … WHERE price_factor >= 0.2` returns nothing when the bar has
+ * vanished, and a Dataform assertion that returns nothing PASSES — so a join
+ * that dropped every India row would read green. The expectation is therefore
+ * a literal row LEFT JOINed to the view, and an absent `actual` is its own
+ * named failure. Not-measured is not passed.
+ */
+
+WITH expected AS (
+  -- The CUM bar: two sessions before the ex-date, must carry the whole 1:10.
+  SELECT
+    'IN' AS market,
+    'TATASTEEL:NSE:unknown' AS listing_id,
+    DATE '2022-07-26' AS session_date,
+    0.2 AS max_price_factor,
+    0.1 AS want_split_cum,
+    TRUE AS adj_must_differ
+  UNION ALL
+  -- The EX bar: already ex-priced at 100.35, so the split must NOT be applied
+  -- again. price_factor is NOT the discriminator here (dividends alone put it
+  -- near 0.909, and a wrongly-applied split near 0.0909 — both under any
+  -- sane ceiling); split_factor_cum is, at 1 against 0.1.
+  SELECT
+    'IN',
+    'TATASTEEL:NSE:unknown',
+    DATE '2022-07-28',
+    1.0,
+    1.0,
+    FALSE
+),
+actual AS (
+  SELECT market, listing_id, session_date, close, adj_close, price_factor, split_factor_cum
+  FROM ${ref("adjusted_bar_d1")}
+  WHERE market = 'IN'
+    AND listing_id = 'TATASTEEL:NSE:unknown'
+    AND session_date IN (DATE '2022-07-26', DATE '2022-07-28')
+)
+SELECT
+  e.listing_id,
+  e.session_date,
+  a.close,
+  a.adj_close,
+  a.price_factor,
+  a.split_factor_cum,
+  CASE
+    WHEN a.listing_id IS NULL THEN 'the pinned bar is not in adjusted_bar_d1 at all'
+    WHEN ABS(a.split_factor_cum - e.want_split_cum) > 0.000000001
+      THEN CONCAT('split_factor_cum is ', CAST(a.split_factor_cum AS STRING),
+                  ', expected ', CAST(e.want_split_cum AS STRING),
+                  ' — on 2022-07-28 that means the ex bar was divided by a split it is already priced for')
+    WHEN a.price_factor >= e.max_price_factor THEN 'price_factor did not fall below its ceiling — the 10:1 split was not applied'
+    ELSE 'adj_close equals close before a 10:1 split'
+  END AS failure
+FROM expected e
+LEFT JOIN actual a
+  ON a.market = e.market
+ AND a.listing_id = e.listing_id
+ AND a.session_date = e.session_date
+-- PROD ONLY, as a conjunct rather than a gate CTE: BigQuery refuses a WHERE
+-- on a SELECT with no FROM ("Query without FROM clause cannot have a WHERE
+-- clause"), so `SELECT 1 AS ok WHERE TRUE` does not compile. In QA this is
+-- FALSE and the assertion returns nothing, which is a PASS. See the header.
+WHERE ${dataform.projectConfig.vars.env === "prod" ? "TRUE" : "FALSE"}
+  AND (
+       a.listing_id IS NULL
+    OR ABS(a.split_factor_cum - e.want_split_cum) > 0.000000001
+    OR a.price_factor >= e.max_price_factor
+    OR (e.adj_must_differ AND ABS(a.adj_close - a.close) <= 0.000001)
+  )

@@ -1,0 +1,48 @@
+config {
+  type: "assertion",
+  schema: datasets.gold(),
+  name: "assert_latest_bar_is_unadjusted",
+  description: "The newest bar of every listing must carry its RAW close. It is the one value a back-adjusted series cannot get wrong without the whole series being wrong.",
+  tags: ["gold", "bars"]
+}
+
+/*
+ * WHY THIS IS THE ASSERTION THAT MATTERS MOST
+ *
+ * A back-adjusted series is a raw series multiplied by a factor that walks
+ * BACKWARD from the newest bar — so the newest bar's factor is, by
+ * construction, exactly 1. If it is not, the walk was made in the wrong
+ * direction, or the frame included the row's own factor, or the cumulation ran
+ * forward. Every one of those produces a series that parses, charts, and is
+ * wrong by a multiple.
+ *
+ * It is also the only cheap check with an EXTERNAL reference: the raw close is
+ * what the exchange printed, and it sits in the same row.
+ *
+ * THE TOLERANCE IS NOT ZERO, AND IT IS NOT A FUDGE. `adj_close` is
+ * `CAST(close * price_factor AS NUMERIC)` — a NUMERIC widened to FLOAT64,
+ * multiplied by 1.0, and rounded back to NUMERIC's 9 decimal places. That round
+ * trip is exact to about 1e-10 for any price this market has ever seen. 1e-6 is
+ * four orders of magnitude inside that and still catches the smallest real
+ * defect this can have, because a wrongly-applied factor is a MULTIPLE (a
+ * split is 2, a dividend ~0.999) and not a rounding.
+ */
+
+WITH ranked AS (
+  SELECT
+    market,
+    listing_id,
+    session_date,
+    close,
+    adj_close,
+    price_factor,
+    ROW_NUMBER() OVER (
+      PARTITION BY market, listing_id ORDER BY session_date DESC
+    ) AS rn
+  FROM ${ref("adjusted_bar_d1")}
+)
+SELECT market, listing_id, session_date, close, adj_close, price_factor
+FROM ranked
+WHERE rn = 1
+  AND close IS NOT NULL
+  AND ABS(adj_close - close) > 0.000001

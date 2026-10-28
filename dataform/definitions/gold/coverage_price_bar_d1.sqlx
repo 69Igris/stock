@@ -1,0 +1,94 @@
+config {
+  type: "view",
+  schema: datasets.gold(),
+  name: "coverage_price_bar_d1",
+  description: "Per-listing coverage of lake_silver.price_bar_d1: first/last session, sessions held, sessions the VENUE traded over the same window, and the difference. Promised by B2 step 5 and B2-IN step 3.",
+  columns: {
+    sessions: "distinct session_dates this listing has",
+    expected_sessions: "distinct session_dates ANY listing on the same venue has, inside this listing's own [first, last] window",
+    gaps: "expected_sessions - sessions. A day the listing was suspended counts as a gap, which is correct: the lake has no bar for it",
+    yahoo_fill_sessions: "sessions whose best row came from YAHOO rather than the exchange. A RISING number is a bhavcopy-sync defect, never a lake one"
+  },
+  assertions: {
+    uniqueKey: ["market", "listing_id"],
+    nonNull: ["market", "listing_id", "first_session", "last_session"],
+    rowConditions: ["gaps >= 0", "sessions > 0"]
+  },
+  tags: ["gold", "coverage"]
+}
+
+/*
+ * ## THE TRADING CALENDAR IS OBSERVED, NOT DECLARED
+ *
+ * There is no calendar table in the lake, and inventing one here would be a
+ * third source of truth about which days NSE and NYSE were open. What the data
+ * already contains is better: the set of session_dates on which ANY listing at
+ * that venue printed a bar IS the trading calendar, as the exchange actually
+ * ran it, including the unscheduled closures and the special sessions that a
+ * published calendar gets wrong.
+ *
+ * ITS ONE BLIND SPOT, stated rather than discovered: a day on which the venue
+ * traded and we ingested NOTHING is missing from both counts, so it reads as
+ * zero gaps. That is a whole-market ingest failure, and it is visible as a hole
+ * in `lake_bronze.partition_load` — which is the ledger's job, not this view's.
+ * A per-listing coverage view cannot see a day it has no rows for anywhere.
+ *
+ * ## THE WINDOW IS THE LISTING'S OWN [first, last]
+ *
+ * Not the venue's. A company that listed in 2021 has not got 25 years of gaps,
+ * and a delisted one has not got a gap for every session since. Coverage is
+ * "what is missing from the history we claim to hold", which is exactly the
+ * inside of the interval.
+ *
+ * ## `yahoo_fill_sessions` IS HERE BECAUSE NOBODY WOULD SEE IT OTHERWISE
+ *
+ * A Yahoo-filled bar renders identically to an exchange one. It is counted
+ * against the WINNING row per session (the one `adjusted_bar_d1` deduplicates
+ * to), because a Yahoo row sitting under a bhavcopy row that beat it is not a
+ * fill — it is a witness that lost.
+ */
+
+WITH best_row_per_session AS (
+  SELECT
+    market,
+    exchange,
+    listing_id,
+    session_date,
+    source
+  FROM ${ref("adjusted_bar_d1")}
+),
+venue_calendar AS (
+  SELECT market, exchange, session_date
+  FROM best_row_per_session
+  GROUP BY market, exchange, session_date
+),
+per_listing AS (
+  SELECT
+    market,
+    exchange,
+    listing_id,
+    MIN(session_date) AS first_session,
+    MAX(session_date) AS last_session,
+    COUNT(DISTINCT session_date) AS sessions,
+    COUNTIF(source = 'YAHOO') AS yahoo_fill_sessions
+  FROM best_row_per_session
+  GROUP BY market, exchange, listing_id
+)
+SELECT
+  p.market,
+  p.exchange,
+  p.listing_id,
+  p.first_session,
+  p.last_session,
+  p.sessions,
+  COUNT(c.session_date) AS expected_sessions,
+  COUNT(c.session_date) - p.sessions AS gaps,
+  p.yahoo_fill_sessions
+FROM per_listing AS p
+JOIN venue_calendar AS c
+  ON c.market = p.market
+ AND c.exchange = p.exchange
+ AND c.session_date BETWEEN p.first_session AND p.last_session
+GROUP BY
+  p.market, p.exchange, p.listing_id,
+  p.first_session, p.last_session, p.sessions, p.yahoo_fill_sessions

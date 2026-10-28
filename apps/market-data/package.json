@@ -1,0 +1,29 @@
+{
+  "name": "@usemoney/market-data",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsup",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src --ext .ts",
+    "test": "node --import tsx ../../scripts/test-timeout.ts --import tsx --test --test-timeout=30000 \"__tests__/**/*.test.ts\""
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.19.13",
+    "@usemoney/core": "*",
+    "@usemoney/database": "*",
+    "@usemoney/datadog": "*",
+    "@usemoney/storage": "*",
+    "hono": "^4.6.14"
+  },
+  "devDependencies": {
+    "@usemoney/eslint-config": "*",
+    "@usemoney/typescript-config": "*",
+    "@types/node": "^22.10.2",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "5.9.2"
+  }
+}

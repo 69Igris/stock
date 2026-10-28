@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/apply-scheduled-plan-changes",
+      "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/cron/sync-products",
+      "schedule": "30 3 * * *"
+    }
+  ]
+}

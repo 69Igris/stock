@@ -1,0 +1,197 @@
+/*
+ * Playful banner styles (MONEY-484).
+ * Imported by DemoBanner, BrokerReauthBanner, TrialEndingBanner,
+ * MaintenanceBanner. All tokens come from playful-app.css (loaded
+ * globally in layout.tsx). This file only adds the .pf-banner* surface rules.
+ */
+
+/* ── Banner strip ────────────────────────────────────────────────────── */
+.pf-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 22px;
+  border-bottom: 2px solid var(--ink);
+  position: relative;
+}
+
+/* Rotated icon square */
+.pf-banner .ic {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid var(--ink);
+  flex-shrink: 0;
+  transform: rotate(-3deg);
+}
+
+/* Body copy area */
+.pf-banner .body {
+  flex: 1;
+  min-width: 0;
+}
+
+.pf-banner .t {
+  font-size: 13.5px;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+  line-height: 1.25;
+}
+
+.pf-banner .t .ser {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.pf-banner .s {
+  font-size: 12px;
+  margin-top: 2px;
+  opacity: 0.85;
+  line-height: 1.35;
+}
+
+/* Action button row */
+.pf-banner .actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+/* Shared button style */
+.pf-banner .btn-bn {
+  padding: 6px 11px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1.5px solid currentColor;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: opacity 0.12s;
+}
+
+.pf-banner .btn-bn:hover {
+  opacity: 0.85;
+}
+
+/* Solid variant — bg = the banner's foreground (currentColor), so the nested
+   <span> text must be the banner's BACKGROUND colour, set per-variant. A blanket
+   `color: var(--paper)` made paper-on-paper on the light-foreground banners. */
+.pf-banner .btn-bn.solid {
+  background: currentColor;
+  border-color: currentColor;
+}
+
+.pf-banner.demo .btn-bn.solid span {
+  color: var(--pop-3);
+}
+.pf-banner.reauth .btn-bn.solid span {
+  color: var(--pop-1);
+}
+.pf-banner.maint .btn-bn.solid span {
+  color: var(--ink);
+}
+/* trial has ink foreground, so currentColor bg is already ink — text = gold */
+.pf-banner.trial .btn-bn.solid {
+  background: #1d1d1b;
+  border-color: #1d1d1b;
+}
+.pf-banner.trial .btn-bn.solid span {
+  color: var(--pop-2);
+}
+
+/* Dismiss X */
+.pf-banner .x {
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.7;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
+
+.pf-banner .x:hover {
+  opacity: 1;
+}
+
+/* ── Variant: demo (blue / --pop-3) ─────────────────────────────────── */
+.pf-banner.demo {
+  background: var(--pop-3);
+  color: var(--paper);
+}
+
+.pf-banner.demo .ic {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--paper);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* ── Variant: reauth (coral / --pop-1) ──────────────────────────────── */
+.pf-banner.reauth {
+  background: var(--pop-1);
+  color: var(--paper);
+}
+
+.pf-banner.reauth .ic {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--paper);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* ── Variant: trial (gold / --pop-2) ───────────────────────────────── */
+.pf-banner.trial {
+  background: var(--pop-2);
+  color: #1d1d1b;
+}
+
+.pf-banner.trial .ic {
+  background: #1d1d1b;
+  color: var(--pop-2);
+  border-color: #1d1d1b;
+}
+
+/* ── Variant: maint (ink) ──────────────────────────────────────────── */
+.pf-banner.maint {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.pf-banner.maint .ic {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--pop-2);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+/* ── Mobile: stack body + actions vertically below ~480px ───────────── */
+@media (max-width: 639px) {
+  .pf-banner {
+    flex-wrap: wrap;
+    padding: 11px 16px;
+    padding-right: 40px; /* room for X */
+  }
+
+  .pf-banner .actions {
+    flex-basis: 100%;
+    margin-top: 4px;
+  }
+
+  .pf-banner .x {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+  }
+}

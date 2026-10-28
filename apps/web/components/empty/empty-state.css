@@ -1,0 +1,59 @@
+/* Playful empty state — co-located styles for components/empty/EmptyState.tsx.
+   Uses the shared playful tokens (--paper / --ink / --pop-* / --emerald) from
+   app/playful-app.css. Theme-aware via those vars (no hardcoded light/dark). */
+
+.pf-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.pf-empty-card {
+  padding: 24px;
+  min-height: 280px;
+}
+
+.pf-empty-ic {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  color: var(--paper);
+  border: 2px solid var(--ink);
+  transform: rotate(-3deg);
+  box-shadow: 3px 3px 0 var(--ink);
+  flex-shrink: 0;
+}
+
+.pf-empty-ic.is-muted {
+  background: var(--rule-softer);
+  color: var(--ink-3);
+  box-shadow: none;
+}
+
+.pf-empty-t {
+  margin-top: 16px;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+  color: var(--ink);
+}
+
+.pf-empty-s {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--ink-3);
+  line-height: 1.4;
+  max-width: 280px;
+}
+
+.pf-empty-actions {
+  margin-top: 18px;
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}

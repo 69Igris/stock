@@ -1,0 +1,69 @@
+{
+  // MONEY-1118 item 13 — type-check the TESTS too.
+  //
+  // `tsconfig.json` includes only `src/**/*`, so none of the 62 files under
+  // `__tests__/` ever saw `tsc`. That is not cosmetic: a missing required field
+  // in a test fixture surfaced as a RUNTIME failure instead of a compile error,
+  // and on another occasion two helper functions sat defined-but-never-called
+  // in a test file with nothing to catch them.
+  //
+  // A separate config rather than widening `include`, because the main one
+  // EMITS: it sets `rootDir: "./src"`, `outDir: "./dist"` and
+  // `declaration: true`, so pulling `__tests__` in would either fail with
+  // "not under rootDir" or start emitting .d.ts files for test code into dist.
+  // This one only checks.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    // Widened to the MONOREPO root, not this package.
+    //
+    // `__tests__` sits outside src/, so the inherited `rootDir: "./src"` had to
+    // go. Pointing it at "." (this package) then broke on a test that imports
+    // the real `normalizeQuarter` from packages/research by relative path — its
+    // comment explains why it wants the genuine article rather than a
+    // hand-copied constant, and it is right to: the whole point is asserting
+    // BSE and NSE key a quarter identically.
+    //
+    // `@usemoney/research` is not a dependency of core and does not export that
+    // module, so importing it by package name is not available either, and
+    // adding the dependency would point core at a package that already depends
+    // on core.
+    //
+    // rootDir exists to control the LAYOUT OF EMITTED OUTPUT. This config emits
+    // nothing (`noEmit: true` above), so there is no layout to constrain and
+    // widening it costs nothing. tsconfig.json still emits with
+    // `rootDir: "./src"`, unchanged.
+    "rootDir": "../..",
+    "declaration": false,
+    "declarationMap": false,
+
+    // OFF for tests only. base.json enables it, and it produced 78 of the 79
+    // errors this config first surfaced — every one an `arr[0]` on a
+    // known-shape fixture. Neither failure item 13 was filed about is an
+    // indexed access:
+    //
+    //   "a missing required field in a test fixture surfaced as a RUNTIME
+    //    failure instead of a compile error"
+    //   "two helper functions sat defined-but-never-called in a test file"
+    //
+    // Keeping it on would mean 78 non-null assertions added to assertions —
+    // noise that buys nothing, and `!` sprinkled through tests is how a real
+    // narrowing bug later hides in the crowd. In a test, indexing past the end
+    // of a fixture already fails the test, which is the same signal.
+    //
+    // src/ is UNAFFECTED: tsconfig.json still checks it with the flag on.
+    "noUncheckedIndexedAccess": false
+
+    // NOT enabling `noUnusedLocals`, despite it being item 13's second
+    // motivation (two helpers defined-but-never-called in a test file).
+    // Compiler options are per-PROJECT, not per-file, so it cannot be aimed at
+    // `__tests__` alone: turning it on reported 5 unused symbols in `src/`
+    // (getBrokerEnvKeys, normalizeColumnName, seriesGroupCount, CRUMB_TTL_MS,
+    // BACKOFF_BASE_MS) and one in `packages/datadog`. Those look like real dead
+    // code and are worth removing — but that is a dead-code sweep across two
+    // packages, not "type-check the tests", and bundling it here would make
+    // this config's failure mode confusing.
+  },
+  "include": ["src/**/*", "__tests__/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

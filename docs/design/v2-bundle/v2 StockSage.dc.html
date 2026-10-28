@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/usemoney-play-design-system-67522a6c-d1c3-4617-97de-fcd968490366/colors_and_type.css">
+  <link rel="stylesheet" href="_ds/usemoney-play-design-system-67522a6c-d1c3-4617-97de-fcd968490366/styles/playful-app.css">
+  <script src="_ds/usemoney-play-design-system-67522a6c-d1c3-4617-97de-fcd968490366/_ds_bundle.js"></script>
+  <style>
+    html,body{margin:0;padding:0}
+    :root{--gain-text:#0f7a34;--loss-text:#b91c1c}
+    html.dark{--gain-text:#34d399;--loss-text:#ff6b35}
+    body{background:var(--paper);font-family:var(--font-sans);color:var(--ink)}
+    a{color:var(--emerald-text);text-decoration:none}a:hover{color:var(--ink)}
+    input,textarea{font-family:inherit}
+  </style>
+</helmet>
+<div style="display:flex;min-height:100vh;background:var(--paper);background-image:radial-gradient(var(--dot-fg) 1px,transparent 1.5px),radial-gradient(var(--dot-fg-2) 1px,transparent 1.5px);background-size:7px 7px,11px 11px;color:var(--ink);font-family:var(--font-sans)">
+  <sc-if value="{{ isDesk }}" hint-placeholder-val="{{ true }}">
+    <div style="width:236px;flex-shrink:0;border-right:2px solid var(--ink);background:var(--paper-3);display:flex;flex-direction:column;height:100vh;position:sticky;top:0">
+      <a href="UseMoney v2 Hub.dc.html" style="padding:15px 18px 13px;border-bottom:1.5px solid var(--rule-soft);display:flex;align-items:center;gap:10px;color:var(--ink)"><span style="width:28px;height:28px;border-radius:7px;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-family:var(--font-mono);font-weight:800;font-size:14px;transform:rotate(-3deg)">U</span><span style="font-weight:800;font-size:15px;letter-spacing:-0.3px">UseMoney<span style="color:var(--emerald-text)"> AI</span></span></a>
+      <div style="flex:1;overflow-y:auto;padding:4px 14px 10px">
+        <sc-for list="{{ nav }}" as="sec" hint-placeholder-count="4">
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;padding:12px 3px 5px"><span style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:1.6px;color:var(--ink-3)">{{ sec.label }}</span><span style="flex:1;height:1.5px;background:var(--ink);opacity:0.18"></span></div>
+            <sc-for list="{{ sec.items }}" as="it" hint-placeholder-count="4"><a href="{{ it.href }}" style="{{ it.rowStyle }}"><span style="{{ it.icStyle }}"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="{{ it.icStroke }}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ it.d }}"></path></svg></span><span style="font-size:12.5px">{{ it.label }}</span><sc-if value="{{ it.badge }}" hint-placeholder-val="{{ false }}"><span style="margin-left:auto;font-family:var(--font-mono);font-size:8px;font-weight:800;letter-spacing:0.6px;background:{{ it.badgeBg }};color:#0b0b09;border:1.5px solid var(--ink);border-radius:5px;padding:1px 5px">{{ it.badge }}</span></sc-if></a></sc-for>
+          </div>
+        </sc-for>
+      </div>
+      <div style="flex-shrink:0;border-top:1.5px solid var(--rule-soft);padding:10px 14px;display:flex;align-items:center;gap:9px"><span style="width:28px;height:28px;border-radius:9px;background:var(--pop-2);border:2px solid var(--ink);display:grid;place-items:center;font-family:var(--font-mono);font-weight:800;font-size:11px;transform:rotate(-3deg);color:#1d1d1b">RV</span><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:800">Rahul Verma</div><div style="font-family:var(--font-mono);font-size:8.5px;color:var(--ink-3)">FREE · ⚡ {{ credits }} CREDITS</div></div></div>
+    </div>
+  </sc-if>
+
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+    <div style="border-bottom:2px solid var(--ink);background:var(--paper);padding:12px 22px 11px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;position:sticky;top:0;z-index:40">
+      <div style="min-width:0;display:flex;align-items:center;gap:10px"><span style="width:28px;height:28px;border-radius:8px;background:var(--emerald);border:2px solid var(--ink);display:grid;place-items:center;transform:rotate(-3deg)"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#0b0b09" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2z"></path></svg></span><div><div style="font-weight:800;font-size:15px;letter-spacing:-0.3px">StockSage</div><div style="font-family:var(--font-mono);font-size:10px;color:var(--ink-3);letter-spacing:0.5px">AI research assistant · /stocksage · US deltas marked</div></div></div>
+      <button onClick="{{ toggleSearchFlag }}" title="PostHog flag us-stocks-search — US rows in the @ picker" style="{{ searchFlagStyle }}">us-stocks-search · {{ searchFlagLabel }}</button>
+      <button onClick="{{ toggleResearchFlag }}" title="PostHog flag us-stock-research — deep research on US symbols" style="{{ researchFlagStyle }}">us-stock-research · {{ researchFlagLabel }}</button>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:9px;flex-shrink:0">
+        <button style="{{ btnGhostSm }}">🔗 {{ sourceCount }}</button>
+        <button onClick="{{ toggleDark }}" style="width:34px;height:34px;border-radius:10px;border:2px solid var(--ink);background:var(--paper-3);display:grid;place-items:center;cursor:pointer;box-shadow:2px 2px 0 var(--ink);color:var(--ink)"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="{{ darkIcon }}"></path></svg></button>
+        <button style="{{ btnGhostSm }}">+ New chat</button>
+      </div>
+    </div>
+
+    <div style="flex:1;display:flex;min-height:0">
+      <sc-if value="{{ isDesk }}" hint-placeholder-val="{{ true }}">
+        <div style="width:220px;flex-shrink:0;border-right:1.5px solid var(--rule-soft);background:var(--paper);padding:14px 12px">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:0 4px"><span style="font-family:var(--font-mono);font-size:8.5px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">CHAT HISTORY</span><span style="font-family:var(--font-mono);font-size:9px;font-weight:800;color:var(--emerald-text)">+ NEW</span></div>
+          <sc-for list="{{ history }}" as="h" hint-placeholder-count="5"><div style="{{ h.style }}"><span style="{{ h.dot }}"></span><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ h.t }}</span></div></sc-for>
+          <div style="margin-top:14px;font-family:var(--font-mono);font-size:8.5px;color:var(--ink-3);line-height:1.6;padding:0 4px">UNCHANGED · [Mentioned: …] PREFIX STRIPPED IN TITLES AS TODAY</div>
+        </div>
+      </sc-if>
+
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;padding:18px 22px 24px;box-sizing:border-box">
+        <div style="flex:1;display:flex;flex-direction:column;gap:14px;max-width:760px;width:100%;margin:0 auto">
+
+          <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;position:relative;padding-top:6px">
+            <sc-for list="{{ quick }}" as="q" hint-placeholder-count="5"><span style="{{ q.style }}">{{ q.l }}</span></sc-for>
+            <sc-if value="{{ searchOn }}" hint-placeholder-val="{{ true }}"><span style="{{ deltaTag }};top:-10px;right:0">DELTA 1 · QUICK CHIPS</span></sc-if>
+          </div>
+
+          <div style="display:flex;gap:10px;justify-content:flex-end"><div style="max-width:600px;border:2px solid var(--ink);border-radius:14px 14px 4px 14px;background:var(--pop-2);color:#1d1d1b;padding:12px 16px;box-shadow:3px 3px 0 var(--ink);position:relative"><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;align-items:center"><span style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:1px;color:#3a3a35">CONTEXT</span><sc-for list="{{ mentions }}" as="m" hint-placeholder-count="3"><span style="{{ m.style }}">@{{ m.sym }}<span style="opacity:0.7"> · {{ m.ex }}</span></span></sc-for></div><div style="font-size:14px;line-height:1.5">How does Apple's services margin compare with Infosys' operating margin, and what does it do to my mix?</div><span style="{{ deltaTag }};top:-10px;left:12px">DELTA 2 · BADGES CARRY EXCHANGE</span></div></div>
+
+          <div style="display:flex;gap:10px"><span style="width:34px;height:34px;border-radius:9px;background:var(--emerald);border:2px solid var(--ink);display:grid;place-items:center;flex-shrink:0;transform:rotate(-3deg)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="#0b0b09" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2z"></path></svg></span>
+            <div style="flex:1;min-width:0;border:2px solid var(--ink);border-radius:4px 14px 14px 14px;background:var(--paper);padding:14px 18px;box-shadow:3px 3px 0 var(--ink);position:relative">
+              <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px"><span style="{{ pillOutline }}">MIXED-MARKET ANSWER</span><span style="{{ pillOutline }}">US ◷ EOD · JUL 18 CLOSE</span><span style="{{ pillOutline }}">INDIA · EXCHANGE-DELAYED</span><span style="{{ pillOutline }}">₹ AT SPOT 84.00</span></div>
+              <div style="font-size:14px;line-height:1.65">Apple's <b>services gross margin is 74%</b> on the latest 10-Q (May 02)<sup style="{{ cite }}">1</sup>; Infosys' <b>operating margin is 21.1%</b> for Q1 FY27<sup style="{{ cite }}">2</sup>. Not the same line — one is a segment gross margin, the other company-wide operating — so read it as "Apple's services are a high-margin annuity on hardware", not "Apple is 3× more profitable". In your Robinhood account Apple is 20 shares (₹3.55 L); across Zerodha + Groww Infosys is 120 shares (₹1.93 L)<sup style="{{ cite }}">3</sup>. <b>About 45% of your money is in dollars</b>: a 1% USDINR move shifts your total by roughly ₹7,800 before either company does anything.</div>
+              <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button onClick="{{ openConfirm }}" style="{{ researchBtn }}">{{ researchLabel }}</button><button style="{{ btnGhostSm }}">Sources · 3</button><span style="font-family:var(--font-mono);font-size:10px;color:var(--ink-3)">{{ researchNote }}</span></div>
+              <div style="margin-top:10px;font-size:11.5px;color:var(--ink-3);line-height:1.5">Analysis and education only — not investment advice. Not a broker-dealer or RIA in the US; SEBI framing on India figures.</div>
+              <span style="{{ deltaTag }};top:-10px;right:12px">DELTA 3 · PROVENANCE ROW</span>
+            </div>
+          </div>
+
+          <sc-if value="{{ gateOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-left:44px;border:2px solid var(--ink);border-radius:14px;background:var(--ink);color:var(--paper);box-shadow:4px 4px 0 var(--pop-2);padding:18px 20px;max-width:620px;position:relative"><div style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1.4px;color:var(--pop-2)">FLAG us-stock-research · OFF</div><div style="font-weight:800;font-size:20px;letter-spacing:-0.6px;margin-top:6px">Deep research on US symbols isn't on yet.</div><div style="font-size:13px;opacity:0.85;margin-top:6px;line-height:1.55">Today the agent resolves symbols against India only and would fail with "AAPL is not listed on NSE or BSE" — after planning. This stops you before a credit is spent. Chat answers still cite SEC filings and EOD prices.</div><div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap"><button onClick="{{ toggleResearchFlag }}" style="border:2px solid var(--paper);border-radius:9px;background:var(--pop-2);color:#1d1d1b;font-weight:800;font-size:12.5px;padding:8px 14px;cursor:pointer">Turn the flag on →</button><button onClick="{{ closeConfirm }}" style="border:2px solid var(--paper);border-radius:9px;background:transparent;color:var(--paper);font-weight:800;font-size:12.5px;padding:8px 14px;cursor:pointer">Research INFY instead</button></div><span style="{{ deltaTag }};top:-10px;right:12px">DELTA 5 · GATE BEFORE SPEND</span></div>
+          </sc-if>
+
+          <sc-if value="{{ confirmOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-left:44px;border:2px solid var(--ink);border-radius:14px;background:var(--paper);box-shadow:4px 4px 0 var(--ink);overflow:visible;max-width:620px;position:relative">
+              <div style="padding:13px 18px;border-bottom:2px solid var(--ink);background:var(--paper-2);display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-radius:12px 12px 0 0"><span style="width:34px;height:34px;border-radius:8px;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-family:var(--font-mono);font-weight:800;font-size:11px;border:1.5px solid var(--ink)">AA</span><div style="flex:1;min-width:160px"><div style="font-size:15px;font-weight:800;letter-spacing:-0.3px">Confirm research · AAPL</div><div style="font-family:var(--font-mono);font-size:9.5px;color:var(--ink-3);letter-spacing:0.5px">PREVIEW-PLAN · MARKET: US · NASDAQ · LISTING US000000000038</div></div><span style="{{ pillGold }}">⚡ 2 CREDITS · EST.</span></div>
+              <div style="padding:14px 18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+                <div><div style="font-family:var(--font-mono);font-size:9px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">REWRITTEN BRIEF</div><div style="margin-top:6px;font-size:13px;line-height:1.5;color:var(--ink-2);border:1.5px dashed var(--ink);border-radius:9px;padding:8px 10px">Build a thesis on Apple — services margin durability, capital returns, and filing-dated fundamentals vs the last four 10-Qs.</div><div style="margin-top:10px;font-family:var(--font-mono);font-size:9px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">SOURCES · US ARM</div><div style="margin-top:5px;display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--ink-2)"><span>✦ SEC EDGAR · 10-K, 10-Q, 8-K, Forms 4, 13F</span><span>✦ Third-party EOD tape · previous close</span><span>✦ Your lots · RBI reference cost basis</span><span style="color:var(--ink-3)">✕ screener.in, NSE announcements, XBRL archive stay off</span></div></div>
+                <div><div style="font-family:var(--font-mono);font-size:9px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">SKILLS · PRESET "DEEP" · 14 TASKS</div><div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:5px"><sc-for list="{{ skills }}" as="s" hint-placeholder-count="6"><span style="{{ s.style }}">{{ s.l }}</span></sc-for></div><div style="margin-top:8px;font-size:12px;color:var(--ink-3);line-height:1.5">Coverage is thinner than India: filings, fundamentals, EOD prices. Peer set and exchange announcements unavailable. Estimate ±2 credits, as today.</div><div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap"><span style="{{ pillOutline }}">MODEL · PRO · DEFAULT</span><span style="{{ pillOutline }}">~90–150 s</span><span style="{{ pillOutline }}">{{ credits }} → {{ creditsAfter }} LEFT</span></div></div>
+              </div>
+              <div style="padding:12px 18px;border-top:1.5px dashed var(--rule-soft);background:var(--paper-2);display:flex;justify-content:flex-end;gap:8px;border-radius:0 0 12px 12px"><button onClick="{{ closeConfirm }}" style="{{ btnGhostSm }}">Cancel</button><button onClick="{{ runResearch }}" style="{{ btnSolid }}">Run research →</button></div>
+              <span style="{{ deltaTag }};top:-10px;right:12px">DELTA 6 · MARKET + US SOURCES IN PREVIEW-PLAN</span>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ running }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-left:44px;border:2px solid var(--ink);border-radius:14px;background:var(--paper);box-shadow:3px 3px 0 var(--ink);padding:14px 18px;max-width:620px;position:relative">
+              <div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center"><sc-for list="{{ stages }}" as="st" hint-placeholder-count="5"><span style="{{ st.style }}">{{ st.l }}</span></sc-for><span style="margin-left:auto;font-family:var(--font-mono);font-size:10px;color:var(--ink-3)">{{ progress }}% · DEEP</span></div>
+              <div style="margin-top:10px;height:8px;border:1.5px solid var(--ink);border-radius:99px;overflow:hidden;background:var(--paper-2)"><div style="height:100%;background:var(--emerald);width:{{ progressW }}"></div></div>
+              <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px"><sc-for list="{{ tasks }}" as="t" hint-placeholder-count="6"><div style="display:flex;align-items:center;gap:9px;font-size:12.5px"><span style="{{ t.dot }}"></span><span style="flex:1;color:var(--ink-2)">{{ t.l }}</span><span style="{{ pillOutline }}">{{ t.phase }}</span><span style="font-family:var(--font-mono);font-size:9.5px;color:var(--ink-3);min-width:110px;text-align:right">{{ t.src }}</span></div></sc-for></div>
+              <span style="{{ deltaTag }};top:-10px;right:12px">DELTA 7 · US TOOLS IN JOBPROGRESS</span>
+            </div>
+          </sc-if>
+        </div>
+
+        <div style="max-width:760px;width:100%;margin:16px auto 0;position:relative">
+          <sc-if value="{{ pickerOpen }}" hint-placeholder-val="{{ true }}">
+            <div style="border:2px solid var(--ink);border-radius:14px;background:var(--paper);box-shadow:4px 4px 0 var(--ink);overflow:visible;margin-bottom:10px;position:relative">
+              <div style="display:flex;align-items:center;gap:4px;padding:8px 10px;background:var(--paper-2);border-bottom:1.5px solid var(--ink);flex-wrap:wrap;border-radius:12px 12px 0 0">
+                <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5"><button onClick="{{ t.on }}" style="{{ t.style }}">{{ t.l }}</button></sc-for>
+                <sc-if value="{{ showMarketPill }}" hint-placeholder-val="{{ true }}"><div style="margin-left:auto;display:inline-flex;border:2px solid var(--ink);border-radius:99px;overflow:hidden;background:var(--paper)"><button onClick="{{ mktIn }}" style="{{ mktInStyle }}">INDIA</button><button onClick="{{ mktUs }}" style="{{ mktUsStyle }}">US</button></div></sc-if>
+                <sc-if value="{{ showMarketOff }}" hint-placeholder-val="{{ false }}"><span style="margin-left:auto;font-family:var(--font-mono);font-size:9.5px;color:var(--ink-3)">↑↓ navigate · ⏎ insert · ⇥ next tab</span></sc-if>
+              </div>
+              <sc-if value="{{ tabSearchable }}" hint-placeholder-val="{{ true }}"><div style="padding:10px;border-bottom:1.5px dashed var(--rule-soft)"><div style="display:flex;align-items:center;gap:8px;border:1.5px solid var(--ink);border-radius:9px;background:var(--paper);padding:8px 12px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink-3)" stroke-width="2.2" stroke-linecap="round"><path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM21 21l-4.3-4.3"></path></svg><input value="{{ pq }}" onChange="{{ onPq }}" placeholder="{{ pickerPlaceholder }}" style="flex:1;border:0;outline:0;background:transparent;font-size:13.5px;color:var(--ink);min-width:0"></div></div></sc-if>
+              <div style="max-height:260px;overflow-y:auto">
+                <sc-for list="{{ pickerRows }}" as="r" hint-placeholder-count="6"><div onClick="{{ r.on }}" style="{{ r.style }}"><sc-if value="{{ r.tile }}" hint-placeholder-val="{{ false }}"><span style="{{ r.tileStyle }}">{{ r.tile }}</span></sc-if><span style="font-family:var(--font-mono);font-weight:800;font-size:13px;flex-shrink:0;white-space:nowrap">{{ r.sym }}</span><span style="font-size:12px;color:var(--ink-3);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span><sc-if value="{{ r.sub }}" hint-placeholder-val="{{ false }}"><span style="font-family:var(--font-mono);font-size:9.5px;color:var(--ink-3);white-space:nowrap;flex-shrink:0">{{ r.sub }}</span></sc-if><span style="{{ r.badge }}">{{ r.ex }}</span></div></sc-for>
+                <sc-if value="{{ pickerEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:16px;text-align:center;font-size:12px;color:var(--ink-3)">{{ pickerEmptyText }}</div></sc-if>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 14px;border-top:1.5px solid var(--ink);background:var(--paper-2);font-family:var(--font-mono);font-size:10px;letter-spacing:0.4px;color:var(--ink-3);border-radius:0 0 12px 12px"><span style="white-space:nowrap"><span style="display:inline-block;width:6px;height:6px;border-radius:99px;background:{{ footDot }};margin-right:6px"></span>{{ footLeft }}</span><span style="white-space:nowrap">{{ footRight }}</span></div>
+              <span style="{{ deltaTag }};top:-10px;left:12px">DELTA 4 · @ PICKER · MARKET PILL, US BADGES, SNAPTRADE ACCOUNTS</span>
+            </div>
+          </sc-if>
+
+          <div style="border:2px solid var(--ink);border-radius:14px;background:var(--paper);box-shadow:3px 3px 0 var(--ink)">
+            <div style="padding:12px 16px 4px;display:flex;flex-wrap:wrap;gap:6px;align-items:center"><span style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:1px;color:var(--ink-3)">CONTEXT</span><sc-for list="{{ mentions }}" as="m" hint-placeholder-count="3"><span style="{{ m.style }}">@{{ m.sym }}<span style="opacity:0.7"> · {{ m.ex }}</span> ✕</span></sc-for></div>
+            <div style="display:flex;align-items:flex-start;gap:8px;padding:8px 16px 4px"><input value="{{ input }}" onChange="{{ onInput }}" placeholder="Ask StockSage anything…" style="flex:1;border:0;outline:0;background:transparent;font-size:15px;color:var(--ink);min-width:0;padding:4px 0"><span style="{{ pillGold }}">⚡ {{ credits }} / 5</span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px 10px;margin-top:4px;border-top:1.5px dashed var(--rule-soft)">
+              <div style="display:flex;gap:6px"><button style="{{ toolBtn }}">+</button><button onClick="{{ togglePicker }}" style="{{ toolBtnAt }}">@</button><button onClick="{{ openCommands }}" style="{{ toolBtn }}">/</button></div>
+              <div style="display:flex;gap:8px;align-items:center"><button style="{{ btnGhostSm }}">Thinking · off</button><button style="{{ btnGhostSm }}">Auto · Gemini 2.5 ▾</button><button style="{{ sendStyle }}">Send</button></div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:center;gap:14px;margin-top:10px;font-family:var(--font-mono);font-size:10.5px;color:var(--ink-3)"><span>Type <b style="color:var(--ink-2)">/</b> for commands</span><span>·</span><span><b style="color:var(--ink-2)">@</b> to mention stocks, funds, brokers</span><span>·</span><span><b style="color:var(--ink-2)">↩</b> to send</span></div>
+        </div>
+      </div>
+
+      <sc-if value="{{ isDesk }}" hint-placeholder-val="{{ true }}">
+        <div style="width:250px;flex-shrink:0;border-left:1.5px solid var(--rule-soft);background:var(--paper);padding:14px 12px;position:relative">
+          <div style="font-family:var(--font-mono);font-size:8.5px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3);padding:0 4px">SOURCES · {{ sourceCount }}</div>
+          <sc-for list="{{ sources }}" as="g" hint-placeholder-count="3">
+            <div style="margin-top:12px"><div style="display:flex;align-items:center;gap:6px;padding:0 4px"><span style="{{ g.badge }}">{{ g.k }}</span><span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-3)">{{ g.n }}</span></div>
+              <sc-for list="{{ g.rows }}" as="r" hint-placeholder-count="2"><div style="margin-top:6px;border:1.5px solid var(--ink);border-radius:9px;background:var(--paper-3);padding:8px 10px"><div style="font-size:12px;font-weight:700;line-height:1.35">{{ r.t }}</div><div style="font-family:var(--font-mono);font-size:9px;color:var(--ink-3);margin-top:3px">{{ r.d }}</div></div></sc-for>
+            </div>
+          </sc-for>
+          <span style="{{ deltaTag }};top:8px;right:10px">DELTA 8 · EDGAR GROUP</span>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { isDesk: true, dark: false, searchOn: true, researchOn: false, pickerOpen: true, tab: "stocks", mkt: "us", pq: "", input: "", confirmOpen: false, gateOpen: false, running: false, progress: 0, credits: 2 };
+  componentDidMount() {
+    try { const d = localStorage.getItem("um-v2-dark") === "1"; document.documentElement.classList.toggle("dark", d); this.setState({ dark: d }); } catch (e) {}
+    this.mq = window.matchMedia("(min-width: 1024px)"); const sync = () => this.setState({ isDesk: this.mq.matches }); this.mq.addEventListener("change", sync); sync();
+  }
+  componentWillUnmount() { clearInterval(this.tick); }
+  renderVals() {
+    const S = this.state, mono = "font-family:var(--font-mono);";
+    const pill = (bg, fg) => mono + "display:inline-block;font-size:9px;font-weight:800;letter-spacing:0.6px;border:1.5px solid var(--ink);border-radius:99px;padding:3px 9px;background:" + bg + ";color:" + fg + ";white-space:nowrap";
+    const pillOutline = pill("var(--paper)", "var(--ink)"), pillGold = pill("var(--pop-2)", "#1d1d1b"), pillEmerald = pill("var(--emerald)", "#0b0b09");
+    const btnGhostSm = "border:2px solid var(--ink);border-radius:9px;background:var(--paper);color:var(--ink);font-weight:800;font-size:12px;padding:7px 12px;cursor:pointer;font-family:var(--font-sans);box-shadow:2px 2px 0 var(--ink)";
+    const btnSolid = "border:2px solid var(--ink);border-radius:9px;background:var(--ink);color:var(--paper);font-weight:800;font-size:12px;padding:7px 12px;cursor:pointer;font-family:var(--font-sans);box-shadow:2px 2px 0 var(--emerald)";
+    const flagBtn = (on) => mono + "font-size:9.5px;font-weight:800;letter-spacing:0.6px;border:2px solid var(--ink);border-radius:8px;padding:6px 10px;cursor:pointer;box-shadow:2px 2px 0 var(--ink);background:" + (on ? "var(--emerald)" : "var(--paper)") + ";color:" + (on ? "#0b0b09" : "var(--ink)");
+    const deltaTag = pillGold + ";position:absolute;font-size:8px";
+    const EX = { NSE: ["var(--emerald)", "var(--emerald-text)"], BSE: ["var(--pop-3)", "#1d4ed8"], NASDAQ: ["var(--pop-3)", "#1d4ed8"], NYSE: ["var(--pop-5)", "#6d28d9"], MF: ["var(--pop-5)", "#6d28d9"], ETF: ["var(--pop-1)", "#b91c1c"], US: ["var(--pop-3)", "#1d4ed8"], IN: ["var(--emerald)", "var(--emerald-text)"] };
+    const exBadge = (ex) => mono + "font-size:9px;font-weight:700;padding:1px 6px;border-radius:5px;letter-spacing:0.4px;color:" + (EX[ex] || ["var(--ink-3)", "var(--ink-3)"])[1] + ";border:1.5px solid " + (EX[ex] || ["var(--ink-3)"])[0] + ";flex-shrink:0";
+    // nav
+    const IC = { grid: "M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z", spark: "M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2z", pie: "M21 12A9 9 0 1 1 12 3v9z", search: "M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM21 21l-4.3-4.3", zap: "M13 2 3 14h7l-1 8 11-12h-8l1-8z", globe: "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20", link: "M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7", cog: "M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19 12l2 1.6-2 3.4-2.4-1-2 1.2L14 21h-4l-.4-2.6-2-1.2-2.4 1-2-3.4 2-1.6V12l-2-1.6 2-3.4 2.4 1 2-1.2L10 3h4l.4 2.6 2 1.2 2.4-1 2 3.4-2 1.6z" };
+    const NC = { emerald: "var(--emerald)", blue: "var(--pop-3)", gold: "var(--pop-2)" };
+    const mk = (id, label, ic, tint, badge, href) => { const act = id === "stocksage"; return { label, badge: badge || false, badgeBg: badge === "AI" ? "var(--emerald)" : "var(--pop-2)", d: IC[ic], href: href || "#", rowStyle: "display:flex;align-items:center;gap:10px;padding:6.5px 9px;border-radius:9px;cursor:pointer;margin-bottom:1px;text-decoration:none;font-weight:" + (act ? 800 : 650) + ";background:" + (act ? "var(--ink)" : "transparent") + ";color:" + (act ? "var(--paper)" : "var(--ink-2)"), icStyle: "width:22px;height:22px;border-radius:6px;border:1.5px solid " + (act ? "var(--paper)" : "var(--ink)") + ";background:" + (tint ? NC[tint] : (act ? "var(--ink)" : "var(--paper)")) + ";display:grid;place-items:center;flex-shrink:0", icStroke: tint ? "#1d1d1b" : (act ? "var(--paper)" : "var(--ink-2)") }; };
+    const nav = [
+      { label: "WORKSPACE", items: [mk("dashboard", "Dashboard", "grid", null, null, "v2 Dashboard.dc.html"), mk("stocksage", "StockSage", "spark", "emerald", "AI", "v2 StockSage.dc.html"), mk("holdings", "Holdings", "pie", null, "US", "v2 US Launch.dc.html#hold")] },
+      { label: "DISCOVER", items: [mk("screener", "Screener", "search", null, null, "v2 Screener.dc.html"), mk("strategies", "Strategies", "zap", "gold", "LAB", "v2 Strategies.dc.html"), mk("us", "US stock · AAPL", "globe", "blue", "US", "v2 US Launch.dc.html#stock")] },
+      { label: "ACCOUNT", items: [mk("brokers", "Brokers", "link", null, "US", "v2 US Launch.dc.html#connect"), mk("settings", "Settings", "cog", null, null, "v2 Settings Developer.dc.html")] },
+    ];
+    const history = [["Apple vs Infosys margins", true, "var(--pop-3)"], ["Roast my holdings", false, "var(--pop-4)"], ["Research INFY · deep", false, "var(--pop-5)"], ["LTCG harvest before March", false, "var(--paper-2)"], ["FIRE at 45?", false, "var(--paper-2)"]].map(([t, act, c]) => ({ t, dot: "width:8px;height:8px;border-radius:3px;border:1.5px solid var(--ink);background:" + c + ";flex-shrink:0", style: "display:flex;gap:7px;align-items:center;padding:8px 8px;border-radius:8px;margin-top:4px;font-size:12px;font-weight:" + (act ? 800 : 600) + ";background:" + (act ? "var(--ink)" : "transparent") + ";color:" + (act ? "var(--paper)" : "var(--ink-2)") }));
+    const quickBase = ["Market pulse", "How's my portfolio?", "Roast my holdings", "Research a stock", "FIRE status"];
+    const quick = [...quickBase, ...(S.searchOn ? ["US book vs India"] : [])].map((l, i) => ({ l, style: pillOutline + ";font-size:11px;padding:5px 11px;letter-spacing:0;text-transform:none;" + (i === 5 ? "background:var(--pop-3);color:#1d1d1b" : "") }));
+    const mentions = [["AAPL", "NASDAQ", "stock"], ["INFY", "NSE", "stock"], ["Robinhood-main", "SnapTrade", "broker"]].filter(m => S.searchOn || m[1] === "NSE").map(([sym, ex, type]) => ({ sym, ex, style: mono + "font-size:10.5px;font-weight:800;border:1.5px solid var(--ink);border-radius:99px;padding:2px 8px;white-space:nowrap;background:" + (type === "broker" ? "var(--paper)" : ex === "NSE" ? "var(--emerald)" : "var(--pop-3)") + ";color:#1d1d1b" }));
+    const skills = ["fundamentals-core", "dcf-valuation", "earnings-deep-dive", "governance-flags · Forms 4", "flows-and-positioning · 13F", "technical-trend · EOD"].map(l => ({ l, style: pillOutline + ";letter-spacing:0;text-transform:none;font-size:9.5px" }));
+    // picker
+    const TABS = [["recent", "★ Recent"], ["stocks", "↗ Stocks"], ["funds", "◔ Funds"], ["brokers", "▤ Brokers"], ["commands", "/ Commands"]];
+    const tabs = TABS.map(([k, l]) => ({ l, on: () => this.setState({ tab: k, pq: "" }), style: mono + "font-size:11px;font-weight:700;letter-spacing:0.4px;padding:6px 11px;border-radius:7px;border:0;cursor:pointer;white-space:nowrap;background:" + (S.tab === k ? "var(--ink)" : "transparent") + ";color:" + (S.tab === k ? "var(--paper)" : "var(--ink-3)") }));
+    const isUs = S.searchOn && S.mkt === "us" && (S.tab === "stocks" || S.tab === "funds");
+    const rowStyle = (sel) => "display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px dashed var(--rule-soft);cursor:pointer;background:" + (sel ? "var(--emerald-bg)" : "transparent");
+    const q = S.pq.trim().toLowerCase();
+    const IN_ST = [["RELIANCE", "Reliance Industries Ltd", "NSE"], ["INFY", "Infosys Ltd", "NSE"], ["TCS", "Tata Consultancy Services", "NSE"], ["HDFCBANK", "HDFC Bank Ltd", "NSE"], ["ITC", "ITC Ltd", "BSE"]];
+    const US_ST = [["AAPL", "Apple Inc.", "NASDAQ", "◷ EOD · 10-Q MAY 02"], ["MSFT", "Microsoft Corp.", "NASDAQ", "◷ EOD"], ["NVDA", "NVIDIA Corp.", "NASDAQ", "◷ EOD"], ["BRK-B", "Berkshire Hathaway · B", "NYSE", "◷ EOD · dash, not dot"], ["GOOGL", "Alphabet Inc. · A", "NASDAQ", "◷ EOD"]];
+    const IN_F = [["120503", "Parag Parikh Flexi Cap · Direct", "MF"], ["NIFTYBEES", "Nippon India Nifty 50 ETF", "ETF"]];
+    const US_F = [["VOO", "Vanguard S&P 500 ETF", "ETF", "◷ EOD"], ["QQQ", "Invesco QQQ Trust", "ETF", "◷ EOD"]];
+    const BR = [["Zerodha", "main · 6 holdings · synced 09:31", "IN"], ["Groww", "main · 5 holdings · synced 09:31", "IN"], ["Upstox", "main · token expired · reconnect", "IN"], ...(S.searchOn ? [["Robinhood", "main · 8 positions · via SnapTrade · 2h ago", "US"], ["Fidelity", "main · 6 positions · session expired Jul 14", "US"], ["Vested", "imported · 3 statements · Apr 26", "US"]] : [])];
+    const CMD = [["/research", "Deep research on a symbol · 1–3 credits" + (S.searchOn ? " · US needs us-stock-research" : "")], ["/compare", "Side-by-side, up to 5 stocks" + (S.searchOn ? " · mixed markets allowed, ₹ at spot" : "")], ["/roast", "Score your holdings"], ["/tax", "FY tax preview"], ["/focus", "Set a research focus"], ["/clear", "Start fresh"]];
+    let pickerRows = [];
+    const filt = (arr, i1, i2) => arr.filter(r => !q || r[i1].toLowerCase().includes(q) || r[i2].toLowerCase().includes(q));
+    if (S.tab === "recent") pickerRows = [["AAPL", "Apple Inc.", "NASDAQ"], ["INFY", "Infosys Ltd", "NSE"], ["Robinhood-main", "Robinhood · main", "US"]].filter(r => S.searchOn || r[2] === "NSE").map(([sym, name, ex]) => ({ sym, name, ex, badge: exBadge(ex), style: rowStyle(false), tile: false, sub: false, on: () => {} }));
+    else if (S.tab === "stocks") pickerRows = filt(isUs ? US_ST : IN_ST, 0, 1).map(([sym, name, ex, sub], i) => ({ sym, name, ex, sub: sub || false, badge: exBadge(ex), style: rowStyle(i === 0), tile: false, on: () => {} }));
+    else if (S.tab === "funds") pickerRows = filt(isUs ? US_F : IN_F, 0, 1).map(([sym, name, ex, sub], i) => ({ sym, name, ex, sub: sub || false, badge: exBadge(ex), style: rowStyle(i === 0), tile: false, on: () => {} }));
+    else if (S.tab === "brokers") pickerRows = BR.filter(b => !q || b[0].toLowerCase().includes(q)).map(([n, d, ex]) => ({ sym: n, name: d, ex: ex === "US" ? "US · SNAPTRADE" : "INDIA", badge: exBadge(ex), style: rowStyle(false), tile: n.slice(0, 2).toUpperCase(), tileStyle: mono + "width:26px;height:26px;border-radius:7px;border:1.5px solid var(--ink);display:grid;place-items:center;font-size:9.5px;font-weight:800;background:" + (ex === "US" ? "var(--pop-3)" : "var(--emerald)") + ";color:#1d1d1b;flex-shrink:0", sub: false, on: () => {} }));
+    else pickerRows = CMD.filter(c => !q || c[0].includes(q)).map(([sym, name]) => ({ sym, name, ex: "CMD", badge: exBadge("CMD"), style: rowStyle(false), tile: false, sub: false, on: () => {} }));
+    const tabSearchable = S.tab !== "recent";
+    const footLeft = S.tab === "commands" ? "slash registry · live" : S.tab === "brokers" ? "your accounts · live" : isUs ? "US · ◷ EOD · previous close" : "NSE & BSE · live";
+    const footRight = S.tab === "stocks" ? (isUs ? "6,900+ US listings" : "5,200+ symbols") : S.tab === "funds" ? (isUs ? "US ETFs · MF later" : "1,800+ schemes") : S.tab === "brokers" ? (S.searchOn ? "3 India · 3 US" : "3 India") : S.tab === "commands" ? CMD.length + " commands" : "3/8 recents";
+    const sources = [
+      { k: "EDGAR", n: "1 · US · FILED", badge: exBadge("NASDAQ"), rows: [{ t: "AAPL 10-Q · Segment information", d: "SEC EDGAR · 2026-05-02 · standardized" }] },
+      { k: "NSE", n: "1 · INDIA", badge: exBadge("NSE"), rows: [{ t: "INFY Q1 FY27 results", d: "NSE announcement · 2026-07-17" }] },
+      { k: "YOU", n: "1 · HOLDINGS", badge: exBadge("IN"), rows: [{ t: "Robinhood + Zerodha + Groww", d: "SnapTrade + broker OAuth · 2h ago · US ◷ previous close" }] },
+    ];
+    const stagesL = ["QUEUED", "PLANNING", "RESEARCHING", "ANALYZING", "SYNTHESIZING"], si = S.progress < 4 ? 0 : S.progress < 12 ? 1 : S.progress < 68 ? 2 : S.progress < 92 ? 3 : 4;
+    const stages = stagesL.map((l, i) => ({ l, style: pill(i < si ? "var(--emerald)" : i === si ? "var(--pop-2)" : "var(--paper)", i <= si ? "#0b0b09" : "var(--ink-3)") + ";font-size:8px" }));
+    const T = [["Fetch SEC filings · 10-K/10-Q", "Data fetch", "EDGAR", 8], ["Fetch EOD prices · 5Y", "Data fetch", "third-party tape", 16], ["Fetch Forms 4 · 90d", "Data fetch", "EDGAR", 26], ["Fetch 13F holders · Q1", "Data fetch", "EDGAR", 34], ["Compute DCF sensitivity", "Computation", "pure-compute", 60], ["Compute governance flags", "Analysis", "pure-compute", 72], ["Synthesize report", "Synthesis", "Gemini 2.5 Pro", 96]];
+    const tasks = T.map(([l, phase, src, at]) => ({ l, phase, src, dot: "width:10px;height:10px;border-radius:3px;border:1.5px solid var(--ink);flex-shrink:0;background:" + (S.progress >= at ? "var(--emerald)" : S.progress >= at - 10 ? "var(--pop-2)" : "var(--paper-2)") }));
+    return {
+      isDesk: S.isDesk, nav, history, credits: S.credits, creditsAfter: Math.max(0, S.credits - 2), sourceCount: 3,
+      searchOn: S.searchOn, searchFlagStyle: flagBtn(S.searchOn), searchFlagLabel: S.searchOn ? "ON" : "OFF", toggleSearchFlag: () => this.setState({ searchOn: !S.searchOn, mkt: S.searchOn ? "in" : "us" }),
+      researchFlagStyle: flagBtn(S.researchOn), researchFlagLabel: S.researchOn ? "ON" : "OFF", toggleResearchFlag: () => this.setState({ researchOn: !S.researchOn, gateOpen: false, confirmOpen: !S.researchOn && S.gateOpen }),
+      toggleDark: () => { const dark = !S.dark; document.documentElement.classList.toggle("dark", dark); try { localStorage.setItem("um-v2-dark", dark ? "1" : "0"); } catch (e) {} this.setState({ dark }); },
+      darkIcon: S.dark ? "M12 3v2M12 19v2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M3 12h2M19 12h2M5.2 18.8l1.4-1.4M17.4 6.6l1.4-1.4M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10z" : "M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z",
+      pillOutline, pillGold, pillEmerald, btnGhostSm, btnSolid, deltaTag, cite: mono + "font-size:9px;color:var(--emerald-text);font-weight:800;margin-left:1px",
+      quick, mentions, skills, sources, stages, tasks, progress: S.progress, progressW: S.progress + "%",
+      researchBtn: S.researchOn ? btnSolid : btnGhostSm + ";color:var(--ink-3)", researchLabel: S.researchOn ? "Deep research AAPL · ⚡ 2" : "Deep research AAPL · India only today",
+      researchNote: S.researchOn ? "US arm: EDGAR + EOD tools · market stamped on the plan" : "us-stock-research OFF · gated before the credit is spent",
+      openConfirm: () => this.setState(S.researchOn ? { confirmOpen: true, gateOpen: false } : { gateOpen: true, confirmOpen: false }), closeConfirm: () => this.setState({ confirmOpen: false, gateOpen: false }),
+      confirmOpen: S.confirmOpen, gateOpen: S.gateOpen, running: S.running,
+      runResearch: () => { this.setState({ confirmOpen: false, running: true, progress: 2, credits: Math.max(0, S.credits - 2) }); clearInterval(this.tick); this.tick = setInterval(() => { const p = Math.min(100, this.state.progress + 4); this.setState({ progress: p }); if (p >= 100) clearInterval(this.tick); }, 260); },
+      pickerOpen: S.pickerOpen, togglePicker: () => this.setState({ pickerOpen: !S.pickerOpen, tab: "stocks" }), openCommands: () => this.setState({ pickerOpen: true, tab: "commands" }),
+      tabs, tabSearchable, pq: S.pq, onPq: (e) => this.setState({ pq: e.target.value }),
+      pickerPlaceholder: S.tab === "stocks" ? (isUs ? "Search NASDAQ / NYSE…" : "Search NSE / BSE…") : S.tab === "funds" ? (isUs ? "Search US ETFs…" : "Search MFs · ETFs…") : S.tab === "brokers" ? "Filter linked brokers…" : "Search slash commands…",
+      showMarketPill: S.searchOn && (S.tab === "stocks" || S.tab === "funds"), showMarketOff: !(S.searchOn && (S.tab === "stocks" || S.tab === "funds")),
+      mktIn: () => this.setState({ mkt: "in" }), mktUs: () => this.setState({ mkt: "us" }),
+      mktInStyle: mono + "padding:4px 10px;font-size:9px;font-weight:800;letter-spacing:0.8px;border:0;cursor:pointer;background:" + (S.mkt === "in" ? "var(--ink)" : "transparent") + ";color:" + (S.mkt === "in" ? "var(--paper)" : "var(--ink-2)"),
+      mktUsStyle: mono + "padding:4px 10px;font-size:9px;font-weight:800;letter-spacing:0.8px;border:0;cursor:pointer;background:" + (S.mkt === "us" ? "var(--ink)" : "transparent") + ";color:" + (S.mkt === "us" ? "var(--paper)" : "var(--ink-2)"),
+      pickerRows, pickerEmpty: pickerRows.length === 0, pickerEmptyText: "No results found", footLeft, footRight, footDot: isUs ? "var(--ink-3)" : "var(--emerald)",
+      input: S.input, onInput: (e) => this.setState({ input: e.target.value }),
+      toolBtn: "width:32px;height:32px;border-radius:8px;border:1.5px solid var(--rule-soft);background:var(--paper);color:var(--ink-2);display:grid;place-items:center;cursor:pointer;font-weight:800;font-family:var(--font-mono)",
+      toolBtnAt: "width:32px;height:32px;border-radius:8px;border:1.5px solid var(--ink);background:" + (S.pickerOpen ? "var(--ink)" : "var(--paper)") + ";color:" + (S.pickerOpen ? "var(--paper)" : "var(--ink)") + ";display:grid;place-items:center;cursor:pointer;font-weight:800;font-family:var(--font-mono);box-shadow:2px 2px 0 var(--ink)",
+      sendStyle: "border:2px solid var(--ink);border-radius:9px;background:var(--emerald);color:#052e1a;font-weight:800;font-size:12px;padding:6px 12px;cursor:pointer;font-family:var(--font-sans)",
+    };
+  }
+}
+</script>
+</body>
+</html>

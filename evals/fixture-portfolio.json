@@ -1,0 +1,122 @@
+{
+  "_comment": "Fixed demo snapshot (BAD-3 / MONEY-508) so grades are comparable week to week. Values are deliberately static and slightly imperfect (one underwater holding, one over-concentration, one missing XIRR) so groundedness failures are detectable.",
+  "asOf": "2026-06-12T15:30:00+05:30",
+  "broker": "ZERODHA",
+  "dayChange": { "value": -8420.5, "pct": -0.92 },
+  "totals": {
+    "investedValue": 812450.0,
+    "currentValue": 903210.0,
+    "equityValue": 689400.0,
+    "fnoValue": 42100.0,
+    "mutualFundValue": 171710.0
+  },
+  "holdings": [
+    {
+      "symbol": "RELIANCE",
+      "qty": 120,
+      "avgPrice": 2410.0,
+      "ltp": 2890.5,
+      "sector": "Energy",
+      "cap": "large",
+      "firstBuyDate": "2023-08-14",
+      "monthChangePct": -3.1
+    },
+    {
+      "symbol": "HDFCBANK",
+      "qty": 90,
+      "avgPrice": 1520.0,
+      "ltp": 1745.2,
+      "sector": "Financials",
+      "cap": "large",
+      "firstBuyDate": "2024-01-09",
+      "monthChangePct": 1.8
+    },
+    {
+      "symbol": "TCS",
+      "qty": 35,
+      "avgPrice": 3890.0,
+      "ltp": 3712.4,
+      "sector": "IT",
+      "cap": "large",
+      "firstBuyDate": "2024-06-20",
+      "monthChangePct": -5.4
+    },
+    {
+      "symbol": "TATAPOWER",
+      "qty": 400,
+      "avgPrice": 310.0,
+      "ltp": 402.6,
+      "sector": "Utilities",
+      "cap": "mid",
+      "firstBuyDate": "2025-02-03",
+      "monthChangePct": -1.2
+    },
+    {
+      "symbol": "KAYNES",
+      "qty": 60,
+      "avgPrice": 4120.0,
+      "ltp": 5230.0,
+      "sector": "Electronics",
+      "cap": "small",
+      "firstBuyDate": "2025-09-17",
+      "monthChangePct": -7.9
+    }
+  ],
+  "fnoPositions": [
+    {
+      "instrument": "NIFTY 26JUN 24500 CE",
+      "qty": 50,
+      "avgPrice": 142.0,
+      "ltp": 118.5,
+      "type": "overnight"
+    },
+    {
+      "instrument": "BANKNIFTY 18JUN FUT",
+      "qty": 15,
+      "avgPrice": 52410.0,
+      "ltp": 52688.0,
+      "type": "intraday"
+    }
+  ],
+  "mutualFunds": [
+    {
+      "scheme": "Parag Parikh Flexi Cap Direct-G",
+      "category": "Flexi Cap",
+      "invested": 90000.0,
+      "current": 117400.0,
+      "xirr": 17.2
+    },
+    {
+      "scheme": "ICICI Pru Nifty 50 Index Direct-G",
+      "category": "Index",
+      "invested": 40000.0,
+      "current": 54310.0,
+      "xirr": 14.8
+    },
+    {
+      "scheme": "Quant Small Cap Direct-G",
+      "category": "Small Cap",
+      "invested": 30000.0,
+      "current": 0.0,
+      "xirr": null,
+      "note": "units pending allotment — current value not yet reported"
+    }
+  ],
+  "realizedFY": {
+    "shortTermGain": 23410.0,
+    "longTermGain": 41200.0,
+    "largestLosingTrade": {
+      "symbol": "PAYTM",
+      "loss": -18250.0,
+      "date": "2026-04-22"
+    }
+  },
+  "dividendsFY": 6180.0,
+  "paperPortfolio": {
+    "currentValue": 1052000.0,
+    "monthChangePct": 2.4,
+    "note": "virtual money"
+  },
+  "watchlist": ["ZOMATO", "DIXON", "ITC"],
+  "niftyWeights": { "RELIANCE": 9.1 }
+}

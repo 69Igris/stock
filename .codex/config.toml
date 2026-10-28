@@ -1,0 +1,19 @@
+[mcp_servers.video-studio]
+command = "node"
+args = [
+    "--import",
+    "tsx",
+    "packages/video-studio/src/index.ts",
+]
+env_vars = [
+    "GCP_PROJECT_ID",
+    "GCP_LOCATION",
+    "GOOGLE_APPLICATION_CREDENTIALS",
+    "VEO_MODEL",
+    "GEMINI_MODEL",
+    "TTS_VOICE_HI",
+    "TTS_VOICE_EN",
+    "TTS_SPEAKING_RATE",
+    "MUSIC_DIR",
+    "VIDEO_STUDIO_OUT",
+]

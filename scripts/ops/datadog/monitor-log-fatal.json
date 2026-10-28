@@ -1,0 +1,32 @@
+{
+  "_readme": [
+    "MONEY-1359 — ANY fatal or critical line, anywhere, in one environment.",
+    "",
+    "No service placeholder and no threshold to tune: the claim is that a single",
+    "one of these is worth interrupting someone for, in any service. A per-service",
+    "copy would be four monitors that each need a floor, and a floor above zero on",
+    "a fatal is a statement nobody would defend out loud.",
+    "",
+    "15 minutes rather than an hour, because unlike error volume this is not a",
+    "rate — the first one is the whole signal and the delay to notice is the only",
+    "thing the window controls."
+  ],
+  "name": "[{{env}}] a FATAL log line",
+  "type": "log alert",
+  "query": "logs(\"env:{{env}} status:(fatal OR critical)\").index(\"*\").rollup(\"count\").last(\"15m\") > 0",
+  "message": "A fatal/critical log line was emitted in {{env}}.\n\nLogs: `env:{{env}} status:(fatal OR critical)`. The `service` facet on the event says where; it is deliberately not in this monitor's query so a new service is covered the day it ships rather than the day someone remembers to add a row.\n\n@{{notify}}",
+  "tags": [
+    "managed-by:apply-monitors",
+    "money:1359",
+    "family:log-fatal",
+    "env:{{env}}"
+  ],
+  "options": {
+    "thresholds": { "critical": 0 },
+    "notify_no_data": false,
+    "renotify_interval": 0,
+    "enable_logs_sample": true,
+    "include_tags": true
+  },
+  "_placeholders": ["{{env}} production | qa", "{{notify}} notification handle"]
+}

@@ -1,0 +1,87 @@
+[
+  {
+    "_why": "The zero-write question as a 30-day number. The 40 monitors answer 'is this job broken today'; this answers 'how much of the last 30 days did the market-data spine spend writing what it selected', which is the question a budget is spent against.",
+    "name": "[production] Scheduled jobs write what they select",
+    "type": "monitor",
+    "description": "The zero-write condition (selected > 0 and written == 0) over 16 of the 41 monitored jobs — the market-data spine: prices, instruments, corporate actions, funds and company financials. NOT the whole estate: Datadog caps a monitor-based SLO at 20 monitor_ids. News, filings, EDGAR, documents and the product jobs are watched by their own monitors and are outside this budget.",
+    "_type_rationale": "MONITOR, and the subset is forced rather than chosen. Datadog caps a monitor-based SLO at 20 monitor_ids — measured: this resolved 40 and was refused 400 \"Maximum number of elements in parameter 'monitor_ids' should be 20\".\n\nIt was a METRIC SLO for one release, `sum(job.written) / sum(job.selected)` across every job, on the claim that this asks the monitors' question of the counters they are computed from. IT DOES NOT, and the number could not move:\n\n  1. THE COUNTERS ARE NOT COMMENSURABLE ACROSS JOBS. `selected` and `written` are per-job units, not a common one. `stock-document-ingest` reports `selected: 1` (one document per message) against `written: extractedRows` (dozens); `mf-nav-backfill` reports FUNDS against NAV ROWS; `events-sync` reports SYMBOLS against event rows. So the estate-wide numerator EXCEEDS the denominator and Datadog clamps the SLI to 100% — permanently, by construction.\n\n  2. IT HAD NO JOB FILTER. `{env:production}` alone includes `candle-evict`, which is DELIBERATELY absent from MONITORED_JOBS because it ships disarmed (`CANDLE_EVICT_APPLY=false`) and honestly reports `selected: N, written: 0` every night. An unfiltered ratio burns budget on the one job whose zero is correct.\n\n  3. IT WAS INSENSITIVE TO THE DEFECT IT IS NAMED FOR. A job selecting 500 and writing 0 for a month moves an estate-wide denominator by well under the 0.5% budget — the six-incident week that produced this whole metric would not have shown up.\n\nNone of that is repairable in a ratio: a metric SLO takes ONE series per side and cannot group by `job`, so the per-job conjunction (selected > 0 AND written == 0) cannot be expressed. The MONITORS already express it exactly, with `clamp_max`, per job. So the instrument is right and only the cap is in the way — and the honest response to a cap is a DECLARED subset that says so on the object, not a whole-estate number that measures nothing.\n\nThe subset is named rather than pattern-matched so that a rename fails CLOSED: every name here must resolve to a live monitor or apply-slos.sh refuses the row. The coverage (16 of 41) is repeated in `description`, where a board reader sees it, and `slos-agreement.test.ts` re-derives both numbers from the rendered estate — so adding a monitored job makes the caveat stale and the suite red, rather than silently widening what this number is believed to cover.",
+    "monitor_names": [
+      "[production] bhavcopy-sync wrote nothing but had work to do",
+      "[production] feed-parse wrote nothing but had work to do",
+      "[production] price-sync wrote nothing but had work to do",
+      "[production] price-backfill wrote nothing but had work to do",
+      "[production] intraday-sync wrote nothing but had work to do",
+      "[production] market-movers-sync wrote nothing but had work to do",
+      "[production] index-constituent-sync wrote nothing but had work to do",
+      "[production] events-sync wrote nothing but had work to do",
+      "[production] us-eod-sync wrote nothing but had work to do",
+      "[production] us-instrument-master-sync wrote nothing but had work to do",
+      "[production] mf-nav-backfill wrote nothing but had work to do",
+      "[production] mf-metadata-sync wrote nothing but had work to do",
+      "[production] mf-portfolio-sync wrote nothing but had work to do",
+      "[production] xbrl-sync wrote nothing but had work to do",
+      "[production] xbrl-projection wrote nothing but had work to do",
+      "[production] xbrl-ratios wrote nothing but had work to do"
+    ],
+    "thresholds": [
+      {
+        "timeframe": "30d",
+        "target": 99.5
+      }
+    ]
+  },
+  {
+    "_why": "The absence monitors (MONEY-1293/1358). Silence is the failure mode they read, so the SLO is tighter than the zero-write one: a job that did not run at all is a harder outage than a job that ran and skipped.\n\nSAME SUBSET, SAME REASON as the row above, found the same way. This was `^\\[production\\] .* has not reported a run in .*$` with min_monitors 3, written when four absence monitors existed. MONEY-1358 took that population to TWENTY-FOUR, so the pattern resolved 24 ids into an API that refuses more than 20 — the identical 400 the zero-write SLO hit, latent in the row beside it, invisible because `min_monitors` only ever looks DOWNWARD. The local cap check in apply-slos.sh is what surfaced it.\n\nThe scope is deliberately the SAME market-data spine, so the board reads as one pair of questions about one population — did the spine run, and did it write what it selected — rather than two numbers over two different unstated sets. Eleven of the sixteen spine jobs have an absence monitor; the other five (xbrl-sync, xbrl-projection, events-sync, mf-nav-backfill, mf-portfolio-sync) have none to name.\n\nThe WINDOW is part of a monitor name, so retuning one (`8d` -> `96h`) renames it and this row stops resolving — deliberately a hard, named failure rather than an SLO that quietly covers one job fewer.",
+    "name": "[production] Scheduled jobs run",
+    "type": "monitor",
+    "description": "The job-absence monitors for 11 of the 27 jobs that have one — the market-data spine, matching the zero-write SLO. NOT the whole estate: Datadog caps a monitor-based SLO at 20 monitor_ids and 27 absence monitors exist. News, filings, EDGAR, the tile builders and the product jobs keep their own absence monitors and are outside this budget.",
+    "monitor_names": [
+      "[production] bhavcopy-sync has not reported a run in 8d",
+      "[production] feed-parse has not reported a run in 8d",
+      "[production] price-sync has not reported a run in 8d",
+      "[production] price-backfill has not reported a run in 8d",
+      "[production] intraday-sync has not reported a run in 8d",
+      "[production] market-movers-sync has not reported a run in 8d",
+      "[production] us-eod-sync has not reported a run in 8d",
+      "[production] us-instrument-master-sync has not reported a run in 8d",
+      "[production] xbrl-ratios has not reported a run in 8d",
+      "[production] mf-metadata-sync has not reported a run in 16d",
+      "[production] index-constituent-sync has not reported a run in 16d"
+    ],
+    "thresholds": [
+      {
+        "timeframe": "30d",
+        "target": 99.9
+      }
+    ]
+  },
+  {
+    "_why": "The workers service, from its dd-trace SERVER span. That span is `hono.request`, declared once in DD_SERVER_SPAN (packages/datadog/src/constants.ts), and slos-agreement.test.ts holds this row to it — JSON cannot import the constant. It read `web.request` until MONEY-1534: MONEY-1380 started the workers with `--import dd-trace/register.js` (~2026-09-11), dd-trace's Hono plugin renamed the span, `trace.web.request.hits` has had no series since, and apply-slos.sh refused this row on its denominator preflight. Never `trace.http.request.*`, the same library's HTTP CLIENT span: measuring it here counted our OUTBOUND calls to NSE, BSE, Screener, Tiingo and Gemini — a vendor 404 storm burned this SLO while a 500ing job route did not touch it. A CONVENTION, not a guarantee — hence the denominator preflight, which refuses the row when the series has no points rather than creating an SLO that is 100% forever because it measures nothing.",
+    "_no_default_zero_rationale": "The numerator subtracts an errors series that does not EXIST while the service is healthy, and it needs no fill — measured, not assumed. 2026-09-22 05:00Z to 09-23 05:00Z: hits 15,799, errors no series, `hits - errors` 15,799 at all 288 points. 2026-09-11, errors sparse (580 in 2 points): `hits - errors` 3,994 = 4,574 - 580 at all 171 hits points. The arithmetic already reads an absent operand as 0 while the other has points. `default_zero()` here would buy nothing and cost the one signal that matters: over a dead span `hits - default_zero(errors)` is a series of ZEROS (measured on web.request, 1h, 181 points) where it is otherwise no data — a numerator claiming zero good requests instead of admitting nobody measured.",
+    "name": "[production] Workers request success",
+    "type": "metric",
+    "query": {
+      "numerator": "sum:trace.hono.request.hits{service:stockbook-workers,env:production}.as_count() - sum:trace.hono.request.errors{service:stockbook-workers,env:production}.as_count()",
+      "denominator": "sum:trace.hono.request.hits{service:stockbook-workers,env:production}.as_count()"
+    },
+    "thresholds": [
+      {
+        "timeframe": "30d",
+        "target": 99
+      }
+    ]
+  },
+  {
+    "_why": "EDGAR detection latency. The one latency monitor in the estate, and the SLO name states the number the monitor's threshold encodes (300s) so the two cannot drift apart silently — min_monitors 1 with an exact-name pattern means a second latency monitor breaks the build rather than quietly widening this SLO.",
+    "name": "[production] EDGAR detection under 5 minutes",
+    "type": "monitor",
+    "monitor_name_pattern": "^\\[production\\] edgar-detect — p95 latency over 300s$",
+    "min_monitors": 1,
+    "thresholds": [
+      {
+        "timeframe": "30d",
+        "target": 99
+      }
+    ]
+  }
+]

@@ -1,0 +1,53 @@
+/* Roadmap-only tag variants (reuse .release .tag base from changelog). */
+.release .tag.shipping {
+  background: var(--emerald);
+  color: #f7f3e6;
+  border-color: var(--ink);
+}
+.release .tag.scheduled {
+  background: var(--pop-2);
+  color: #1d1d1b;
+}
+.release .tag.planned {
+  background: var(--pop-3);
+  color: #f7f3e6;
+}
+
+/* Exploring list — a low-key list of maybes. */
+.explore-list {
+  margin-top: 28px;
+  display: grid;
+  gap: 0;
+}
+.explore-row {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 24px;
+  padding: 20px 0;
+  border-bottom: 1.5px dashed var(--ink);
+  align-items: baseline;
+}
+.explore-row:last-child {
+  border-bottom: 0;
+}
+.explore-row .t {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.2px;
+}
+.explore-row .s {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-size: 17px;
+  color: var(--ink-2);
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .explore-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+}

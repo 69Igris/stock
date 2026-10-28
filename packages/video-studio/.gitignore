@@ -1,0 +1,17 @@
+# Secrets / local config
+.env
+.env.*
+!.env.example
+
+# Rendered output (videos + work dirs) — large binaries, not committed
+.video-out/
+
+# Licensed/royalty-free audio is user-supplied (see assets/music/README.md)
+assets/music/*.mp3
+assets/music/*.m4a
+assets/music/*.wav
+assets/music/*.aac
+assets/music/*.ogg
+
+# Build
+dist/

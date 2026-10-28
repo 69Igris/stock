@@ -1,0 +1,42 @@
+{
+  "name": "@usemoney/fire",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts",
+    "./bounds": "./src/bounds.ts",
+    "./calculations": "./src/calculations.ts",
+    "./rebalance": "./src/rebalance.ts",
+    "./actions": "./src/actions.ts",
+    "./parser": "./src/parser.ts",
+    "./systemPrompt": "./src/systemPrompt.ts",
+    "./tools": "./src/tools.ts",
+    "./toolExecutor": "./src/toolExecutor.ts",
+    "./serverActions": "./src/serverActions.ts",
+    "./serverSnapshot": "./src/serverSnapshot.ts",
+    "./serverTurn": "./src/serverTurn.ts",
+    "./scenarioTarget": "./src/scenarioTarget.ts"
+  },
+  "_comment_test": "MONEY-1079 — the `test` script is back because this package now HAS __tests__ (scenario-save-target.test.ts, which pins a data-loss invariant that only apps/api exercises, so apps/web could not host it). It was removed for a while when the package had no tests and the script reported a vacuous `# tests 0`. If the last test here is ever deleted, drop the script again rather than leaving it reporting 0 — and never reintroduce --test-force-exit (MONEY-1083: it silently truncates runs).",
+  "scripts": {
+    "build": "tsc",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0",
+    "test": "node --import tsx ../../scripts/test-timeout.ts --import tsx --test --test-timeout=30000 \"__tests__/**/*.test.ts\""
+  },
+  "dependencies": {
+    "@google/genai": "^2.8.0",
+    "@usemoney/services": "*",
+    "@usemoney/validation": "*",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@usemoney/typescript-config": "*",
+    "tsx": "^4.19.2",
+    "typescript": "5.9.2"
+  }
+}

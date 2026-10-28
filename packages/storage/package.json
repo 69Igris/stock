@@ -1,0 +1,27 @@
+{
+  "name": "@usemoney/storage",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./archive-audit": "./src/archive-audit.ts",
+    "./download-budget": "./src/download-budget.ts",
+    "./multipart-envelope": "./src/multipart-envelope.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "type-check": "tsc --noEmit",
+    "test": "node --import tsx ../../scripts/test-timeout.ts --import tsx --test --test-timeout=30000 \"__tests__/**/*.test.ts\""
+  },
+  "dependencies": {
+    "@google-cloud/storage": "^7.0.0",
+    "@usemoney/core": "*"
+  },
+  "devDependencies": {
+    "@usemoney/typescript-config": "*",
+    "typescript": "5.9.2"
+  }
+}

@@ -1,0 +1,363 @@
+name: Test
+
+# Runs the test suite on pull requests (including drafts).
+#
+# Why this exists:
+#   Until now nothing in CI gated merges on `yarn test` - only the branch-name
+#   check (pr-branch-check.yml) and ticket-populate (pr-populate-ticket.yml)
+#   workflows ran, and the husky pre-push hook only validates branch names.
+#   This workflow makes `yarn test` (the turbo `test` task) a real merge gate.
+#
+# Trigger policy (CI-minute control):
+#   * pull_request — the merge gate. Tests the merge preview. Drafts trigger
+#     it too, so "open a draft PR early" replaces pre-PR push runs.
+#   * push to main/release ONLY — post-merge verification on the REAL merged
+#     commit (a PR's merge preview can go stale when another PR lands in
+#     between), and a safety net on release promotions since prod
+#     auto-deploys from `release`.
+#   The old unscoped `push` trigger double-ran both tiers for every push to a
+#   branch with an open PR — same commit, twice the minutes. Combined with the
+#   cancel-in-progress concurrency below, a burst of pushes now costs at most
+#   one in-flight run per tier.
+#
+# Test tiers (see scripts/README.md → "Test tiers"):
+#   * smoke      — `yarn test:smoke`, the critical-path subset (FIFO pairing,
+#                  calc-suite, guardrails, webhook sig/idempotency + *-e2e, demo
+#                  routes, security/*, subscription access, contract tests). The
+#                  `smoke` job below runs it first as a FAST early signal.
+#   * regression — `yarn test`, the whole suite. The `test` job is the MERGE
+#                  GATE; smoke is a fast pre-flight, not a replacement for it.
+#   * full       — `yarn test:full` (regression + env-gated tests/integration).
+#                  Needs QA DB/Redis env (RUN_INTEGRATION_TESTS) so it is NOT
+#                  run here; it is an on-demand / nightly concern.
+#
+# Coverage:
+#   A coverage summary is emitted as an INFORMATIONAL, NON-BLOCKING step.
+#   Real line coverage is ~14% today, so we deliberately do NOT hard-fail on a
+#   coverage floor yet. See the TODO on the coverage step below to ratchet a
+#   threshold once test de-coupling lands (task 133).
+#
+# Security:
+#   Pinned to ubuntu-latest, read-only contents permission, no untrusted input
+#   is interpolated into run: blocks.
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - release
+
+# Cancel superseded runs on the same ref to save CI minutes.
+concurrency:
+  group: test-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # Fast, REQUIRED pre-flight: the critical-path subset only (< ~30s of test
+  # time). Runs as its own job so a broken core path fails in seconds instead of
+  # waiting out the whole `yarn test` run. This does NOT replace the merge gate
+  # below — `test` is still authoritative.
+  smoke:
+    name: yarn test:smoke
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: yarn
+
+      - name: Enable Corepack (yarn 1.22)
+        run: corepack enable
+
+      # `--prefer-offline` resolves from the yarn cache that `cache: yarn`
+      # above just restored, instead of revalidating every package against the
+      # registry. `--frozen-lockfile` still enforces the lockfile, so resolution
+      # is not loosened — only the network round-trips are skipped.
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --prefer-offline
+
+      # NOTE: no turbo cache in this job. `yarn test:smoke` runs
+      # scripts/run-smoke.ts, which spawns `node --import tsx --test` per
+      # workspace directly — it never invokes turbo, so there is nothing here
+      # for a turbo cache to hit.
+
+      # Some smoke tests (contract/security) import @usemoney/database, so the
+      # Prisma client must exist even for the subset run.
+      - name: Generate Prisma client
+        run: yarn db:generate
+
+      - name: Run smoke tier
+        run: yarn test:smoke
+
+  # The PYTHON half of the suite (MONEY-979). `services/us-fundamentals` is a
+  # Python Cloud Run service; `yarn test` cannot see it, because turbo's task
+  # graph comes from the Yarn workspaces and a Python directory is not one.
+  #
+  # It runs `yarn test:python` rather than `pytest` directly, and that is a
+  # requirement rather than a style choice: verify-gate-parity.test.ts extracts
+  # every `run:` command here, strips `yarn `, and asserts the pre-push gate
+  # invokes the same script. A raw `pytest` step would make the guard demand
+  # `yarn pytest` in the gate, and the honest fix is one entry point rather than
+  # an exemption.
+  #
+  # The redis SERVICE is what makes the fair-access load test real. That test
+  # runs 4 processes through the SEC client against a fake server sharing one
+  # Redis bucket and asserts no 1-second window exceeds 9 requests. Without a
+  # server it self-skips — which is correct on a laptop and would be a silent
+  # hole in CI, since the shared limiter is the one thing standing between us
+  # and a per-IP block from SEC.
+  python:
+    name: yarn test:python
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      # Only to provide `yarn`, which resolves the test:python script. No
+      # install step: the script shells out to bash and needs no node_modules.
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Enable Corepack (yarn 1.22)
+        run: corepack enable
+
+      # 3.12 matches the service Dockerfile and ruff's target-version. The
+      # runner script resolves an interpreter BY VERSION rather than by binary
+      # name, because setup-python exposes `python`/`python3` and not always a
+      # `python3.12`.
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Run Python tests
+        env:
+          REDIS_URL: redis://localhost:6379
+        run: yarn test:python
+
+  test:
+    name: yarn test (${{ matrix.shard }})
+    runs-on: ubuntu-latest
+    # TWO SHARDS, SPLIT ON THE ONE MEASUREMENT THAT MATTERS (MONEY-1406).
+    #
+    # Measured on run #665: the serialized step took 21m59s, of which
+    # `@usemoney/web` alone was 607s of 1319s — 46%. So "web" against
+    # "everything else" is 607 vs 712 and needs no finer partitioning; a third
+    # shard would buy minutes and cost a runner.
+    #
+    # THIS IS A WALL-CLOCK FIX AND NOTHING ELSE. It does NOT address the
+    # starvation the step comment below describes, and believing otherwise is
+    # the intuitive wrong answer: turbo already runs the workspaces strictly
+    # sequentially, so web ALREADY had the whole runner to itself when it
+    # cancelled a subtest on run #665. A second runner changes nothing about
+    # four node workers on two cores — that is fixed in apps/web's own
+    # `--test-concurrency`, which is now derived from the machine.
+    #
+    # What a shard genuinely buys is CORES. On a fixed 2-vCPU box the total CPU
+    # work cannot be compressed, so more machines is the only lever there is.
+    #
+    # `fail-fast: false` so one shard's failure still lets the other report —
+    # a merge gate that hides half its answer is a gate you re-run blind.
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - shard: web
+            filter: "--filter=@usemoney/web"
+          - shard: rest
+            filter: "--filter=!@usemoney/web"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: yarn
+
+      - name: Enable Corepack (yarn 1.22)
+        run: corepack enable
+
+      # See the smoke job above for why `--prefer-offline` is safe here.
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --prefer-offline
+
+      # Turbo LOCAL cache. Nothing persisted `.turbo/` between runs, so every
+      # CI run was fully cold: all 23 package `build` tasks and all 29
+      # `type-check` tasks re-executed even for a one-line PR. (The run log's
+      # "Remote caching disabled" line is a separate thing — that is Vercel
+      # Remote Cache, which we deliberately do NOT use. This step is the local
+      # cache, persisted with actions/cache and no external service.)
+      #
+      # PATH IS VERIFIED, NOT ASSUMED: turbo 2.7.4 (root package.json devDep)
+      # writes <repo-root>/.turbo/cache/<taskhash>.tar.zst plus a matching
+      # -meta.json — confirmed by running a forced task and diffing the tree.
+      # The pre-2.0 location (node_modules/.cache/turbo) does not exist in this
+      # repo. Cache ONLY `cache/`: the sibling `.turbo/{daemon,cookies,
+      # preferences}` dirs hold machine-local sockets and state, and restoring
+      # those onto a fresh runner is meaningless at best.
+      #
+      # KEY = lockfile + commit SHA. The SHA tail makes the primary key unique
+      # per run so it never matches exactly — that is deliberate, not sloppy:
+      # actions/cache only WRITES when the primary key missed, so a unique
+      # primary key keeps the stored cache rolling forward instead of freezing
+      # it at whichever commit first populated it. The restore-keys chain is
+      # what actually hits, falling back newest-first to the same lockfile, then
+      # to any run on this OS.
+      #
+      # A PR restores caches from its BASE branch, so the `push: [main, release]`
+      # trigger at the top of this file is what seeds the entry every PR reads.
+      #
+      # This does NOT cache test results. turbo.json keeps
+      # `"test": { "cache": false }`, so every test still executes on every run;
+      # only `build` and `type-check` can replay. Expected payload is small —
+      # the `test` graph builds packages only (23 tasks, ~11 MB of dist total,
+      # no app `.next`), and `type-check` caches logs alone.
+      - name: Restore turbo local cache
+        uses: actions/cache@v4
+        with:
+          path: .turbo/cache
+          key: turbo-test-${{ runner.os }}-${{ hashFiles('yarn.lock') }}-${{ github.sha }}
+          restore-keys: |
+            turbo-test-${{ runner.os }}-${{ hashFiles('yarn.lock') }}-
+            turbo-test-${{ runner.os }}-
+
+      # Generate the Prisma client so workspace tests (and the standalone
+      # coverage run, which does not go through turbo's ^build graph) can
+      # import @usemoney/database without a missing-client error.
+      - name: Generate Prisma client
+        run: yarn db:generate
+
+      # TEST-COVERAGE.md freshness (the MONEY-838 "durable fix"): the doc's
+      # "Total Test Files" headline must match the on-disk inventory.
+      # BLOCKING as of MONEY-1157 (2026-08-08). It was warn-only while the doc
+      # carried stale headlines — and it carried TWO contradictory ones (896 and
+      # 909); gen-test-coverage.ts reads the FIRST match, so the second drifted
+      # unseen. Both were collapsed into one measured figure (923 files /
+      # 24,320 executed cases), which is the restamp this comment was waiting
+      # for. Drift now blocks the merge that causes it, as intended.
+      - name: TEST-COVERAGE.md freshness check
+        run: yarn test:coverage-check
+
+      # Typecheck (MONEY-1157 item 6). This gate did not exist, and could not
+      # have: `yarn check-types` invoked a turbo task that was never declared
+      # (turbo.json only had `type-check`), so it failed with "Could not find
+      # task" rather than checking anything. 15 packages defined `check-types`,
+      # 4 defined `type-check`, and apps/web defined neither. Standardised on
+      # `type-check` — the name turbo actually declares — which surfaced 179
+      # pre-existing errors, all now fixed. `build` is Next/tsup/esbuild and
+      # never typechecks, so without this step nothing does.
+      # Node sizes its default old-space from total system RAM, so a dev machine
+      # gets ~4.1 GB while this runner gets ~2.08 GB — which is why the first run
+      # of this step OOM'd (exit 134) on apps/web while passing locally. The real
+      # fix was excluding `.next` build output from apps/web/tsconfig.json (its
+      # `standalone` dir is a full copy of the app + every package, so everything
+      # was type-checked twice): peak RSS 2.86 GB -> 1.64 GB, which fits the
+      # runner default. This ceiling is headroom on top, so growth trips a slow
+      # build rather than a red gate that blocks every merge.
+      - name: Typecheck
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
+        run: yarn type-check
+
+      # SERIALIZED, and that is the whole point of this step.
+      #
+      # `yarn test` is `turbo run test` at default concurrency: turbo fans ~20
+      # workspace test tasks out at once and each one forks `node --test` per
+      # core. On a 2-vCPU ubuntu-latest runner that is heavy oversubscription,
+      # and node's runner responds by KILLING subtests — which reports as
+      # `# cancelled`, not `# fail`.
+      #
+      # Measured on this branch (run #623): 20,563 passed, **0 failed**,
+      # 8 cancelled, exit 1. Nothing was broken; the runner ran out of room.
+      # That is exactly the state `.claude/hooks/run-verify.sh` already names
+      # ("if zero test CASES failed but a turbo TASK died (parallel resource
+      # contention), re-run serialized") and already has a switch for — the
+      # local gate passes because it uses it. CI did not.
+      #
+      # Correctness over wall-clock for a MERGE GATE: the `test:smoke` job above
+      # exists to give fast feedback, so this one can afford to be the slow,
+      # trustworthy signal. Raise the concurrency only with evidence that a
+      # bigger runner can take it — a flaky merge gate teaches people to re-run
+      # until green, which is worse than a slow one.
+      #
+      # MONEY-1406 — `--concurrency=1` was only HALF the fix, and run #665
+      # proved it. It bounds how many WORKSPACES turbo runs at once; it says
+      # nothing about how many workers `node --test` forks INSIDE one. apps/web
+      # pinned `--test-concurrency=4` against this runner's 2 vCPUs, and
+      # `__tests__/cache/wrapper.test.ts` — 21 cases, no timers, 3.3s locally —
+      # was cancelled at the 30s timeout. 20,866 passed, ZERO failed, exit 1.
+      #
+      # That literal `4` was itself a fix for the same failure on a 14-core Mac,
+      # capping DOWN from 14. On a 2-core runner the identical number caps UP
+      # from 2, which is the oversubscription it exists to prevent. One constant
+      # cannot be right on both machines, so apps/web now derives it:
+      # `min(4, availableParallelism())`. Third instance of this class; the
+      # first two were fixed per-instance, this one closes the rule.
+      #
+      # `--test-timeout` is deliberately UNCHANGED at 30000, but NOT for the
+      # reason this comment used to give. It said `--test-timeout` "is the only
+      # thing that can catch a genuinely hung test"; that is FALSE —
+      # `scripts/test-timeout.ts` is a 900s SIGKILL watchdog (`TEST_TIMEOUT_MS`)
+      # over the whole run, and every workspace routes through it. So
+      # `--test-timeout` is the only ATTRIBUTABLE hang catcher, not the only one.
+      #
+      # The rest of the objection holds and is why it stays at 30000: raising it
+      # makes starvation stop reporting as failure, leaves the cause in place,
+      # and needs raising again on the next slower runner. This is the THIRD
+      # instance of the starvation class (#623, #665, #713/#727/#729) and the
+      # first two were fixed per-instance.
+      #
+      # MONEY-1489 — WHAT ACTUALLY CHANGED IS THAT A KILLED FILE NOW HAS A NAME.
+      # `--test-timeout` is per-TEST and node treats each FILE as a test, so it
+      # is really a per-file wall-clock budget. A file that blows it is reported
+      # CANCELLED, its cases vanish from every counter, and `# fail` stays 0:
+      #
+      #     # tests 20858     # fail 0     # cancelled 2      <- run #729
+      #
+      # Node exits 1, so this step already went red — three times — and all three
+      # went UNDIAGNOSED, because the annotations read `Process completed with
+      # exit code 1` and `@usemoney/web#test … exited (1)` with no filename, and
+      # `# fail 0` actively misdirects.
+      #
+      # `scripts/test-timeout.ts` now parses the run and prints the cancelled
+      # FILES by name, plus a GitHub step summary (a FILE, so turbo's line prefix
+      # cannot break it the way it would break a `::error::` on stdout). It also
+      # enforces a per-workspace executed-case FLOOR, which is the only
+      # instrument that can see the sibling class: cases that were never
+      # REGISTERED exit **0** with every counter green (MONEY-1093).
+      #
+      # Deliberately NOT done here as a `grep` over this step's log: the same
+      # defect hit the LOCAL `yarn verify:push` gate on the same day, and a check
+      # that lives in the workflow cannot see that run.
+      - name: Run tests
+        run: yarn turbo run test --concurrency=1 ${{ matrix.filter }}
+
+      # Coverage (c8) is intentionally NOT run in PR CI. It re-ran the ENTIRE
+      # suite a second time under instrumentation (~doubling the job's wall-clock,
+      # the >10 min step) only to print an informational, non-blocking ~14% number
+      # that nothing gated on (`continue-on-error: true`, no `--check-coverage`).
+      # Run `yarn test:coverage` locally when you need the number. If executed
+      # coverage becomes worth enforcing, add it back as a SCHEDULED (nightly) job
+      # and/or with `--check-coverage --lines <N>` so it actually gates the build.

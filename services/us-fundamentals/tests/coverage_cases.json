@@ -1,0 +1,315 @@
+{
+  "$comment": [
+    "MONEY-979 T12 — the ONE recorded contract for the US coverage gate.",
+    "",
+    "Two implementations compute this gate: judge_coverage() in",
+    "services/us-fundamentals/app/report/coverage.py, and judgeCoverage() in",
+    "packages/core/src/us-fundamentals/repository-logic.ts. Two languages",
+    "computing one gate is exactly how they drift, so both are pinned HERE:",
+    "",
+    "  services/us-fundamentals/tests/test_coverage_report.py   (Python side)",
+    "  packages/core/__tests__/us-fundamentals/coverage-gate.test.ts  (TS side)",
+    "",
+    "Each test drives its REAL implementation over `filers` and asserts the",
+    "result equals `expected`. Neither restates the rule — this file is the",
+    "expected OUTPUT, not a third copy of the arithmetic. Change `expected`",
+    "only when the gate's definition changes, and change it in one commit with",
+    "both implementations; a value edited to make a test pass has silently",
+    "moved a release gate.",
+    "",
+    "This file is NOT generated. Do not add a script that rewrites it: a",
+    "snapshot regenerated from one side is a snapshot that agrees with",
+    "whichever side ran last, which is the drift it was meant to catch.",
+    "",
+    "Percentages are IEEE-754 doubles and round-trip exactly through JSON in",
+    "both languages; the tests still compare them with a 1e-9 tolerance so a",
+    "future case with a repeating fraction does not become a formatting test."
+  ],
+  "targetYears": 5,
+  "cases": [
+    {
+      "name": "empty",
+      "why": "The empty-population guard. 100, never NaN — `NaN >= 95` is false and so is `NaN < 95`, so a threshold check written either way reports the wrong thing without erroring. A caller that needs to tell 'vacuously satisfied' from 'measured 100%' reads `eligible === 0`.",
+      "filers": [],
+      "expected": {
+        "eligible": 0,
+        "eligibleCovered": 0,
+        "ineligible": 0,
+        "ineligibleWithAllAvailable": 0,
+        "pct": 100,
+        "overallPct": 100,
+        "filers": 0
+      }
+    },
+    {
+      "name": "all_eligible_covered",
+      "why": "The healthy case: every eligible filer holds 5+ fiscal years.",
+      "filers": [
+        {
+          "eligibleForCoverage": true,
+          "fiscalYearsOnFile": 12,
+          "statementYears": 10
+        },
+        {
+          "eligibleForCoverage": true,
+          "fiscalYearsOnFile": 8,
+          "statementYears": 6
+        },
+        {
+          "eligibleForCoverage": true,
+          "fiscalYearsOnFile": 5,
+          "statementYears": 5
+        }
+      ],
+      "expected": {
+        "eligible": 3,
+        "eligibleCovered": 3,
+        "ineligible": 0,
+        "ineligibleWithAllAvailable": 0,
+        "pct": 100,
+        "overallPct": 100,
+        "filers": 3
+      }
+    },
+    {
+      "name": "eligible_partial",
+      "why": "A real gap: 3 of 4 eligible filers are covered. 75, not 100.",
+      "filers": [
+        {
+          "eligibleForCoverage": true,
+          "fiscalYearsOnFile": 12,
+          "statementYears": 9
+        },
+        {
+          "eligibleForCoverage": true,
+          "fiscalYearsOnFile": 12,
+          "statementYears": 7
+        },
+        {
+          "eligibleForCoverage": true,
+          "fiscalYearsOnFile": 12,
+          "statementYears": 5
+        },
+        {
+          "eligibleForCoverage": true,
+          "fiscalYearsOnFile": 12,
+          "statementYears": 2
+        }
+      ],
+      "expected": {
+        "eligible": 4,
+        "eligibleCovered": 3,
+        "ineligible": 0,
+        "ineligibleWithAllAvailable": 0,
+        "pct": 75,
+        "overallPct": 75,
+        "filers": 4
+      }
+    },
+    {
+      "name": "spac_batch",
+      "why": "THE case this gate exists for, and the one that dies first if the denominator is replaced by all filers. Two eligible filers, both covered; eight SPACs listed last year holding the single year each of them has. The gate is 100 because we hold everything obtainable. Over ALL filers it would read 20% and fail a release for a market condition no engineering can change. DO NOT DELETE THIS CASE — the gate tests assert it by name.",
+      "filers": [
+        {
+          "eligibleForCoverage": true,
+          "fiscalYearsOnFile": 15,
+          "statementYears": 10
+        },
+        {
+          "eligibleForCoverage": true,
+          "fiscalYearsOnFile": 9,
+          "statementYears": 5
+        },
+        {
+          "eligibleForCoverage": false,
+          "fiscalYearsOnFile": 1,
+          "statementYears": 1
+        },
+        {
+          "eligibleForCoverage": false,
+          "fiscalYearsOnFile": 1,
+          "statementYears": 1
+        },
+        {
+          "eligibleForCoverage": false,
+          "fiscalYearsOnFile": 1,
+          "statementYears": 1
+        },
+        {
+          "eligibleForCoverage": false,
+          "fiscalYearsOnFile": 1,
+          "statementYears": 1
+        },
+        {
+          "eligibleForCoverage": false,
+          "fiscalYearsOnFile": 1,
+          "statementYears": 1
+        },
+        {
+          "eligibleForCoverage": false,
+          "fiscalYearsOnFile": 1,
+          "statementYears": 1
+        },
+        {
+          "eligibleForCoverage": false,
+          "fiscalYearsOnFile": 1,
+          "statementYears": 1
+        },
+        {
+          "eligibleForCoverage": false,
+          "fiscalYearsOnFile": 1,
+          "statementYears": 1
+        }
+      ],
+      "expected": {
+        "eligible": 2,
+        "eligibleCovered": 2,
+        "ineligible": 8,
+        "ineligibleWithAllAvailable": 8,
+        "pct": 100,
+        "overallPct": 100,
+        "filers": 10
+      }
+    },
+    {
+      "name": "ineligible_missing_years",
+      "why": "An ineligible filer that is NOT satisfied: SEC shows 3 fiscal years, we hold 1. The gate is unmoved (it is eligible-only, and correctly so) but overallPct drops to 50 — which is the only place this filer is visible at all. Without overallPct, 'the ineligible ones are fine too' would be an assumption.",
+      "filers": [
+        {
+          "eligibleForCoverage": true,
+          "fiscalYearsOnFile": 20,
+          "statementYears": 12
+        },
+        {
+          "eligibleForCoverage": false,
+          "fiscalYearsOnFile": 3,
+          "statementYears": 1
+        }
+      ],
+      "expected": {
+        "eligible": 1,
+        "eligibleCovered": 1,
+        "ineligible": 1,
+        "ineligibleWithAllAvailable": 0,
+        "pct": 100,
+        "overallPct": 50,
+        "filers": 2
+      }
+    },
+    {
+      "name": "ineligible_zero_years",
+      "why": "A filer SEC shows zero fiscal years for is COMPLETE — there is nothing to fetch. `held >= atSec` with both at 0 is satisfied, and it must not be dragged into the gate as a failure.",
+      "filers": [
+        {
+          "eligibleForCoverage": false,
+          "fiscalYearsOnFile": 0,
+          "statementYears": 0
+        }
+      ],
+      "expected": {
+        "eligible": 0,
+        "eligibleCovered": 0,
+        "ineligible": 1,
+        "ineligibleWithAllAvailable": 1,
+        "pct": 100,
+        "overallPct": 100,
+        "filers": 1
+      }
+    },
+    {
+      "name": "boundary_exactly_target",
+      "why": "The comparison is `>=`, so exactly 5 fiscal years is COVERED and 4 is not. An off-by-one here moves a release gate silently across the whole universe.",
+      "filers": [
+        {
+          "eligibleForCoverage": true,
+          "fiscalYearsOnFile": 6,
+          "statementYears": 5
+        },
+        {
+          "eligibleForCoverage": true,
+          "fiscalYearsOnFile": 6,
+          "statementYears": 4
+        }
+      ],
+      "expected": {
+        "eligible": 2,
+        "eligibleCovered": 1,
+        "ineligible": 0,
+        "ineligibleWithAllAvailable": 0,
+        "pct": 50,
+        "overallPct": 50,
+        "filers": 2
+      }
+    },
+    {
+      "name": "dirty_inputs",
+      "why": "Coercion parity across the two languages. A numeric STRING is a number ('6' -> 6). null and a non-numeric string are NO VALUE and floor to 0, never silently becoming a count. A negative year count clamps to 0 rather than subtracting from the population. `eligibleForCoverage: 1` is NOT boolean true — TS tests `=== true` and Python tests `is True`, so this row is INELIGIBLE in both; anything looser would let a truthy non-boolean into the gate's denominator.",
+      "filers": [
+        {
+          "eligibleForCoverage": true,
+          "fiscalYearsOnFile": "9",
+          "statementYears": "6"
+        },
+        {
+          "eligibleForCoverage": true,
+          "fiscalYearsOnFile": 9,
+          "statementYears": null
+        },
+        {
+          "eligibleForCoverage": true,
+          "fiscalYearsOnFile": 9,
+          "statementYears": "not a number"
+        },
+        {
+          "eligibleForCoverage": true,
+          "fiscalYearsOnFile": 9,
+          "statementYears": -3
+        },
+        {
+          "eligibleForCoverage": 1,
+          "fiscalYearsOnFile": 0,
+          "statementYears": 0
+        }
+      ],
+      "expected": {
+        "eligible": 4,
+        "eligibleCovered": 1,
+        "ineligible": 1,
+        "ineligibleWithAllAvailable": 1,
+        "pct": 25,
+        "overallPct": 40,
+        "filers": 5
+      }
+    },
+    {
+      "name": "repeating_fraction",
+      "why": "2 of 3 is 66.666…, which is why both tests compare percentages with a tolerance instead of by string.",
+      "filers": [
+        {
+          "eligibleForCoverage": true,
+          "fiscalYearsOnFile": 9,
+          "statementYears": 9
+        },
+        {
+          "eligibleForCoverage": true,
+          "fiscalYearsOnFile": 9,
+          "statementYears": 5
+        },
+        {
+          "eligibleForCoverage": true,
+          "fiscalYearsOnFile": 9,
+          "statementYears": 1
+        }
+      ],
+      "expected": {
+        "eligible": 3,
+        "eligibleCovered": 2,
+        "ineligible": 0,
+        "ineligibleWithAllAvailable": 0,
+        "pct": 66.66666666666666,
+        "overallPct": 66.66666666666666,
+        "filers": 3
+      }
+    }
+  ]
+}

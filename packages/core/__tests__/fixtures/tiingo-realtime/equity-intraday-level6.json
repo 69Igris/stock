@@ -1,0 +1,1081 @@
+[
+  {
+    "response": {
+      "code": 200,
+      "message": "Success"
+    },
+    "data": {
+      "subscriptionId": 49411713
+    },
+    "messageType": "I"
+  },
+  {
+    "response": {
+      "code": 200,
+      "message": "HeartBeat"
+    },
+    "messageType": "H"
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:23.937808681-04:00",
+      "aapl",
+      314.99
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:23.937937926-04:00",
+      "aapl",
+      315.02
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:24.086384865-04:00",
+      "nvda",
+      219.535
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:24.174148440-04:00",
+      "spy",
+      766.39
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:24.436867270-04:00",
+      "msft",
+      511.005
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:24.539967092-04:00",
+      "tsla",
+      367.9
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:24.617334678-04:00",
+      "aapl",
+      314.9
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:24.937114135-04:00",
+      "aapl",
+      315
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:24.964535395-04:00",
+      "tsla",
+      367.92
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:25.137791948-04:00",
+      "msft",
+      510.995
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:25.368724968-04:00",
+      "tsla",
+      367.955
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:25.492813407-04:00",
+      "tsla",
+      368
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:25.495435788-04:00",
+      "spy",
+      766.41
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:25.763769052-04:00",
+      "nvda",
+      219.535
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:26.029961874-04:00",
+      "aapl",
+      315.01
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:26.179118367-04:00",
+      "tsla",
+      368.05
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:26.254621113-04:00",
+      "spy",
+      766.405
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:26.376423219-04:00",
+      "nvda",
+      219.535
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:26.690502084-04:00",
+      "tsla",
+      368
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:26.690558334-04:00",
+      "tsla",
+      367.95
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:26.905399430-04:00",
+      "spy",
+      766.39
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:26.947962710-04:00",
+      "nvda",
+      219.535
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:26.953439539-04:00",
+      "msft",
+      511.005
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:27.153902100-04:00",
+      "nvda",
+      219.53
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:27.258193486-04:00",
+      "aapl",
+      314.905
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:27.538933624-04:00",
+      "msft",
+      511.005
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:27.658555005-04:00",
+      "spy",
+      766.39
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:27.730489322-04:00",
+      "nvda",
+      219.535
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:27.809556397-04:00",
+      "tsla",
+      368
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:28.287885334-04:00",
+      "nvda",
+      219.535
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:28.795574768-04:00",
+      "aapl",
+      315.03
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:28.824535963-04:00",
+      "spy",
+      766.4
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:28.824453278-04:00",
+      "nvda",
+      219.52
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:29.080497948-04:00",
+      "aapl",
+      315
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:29.303906248-04:00",
+      "aapl",
+      314.99
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:29.956882210-04:00",
+      "spy",
+      766.385
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:30.286724948-04:00",
+      "aapl",
+      314.93
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:30.777060336-04:00",
+      "spy",
+      766.385
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:30.835289671-04:00",
+      "aapl",
+      314.995
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:30.956358605-04:00",
+      "aapl",
+      314.9
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:30.989183367-04:00",
+      "tsla",
+      368.08
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:31.235812374-04:00",
+      "msft",
+      511.01
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:31.329633253-04:00",
+      "tsla",
+      368.04
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:31.478353350-04:00",
+      "spy",
+      766.395
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:31.537805850-04:00",
+      "aapl",
+      315
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:31.537805850-04:00",
+      "aapl",
+      314.995
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:31.570378068-04:00",
+      "tsla",
+      368.07
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:32.272879877-04:00",
+      "aapl",
+      314.9
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:32.600608890-04:00",
+      "nvda",
+      219.515
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:32.721759191-04:00",
+      "tsla",
+      367.965
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:32.809329035-04:00",
+      "msft",
+      511.01
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:32.860810321-04:00",
+      "spy",
+      766.4
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:33.260296355-04:00",
+      "nvda",
+      219.53
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:33.286248469-04:00",
+      "aapl",
+      314.9
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:33.379784740-04:00",
+      "spy",
+      766.39
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:33.403781679-04:00",
+      "aapl",
+      315.015
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:33.424037684-04:00",
+      "nvda",
+      219.52
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:33.571725918-04:00",
+      "tsla",
+      368
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:33.774516261-04:00",
+      "msft",
+      510.975
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:33.852547398-04:00",
+      "nvda",
+      219.525
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:33.863083312-04:00",
+      "aapl",
+      315.02
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:34.094803245-04:00",
+      "spy",
+      766.4
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:34.124648641-04:00",
+      "tsla",
+      368.01
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:34.124544985-04:00",
+      "nvda",
+      219.51
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:34.124648641-04:00",
+      "tsla",
+      368
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:34.407476422-04:00",
+      "aapl",
+      314.92
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:34.688508926-04:00",
+      "tsla",
+      368
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:34.876565659-04:00",
+      "nvda",
+      219.505
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:34.917725718-04:00",
+      "aapl",
+      314.925
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:34.942420494-04:00",
+      "aapl",
+      315.03
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:35.233677448-04:00",
+      "msft",
+      511.01
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:35.465644827-04:00",
+      "tsla",
+      368.095
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:35.752376001-04:00",
+      "aapl",
+      315.065
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:35.932615368-04:00",
+      "aapl",
+      315.02
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:36.046172440-04:00",
+      "spy",
+      766.385
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:36.941165603-04:00",
+      "tsla",
+      368.05
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:36.954039135-04:00",
+      "aapl",
+      315.02
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:37.013199703-04:00",
+      "nvda",
+      219.51
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:37.013199703-04:00",
+      "nvda",
+      219.505
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:37.158961462-04:00",
+      "spy",
+      766.4
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:37.233481902-04:00",
+      "tsla",
+      368.095
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:37.433751723-04:00",
+      "msft",
+      511.05
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:37.433751723-04:00",
+      "msft",
+      511.01
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:37.442413290-04:00",
+      "tsla",
+      368.15
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:37.535951648-04:00",
+      "nvda",
+      219.505
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:37.552125361-04:00",
+      "aapl",
+      315.025
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:37.753031887-04:00",
+      "spy",
+      766.425
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:37.790200579-04:00",
+      "aapl",
+      315.05
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:37.809749116-04:00",
+      "tsla",
+      368.16
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:38.107222412-04:00",
+      "aapl",
+      315.03
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:38.141400287-04:00",
+      "msft",
+      511.005
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:38.419965475-04:00",
+      "spy",
+      766.425
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:38.711841610-04:00",
+      "aapl",
+      315.025
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:38.734375202-04:00",
+      "nvda",
+      219.505
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:38.803023275-04:00",
+      "tsla",
+      368.14
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:38.803296432-04:00",
+      "tsla",
+      368.13
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:39.310257429-04:00",
+      "spy",
+      766.41
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:39.312170791-04:00",
+      "aapl",
+      315.065
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:39.608911601-04:00",
+      "msft",
+      511.09
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:39.610073382-04:00",
+      "msft",
+      511.28
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:39.889516920-04:00",
+      "aapl",
+      315.06
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:39.981191037-04:00",
+      "tsla",
+      368.14
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:40.061456865-04:00",
+      "spy",
+      766.43
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:40.088772762-04:00",
+      "spy",
+      766.45
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:40.437149294-04:00",
+      "aapl",
+      315.03
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:40.528599770-04:00",
+      "aapl",
+      315.045
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:40.585094901-04:00",
+      "spy",
+      766.455
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:40.716403828-04:00",
+      "nvda",
+      219.5
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:40.716403828-04:00",
+      "nvda",
+      219.51
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:41.531234465-04:00",
+      "spy",
+      766.45
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:41.532238954-04:00",
+      "nvda",
+      219.505
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:41.880479596-04:00",
+      "spy",
+      766.45
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:42.042825325-04:00",
+      "spy",
+      766.45
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:42.082756946-04:00",
+      "aapl",
+      314.925
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:42.326848272-04:00",
+      "aapl",
+      315.04
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:42.453284602-04:00",
+      "tsla",
+      368.15
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:42.504355649-04:00",
+      "nvda",
+      219.505
+    ]
+  },
+  {
+    "service": "cons",
+    "messageType": "A",
+    "data": [
+      "2026-08-31T13:58:42.640313990-04:00",
+      "spy",
+      766.47
+    ]
+  }
+]

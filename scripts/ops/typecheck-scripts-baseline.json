@@ -1,0 +1,49 @@
+{
+  "scripts/data/audit-ohlc-violations.ts": {
+    "TS2352": 1
+  },
+  "scripts/data/backfill-symbol-aliases.ts": {
+    "TS2345": 1
+  },
+  "scripts/data/enrich-sectors-gemini.ts": {
+    "TS2307": 1
+  },
+  "scripts/gen-claude-md-index.ts": {
+    "TS18048": 3,
+    "TS2322": 2,
+    "TS2532": 3
+  },
+  "scripts/jobs/feed-parse.ts": {
+    "TS2322": 1
+  },
+  "scripts/migrations/backfill-clerk-user-sync.ts": {
+    "TS2345": 1,
+    "TS2532": 1
+  },
+  "scripts/migrations/dedupe-stock-flags.ts": {
+    "TS2352": 1
+  },
+  "scripts/migrations/fix-noon-dated-daily-prices.ts": {
+    "TS2322": 1
+  },
+  "scripts/migrations/migrate-resend-segments.ts": {
+    "TS18048": 6
+  },
+  "scripts/migrations/repair-daily-price-candles.ts": {
+    "TS2322": 2,
+    "TS2352": 1
+  },
+  "scripts/migrations/trim-stock-fo-pre-2018.ts": {
+    "TS2322": 1
+  },
+  "scripts/ops/backfill-syncbucket.ts": {
+    "TS2532": 1
+  },
+  "scripts/ops/reconcile-resend-segments.ts": {
+    "TS18048": 5
+  },
+  "scripts/seed/seed-mf-tickertape.ts": {
+    "TS2339": 1,
+    "TS2353": 1
+  }
+}

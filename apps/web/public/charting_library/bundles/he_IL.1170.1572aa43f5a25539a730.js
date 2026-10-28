@@ -1,0 +1,245 @@
+(self.webpackChunktradingview = self.webpackChunktradingview || []).push([
+  [1170],
+  {
+    18992: (e) => {
+      e.exports = {
+        en: ["1/{minmove2} of 1/{pricescale}"],
+        he_IL: ["1/{minmove2} מתוך 1/{pricescale}"],
+      };
+    },
+    98459: (e) => {
+      e.exports = { en: ["Fr"], he_IL: ["שישי"] };
+    },
+    65535: (e) => {
+      e.exports = { en: ["Mo"], he_IL: ["שני"] };
+    },
+    60496: (e) => {
+      e.exports = { en: ["Sa"], he_IL: ["שבת"] };
+    },
+    69199: (e) => {
+      e.exports = { en: ["Su"], he_IL: ["ראשון"] };
+    },
+    51271: (e) => {
+      e.exports = { en: ["We"] };
+    },
+    28582: (e) => {
+      e.exports = { en: ["Th"], he_IL: ["חמישי"] };
+    },
+    39329: (e) => {
+      e.exports = { en: ["Tu"], he_IL: ["שלישי"] };
+    },
+    87038: (e) => {
+      e.exports = { en: ["Right"], he_IL: ["זכות Right"] };
+    },
+    9919: (e) => {
+      e.exports = { en: ["CUSIP"] };
+    },
+    54910: (e) => {
+      e.exports = { en: ["Close menu"], he_IL: ["סגור תפריט"] };
+    },
+    61728: (e) => {
+      e.exports = { en: ["Currency"], he_IL: ["מַטְבֵּעַ"] };
+    },
+    72684: (e) => {
+      e.exports = { en: ["Current contract"], he_IL: ["החוזה הנוכחי"] };
+    },
+    57850: (e) => {
+      e.exports = { en: ["All sessions"], he_IL: ["כל הסשנים"] };
+    },
+    55852: (e) => {
+      e.exports = { en: ["April"], he_IL: ["‏אפריל"] };
+    },
+    59772: (e) => {
+      e.exports = { en: ["August"], he_IL: ["‏אוגוסט"] };
+    },
+    9054: (e) => {
+      e.exports = { en: ["Bond"], he_IL: ["אגרת חוב"] };
+    },
+    9666: (e) => {
+      e.exports = { en: ["December"], he_IL: ["דצמבר‏"] };
+    },
+    41458: (e) => {
+      e.exports = { en: ["Delisted"], he_IL: ["הוסר מהרשימה"] };
+    },
+    97987: (e) => {
+      e.exports = { en: ["Description"], he_IL: ["תיאור"] };
+    },
+    84083: (e) => {
+      e.exports = { en: ["Exchange timezone"], he_IL: ["אזור זמן של הבורסה"] };
+    },
+    57371: (e) => {
+      e.exports = { en: ["Expiration date"], he_IL: ["תאריך תפוגה"] };
+    },
+    81908: (e) => {
+      e.exports = { en: ["FIGI"] };
+    },
+    33630: (e) => {
+      e.exports = { en: ["February"], he_IL: ["פברואר‏"] };
+    },
+    29991: (e) => {
+      e.exports = { en: ["Fri"], he_IL: ["שישי"] };
+    },
+    18525: (e) => {
+      e.exports = { en: ["Friday"], he_IL: ["יום שישי"] };
+    },
+    91868: (e) => {
+      e.exports = { en: ["Home page"], he_IL: ["עמוד בית"] };
+    },
+    67917: (e) => {
+      e.exports = { en: ["ISIN"], he_IL: ["Isin"] };
+    },
+    87761: (e) => {
+      e.exports = { en: ["Industry"], he_IL: ["תעשיה"] };
+    },
+    44784: (e) => {
+      e.exports = { en: ["January"], he_IL: ["ינואר‏"] };
+    },
+    24689: (e) => {
+      e.exports = { en: ["July"], he_IL: ["יולי‏"] };
+    },
+    2482: (e) => {
+      e.exports = { en: ["June"], he_IL: ["יוני‏"] };
+    },
+    14501: (e) => {
+      e.exports = { en: ["October"], he_IL: ["אוקטובר‏"] };
+    },
+    47150: (e) => {
+      e.exports = {
+        en: ["Link copied to clipboard"],
+        he_IL: ["הקישור הועתק ללוח"],
+      };
+    },
+    31658: (e) => {
+      e.exports = { en: ["Listed exchange"], he_IL: ["בורסה רשומה"] };
+    },
+    47936: (e) => {
+      e.exports = { en: ["Mon"], he_IL: ["שני"] };
+    },
+    89394: (e) => {
+      e.exports = { en: ["Monday"], he_IL: ["יום שני"] };
+    },
+    49973: (e) => {
+      e.exports = { en: ["May"], he_IL: ["מאי"] };
+    },
+    35643: (e) => {
+      e.exports = { en: ["March"], he_IL: ["מרץ‏"] };
+    },
+    91830: (e) => {
+      e.exports = { en: ["Market open"], he_IL: ["שוק פתוח"] };
+    },
+    82983: (e) => {
+      e.exports = { en: ["Market closed"], he_IL: ["השוק סגור"] };
+    },
+    69034: (e) => {
+      e.exports = { en: ["Measure"], he_IL: ["מדידה"] };
+    },
+    71561: (e) => {
+      e.exports = { en: ["November"], he_IL: ["נובמבר‏"] };
+    },
+    34993: (e) => {
+      e.exports = { en: ["Name"], he_IL: ["שם"] };
+    },
+    38948: (e) => {
+      e.exports = { en: ["Source"], he_IL: ["מקור"] };
+    },
+    91418: (e) => {
+      e.exports = { en: ["Sat"], he_IL: ["שבת"] };
+    },
+    38795: (e) => {
+      e.exports = { en: ["Saturday"], he_IL: ["יום שבת"] };
+    },
+    78729: (e) => {
+      e.exports = { en: ["Sector"], he_IL: ["סקטור"] };
+    },
+    24845: (e) => {
+      e.exports = { en: ["Security Info"], he_IL: ["מידע על הסימול"] };
+    },
+    15261: (e) => {
+      e.exports = { en: ["September"], he_IL: ["ספטמבר‏"] };
+    },
+    7458: (e) => {
+      e.exports = { en: ["Sun"], he_IL: ["יום ראשון"] };
+    },
+    9304: (e) => {
+      e.exports = { en: ["Sunday"], he_IL: ["יום ראשון"] };
+    },
+    43282: (e) => {
+      e.exports = { en: ["Point value"], he_IL: ["נקודת ערך Point value"] };
+    },
+    14890: (e) => {
+      e.exports = { en: ["Post-market"], he_IL: ["פוסט-מרקט"] };
+    },
+    98490: (e) => {
+      e.exports = { en: ["Pip size"], he_IL: ["גודל Pip"] };
+    },
+    28809: (e) => {
+      e.exports = { en: ["Pre-market"], he_IL: ["פרה-מרקט"] };
+    },
+    87978: (e) => {
+      e.exports = { en: ["Website"], he_IL: ["אתר‏"] };
+    },
+    70480: (e) => {
+      e.exports = { en: ["Wed"], he_IL: ["רביעי"] };
+    },
+    72765: (e) => {
+      e.exports = { en: ["Wednesday"], he_IL: ["יום רביעי"] };
+    },
+    79342: (e) => {
+      e.exports = {
+        en: ["Text copied to clipboard"],
+        he_IL: ["הטקסט הועתק ללוח"],
+      };
+    },
+    1489: (e) => {
+      e.exports = { en: ["Thu"], he_IL: ["חמישי"] };
+    },
+    34671: (e) => {
+      e.exports = { en: ["Thursday"], he_IL: ["יום חמישי"] };
+    },
+    73795: (e) => {
+      e.exports = { en: ["Tick size"], he_IL: ["גודל Tick"] };
+    },
+    47493: (e) => {
+      e.exports = { en: ["Tue"], he_IL: ["שלישי"] };
+    },
+    56334: (e) => {
+      e.exports = { en: ["Tuesday"], he_IL: ["יום שלישי"] };
+    },
+    41019: (e) => {
+      e.exports = { en: ["Type"], he_IL: ["סוג"] };
+    },
+    73354: (e) => {
+      e.exports = { en: ["Unit"], he_IL: ["יחידה"] };
+    },
+    62922: (e) => {
+      e.exports = { en: ["commodity"], he_IL: ["סחורה"] };
+    },
+    8017: (e) => {
+      e.exports = { en: ["cfd"], he_IL: ["חוזה הפרשים cfd"] };
+    },
+    91059: (e) => {
+      e.exports = { en: ["crypto"], he_IL: ["קריפטו"] };
+    },
+    74264: (e) => {
+      e.exports = { en: ["dr"] };
+    },
+    96882: (e) => {
+      e.exports = { en: ["economy"], he_IL: ["כַּלְכָּלָה"] };
+    },
+    73597: (e) => {
+      e.exports = { en: ["forex"], he_IL: ['מט"ח'] };
+    },
+    29108: (e) => {
+      e.exports = { en: ["futures"], he_IL: ["חוזים עתידיים"] };
+    },
+    58926: (e) => {
+      e.exports = { en: ["index"], he_IL: ["מדד"] };
+    },
+    15161: (e) => {
+      e.exports = { en: ["indices"], he_IL: ["מדדים"] };
+    },
+    64625: (e) => {
+      e.exports = { en: ["stock"], he_IL: ["מניה"] };
+    },
+  },
+]);

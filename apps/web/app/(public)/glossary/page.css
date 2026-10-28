@@ -1,0 +1,169 @@
+/* Glossary list — playful aesthetic */
+.glos-search {
+  margin-top: 30px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  border: 2px solid var(--ink);
+  background: var(--paper-3);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.glos-search svg {
+  color: var(--ink-3);
+  flex-shrink: 0;
+}
+.glos-search .count {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--ink-3);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.az {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+  margin: 30px 0 0;
+  padding: 12px;
+  border: 1.5px solid var(--ink);
+  border-radius: 12px;
+  background: var(--paper-3);
+  justify-content: center;
+}
+.az a {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-2);
+  border-radius: 6px;
+  transition:
+    background 0.12s,
+    color 0.12s;
+}
+.az a:hover {
+  background: var(--rule-softer);
+  color: var(--ink);
+}
+.az a.empty {
+  color: var(--ink-4);
+  pointer-events: none;
+}
+.az a.active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.letter-block {
+  padding: 32px 0;
+  border-bottom: 2px dashed var(--ink);
+}
+.letter-block:last-child {
+  border-bottom: 0;
+}
+.letter-block .head {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+.letter-block .head .L {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 72px;
+  line-height: 0.8;
+  letter-spacing: -3px;
+  color: var(--ink);
+}
+.letter-block .head .meta {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  color: var(--ink-3);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.term-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.term {
+  display: block;
+  padding: 20px 22px;
+  border-radius: 12px;
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s,
+    background 0.12s;
+  color: var(--ink);
+}
+.term:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-soft);
+  background: var(--paper-3);
+}
+.term .t {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.3px;
+  line-height: 1.1;
+}
+.term p {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--ink-2);
+  line-height: 1.55;
+}
+
+.glos-empty {
+  margin: 60px auto;
+  padding: 40px;
+  max-width: 520px;
+  text-align: center;
+  border: 2px dashed var(--ink);
+  border-radius: 14px;
+  background: var(--paper-3);
+}
+.glos-empty p {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-size: 20px;
+  color: var(--ink-2);
+}
+.glos-empty a {
+  display: inline-block;
+  margin-top: 16px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  color: var(--emerald);
+  text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+  .term-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .term-grid {
+    grid-template-columns: 1fr;
+  }
+  .letter-block .head .L {
+    font-size: 52px;
+  }
+}

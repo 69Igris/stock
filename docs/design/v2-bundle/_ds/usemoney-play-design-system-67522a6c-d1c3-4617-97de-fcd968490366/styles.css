@@ -1,0 +1,23 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   UseMoney · "Playful" Design System — styles.css  (ROOT ENTRY)
+   ───────────────────────────────────────────────────────────────────────
+   The single stylesheet a consumer links. It pulls in the whole global
+   surface in the right cascade order:
+
+     1 · colors_and_type.css  — canonical tokens (both themes) + base classes
+     2 · styles/playful.css   — marketing component vocabulary (nav, sections,
+                                buttons, stickers, compare table, footer, …)
+     3 · styles/playful-app.css — authenticated-app shell (.pf-* : sidebar,
+                                topbar, ticker, cards, stats, tables, dialogs)
+
+   Link ONLY this file:  <link rel="stylesheet" href="styles.css">
+   Add class="dark" to <html> for the deep-ink theme.
+
+   NOT imported (intentionally): the per-kit runtime copies under
+   ui_kits/**/shared/ and ui_kits/stocksage/*.css, and preview/_card.css —
+   those are local to their own prototypes, not part of the global surface.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@import url("colors_and_type.css");
+@import url("styles/playful.css");
+@import url("styles/playful-app.css");

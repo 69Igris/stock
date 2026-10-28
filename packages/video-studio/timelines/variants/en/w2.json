@@ -1,0 +1,91 @@
+{
+  "title": "W2 The fees you cant see (EN)",
+  "aspect": "9:16",
+  "fps": 30,
+  "brandTheme": "cream",
+  "music": {
+    "track": "corporate-lofi",
+    "gainDb": -22,
+    "duckUnderVoiceover": true
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "type": "hook",
+      "durationSec": 4,
+      "kicker": "Hidden costs",
+      "headline": "The fees you ==can't see==",
+      "motion": "rise",
+      "voiceover": {
+        "text": "The fees you can't see are often the ones that cost you the most.",
+        "lang": "en-IN"
+      }
+    },
+    {
+      "id": "cards",
+      "type": "cards",
+      "durationSec": 5.5,
+      "headline": "3 fees you forgot",
+      "bullets": [
+        "Exit load on early sells",
+        "Regular-plan commission",
+        "Dormant account charges"
+      ],
+      "motion": "rise",
+      "disclaimer": true,
+      "voiceover": {
+        "text": "Three fees people forget — exit load, regular-plan commission, and dormant account charges.",
+        "lang": "en-IN"
+      }
+    },
+    {
+      "id": "p1",
+      "type": "point",
+      "durationSec": 4.5,
+      "headline": "==Regular== vs Direct",
+      "subtext": "Commission quietly rides along, every year.",
+      "motion": "kenburns-in",
+      "disclaimer": true,
+      "voiceover": {
+        "text": "In a regular plan, commission quietly rides along every single year.",
+        "lang": "en-IN"
+      }
+    },
+    {
+      "id": "broll",
+      "type": "veo",
+      "durationSec": 6,
+      "veoPrompt": "abstract soft golden light and gentle bokeh slowly drifting and fading into a calm dark cream haze, premium minimal fintech motion graphics, elegant, shallow depth of field, no text, no logos, no people",
+      "motion": "static",
+      "voiceover": {
+        "text": "Small fees add up to a surprisingly big amount over the years.",
+        "lang": "en-IN"
+      }
+    },
+    {
+      "id": "p2",
+      "type": "point",
+      "durationSec": 4.5,
+      "headline": "Audit your fees in *15 min*",
+      "subtext": "List → flag regular → note exit loads → one number.",
+      "motion": "rise",
+      "disclaimer": true,
+      "voiceover": {
+        "text": "Audit your fees in fifteen minutes and get to one clear number.",
+        "lang": "en-IN"
+      }
+    },
+    {
+      "id": "cta",
+      "type": "cta",
+      "durationSec": 3.5,
+      "headline": "Costs are ==knowable==.",
+      "subtext": "Education only · UseMoney AI (my product)",
+      "motion": "pop",
+      "voiceover": {
+        "text": "Costs are knowable — with UseMoney AI.",
+        "lang": "en-IN"
+      }
+    }
+  ]
+}

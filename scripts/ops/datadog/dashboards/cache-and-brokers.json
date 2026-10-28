@@ -1,0 +1,96 @@
+{
+  "_ticket": "MONEY-1361",
+  "_why": [
+    "Cache effectiveness and broker sync health — the two India-side surfaces",
+    "with real user consequence when they go quiet.",
+    "",
+    "TWO WIDGETS THE PLAN ASKED FOR ARE NOT HERE, and their absence is the",
+    "point of this ticket rather than an omission:",
+    "",
+    "  broker.sync.duration p95 by broker   NOT EMITTED. `histogram()` in",
+    "    packages/datadog/src/metrics.ts names it in a JSDoc @example and",
+    "    nothing calls it — grep for `histogram(` across apps, workers and",
+    "    packages returns the definition, the .d.ts and two doc comments. A",
+    "    p95 widget over it would render an empty graph, which is",
+    "    indistinguishable from a broker that is syncing instantly.",
+    "  pairing.trades_processed             NOT EMITTED, same shape: a",
+    "    `gauge()` @example with no call site.",
+    "",
+    "Filed rather than faked. The two widgets below answer the nearest real",
+    "question from series that DO exist (sync.ts:165/233 and :320), and",
+    "dashboards-agreement.test.ts would fail this file the moment somebody",
+    "pastes either name back in."
+  ],
+  "title": "UseMoney — cache and brokers",
+  "description": "managed-by:apply-dashboards — edit the file, not the UI",
+  "layout_type": "ordered",
+  "template_variables": [
+    { "name": "env", "prefix": "env", "default": "production" }
+  ],
+  "widgets": [
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Cache hits by layer vs misses",
+        "_why": "`cache.hit` carries a `layer` tag (memory / redis); `cache.miss` at client.ts:130 carries NO tags at all, so it is deliberately NOT grouped — `by {layer}` on it would render one line called (empty) and read as a broken split.",
+        "requests": [
+          {
+            "q": "sum:stockbook.cache.hit{$env} by {layer}.as_count(), sum:stockbook.cache.miss{$env}.as_count()",
+            "display_type": "bars"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Broker sync failures by broker",
+        "requests": [
+          {
+            "q": "sum:stockbook.broker.sync.failure{$env} by {broker}.as_count()",
+            "display_type": "bars"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Broker sync records by broker",
+        "_why": "Stands in for the p95 duration widget the plan asked for. Not the same measurement — it is throughput, not latency — but it is the one that has points, and a failure count with no volume beside it cannot tell a healthy quiet Sunday from a sync that stopped running.",
+        "requests": [
+          {
+            "q": "sum:stockbook.broker.sync.records{$env} by {broker}.as_count()",
+            "display_type": "bars"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Post-sync pairing failures",
+        "_why": "Stands in for pairing.trades_processed. Pairing runs in-process after a sync and its failure is swallowed on purpose (the data sync has already succeeded), so this counter is the only place that failure is visible.",
+        "requests": [
+          {
+            "q": "sum:stockbook.trade.pairing.failure{$env} by {broker}.as_count()",
+            "display_type": "bars"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Feed-archive replay degraded",
+        "_why": "QA replays prod's archived exchange bytes and falls back to scraping NSE/BSE on a miss — a SOFT failure by design, so the only way to see a mirror that has stopped landing before the consumer runs is this counter.",
+        "requests": [
+          {
+            "q": "sum:stockbook.feed.archive.replay.degraded{$env} by {job}.as_count()",
+            "display_type": "bars"
+          }
+        ]
+      }
+    }
+  ]
+}

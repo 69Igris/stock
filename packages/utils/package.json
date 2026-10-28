@@ -1,0 +1,30 @@
+{
+  "name": "@usemoney/utils",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./cn": "./src/cn.ts",
+    "./error-sanitization": "./src/error-sanitization.ts",
+    "./log-redaction": "./src/log-redaction.ts",
+    "./sanitize-recommendation": "./src/sanitize-recommendation.ts",
+    "./with-soft-timeout": "./src/with-soft-timeout.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0",
+    "test": "node --import tsx ../../scripts/test-timeout.ts --import tsx --test --test-timeout=30000 \"__tests__/**/*.test.ts\""
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.3.1"
+  },
+  "devDependencies": {
+    "@usemoney/typescript-config": "*",
+    "typescript": "5.9.2"
+  }
+}

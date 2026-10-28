@@ -1,0 +1,4 @@
+# apps/web graph. public/ is 1,800 files of vendored TradingView datafeeds and
+# static assets — third-party, unowned, and noise in a graph of this app.
+public/
+graphify-out/

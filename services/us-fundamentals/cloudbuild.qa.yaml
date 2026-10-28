@@ -1,0 +1,544 @@
+# GCP Cloud Build — us-fundamentals QA (MONEY-979)
+# Trigger: push to 'main'. Create it with --included-files so a workers push
+# does not rebuild this service and vice-versa:
+#
+#   gcloud builds triggers create github \
+#     --name=us-fundamentals-qa --repo-owner=... --repo-name=... \
+#     --branch-pattern='^main$' \
+#     --build-config=services/us-fundamentals/cloudbuild.qa.yaml \
+#     --included-files='services/us-fundamentals/**'
+#
+# The two EXISTING worker triggers have no file filter, which is why this one
+# must declare its own: without it every commit to release would rebuild both.
+
+substitutions:
+  _REGION: "asia-south1"
+  _SERVICE_NAME: "us-fundamentals-qa"
+  # The suffix every per-environment Cloud Run JOB carries
+  # (edgar-bulk-submissions-qa, ...). Used ONLY to name jobs in the re-pin step
+  # at the bottom; the image tag itself is written out literally so it stays
+  # character-identical to the tag the build step pushes.
+  _ENV: "qa"
+
+steps:
+  # Build. Context is the SERVICE directory — nothing here imports the
+  # TypeScript workspaces, so shipping the repo root would upload node_modules
+  # for no reason.
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - "build"
+      # DD_VERSION is baked into the IMAGE (Dockerfile ARG), not supplied by the
+      # deploy. The service spec sets it too and both carry this same SHA; the
+      # five Cloud Run JOBS are why the ARG has to exist, because their env
+      # block is written once at provision time by
+      # scripts/ops/setup-us-fundamentals-jobs.sh and cannot carry a release SHA.
+      # Mirrors workers/cloudbuild.qa.yaml:22-23.
+      - "--build-arg"
+      - "DD_VERSION=$COMMIT_SHA"
+      - "-t"
+      - "gcr.io/$PROJECT_ID/us-fundamentals:qa-$COMMIT_SHA"
+      - "-t"
+      - "gcr.io/$PROJECT_ID/us-fundamentals:qa-latest"
+      - "-f"
+      - "services/us-fundamentals/Dockerfile"
+      - "services/us-fundamentals"
+
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "--all-tags", "gcr.io/$PROJECT_ID/us-fundamentals"]
+
+  # ───────────────────────────────────────────────────────────────────
+  # DEPLOY. All commentary lives OUT HERE.
+  #
+  # The service.yaml heredoc below is ONE Cloud Build arg and Cloud Build caps a
+  # single arg at 10,000 characters. `workers/cloudbuild.prod.yaml` hit that
+  # ceiling at 11,600 and failed with
+  #   invalid build: invalid .steps field: build step 2 arg 1 too long
+  # A comment INSIDE the heredoc costs exactly as much as configuration; out
+  # here it costs nothing. Re-check after adding env vars:
+  #   python3 -c "import yaml,sys; d=yaml.safe_load(open('services/us-fundamentals/cloudbuild.qa.yaml')); \
+  #               print(max(len(a) for s in d['steps'] for a in s.get('args',[])))"
+  #
+  # ── WHY QA'S FLAGS SHIP OFF WHILE PROD'S SHIP ARMED ─────────────────
+  #
+  # PROD ships EDGAR_DETECT="on" and EDGAR_PARSE_APPLY="true" — the engine runs,
+  # matching how the Tiingo backbone shipped. QA ships all three off, and that
+  # asymmetry is FORCED by SEC_EGRESS, not chosen out of caution.
+  #
+  # QA has no SEC egress at all (see below): every client method raises before
+  # opening a socket, because SEC's fair-access limit is PER IP and Cloud Run
+  # gives both environments shared egress addresses. Two environments spending
+  # one budget is two environments getting blocked. So an armed detector here
+  # would raise SecEgressDisabled on all 1,440 runs a day and report FAILED —
+  # noisier than off, and no more functional. QA receives prod's parsed us_*
+  # ROWS through the collection sync instead.
+  #
+  # They are still PRESENT rather than omitted. "Absent" and "explicitly off"
+  # must NOT be the same state: absent is exactly how MF_METADATA_PROVIDER
+  # disabled its job silently for months (MONEY-1214). Each is compared against
+  # a LITERAL string in app/settings.py, never Boolean() — Boolean("false") is
+  # True, which would arm the one configuration meant to be off.
+  #
+  # If QA is ever given its own egress budget, arming detect and parse here is a
+  # value change in this file and nothing else. EDGAR_EVICT_APPLY stays off in
+  # BOTH environments for a separate, measured reason — see the prod spec.
+  #
+  # ── SEC_EGRESS ──────────────────────────────────────────────────────
+  #
+  # "off" on QA, and this is the environment the setting exists for. QA makes NO
+  # request to sec.gov: `SecClient` raises `SecEgressDisabled` on any network
+  # attempt, before a socket exists. So the SEC sees exactly one fleet.
+  #
+  # WHERE QA'S BYTES COME FROM — corrected, because this comment used to claim a
+  # mirror that does not exist. It said QA "serves bundles from the archive PROD
+  # wrote into gs://stockbook-content-prod/edgar/", "mirrored by the same
+  # prod->QA `feeds/`-style job". Both halves are false:
+  #
+  #   * `app/sec/archive.py` resolves ONE bucket, from GCP_STORAGE_BUCKET, which
+  #     is `stockbook-content-qa` here. The reader never looks at prod's bucket.
+  #   * `scripts/ops/sync-prod-to-qa.sh` hard-codes its GCS tiers as
+  #     `feeds/` -> `feeds/` and `stocks/` -> `stocks/`. `edgar/` is in NEITHER,
+  #     and that is deliberate rather than an oversight: the prefix was put
+  #     OUTSIDE `feeds/` precisely so the twice-daily rsync would not copy it —
+  #     raw filings grow ~330 GB/yr.
+  #
+  # So the QA archive is EMPTY unless something puts bytes in it, and a miss
+  # RAISES. The one path that works today is
+  # `scripts/ops/edgar-qa-synthetic-filing.sh`, which uploads a committed
+  # fixture bundle to the QA bucket at the exact key `SecClient.fetch_bundle`
+  # reads first, then publishes one message and asserts the row landed. It
+  # exercises envelope -> OIDC -> dedupe -> dispatch -> parser -> writer against
+  # real SEC bytes without a single request.
+  #
+  # What QA DOES receive from prod is ROWS, not bytes: the `us_*` collections
+  # are in `sync-prod-to-qa.sh`'s allowlist, so QA holds prod's PARSED output.
+  # That is the whole QA data story — the byte-level replay that `feeds/` has
+  # for India was never built here. If it is ever wanted it is NEW WORK with a
+  # cost to argue (an `edgar/` tier on the mirror, plus that 330 GB/yr), and it
+  # must be filed as its own ticket rather than assumed by a comment.
+  #
+  # The five Cloud Run JOBS are therefore PROD-ONLY in practice, which is why no
+  # `setup-us-fundamentals-jobs.sh qa` invocation is documented anywhere: their
+  # work is fetching, and QA may not fetch.
+  #
+  # Same scrape-once contract as FEED_ARCHIVE_MODE, and the reason QA cannot
+  # simply "also fetch": SEC's 10 req/s ceiling is per REQUESTER, so two
+  # environments pacing independently put 2x the ceiling on a host whose only
+  # feedback is a 10-minute block with no Retry-After. It also differs from the
+  # India feed arrangement deliberately — there QA REPLAYS archived bytes and
+  # falls back to the exchange on a miss, which is a soft failure. Here a miss
+  # RAISES, because a silent fallback would be QA quietly scraping the SEC and
+  # nothing would say so.
+  #
+  # GCP_STORAGE_BUCKET stays stockbook-content-qa, and it is the ONLY bucket
+  # this service touches in either direction — `app/sec/archive.py` reads it for
+  # the archive-first lookup and writes parsed output back to it. QA has no
+  # access path to prod's bucket and no code that would use one.
+  #
+  # ── EDGAR_IDENTITY ──────────────────────────────────────────────────
+  #
+  # Sent VERBATIM as User-Agent and UNVALIDATED by edgartools. SEC's own
+  # template is `Name email`. An undeclared or generic agent gets 403 with body
+  # "Undeclared Automated Tool" — a whole-service outage that reads like a
+  # permissions problem. A plain value, not a secret: it is a contact address
+  # SEC expects to be able to read.
+  #
+  # ── SEC_RATE_LIMIT_PER_SEC ──────────────────────────────────────────
+  #
+  # 9, one below SEC's documented 10. It is also edgartools' own default, so the
+  # value is set explicitly to make "absent" and "explicitly 9" different states
+  # — the MF_METADATA_PROVIDER lesson applied before it can happen again. The
+  # limiter is PROACTIVE (T3, Redis-backed and fleet-wide) because a 429 is not
+  # available as feedback: SEC documents none.
+  #
+  # ── EDGAR_LOCAL_DATA_DIR ────────────────────────────────────────────
+  #
+  # Also in the Dockerfile ENV; repeated here so the value is visible where an
+  # operator reads the service spec. edgartools mkdirs its data dir AT IMPORT
+  # and Cloud Run's FS is read-only outside /tmp, so an unset value kills the
+  # container on `import edgar` before any handler runs.
+  #
+  # ── SECRETS ─────────────────────────────────────────────────────────
+  #
+  # DATABASE_URL / REDIS_URL / OPENFIGI_API_KEY / DD_API_KEY all carry the _QA
+  # suffix. This line used to read `_PROD`, describing the prod spec, while the
+  # configuration below was correctly `_QA` — the one class of comment typo that
+  # can do real damage, because "fixing" the code to match it points QA at
+  # prod's database, prod's Redis and prod's OpenFIGI quota.
+  #
+  # ── THERE IS NO SERVICE-ACCOUNT KEY HERE, DELIBERATELY ──────────────
+  #
+  # `GCP_SERVICE_ACCOUNT_KEY_BASE64` was mounted into this service and all five
+  # Cloud Run jobs and READ BY NOTHING. Grep the Python service — app/, scripts/
+  # and tests/ — and the only hit is a constant inside a test. `app/sec/archive.py`
+  # builds a plain `storage.Client()`, i.e. ADC, so on Cloud Run this service
+  # authenticates as its RUNTIME service account, stockbook-api@, and THAT is
+  # the principal that needs object read/write on the bucket.
+  #
+  # The comment that used to sit here said the opposite — that the mounted key
+  # "OUTRANKS the runtime service account" because `googleCredentials()`
+  # resolves it first. True of the TYPESCRIPT helper
+  # (packages/core/src/gemini/credentials.ts); FALSE here, because this service
+  # is Python and has no such helper. An operator following it grants the bucket
+  # to the wrong principal and the failure lands late and expensively:
+  # `archive.write_bytes` 403s inside `SecClient.fetch_bundle` AFTER the SEC GET
+  # has already been spent, so every parse burns a request from a shared per-IP
+  # budget, throws, and the archive never accumulates.
+  #
+  # Removing it also takes a long-lived, PROD-CAPABLE credential off the QA
+  # service, where `redact()` could never have masked it in a log — none of
+  # REDACTED_KEYS matches the name.
+  #
+  # REDIS_URL is not optional here. edgartools' own limiter is a per-PROCESS
+  # InMemoryBucket, so N instances would each pace to 9 req/s independently and
+  # the fleet would breach SEC's ceiling with nothing detecting it.
+  #
+  # ── ingress: internal ───────────────────────────────────────────────
+  #
+  # Pub/Sub push and Cloud Scheduler both originate inside the VPC's Google
+  # front end, so internal ingress is sufficient AND removes the public attack
+  # surface on a route family that triggers every job processor.
+  #
+  # containerConcurrency 4 (not the workers' 10): each request can hold an SEC
+  # bundle and a pandas frame in memory. timeoutSeconds 600 matches the Pub/Sub
+  # ack deadline exactly — a handler that outlives the deadline is redelivered
+  # while the first copy still runs, so there is no value in letting it live
+  # longer than the message it is answering.
+  #
+  # ── THE EVENTS HOP IS PUB/SUB NOW — MONEY-1520 ────────────────────────
+  #
+  # This block used to derive EVENTS_ENDPOINT_URL: `gcloud run services
+  # describe stockbook-workers-{ENV}` plus `/internal/events`, allowed to fail
+  # SILENTLY (unlike CLOUD_RUN_URL, which aborts the build). It resolved
+  # perfectly and every POST still answered 404, because
+  # `stockbook-workers-{ENV}` carries `run.googleapis.com/ingress: internal`
+  # and this service has no VPC egress — so the call left over the public
+  # internet and Cloud Run rejected it AT THE EDGE, before Hono and before the
+  # `jobsAuth` gate, which has no 404 path and would have answered 401.
+  #
+  # The producer now PUBLISHES to `us-filing-events-{ENV}` and the workers
+  # consume it on a push subscription, which is not external traffic — the
+  # reason the ~55 other job routes reach that same internal-ingress service
+  # without trouble.
+  #
+  # So there is no URL to resolve and no variable to ship. A topic BASE name is
+  # a compile-time constant in `app/events.py` and the `-{env}` suffix comes
+  # from PUBSUB_ENV, which this spec already sets. That removes the
+  # fail-silently-at-build-time failure mode entirely rather than hardening it,
+  # and `test_deploy_contract.py` now FAILS if EVENTS_ENDPOINT_URL reappears in
+  # either spec — an env var the code no longer reads is configuration that
+  # looks live and does nothing (MONEY-1214, one layer over).
+  #
+  # ── CLOUD_RUN_URL IS DERIVED, NOT PREDICTED (MONEY-979 / T15) ────────
+  #
+  # This value used to be the literal string
+  # `https://us-fundamentals-qa-w7eyeklrua-el.a.run.app`, copied from the
+  # workers service on the theory that Cloud Run's legacy hostname hash is a
+  # property of the project+region rather than of the service.
+  #
+  # That theory is CORRECT and it was still the wrong thing to ship. Measured
+  # 2026-08-29, all four live services in stock-book-483718 / asia-south1
+  # (algo-api-prod, algo-workers-prod, stockbook-workers-prod,
+  # stockbook-workers-qa) do share `w7eyeklrua`, and each reports the SAME
+  # legacy form in both `status.url` and `status.address.url` — the newer
+  # deterministic `<service>-<projectnumber>.<region>.run.app` form is not
+  # served here at all, so "accept both forms" would have been dead code that
+  # only widened the set of audiences we accept. The defect is not the guess
+  # being wrong; it is the guess being UNVERIFIED at the one place that can
+  # verify it, on a value whose failure mode is silent:
+  #
+  #   `app/auth.py` verifies every Pub/Sub push token against CLOUD_RUN_URL, and
+  #   `workers/scripts/setup-pubsub.sh` sets each subscription's
+  #   --push-auth-token-audience to whatever `gcloud run services describe`
+  #   RETURNS. One character of disagreement and every delivery is 401, retries
+  #   five times and dead-letters. Nothing logs a mismatch, because from either
+  #   side it looks like a job that keeps failing.
+  #
+  # So the deploy READS the URL and the build FAILS if it cannot. Three states:
+  #
+  #   service exists      -> describe gives the URL, the spec carries it, the
+  #                          post-replace re-read confirms it, no second revision
+  #   service is NEW      -> nothing to describe, so the spec ships an
+  #                          unmistakable sentinel (`…invalid`, RFC-2606, which
+  #                          can never be a real Cloud Run URL and is visible in
+  #                          /health) and the post-replace step CORRECTS it with
+  #                          `services update --update-env-vars`. That merges;
+  #                          `--set-env-vars` would drop every other var
+  #   describe FAILS for  -> the build stops. Deploying a sentinel over a live
+  #   any other reason       service on a transient gcloud error would 401 the
+  #                          fleet, so "could not determine" is its own outcome
+  #                          and is never treated as "not deployed yet"
+  #
+  # `services update` is the honest answer rather than `replace` twice: on every
+  # steady-state release the URL is already known, the spec is written with the
+  # real value and the update is SKIPPED, so the extra revision is paid exactly
+  # once in a service's life.
+  #
+  # A first deploy therefore ends with a loud ACTION REQUIRED line: the EDGAR
+  # push subscriptions were created (or refused) against a URL that did not
+  # exist yet, and setup-pubsub.sh must run again.
+  # ───────────────────────────────────────────────────────────────────
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: bash
+    args:
+      - "-c"
+      - |
+        set -uo pipefail
+        SVC="${_SERVICE_NAME}"
+        RGN="${_REGION}"
+        ERRF=$$(mktemp)
+        CLOUD_RUN_URL=$$(gcloud run services describe "$${SVC}" --region="$${RGN}" --format='value(status.url)' 2>"$${ERRF}") || CLOUD_RUN_URL=""
+        BOOTSTRAP=0
+        if [ -z "$${CLOUD_RUN_URL}" ]; then
+          if grep -qiE 'cannot find|not found|NOT_FOUND|does not exist' "$${ERRF}"; then
+            BOOTSTRAP=1
+            CLOUD_RUN_URL="https://unresolved-first-deploy.invalid"
+            echo "FIRST DEPLOY: $${SVC} does not exist yet. Shipping a sentinel CLOUD_RUN_URL and correcting it after the replace."
+          else
+            echo "ERROR: could not read status.url for $${SVC}, and the failure is not 'service missing':"
+            cat "$${ERRF}"
+            echo "ERROR: refusing to deploy — a wrong CLOUD_RUN_URL 401s every Pub/Sub push silently."
+            exit 1
+          fi
+        fi
+        echo "CLOUD_RUN_URL (resolved) = $${CLOUD_RUN_URL}"
+        cat > /tmp/service.yaml << EOF
+        apiVersion: serving.knative.dev/v1
+        kind: Service
+        metadata:
+          name: ${_SERVICE_NAME}
+          annotations:
+            run.googleapis.com/ingress: internal
+        spec:
+          template:
+            metadata:
+              annotations:
+                autoscaling.knative.dev/minScale: "0"
+                autoscaling.knative.dev/maxScale: "3"
+                run.googleapis.com/container-dependencies: '{"us-fundamentals":["datadog-agent"]}'
+            spec:
+              containerConcurrency: 4
+              timeoutSeconds: 600
+              serviceAccountName: stockbook-api@$PROJECT_ID.iam.gserviceaccount.com
+              containers:
+                - name: us-fundamentals
+                  image: gcr.io/$PROJECT_ID/us-fundamentals:qa-$COMMIT_SHA
+                  ports:
+                    - containerPort: 8080
+                  env:
+                    - name: NODE_ENV
+                      value: qa
+                    - name: APP_ENV
+                      value: qa
+                    - name: PUBSUB_ENV
+                      value: "qa"
+                    - name: CLOUD_RUN_URL
+                      value: "$${CLOUD_RUN_URL}"
+                    - name: GCP_PROJECT_ID
+                      value: "stock-book-483718"
+                    - name: GCP_STORAGE_BUCKET
+                      value: "stockbook-content-qa"
+                    - name: SEC_EGRESS
+                      value: "off"
+                    - name: EDGAR_IDENTITY
+                      value: "UseMoney deepshaswat@gmail.com"
+                    - name: SEC_RATE_LIMIT_PER_SEC
+                      value: "9"
+                    - name: EDGAR_LOCAL_DATA_DIR
+                      value: "/tmp/edgar"
+                    - name: EDGAR_DETECT
+                      value: "off"
+                    - name: EDGAR_PARSE_APPLY
+                      value: "false"
+                    - name: EDGAR_EVICT_APPLY
+                      value: "false"
+                    - name: DD_TRACE_ENABLED
+                      value: "true"
+                    - name: DD_SERVICE
+                      value: us-fundamentals
+                    - name: DD_ENV
+                      value: qa
+                    - name: DD_VERSION
+                      value: "$COMMIT_SHA"
+                    - name: DD_TRACE_AGENT_URL
+                      value: "http://localhost:8126"
+                    # MONEY-1278 — the SERVICE keeps DogStatsD: it runs beside the
+                    # datadog-agent sidecar below. Stated rather than left absent,
+                    # because absent and deliberately-off must not be one state
+                    # (MONEY-1214). The five Cloud Run JOBS get "http" instead —
+                    # they have no sidecar and their packets went nowhere.
+                    - name: DD_METRICS_TRANSPORT
+                      value: "statsd"
+                    - name: DATABASE_URL
+                      valueFrom:
+                        secretKeyRef:
+                          name: DATABASE_URL_QA
+                          key: latest
+                    - name: REDIS_URL
+                      valueFrom:
+                        secretKeyRef:
+                          name: REDIS_URL_QA
+                          key: latest
+                    - name: OPENFIGI_API_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: OPENFIGI_API_KEY_QA
+                          key: latest
+                    - name: DD_API_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: DD_API_KEY_QA
+                          key: latest
+                  resources:
+                    limits:
+                      memory: 2Gi
+                      cpu: "2"
+                - name: datadog-agent
+                  image: gcr.io/datadoghq/serverless-init:latest
+                  env:
+                    - name: DD_SITE
+                      value: us5.datadoghq.com
+                    - name: DD_ENV
+                      value: qa
+                    - name: DD_SERVICE
+                      value: us-fundamentals
+                    - name: DD_APM_ENABLED
+                      value: "true"
+                    - name: DD_HEALTH_PORT
+                      value: "5555"
+                    - name: DD_VERSION
+                      value: "$COMMIT_SHA"
+                    - name: DD_API_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: DD_API_KEY_QA
+                          key: latest
+                  startupProbe:
+                    tcpSocket:
+                      port: 5555
+                    periodSeconds: 10
+                    failureThreshold: 5
+                  resources:
+                    limits:
+                      memory: 256Mi
+                      cpu: "0.5"
+        EOF
+        gcloud run services replace /tmp/service.yaml --region=$${RGN} || exit 1
+        DEPLOYED=$$(gcloud run services describe "$${SVC}" --region="$${RGN}" --format='value(status.url)' 2>/dev/null) || DEPLOYED=""
+        if [ -z "$${DEPLOYED}" ]; then
+          echo "ERROR: $${SVC} deployed but status.url is empty; the OIDC audience cannot be verified."
+          exit 1
+        fi
+        if [ "$${DEPLOYED}" != "$${CLOUD_RUN_URL}" ]; then
+          echo "CLOUD_RUN_URL corrected: $${CLOUD_RUN_URL} -> $${DEPLOYED}"
+          gcloud run services update "$${SVC}" --region="$${RGN}" --update-env-vars="CLOUD_RUN_URL=$${DEPLOYED}" --quiet || exit 1
+        fi
+        echo "CLOUD_RUN_URL (verified) = $${DEPLOYED}"
+        if [ "$${BOOTSTRAP}" = "1" ]; then
+          echo "ACTION REQUIRED: ./workers/scripts/setup-pubsub.sh ${_ENV} — the EDGAR subscriptions' push audience must equal $${DEPLOYED}."
+        fi
+
+  # ───────────────────────────────────────────────────────────────────
+  # RE-PIN THE CLOUD RUN JOBS
+  #
+  # Cloud Run JOBS pin their image at PROVISION time. The `services replace`
+  # above moves the SERVICE and nothing else: a job keeps executing whatever tag
+  # it was created with until somebody re-runs a setup script, and nobody
+  # re-runs a setup script on a Tuesday.
+  #
+  # This is neither hypothetical nor rare on this repo. Four worker jobs drifted
+  # to a stale image across ALL FOUR releases of the MONEY-1234/1235 cycle. The
+  # first occurrence left `feed-parse-prod` four days behind the service: it ran
+  # nightly, exited 0, reported success, and silently skipped four feed families
+  # it had never heard of. A drifted job does not fail — it succeeds at running
+  # last release's code, which is the failure mode with no symptom.
+  #
+  # ONLY `--image` IS TOUCHED, and that restriction is load-bearing.
+  # `gcloud run jobs update --set-env-vars` REPLACES a job's env list rather
+  # than merging into it, and the env/secret block for these five jobs is owned
+  # by scripts/ops/setup-us-fundamentals-jobs.sh (SEC_EGRESS per env,
+  # GCP_STORAGE_BUCKET, REDIS_URL, DATABASE_URL, OPENFIGI_API_KEY). Two writers
+  # over one job's env is the "whichever ran last wins, silently" bug; a re-pin
+  # that also rewrote env would reintroduce it on EVERY release, with the loser
+  # being a whole environment's egress mode.
+  #
+  # DD_VERSION is likewise never passed here — it is a property of the IMAGE,
+  # and making it a property of the JOB SPEC is exactly the forge that would let
+  # a stale-pinned job report a fresh SHA.
+  #
+  # ABSENT AND DRIFTED ARE DIFFERENT, AND ONLY ONE OF THEM IS A WARNING.
+  #
+  # `gcloud run jobs update` fails on a job that does not exist, so this loop
+  # used to print five `WARNING … was NOT re-pinned` lines on EVERY QA build
+  # plus a summary warning — permanently, because these five jobs are NOT
+  # provisioned on QA and are not meant to be. Their work is fetching sec.gov,
+  # QA runs SEC_EGRESS=off, and no `setup-us-fundamentals-jobs.sh qa` invocation
+  # is documented anywhere. A warning that is ALWAYS present is worse than no
+  # warning: it makes a real drift warning indistinguishable from the baseline,
+  # which is precisely the signal this step exists to give.
+  #
+  # So the loop DESCRIBES first. Absent -> one quiet `absent` line and a
+  # summary note. Present but `update` failed -> the WARNING, unchanged, because
+  # that IS drift: a Cloud Run job pins its image at provision time and keeps
+  # executing last release's code while exiting 0 (four worker jobs did exactly
+  # that across all four releases of the MONEY-1234/1235 cycle).
+  #
+  # If QA jobs are ever wanted, provisioning them is a documented decision, not
+  # a side effect of this loop going quiet: `setup-us-fundamentals-jobs.sh` does
+  # accept `qa` and would set SEC_EGRESS=off on them — which is why they would
+  # be inert until QA has a byte source, and why nothing here assumes it.
+  # ───────────────────────────────────────────────────────────────────
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: bash
+    args:
+      - "-c"
+      - |
+        set -uo pipefail
+        IMAGE="gcr.io/$PROJECT_ID/us-fundamentals:qa-$COMMIT_SHA"
+        echo "Re-pinning us-fundamentals Cloud Run jobs (${_ENV}) to $${IMAGE}"
+        NOT_PINNED=""
+        ABSENT=""
+        for BASE in edgar-bulk-submissions edgar-bulk-companyfacts edgar-xbrl-backfill edgar-ownership-backfill edgar-bulk-ftd; do
+          JOB="$${BASE}-${_ENV}"
+          DESC_ERR="$$(gcloud run jobs describe "$${JOB}" --region=${_REGION} 2>&1 >/dev/null)" || DESC_RC=$$?
+          if [ -n "$${DESC_RC:-}" ]; then
+            DESC_RC=""
+            case "$${DESC_ERR}" in
+              *NOT_FOUND*|*"Cannot find service"*|*"not found"*)
+                ABSENT="$${ABSENT} $${JOB}"
+                echo "  absent   $${JOB} (not provisioned on QA; nothing to re-pin)"
+                ;;
+              *)
+                NOT_PINNED="$${NOT_PINNED} $${JOB}"
+                echo "  WARNING  $${JOB} could not be DESCRIBED and was not re-pinned."
+                echo "  WARNING  NOT the same as 'absent by design' — if this job exists it is"
+                echo "  WARNING  now running a previous release. gcloud said: $${DESC_ERR}"
+                ;;
+            esac
+            continue
+          fi
+          if gcloud run jobs update "$${JOB}" --image="$${IMAGE}" --region=${_REGION} --quiet; then
+            echo "  OK       $${JOB} -> $${IMAGE}"
+          else
+            NOT_PINNED="$${NOT_PINNED} $${JOB}"
+            echo "  WARNING  $${JOB} EXISTS but was NOT re-pinned; it is still on its previous image."
+            echo "  WARNING  Its next run will execute a previous release's code."
+          fi
+        done
+        if [ -n "$${ABSENT}" ]; then
+          echo "note: not provisioned on ${_ENV}, as designed:$${ABSENT}"
+        fi
+        if [ -n "$${NOT_PINNED}" ]; then
+          echo "WARNING: still on a previous image:$${NOT_PINNED}"
+          echo "WARNING: their next run will execute a previous release's code."
+        fi
+        exit 0
+
+images:
+  - "gcr.io/$PROJECT_ID/us-fundamentals:qa-$COMMIT_SHA"
+  - "gcr.io/$PROJECT_ID/us-fundamentals:qa-latest"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: "E2_HIGHCPU_8"
+
+timeout: "1800s"

@@ -1,0 +1,54 @@
+{
+  "_readme": [
+    "MONEY-1359 — Largest Contentful Paint, p75, against Google's 2.5s 'good'",
+    "boundary. The regression alarm the performance week reads its baseline from.",
+    "",
+    "p75 and not p95, because that is the percentile Core Web Vitals is DEFINED",
+    "on: it is what Search reports and what the 2.5s number means. Alerting on a",
+    "p95 against a p75 threshold would fire on a page that Google calls good."
+  ],
+  "_units_rationale": [
+    "THE THRESHOLD IS IN NANOSECONDS, and this is the single most likely thing in",
+    "this directory to be wrong by a factor of a million.",
+    "",
+    "RUM view timings (`@view.largest_contentful_paint`,",
+    "`@view.interaction_to_next_paint`, `@view.first_contentful_paint`) are stored",
+    "in NANOSECONDS. 2.5s is therefore 2_500_000_000. Written as a plain integer",
+    "because Datadog rejects an expression here.",
+    "",
+    "Get it wrong low and the monitor fires on every page forever; wrong high and",
+    "it never fires and nobody notices, because a silent monitor and a healthy one",
+    "look identical. That is the MONEY-1238 shape, and unlike the metric-name",
+    "version of it there is no series to check the name of — the query is valid",
+    "either way.",
+    "",
+    "So apply-service-monitors.sh does not merely preflight that VIEWS EXIST: it",
+    "prints the observed p75 next to the threshold when it applies this row. An",
+    "operator reading `observed p75 = 1_840_000_000 vs threshold 2_500_000_000`",
+    "can see the magnitude is right; `observed p75 = 1840` against the same",
+    "threshold says the unit assumption is wrong, in one line, at apply time",
+    "rather than after a month of silence."
+  ],
+  "name": "[{{env}}] stockbook-web — LCP p75 over 2.5s for 30 minutes",
+  "type": "rum alert",
+  "query": "rum(\"@type:view service:stockbook-web env:{{env}}\").rollup(\"pc75\", \"@view.largest_contentful_paint\").last(\"30m\") > 2500000000",
+  "message": "stockbook-web's LCP p75 stayed above 2.5s for 30 minutes — the boundary Core Web Vitals calls 'good'.\n\nThreshold is in NANOSECONDS (2_500_000_000). RUM view timings are stored in ns; a threshold written in ms would be a million times too small and this monitor would never stop firing.\n\nRUM Explorer: `@type:view service:stockbook-web env:{{env}}`, pc75 of `@view.largest_contentful_paint`, grouped by `@view.url_path` — a site-wide rise is usually the shell or a font; one route is that route's data fetch.\n\n30 minutes, not 15: LCP is noisy per-session and a shorter window fires on a handful of slow connections.\n\n@{{notify}}",
+  "tags": [
+    "managed-by:apply-monitors",
+    "money:1359",
+    "family:rum-lcp",
+    "service:stockbook-web",
+    "env:{{env}}"
+  ],
+  "options": {
+    "thresholds": { "critical": 2500000000 },
+    "notify_no_data": false,
+    "renotify_interval": 0,
+    "include_tags": true
+  },
+  "_notify_no_data_rationale": [
+    "FALSE, same as the RUM error row: no sessions is a normal overnight state,",
+    "not a regression."
+  ],
+  "_placeholders": ["{{env}} production | qa", "{{notify}} notification handle"]
+}

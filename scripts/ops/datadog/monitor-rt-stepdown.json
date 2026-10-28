@@ -1,0 +1,40 @@
+{
+  "_readme": [
+    "MONEY-1357 — the leader stepping down.",
+    "",
+    "Not a failure on its own, which is why it is a separate row rather than folded",
+    "into the health gauge: a step-down is CORRECT during a deploy, when a new",
+    "revision takes the Redis lock. What it must not be is FREQUENT.",
+    "",
+    "Repeated step-downs mean two instances are fighting over the lock, and the",
+    "cost is not just churn: each hand-over drops the socket, and the incoming",
+    "holder buys a metered REST snapshot on connect. A flapping leader spends",
+    "Tiingo quota on an unobservable budget while producing gaps in the bar series",
+    "that look like a quiet market.",
+    "",
+    "> 0 in 15 minutes is chosen so a single deploy hand-over does page once — and",
+    "that is accepted deliberately. A deploy is a known, human-initiated event; a",
+    "flap is not, and the two are indistinguishable from the count alone. One",
+    "expected notification per release is cheaper than a threshold high enough to",
+    "hide a flap."
+  ],
+  "name": "[{{env}}] tiingo-realtime — leader stepped down",
+  "type": "log alert",
+  "query": "logs(\"service:tiingo-realtime env:{{env}} \\\"stepping down\\\"\").index(\"*\").rollup(\"count\").last(\"15m\") > 0",
+  "message": "tiingo-realtime's leader stepped down.\n\nExpected ONCE per deploy, when the new revision takes the Redis lock. Anything else is a flap, and a flap is expensive twice over: every hand-over drops the socket, and the incoming holder buys a metered Tiingo REST snapshot to catch up.\n\nIf this repeats without a deploy: the leader lock is fail-CLOSED (no Redis, no leader), so check Redis reachability first — an unreachable lock produces no leader at all rather than two. Then check whether two revisions are genuinely overlapping; Cloud Run keeps the old one alive briefly on a replace, which is exactly what the lock exists to arbitrate.\n\n@{{notify}}",
+  "tags": [
+    "managed-by:apply-monitors",
+    "money:1357",
+    "family:rt-liveness",
+    "service:tiingo-realtime",
+    "env:{{env}}"
+  ],
+  "options": {
+    "thresholds": { "critical": 0 },
+    "notify_no_data": false,
+    "renotify_interval": 0,
+    "enable_logs_sample": true,
+    "include_tags": true
+  },
+  "_placeholders": ["{{env}} production | qa", "{{notify}} notification handle"]
+}

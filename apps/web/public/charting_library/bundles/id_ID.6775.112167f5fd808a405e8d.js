@@ -1,0 +1,8 @@
+(self.webpackChunktradingview = self.webpackChunktradingview || []).push([
+  [6775],
+  {
+    66775: (e) => {
+      e.exports = { en: ["erase level line"], id_ID: ["hapus haris level"] };
+    },
+  },
+]);

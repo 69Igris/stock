@@ -1,0 +1,24 @@
+.git
+.gitignore
+.vscode
+.idea
+.husky
+.github
+**/node_modules
+**/.next
+**/dist
+**/.turbo
+**/coverage
+**/.env
+**/.env.*
+!**/.env.example
+*.md
+LICENSE
+**/__tests__
+**/*.test.ts
+**/*.spec.ts
+apps/admin
+apps/content
+# MONEY-1611 — `dataform/` is COPYed into the workers image. A local CLI
+# credentials file beside it must never ride along.
+**/.df-credentials.json

@@ -1,0 +1,11 @@
+(self.webpackChunktradingview = self.webpackChunktradingview || []).push([
+  [9694],
+  {
+    69694: (a) => {
+      a.exports = {
+        en: ["Don't show again"],
+        ca_ES: ["No ho torneu a mostrar"],
+      };
+    },
+  },
+]);

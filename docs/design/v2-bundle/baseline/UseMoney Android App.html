@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UseMoney Android — Public & Auth</title>
+  <link rel="stylesheet" href="../styles/colors_and_type.css" />
+  <link rel="stylesheet" href="../styles/app.css" />
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #e7e2d3; -webkit-font-smoothing: antialiased; }
+    #root { height: 100%; }
+    button { font-family: inherit; }
+    ::-webkit-scrollbar { width: 0; height: 0; }
+  </style>
+  <template id="__bundler_thumbnail">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+      <rect width="100" height="100" fill="#f7f3e6"/>
+      <rect x="34" y="20" width="32" height="60" rx="8" fill="#1d1d1b"/>
+      <text x="50" y="58" text-anchor="middle" font-family="monospace" font-weight="800" font-size="22" fill="#f7f3e6">U</text>
+    </svg>
+  </template>
+
+  <script>window.__UM_DEVICE_NAME = "android"; window.__UM_PLATFORM = "android";</script>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" src="../frames/ios-frame.jsx"></script>
+  <script type="text/babel" src="../frames/android-phone.jsx"></script>
+  <script type="text/babel" src="../src/shared.jsx"></script>
+  <script type="text/babel" src="../src/screens-public.jsx"></script>
+  <script type="text/babel" src="../src/screens-info.jsx"></script>
+  <script type="text/babel" src="../src/screens-auth.jsx"></script>
+  <script type="text/babel" src="../src/screens-marketing.jsx"></script>
+  <script type="text/babel" src="../src/screens-content.jsx"></script>
+  <script type="text/babel" src="../src/screens-profile.jsx"></script>
+  <script type="text/babel" src="../src/app-shell.jsx"></script>
+  <script type="text/babel" src="../src/screens-workspace.jsx"></script>
+  <script type="text/babel" src="../src/screens-discover.jsx"></script>
+  <script type="text/babel" src="../src/screens-tools.jsx"></script>
+  <script type="text/babel" src="../src/screens-account.jsx"></script>
+  <script type="text/babel" src="../src/app.jsx"></script>
+</body>
+</html>

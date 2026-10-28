@@ -1,0 +1,251 @@
+/* ─────────────────────────────────────────────────────────────────────
+   PfDatePicker — co-located styles.
+   Theme-aware: ALL colours use CSS vars from playful-app.css.
+   NEVER hardcode light/dark hex here — use var(--ink), var(--paper),
+   var(--emerald), var(--rule-soft), var(--ink-3), etc.
+   ───────────────────────────────────────────────────────────────────── */
+
+/* ── Root wrapper ─────────────────────────────────────────────────── */
+.pf-dp-root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  flex: 1;
+}
+
+/* ── Label ────────────────────────────────────────────────────────── */
+.pf-dp-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--ink-3);
+  font-weight: 700;
+  display: block;
+}
+
+/* ── Trigger button ───────────────────────────────────────────────── */
+.pf-dp-trigger {
+  width: 100%;
+  padding: 9px 11px;
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  border-radius: 8px;
+  color: var(--ink);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s,
+    transform 0.12s;
+  box-sizing: border-box;
+}
+
+.pf-dp-trigger:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.pf-dp-trigger.is-open {
+  border-color: var(--emerald);
+  box-shadow: 0 0 0 3px var(--emerald-bg);
+  transform: translate(-1px, -1px);
+}
+
+.pf-dp-trigger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pf-dp-value {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pf-dp-placeholder {
+  color: var(--ink-3);
+}
+
+/* ── Popover ──────────────────────────────────────────────────────── */
+.pf-dp-popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 200;
+  /* Constrain width so it never causes horizontal overflow on narrow screens.
+     min(280px, calc(100vw - 32px)) keeps it inside the viewport with 16px
+     gutters on each side. */
+  width: min(280px, calc(100vw - 32px));
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: 4px 4px 0 var(--ink);
+  overflow: hidden;
+}
+
+/* On very narrow viewports anchor to the left edge of the screen
+   rather than the field — prevents right-side bleed. */
+@media (max-width: 360px) {
+  .pf-dp-popover {
+    left: 0;
+    right: auto;
+  }
+}
+
+/* ── Month / year navigation ─────────────────────────────────────── */
+.pf-dp-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px 8px;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.pf-dp-nav-title {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: 0.2px;
+}
+
+.pf-dp-nav-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: 1.5px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    transform 0.1s,
+    box-shadow 0.1s;
+}
+
+.pf-dp-nav-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+/* ── Day grid ────────────────────────────────────────────────────── */
+.pf-dp-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  padding: 8px 8px 6px;
+}
+
+.pf-dp-dow {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9.5px;
+  font-weight: 800;
+  color: var(--ink-3);
+  text-align: center;
+  padding: 3px 0 5px;
+  letter-spacing: 0.5px;
+}
+
+.pf-dp-blank {
+  /* empty leading cells */
+}
+
+.pf-dp-cell {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ink);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition:
+    background 0.1s,
+    color 0.1s;
+}
+
+.pf-dp-cell:hover:not(.is-disabled):not(.is-selected) {
+  background: var(--rule-softer);
+  color: var(--ink);
+}
+
+/* Today: subtle emerald ring */
+.pf-dp-cell.is-today:not(.is-selected) {
+  color: var(--emerald);
+  font-weight: 800;
+  box-shadow: inset 0 0 0 1.5px var(--emerald);
+}
+
+/* Selected: solid emerald fill */
+.pf-dp-cell.is-selected {
+  background: var(--emerald);
+  color: var(--paper);
+  font-weight: 800;
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+/* Disabled */
+.pf-dp-cell.is-disabled {
+  color: var(--ink-4);
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────── */
+.pf-dp-footer {
+  display: flex;
+  gap: 6px;
+  padding: 8px 10px 10px;
+  border-top: 1px solid var(--rule-soft);
+}
+
+.pf-dp-footer-btn {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1.5px solid var(--ink);
+  border-radius: 7px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 0.1s,
+    box-shadow 0.1s;
+  letter-spacing: 0.3px;
+}
+
+.pf-dp-footer-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.pf-dp-footer-clear {
+  border-style: dashed;
+  color: var(--ink-3);
+}
+
+.pf-dp-footer-clear:hover {
+  border-style: solid;
+  color: var(--ink);
+}

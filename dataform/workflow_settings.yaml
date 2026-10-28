@@ -1,0 +1,30 @@
+# Dataform project settings — MONEY-1506 (data-platform B4).
+#
+# THE LOCATION IS asia-south1 AND IT IS NOT A PREFERENCE. A BigQuery job runs in
+# exactly ONE location and every dataset it touches must be in that location
+# (docs/reference/lake-layout.md §2). A Dataform project compiled with the
+# default `US` would fail every model at run time with "Not found: Dataset … was
+# not found in location US" — a message that reads like a missing table.
+#
+# THESE VALUES ARE THE QA DEFAULTS. Prod is the SAME project compiled with
+# overrides by the `lake-gold` Cloud Run job (MONEY-1611): the default schema,
+# the assertion schema and `vars.env`, all three built from ONE `--env` in
+# packages/core/src/ops/lake-gold-logic.ts. One project, two environments —
+# never a second copy of the SQL, because two copies of one policy agree until
+# the day they do not.
+defaultProject: stock-book-483718
+defaultLocation: asia-south1
+defaultDataset: lake_gold_qa
+defaultAssertionDataset: lake_gold_qa
+# THE ONE VERSION PIN. There is deliberately NO dataform/package.json: with
+# `dataformCoreVersion` set, Dataform 3 refuses to compile beside one ("…
+# package.json unexpected; remove it and try again", measured with CLI 3.0.0,
+# 2026-09-23). The project shipped with both, so it had never compiled.
+dataformCoreVersion: 3.0.0
+
+vars:
+  # Suffixes every dataset this project reads or writes. `lake-gold --env prod`
+  # sets it to `prod`; a compile without it is QA, which is the safe default
+  # because a mistake there costs a wasted query rather than a wrong production
+  # table.
+  env: qa

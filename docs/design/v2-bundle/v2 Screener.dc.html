@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/usemoney-play-design-system-67522a6c-d1c3-4617-97de-fcd968490366/colors_and_type.css">
+  <link rel="stylesheet" href="_ds/usemoney-play-design-system-67522a6c-d1c3-4617-97de-fcd968490366/styles/playful-app.css">
+  <script src="_ds/usemoney-play-design-system-67522a6c-d1c3-4617-97de-fcd968490366/_ds_bundle.js"></script>
+  <script src="app/data.js"></script>
+  <script src="web/wdata.js"></script>
+  <script src="web/v2data.js"></script>
+  <style>
+    html,body{margin:0;padding:0}
+    :root{--gain-text:#0f7a34;--loss-text:#b91c1c}
+    html.dark{--gain-text:#34d399;--loss-text:#ff6b35}
+    body{background:var(--paper);font-family:var(--font-sans);color:var(--ink)}
+    a{color:var(--emerald-text);text-decoration:none}a:hover{color:var(--ink)}
+    input{font-family:inherit}
+  </style>
+</helmet>
+<div style="display:flex;min-height:100vh;background:var(--paper);background-image:radial-gradient(var(--dot-fg) 1px,transparent 1.5px),radial-gradient(var(--dot-fg-2) 1px,transparent 1.5px);background-size:7px 7px,11px 11px;color:var(--ink);font-family:var(--font-sans)">
+  <sc-if value="{{ isDesk }}" hint-placeholder-val="{{ true }}">
+    <div style="width:236px;flex-shrink:0;border-right:2px solid var(--ink);background:var(--paper-3);display:flex;flex-direction:column;height:100vh;position:sticky;top:0">
+      <a href="UseMoney v2 Hub.dc.html" style="padding:15px 18px 13px;border-bottom:1.5px solid var(--rule-soft);display:flex;align-items:center;gap:10px;color:var(--ink)">
+        <span style="width:28px;height:28px;border-radius:7px;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-family:var(--font-mono);font-weight:800;font-size:14px;transform:rotate(-3deg)">U</span>
+        <span style="font-weight:800;font-size:15px;letter-spacing:-0.3px">UseMoney<span style="color:var(--emerald-text)"> AI</span></span>
+      </a>
+      <div style="flex:1;overflow-y:auto;padding:4px 14px 10px">
+        <sc-for list="{{ nav }}" as="sec" hint-placeholder-count="4">
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;padding:12px 3px 5px"><span style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:1.6px;color:var(--ink-3)">{{ sec.label }}</span><span style="flex:1;height:1.5px;background:var(--ink);opacity:0.18"></span></div>
+            <sc-for list="{{ sec.items }}" as="it" hint-placeholder-count="4">
+              <a href="{{ it.href }}" title="{{ it.tip }}" style="{{ it.rowStyle }}">
+                <span style="{{ it.icStyle }}"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="{{ it.icStroke }}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ it.d }}"></path></svg></span>
+                <span style="font-size:12.5px">{{ it.label }}</span>
+                <sc-if value="{{ it.badge }}" hint-placeholder-val="{{ false }}"><span style="margin-left:auto;font-family:var(--font-mono);font-size:8px;font-weight:800;letter-spacing:0.6px;background:{{ it.badgeBg }};color:#0b0b09;border:1.5px solid var(--ink);border-radius:5px;padding:1px 5px">{{ it.badge }}</span></sc-if>
+              </a>
+            </sc-for>
+          </div>
+        </sc-for>
+        <div style="margin-top:16px;background:var(--pop-2);border:2px solid var(--ink);border-radius:11px;padding:11px 13px;transform:rotate(-1deg);box-shadow:3px 3px 0 var(--ink);font-family:var(--font-serif);font-style:italic;font-size:13px;color:#1d1d1b;cursor:pointer"><b>Upgrade?</b> Unlock backtests &amp; deep research.<div style="font-family:var(--font-mono);font-style:normal;font-size:10px;font-weight:800;margin-top:5px">GO PRO →</div></div>
+      </div>
+      <div style="flex-shrink:0;border-top:1.5px solid var(--rule-soft);padding:10px 14px;display:flex;align-items:center;gap:9px">
+        <span style="width:28px;height:28px;border-radius:9px;background:var(--pop-2);border:2px solid var(--ink);display:grid;place-items:center;font-family:var(--font-mono);font-weight:800;font-size:11px;transform:rotate(-3deg);color:#1d1d1b">RV</span>
+        <div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:800">Rahul Verma</div><div style="font-family:var(--font-mono);font-size:8.5px;color:var(--ink-3)">FREE · ⚡ 2 CREDITS</div></div>
+      </div>
+    </div>
+  </sc-if>
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+    <div style="border-bottom:2px solid var(--ink);background:var(--paper);padding:12px 22px 11px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;position:sticky;top:0;z-index:40">
+      <div style="min-width:0">
+        <div style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:1.4px;color:var(--emerald-text)">● DISCOVER / SCREENER</div>
+        <div style="font-weight:800;font-size:21px;letter-spacing:-0.7px;margin-top:2px">Screener <span style="font-family:var(--font-serif);font-style:italic;font-weight:400;color:var(--ink-2)">who matches now.</span></div>
+      </div>
+      <div style="position:relative">
+        <button onClick="{{ toggleViewMenu }}" style="display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:10px;font-weight:800;letter-spacing:0.8px;border:2px solid var(--ink);border-radius:8px;background:var(--paper);color:var(--ink);padding:6px 10px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)">VIEW: {{ viewLabel }} ▾</button>
+        <sc-if value="{{ viewOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;top:38px;left:0;z-index:60;width:250px;border:2px solid var(--ink);border-radius:11px;background:var(--paper);box-shadow:4px 4px 0 var(--ink);overflow:hidden">
+            <sc-for list="{{ viewOpts }}" as="v" hint-placeholder-count="3">
+              <div onClick="{{ v.on }}" style="{{ v.style }}"><div style="font-weight:800;font-size:12.5px">{{ v.name }}</div><div style="font-size:11px;opacity:0.75;margin-top:1px">{{ v.desc }}</div></div>
+            </sc-for>
+            <div style="padding:8px 12px;font-family:var(--font-mono);font-size:8.5px;color:var(--ink-3);border-top:1.5px solid var(--rule-soft)">MANUAL PRESET — PERSONA ENGINE TAKES OVER LATER</div>
+          </div>
+        </sc-if>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:9px;flex-shrink:0">
+        <span style="font-family:var(--font-mono);font-size:10px;color:var(--ink-3)">{{ mktLine }}</span>
+        <button onClick="{{ toggleDark }}" title="Toggle dark mode" style="width:34px;height:34px;border-radius:10px;border:2px solid var(--ink);background:var(--paper-3);display:grid;place-items:center;cursor:pointer;box-shadow:2px 2px 0 var(--ink);color:var(--ink)"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="{{ darkIcon }}"></path></svg></button>
+        <span style="display:inline-flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:10px;font-weight:800;border:2px solid var(--ink);border-radius:99px;background:var(--pop-2);color:#1d1d1b;padding:5px 11px;box-shadow:2px 2px 0 var(--ink)">⚡ 2</span>
+      </div>
+    </div>
+    <div style="flex:1;padding:20px 22px 90px;max-width:1240px;width:100%;box-sizing:border-box">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+        <div style="display:inline-flex;border:2px solid var(--ink);border-radius:11px;overflow:hidden;background:var(--paper-3);box-shadow:3px 3px 0 var(--ink)">
+          <sc-for list="{{ modeTabs }}" as="t" hint-placeholder-count="3"><button onClick="{{ t.on }}" style="{{ t.style }}">{{ t.label }}</button></sc-for>
+        </div>
+        <div style="display:inline-flex;border:2px solid var(--ink);border-radius:99px;overflow:hidden;background:var(--paper)">
+          <button onClick="{{ onIn }}" style="{{ inPillStyle }}">INDIA</button>
+          <button onClick="{{ onUs }}" style="{{ usPillStyle }}">US</button>
+        </div>
+        <sc-if value="{{ usReal }}" hint-placeholder-val="{{ false }}">
+          <span style="display:inline-flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:9px;font-weight:700;color:var(--ink-2);border:1.5px solid var(--ink);background:var(--paper-2);border-radius:6px;padding:4px 8px">◷ EOD · JUL 18 CLOSE · THIRD-PARTY TAPE</span>
+          <button onClick="{{ toggleUsInr }}" style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;border:2px solid var(--ink);border-radius:6px;background:var(--paper);color:var(--ink);padding:4px 8px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)">{{ usInrLabel }}</button>
+        </sc-if>
+        <div style="position:relative;flex:1;min-width:230px;max-width:460px;margin-left:auto">
+          <div style="display:flex;align-items:center;gap:8px;border:2px solid var(--ink);border-radius:10px;background:var(--paper);padding:8px 12px;box-shadow:2px 2px 0 var(--ink)">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink-3)" stroke-width="2.2" stroke-linecap="round"><path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM21 21l-4.3-4.3"></path></svg>
+            <input value="{{ q }}" onChange="{{ onQ }}" placeholder="{{ searchPh }}" style="flex:1;border:0;outline:0;background:transparent;font-size:12.5px;color:var(--ink);min-width:0">
+            <span style="font-family:var(--font-mono);font-size:8.5px;font-weight:700;color:var(--ink-3);border:1.5px solid var(--rule-soft);border-radius:4px;padding:1px 5px;white-space:nowrap">TICKER OR PLAIN ENGLISH</span>
+          </div>
+          <sc-if value="{{ qOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;top:44px;left:0;right:0;z-index:55;border:2px solid var(--ink);border-radius:11px;background:var(--paper);box-shadow:4px 4px 0 var(--ink);overflow:hidden">
+              <sc-for list="{{ qMatches }}" as="m" hint-placeholder-count="2">
+                <div style="display:flex;align-items:center;gap:10px;padding:9px 13px;border-bottom:1.5px solid var(--rule-soft);cursor:pointer;background:var(--paper)" style-hover="background:var(--paper-2)"><b style="font-family:var(--font-mono);font-size:12px">{{ m.sym }}</b><span style="font-size:11.5px;color:var(--ink-3)">{{ m.name }}</span><span style="margin-left:auto;font-family:var(--font-mono);font-size:11px">{{ m.px }}</span></div>
+              </sc-for>
+              <sc-if value="{{ aiRow }}" hint-placeholder-val="{{ false }}">
+                <div onClick="{{ applyAi }}" style="display:flex;align-items:center;gap:9px;padding:10px 13px;cursor:pointer;background:var(--pop-2)">
+                  <span style="font-family:var(--font-mono);font-size:11px;font-weight:800;color:#1d1d1b">↵</span>
+                  <span style="font-size:12px;font-weight:700;color:#1d1d1b">Build filters from “{{ q }}”</span>
+                  <span style="margin-left:auto;font-family:var(--font-mono);font-size:8.5px;font-weight:800;color:#1d1d1b;border:1.5px solid #1d1d1b;border-radius:4px;padding:1px 5px">AI · FREE</span>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
+        </div>
+        <div style="position:relative">
+          <button onClick="{{ toggleOf }}" title="Save as scan · alerts · export · columns" style="width:34px;height:34px;border-radius:10px;border:2px solid var(--ink);background:var(--paper);cursor:pointer;font-weight:800;font-size:15px;color:var(--ink);box-shadow:2px 2px 0 var(--ink)">⋯</button>
+          <sc-if value="{{ ofOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;top:38px;right:0;z-index:60;width:210px;border:2px solid var(--ink);border-radius:11px;background:var(--paper);box-shadow:4px 4px 0 var(--ink);overflow:hidden;font-size:12.5px;font-weight:700">
+              <div onClick="{{ saveScan }}" style="padding:9px 13px;border-bottom:1.5px solid var(--rule-soft);cursor:pointer">Save as scan</div>
+              <div style="padding:9px 13px;border-bottom:1.5px solid var(--rule-soft);cursor:pointer">Alert on this scan <span style="font-family:var(--font-mono);font-size:8.5px;color:var(--ink-3)">EOD</span></div>
+              <div style="padding:9px 13px;border-bottom:1.5px solid var(--rule-soft);cursor:pointer">Export CSV</div>
+              <div style="padding:9px 13px;cursor:pointer">Columns…</div>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+
+      <sc-if value="{{ begHero }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:18px">
+          <div style="font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:1.2px;color:var(--ink-3)">START FROM A SCAN — PLAIN ENGLISH, NO JARGON</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:10px">
+            <sc-for list="{{ begScans }}" as="s" hint-placeholder-count="4">
+              <div onClick="{{ s.on }}" style="border:2px solid var(--ink);border-radius:12px;background:var(--paper);box-shadow:3px 3px 0 var(--ink);padding:13px 15px;cursor:pointer" style-hover="transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)">
+                <span style="{{ s.badgeStyle }}">{{ s.src }}</span>
+                <div style="font-weight:800;font-size:14px;margin-top:8px">{{ s.name }}</div>
+                <div style="font-size:11.5px;color:var(--ink-3);line-height:1.45;margin-top:3px">{{ s.plain }}</div>
+                <div style="font-family:var(--font-mono);font-size:10px;font-weight:800;color:var(--emerald-text);margin-top:8px">{{ s.matchLine }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="margin-top:10px"><a href="#" onClick="{{ showRail }}" style="font-size:12px;font-weight:700">More filters →</a></div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ mRailBtn }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ toggleMRail }}" style="margin-top:14px;display:inline-flex;align-items:center;gap:7px;font-family:var(--font-mono);font-size:10px;font-weight:800;letter-spacing:0.8px;border:2px solid var(--ink);border-radius:9px;background:var(--paper);color:var(--ink);padding:8px 13px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)">{{ mRailGlyph }} SCANS &amp; FILTERS</button>
+      </sc-if>
+      <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;margin-top:16px">
+        <sc-if value="{{ railShow }}" hint-placeholder-val="{{ true }}">
+          <div style="{{ railStyle }}">
+            <div style="border:2px solid var(--ink);border-radius:12px;background:var(--paper);box-shadow:3px 3px 0 var(--ink);overflow:hidden">
+              <div style="display:flex;align-items:center;gap:7px;padding:10px 13px;border-bottom:2px solid var(--ink);background:var(--paper-3)"><span style="font-family:var(--font-mono);font-size:10px;font-weight:800;letter-spacing:1.2px">SCANS</span><span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-3)">= SAVED QUERIES</span><span style="margin-left:auto;font-family:var(--font-mono);font-size:9px;font-weight:800;color:var(--emerald-text);cursor:pointer" onClick="{{ saveScan }}">+ SAVE</span></div>
+              <sc-for list="{{ scanList }}" as="s" hint-placeholder-count="6">
+                <div onClick="{{ s.on }}" style="{{ s.rowStyle }}">
+                  <div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ s.name }}</div><span style="{{ s.badgeStyle }}">{{ s.src }}</span></div>
+                  <span style="font-family:var(--font-mono);font-size:10px;font-weight:800;color:{{ s.nColor }}">{{ s.n }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="border:2px solid var(--ink);border-radius:12px;background:var(--paper);box-shadow:3px 3px 0 var(--ink);overflow:hidden">
+              <div style="display:flex;align-items:center;padding:10px 13px;border-bottom:2px solid var(--ink);background:var(--paper-3)"><span style="font-family:var(--font-mono);font-size:10px;font-weight:800;letter-spacing:1.2px">{{ railTitle }}</span></div>
+              <sc-if value="{{ scanSel }}" hint-placeholder-val="{{ true }}">
+                <div style="padding:11px 13px">
+                  <div style="display:flex;flex-wrap:wrap;gap:6px">
+                    <sc-for list="{{ ruleChips }}" as="r" hint-placeholder-count="3"><span style="{{ ruleChipStyle }}">{{ r }}</span></sc-for>
+                  </div>
+                  <sc-if value="{{ scanLockedV }}" hint-placeholder-val="{{ true }}">
+                    <button onClick="{{ unlockScan }}" style="margin-top:10px;width:100%;border:2px solid var(--ink);border-radius:8px;background:var(--paper);color:var(--ink);font-weight:800;font-size:11.5px;padding:7px 0;cursor:pointer;box-shadow:2px 2px 0 var(--ink)">Edit as filters</button>
+                  </sc-if>
+                  <sc-if value="{{ scanUnlockedV }}" hint-placeholder-val="{{ false }}">
+                    <div style="margin-top:10px;font-family:var(--font-mono);font-size:9px;font-weight:700;color:var(--ink-2);background:var(--pop-2);border:1.5px solid var(--ink);border-radius:6px;padding:5px 8px;color:#1d1d1b">EDITING A DRAFT — SOURCE SCAN UNTOUCHED. SAVE VIA ⋯</div>
+                  </sc-if>
+                </div>
+              </sc-if>
+              <sc-if value="{{ noScanSel }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:11px 13px;display:flex;flex-direction:column;gap:10px">
+                  <div><div style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:1px;color:var(--ink-3)">{{ fundLabel }}</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px"><sc-for list="{{ fundChips }}" as="f" hint-placeholder-count="3"><span style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;border:1.5px solid var(--ink);border-radius:6px;padding:3px 7px;background:var(--paper-2);cursor:pointer">{{ f }}</span></sc-for></div></div>
+                  <div><div style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:1px;color:var(--ink-3)">TECHNICAL</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px"><sc-for list="{{ techChips }}" as="f" hint-placeholder-count="2"><span style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;border:1.5px solid var(--ink);border-radius:6px;padding:3px 7px;background:var(--paper-2);cursor:pointer">{{ f }}</span></sc-for></div></div>
+                  <div onClick="{{ toggleAdv }}" style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:11.5px;font-weight:800"><span style="font-family:var(--font-mono)">{{ advGlyph }}</span>Advanced filters</div>
+                  <sc-if value="{{ advOpenV }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ advChips }}" as="f" hint-placeholder-count="3"><span style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;border:1.5px dashed var(--ink);border-radius:6px;padding:3px 7px;background:var(--paper);cursor:pointer">{{ f }}</span></sc-for></div>
+                  </sc-if>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+        <div style="flex:1;min-width:0">
+          <sc-if value="{{ usGate }}" hint-placeholder-val="{{ false }}">
+            <div style="border:2px solid var(--ink);border-radius:14px;background:var(--ink);color:var(--paper);box-shadow:5px 5px 0 var(--pop-2);padding:34px 32px;max-width:640px">
+              <div style="font-family:var(--font-mono);font-size:10px;font-weight:800;letter-spacing:1.6px;color:var(--pop-2)">FLAG us-stocks-listing · OFF</div>
+              <div style="font-weight:800;font-size:30px;letter-spacing:-1.2px;line-height:1.05;margin-top:10px">Not on your plan yet. <span style="font-family:var(--font-serif);font-style:italic;font-weight:400">No waitlist, no pre-GA.</span></div>
+              <div style="font-size:13.5px;line-height:1.6;opacity:0.85;margin-top:10px">In production this pill is simply absent while the flag is off — the India screener is today's screener. At launch the gate becomes a pricing tier (designed later). This card exists only so the mockup can show both states.</div>
+              <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;font-size:12px"><span>✦ SEC filings, dated</span><span>✦ End-of-day prices, stamped</span><span>✦ $ and ₹ side by side</span></div>
+              <button onClick="{{ flagUs }}" style="margin-top:18px;border:2px solid var(--paper);border-radius:9px;background:var(--pop-2);color:#1d1d1b;font-weight:800;font-size:13px;padding:10px 18px;cursor:pointer">Turn the flag on →</button>
+            </div>
+          </sc-if>
+          <sc-if value="{{ gateScan }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:12px;border:2px solid var(--ink);border-radius:12px;background:var(--ink);color:var(--paper);padding:14px 16px;box-shadow:3px 3px 0 var(--pop-2)">
+              <span style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1px;background:var(--pop-2);color:#1d1d1b;padding:3px 8px;border-radius:6px;border:1.5px solid var(--paper)">PREMIUM</span>
+              <span style="flex:1;font-size:13px;font-weight:600">“Insider accumulation” is a Premium scan — promoter &amp; insider buying clusters, refreshed nightly.</span>
+              <span style="border:2px solid var(--paper);background:var(--pop-2);color:#1d1d1b;border-radius:8px;padding:7px 13px;font-weight:800;font-size:12px;cursor:pointer;white-space:nowrap">See plans →</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ showMain }}" hint-placeholder-val="{{ true }}">
+            <sc-if value="{{ ctxShow }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-wrap:wrap;align-items:center;gap:9px;border:2px solid var(--ink);border-radius:11px;background:var(--paper-3);box-shadow:3px 3px 0 var(--ink);padding:9px 13px">
+                <span style="{{ ctxBadgeStyle }}">{{ ctxSrc }}</span>
+                <b style="font-size:13.5px">{{ ctxName }}</b>
+                <span style="font-family:var(--font-mono);font-size:10px;color:var(--ink-3)">{{ ctxMeta }}</span>
+                <span onClick="{{ clearScan }}" style="margin-left:auto;font-family:var(--font-mono);font-size:10px;font-weight:800;color:var(--ink-3);cursor:pointer">✕ CLEAR</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ degraded }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:10px;border:2px dashed var(--ink);border-radius:11px;background:var(--pop-2);padding:10px 14px;margin-top:10px">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#1d1d1b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"></path></svg>
+                <span style="font-size:12.5px;font-weight:700;color:#1d1d1b">Chartink source degraded — showing the last good run (Fri 16:05 IST). Live columns withheld, never guessed.</span>
+                <span style="margin-left:auto;font-family:var(--font-mono);font-size:9.5px;font-weight:800;color:#1d1d1b;cursor:pointer;white-space:nowrap">RE-RUN →</span>
+              </div>
+            </sc-if>
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:11px">
+              <sc-for list="{{ chipList }}" as="c" hint-placeholder-count="5"><button onClick="{{ c.on }}" style="{{ c.style }}">{{ c.label }}</button></sc-for>
+              <sc-if value="{{ moreChipBtn }}" hint-placeholder-val="{{ true }}"><button onClick="{{ toggleMoreChips }}" style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;border:2px solid var(--ink);border-radius:99px;padding:4px 10px;background:var(--paper);color:var(--ink-3);cursor:pointer">{{ moreChipLabel }}</button></sc-if>
+            </div>
+            <sc-if value="{{ selBar }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;border:2px solid var(--ink);border-radius:11px;background:var(--ink);color:var(--paper);padding:9px 14px;margin-top:11px;box-shadow:3px 3px 0 var(--emerald)">
+                <span style="font-family:var(--font-mono);font-size:10.5px;font-weight:800">{{ selCount }} SELECTED</span>
+                <span style="font-size:12.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:5px">Send to research <span style="font-family:var(--font-mono);font-size:8.5px;font-weight:800;background:var(--pop-2);color:#1d1d1b;border-radius:4px;padding:1px 5px">⚡ 1 EACH</span></span>
+                <span style="font-size:12.5px;font-weight:700;cursor:pointer">Add to watchlist</span>
+                <span style="font-size:12.5px;font-weight:700;cursor:pointer">Compare</span>
+                <span onClick="{{ clearSel }}" style="margin-left:auto;font-family:var(--font-mono);font-size:10px;font-weight:800;opacity:0.7;cursor:pointer">CLEAR</span>
+              </div>
+            </sc-if>
+            <div style="border:2px solid var(--ink);border-radius:13px;background:var(--paper);box-shadow:4px 4px 0 var(--ink);margin-top:12px;overflow:hidden">
+              <div style="overflow-x:auto">
+                <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding:14px 16px;display:flex;flex-direction:column;gap:12px">
+                    <div class="pf-skel" style="height:13px;width:38%"></div>
+                    <div class="pf-skel" style="height:13px;width:88%"></div>
+                    <div class="pf-skel" style="height:13px;width:76%"></div>
+                    <div class="pf-skel" style="height:13px;width:82%"></div>
+                    <div class="pf-skel" style="height:13px;width:64%"></div>
+                    <div class="pf-skel" style="height:13px;width:71%"></div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ tableShow }}" hint-placeholder-val="{{ true }}">
+                  <div style="min-width:860px">
+                    <div style="display:grid;grid-template-columns:36px 1.6fr 0.9fr 0.8fr 0.7fr 0.9fr 0.6fr 0.6fr 1fr;gap:0 10px;align-items:center;padding:9px 14px;border-bottom:2px solid var(--ink);background:var(--paper-3);font-family:var(--font-mono);font-size:9px;font-weight:800;letter-spacing:0.8px;color:var(--ink-3)">
+                      <span></span><span>COMPANY</span><span>SECTOR</span><span style="text-align:right">{{ pxHead }}</span><span style="text-align:right">1D</span><span style="text-align:right">MCAP</span><span style="text-align:right">PE</span><span style="text-align:right">ROE</span><span>{{ lastHead }}</span>
+                    </div>
+                    <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+                      <div style="display:grid;grid-template-columns:36px 1.6fr 0.9fr 0.8fr 0.7fr 0.9fr 0.6fr 0.6fr 1fr;gap:0 10px;align-items:center;padding:9px 14px;border-bottom:1.5px solid var(--rule-soft);background:var(--paper);cursor:pointer" style-hover="background:var(--paper-3)">
+                        <span onClick="{{ r.onSel }}" style="{{ r.ckStyle }}">{{ r.ck }}</span>
+                        <span style="min-width:0"><b style="font-family:var(--font-mono);font-size:12.5px">{{ r.sym }}</b><span style="display:block;font-size:10.5px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span></span>
+                        <span style="font-size:11px;color:var(--ink-2)">{{ r.sector }}</span>
+                        <span style="text-align:right;font-family:var(--font-mono);font-size:12px;font-weight:700">{{ r.pxDisp }}</span>
+                        <span style="text-align:right;font-family:var(--font-mono);font-size:11.5px;font-weight:800;color:{{ r.chgColor }}">{{ r.chgDisp }}</span>
+                        <span style="text-align:right;font-family:var(--font-mono);font-size:11px;color:var(--ink-2)">{{ r.mcap }}</span>
+                        <span style="text-align:right;font-family:var(--font-mono);font-size:11px">{{ r.pe }}</span>
+                        <span style="text-align:right;font-family:var(--font-mono);font-size:11px">{{ r.roe }}</span>
+                        <span>{{ r.lastCell }}<sc-if value="{{ r.bar }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:56px;height:7px;border:1.5px solid var(--ink);border-radius:99px;background:var(--paper-2);overflow:hidden;display:inline-block"><span style="display:block;height:100%;background:var(--emerald);width:{{ r.barW }}"></span></span><span style="font-family:var(--font-mono);font-size:10px;font-weight:800">{{ r.score }}</span></span></sc-if></span>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ emptyShow }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding:40px 24px;text-align:center">
+                    <div style="font-family:var(--font-mono);font-size:10px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">0 MATCHES</div>
+                    <div style="font-weight:800;font-size:19px;letter-spacing:-0.5px;margin-top:8px">Nothing matches today. <span style="font-family:var(--font-serif);font-style:italic;font-weight:400">That’s the honest answer.</span></div>
+                    <div style="font-size:12.5px;color:var(--ink-3);margin-top:6px">This scan re-runs at 16:05 IST after the close.</div>
+                    <button onClick="{{ unlockScan }}" style="margin-top:14px;border:2px solid var(--ink);border-radius:9px;background:var(--paper);color:var(--ink);font-weight:800;font-size:12px;padding:8px 16px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)">Loosen the rules</button>
+                  </div>
+                </sc-if>
+              </div>
+              <sc-if value="{{ footShow }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:9px;padding:8px 14px;border-top:2px solid var(--ink);background:var(--paper-3);font-family:var(--font-mono);font-size:9px;font-weight:700;color:var(--ink-3)">
+                  <span>{{ provLine }}</span><span style="margin-left:auto">{{ countLine }}</span>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
+          <sc-if value="{{ usSoon }}" hint-placeholder-val="{{ false }}">
+            <div style="border:2px solid var(--ink);border-radius:12px;background:var(--paper-3);box-shadow:3px 3px 0 var(--ink);padding:22px 24px;max-width:520px">
+              <div style="font-family:var(--font-mono);font-size:10px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">US FUNDS &amp; ETFS — LATER</div>
+              <div style="font-weight:800;font-size:17px;margin-top:6px">Same switcher, next stop.</div>
+              <div style="font-size:12.5px;color:var(--ink-3);margin-top:4px">US mutual funds and ETFs arrive under this exact India | US control. Nothing to relearn.</div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ mfShow }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--ink-3)">INDIA FUNDS · DIRECT PLANS · US FUNDS ARRIVE UNDER THE SAME SWITCHER</span><span style="margin-left:auto;font-family:var(--font-mono);font-size:9.5px;font-weight:800;border:2px solid var(--ink);border-radius:6px;padding:3px 8px;background:var(--paper);cursor:pointer">SORT: 5Y CAGR ▾</span></div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px">
+              <sc-for list="{{ mf }}" as="f" hint-placeholder-count="6">
+                <div style="border:2px solid var(--ink);border-radius:12px;background:var(--paper);box-shadow:3px 3px 0 var(--ink);padding:13px 15px" style-hover="transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)">
+                  <div style="display:flex;align-items:center;gap:7px"><span style="font-family:var(--font-mono);font-size:8.5px;font-weight:800;letter-spacing:0.6px;border:1.5px solid var(--ink);border-radius:5px;padding:2px 6px;background:var(--paper-2)">{{ f.cat }}</span><sc-if value="{{ f.risk }}" hint-placeholder-val="{{ false }}"><span style="font-family:var(--font-mono);font-size:8.5px;font-weight:800;border:1.5px solid var(--ink);border-radius:5px;padding:2px 6px;background:var(--pop-1);color:#1d1d1b">{{ f.risk }}</span></sc-if></div>
+                  <div style="font-weight:800;font-size:14.5px;margin-top:8px;letter-spacing:-0.3px">{{ f.name }}</div>
+                  <div style="display:flex;align-items:baseline;gap:6px;margin-top:8px"><span style="font-family:var(--font-mono);font-size:20px;font-weight:800;color:var(--gain-text)">{{ f.r5 }}%</span><span style="font-family:var(--font-mono);font-size:9px;color:var(--ink-3)">5Y CAGR</span></div>
+                  <div style="display:flex;gap:12px;margin-top:7px;font-family:var(--font-mono);font-size:9.5px;color:var(--ink-3)"><span>AUM {{ f.aum }}</span><span>TER {{ f.ter }}</span></div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ etfShow }}" hint-placeholder-val="{{ false }}">
+            <div style="border:2px solid var(--ink);border-radius:13px;background:var(--paper);box-shadow:4px 4px 0 var(--ink);overflow:hidden">
+              <sc-for list="{{ etf }}" as="e" hint-placeholder-count="5">
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:11px 16px;border-bottom:1.5px solid var(--rule-soft)" style-hover="background:var(--paper-3)">
+                  <b style="font-family:var(--font-mono);font-size:12.5px;min-width:110px">{{ e.sym }}</b>
+                  <span style="font-size:12px;color:var(--ink-2);flex:1;min-width:140px">{{ e.name }}</span>
+                  <span style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;border:1.5px solid var(--ink);border-radius:5px;padding:2px 7px;background:var(--paper-2)">{{ e.trk }}</span>
+                  <span style="font-family:var(--font-mono);font-size:12px;font-weight:700;min-width:80px;text-align:right">₹{{ e.px }}</span>
+                  <span style="font-family:var(--font-mono);font-size:9.5px;color:var(--ink-3);min-width:70px;text-align:right">TER {{ e.ter }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </div>
+  <sc-if value="{{ isMob }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;left:0;right:0;bottom:0;z-index:70;display:flex;background:var(--paper);border-top:2px solid var(--ink);padding-bottom:env(safe-area-inset-bottom,0px)">
+      <a href="v2 Dashboard.dc.html" style="flex:1;text-align:center;padding:9px 0 7px;color:var(--ink-3);font-family:var(--font-mono);font-size:8.5px;font-weight:800">HOME</a>
+      <a href="#" style="flex:1;text-align:center;padding:9px 0 7px;color:var(--paper);background:var(--ink);font-family:var(--font-mono);font-size:8.5px;font-weight:800">SCREENER</a>
+      <a href="v2 Strategies.dc.html" style="flex:1;text-align:center;padding:9px 0 7px;color:var(--ink-3);font-family:var(--font-mono);font-size:8.5px;font-weight:800">STRATEGIES</a>
+      <a href="#" style="flex:1;text-align:center;padding:9px 0 7px;color:var(--ink-3);font-family:var(--font-mono);font-size:8.5px;font-weight:800">SAGE</a>
+      <a href="v2 Settings Developer.dc.html" style="flex:1;text-align:center;padding:9px 0 7px;color:var(--ink-3);font-family:var(--font-mono);font-size:8.5px;font-weight:800">YOU</a>
+    </div>
+  </sc-if>
+  <sc-if value="{{ isDesk }}" hint-placeholder-val="{{ true }}">
+    <div style="position:fixed;right:22px;bottom:20px;z-index:60;display:inline-flex;align-items:center;gap:8px;border:2px solid var(--ink);border-radius:99px;background:var(--ink);color:var(--paper);padding:12px 19px;font-weight:800;font-size:13.5px;box-shadow:3px 3px 0 var(--emerald);cursor:pointer">✦ Ask Sage</div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    ready: false, isDesk: true, dark: false,
+    mode: "stocks", market: "in", usFlagged: false, usInr: false,
+    view: "advanced", viewOpen: false, ofOpen: false,
+    scanId: "momo", scanLocked: true, railOpen: true, advOpen: false,
+    q: "", ai: false, chipsOn: {}, moreChips: false, sel: {}, loading: false, mRail: false,
+  };
+  componentDidMount() {
+    try {
+      const d = localStorage.getItem("um-v2-dark") === "1";
+      const v = localStorage.getItem("um-v2-view-screener") || "advanced";
+      document.documentElement.classList.toggle("dark", d);
+      this.setState({ dark: d, view: v });
+    } catch (e) {}
+    this.mq = window.matchMedia("(min-width: 1024px)");
+    const sync = () => this.setState({ isDesk: this.mq.matches });
+    this.mq.addEventListener("change", sync); sync();
+    this.poll = setInterval(() => { if (window.V2) { clearInterval(this.poll); this.setState({ ready: true }); } }, 60);
+    window.addEventListener("storage", this.onStore = (e) => {
+      if (e.key === "um-v2-dark") { const d = e.newValue === "1"; document.documentElement.classList.toggle("dark", d); this.setState({ dark: d }); }
+    });
+  }
+  componentWillUnmount() { clearInterval(this.poll); window.removeEventListener("storage", this.onStore); }
+  flash(patch) { this.setState({ loading: true, ...patch, viewOpen: false, ofOpen: false }); clearTimeout(this.t); this.t = setTimeout(() => this.setState({ loading: false }), 450); }
+  setView(v) { try { localStorage.setItem("um-v2-view-screener", v); } catch (e) {} this.setState({ view: v, viewOpen: false, railOpen: v === "advanced", scanId: v === "beginner" ? null : this.state.scanId }); }
+  renderVals() {
+    const S = this.state, V2 = window.V2 || { ROWS_IN: [], ROWS_US: [], SCANS: [], CHIPS_IN: [], CHIPS_US: [], MF: [], ETF: [], AI_DEMO: { chips: [], syms: [] } };
+    const mono = "font-family:var(--font-mono);";
+    const isUS = S.market === "us", usReal = isUS && S.usFlagged, usGate = isUS && !S.usFlagged;
+    const isBeg = S.view === "beginner", isInt = S.view === "intermediate";
+    const scan = V2.SCANS.find(s => s.id === S.scanId) || null;
+    const gateScan = !!(scan && scan.gate) && !usGate && S.mode === "stocks";
+    const srcBg = { ENGINE: "var(--pop-2)", CHARTINK: "var(--pop-3)", STRATEGY: "var(--pop-5)", YOURS: "var(--emerald)" };
+    const badgeStyle = (src) => "display:inline-block;margin-top:3px;" + mono + "font-size:8px;font-weight:800;letter-spacing:0.6px;border:1.5px solid var(--ink);border-radius:4px;padding:1px 5px;background:" + (srcBg[src] || "var(--paper-2)") + ";color:#1d1d1b";
+    // nav
+    const IC = { grid: "M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z", spark: "M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2z", pie: "M21 12A9 9 0 1 1 12 3v9z", eye: "M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z", book: "M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5zM4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5", flame: "M12 22c4 0 7-2.7 7-7 0-3-2-5.5-3.5-7C14 6 13 4 13 2c-3 2-4 5-4 7-1-1-1.5-2-1.5-3.5C5.5 7.5 5 9.8 5 12c0 6 3.4 10 7 10z", act: "M22 12h-4l-3 9L9 3l-3 9H2", search: "M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM21 21l-4.3-4.3", zap: "M13 2 3 14h7l-1 8 11-12h-8l1-8z", brain: "M12 4a3 3 0 0 0-3 3v10a3 3 0 1 0 6 0V7a3 3 0 0 0-3-3zM6 9a3 3 0 0 0 0 6M18 9a3 3 0 0 1 0 6", news: "M4 22h16a2 2 0 0 0 2-2V4H6v16a2 2 0 0 1-4 0V9h4M10 8h8M10 12h8M10 16h5", target: "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12zM12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z", calc: "M5 2h14a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zM8 6h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h8", shield: "M12 22s8-3.5 8-10V5l-8-3-8 3v7c0 6.5 8 10 8 10z", receipt: "M4 2v20l2-1.5L8 22l2-1.5L12 22l2-1.5L16 22l2-1.5L20 22V2l-2 1.5L16 2l-2 1.5L12 2l-2 1.5L8 2 6 3.5zM8 8h8M8 12h8M8 16h5", link: "M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7", cog: "M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19 12a7 7 0 0 1-.1 1.2l2 1.6-2 3.4-2.4-1a7 7 0 0 1-2 1.2L14 21h-4l-.4-2.6a7 7 0 0 1-2-1.2l-2.4 1-2-3.4 2-1.6A7 7 0 0 1 5 12a7 7 0 0 1 .1-1.2l-2-1.6 2-3.4 2.4 1a7 7 0 0 1 2-1.2L10 3h4l.4 2.6a7 7 0 0 1 2 1.2l2.4-1 2 3.4-2 1.6c.1.4.2.8.2 1.2z", bell: "M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M10.3 21a2 2 0 0 0 3.4 0" };
+    const NC = { emerald: "var(--emerald)", pink: "var(--pop-4)", blue: "var(--pop-3)", coral: "var(--pop-1)", gold: "var(--pop-2)" };
+    const mk = (id, label, ic, tint, badge, href) => {
+      const act = id === "screener";
+      return { label, badge: badge || false, badgeBg: badge === "AI" ? "var(--emerald)" : "var(--pop-2)", d: IC[ic], href: href || "#", tip: href ? "" : "Not part of this mockup",
+        rowStyle: "display:flex;align-items:center;gap:10px;padding:6.5px 9px;border-radius:9px;cursor:pointer;margin-bottom:1px;text-decoration:none;font-weight:" + (act ? 800 : 650) + ";background:" + (act ? "var(--ink)" : "transparent") + ";color:" + (act ? "var(--paper)" : "var(--ink-2)"),
+        icStyle: "width:22px;height:22px;border-radius:6px;border:1.5px solid " + (act ? "var(--paper)" : "var(--ink)") + ";background:" + (tint ? NC[tint] : (act ? "var(--ink)" : "var(--paper)")) + ";display:grid;place-items:center;flex-shrink:0",
+        icStroke: tint ? "#1d1d1b" : (act ? "var(--paper)" : "var(--ink-2)") };
+    };
+    const nav = [
+      { label: "WORKSPACE", items: [mk("dashboard", "Dashboard", "grid", null, null, "v2 Dashboard.dc.html"), mk("stocksage", "StockSage", "spark", "emerald", "AI"), mk("holdings", "Holdings", "pie"), mk("watchlists", "Watchlists", "eye"), mk("tradebook", "Tradebook", "book"), mk("roast", "Portfolio Roast", "flame", "pink")] },
+      { label: "DISCOVER", items: [mk("markets", "Markets", "act", "blue"), mk("screener", "Screener", "search", null, null, "v2 Screener.dc.html"), mk("strategies", "Strategies", "zap", "gold", "LAB", "v2 Strategies.dc.html"), mk("research", "Research List", "brain"), mk("news", "News & Events", "news")] },
+      { label: "TOOLS", items: [mk("fire", "FIRE Calculator", "target", "coral"), mk("calculators", "Calculators", "calc"), mk("risk", "Risk Report", "shield"), mk("tax", "Tax Report", "receipt")] },
+      { label: "ACCOUNT", items: [mk("brokers", "Brokers", "link"), mk("settings", "Settings", "cog", null, null, "v2 Settings Developer.dc.html"), mk("notifications", "Notifications", "bell")] },
+    ];
+    // controls
+    const tabStyle = (on, i) => "padding:9px 16px;border:0;border-left:" + (i ? "2px solid var(--ink)" : "0") + ";background:" + (on ? "var(--ink)" : "transparent") + ";color:" + (on ? "var(--paper)" : "var(--ink-2)") + ";font-family:var(--font-sans);font-weight:" + (on ? 800 : 650) + ";font-size:12.5px;cursor:pointer";
+    const modeTabs = [["stocks", "Stocks"], ["mf", "Mutual funds"], ["etf", "ETFs"]].map(([k, label], i) => ({ label, style: tabStyle(S.mode === k, i), on: () => this.flash({ mode: k, scanId: null, ai: false, sel: {} }) }));
+    const pill = (on) => "padding:6px 13px;border:0;cursor:pointer;" + mono + "font-size:10px;font-weight:800;letter-spacing:0.8px;background:" + (on ? "var(--ink)" : "transparent") + ";color:" + (on ? "var(--paper)" : "var(--ink-2)");
+    const viewOpts = [["advanced", "Advanced", "Full filter sidebar, every metric, keyboard-first."], ["intermediate", "Intermediate", "Filters on demand, standard metrics."], ["beginner", "Beginner", "Curated scans and plain language first."]].map(([k, name, desc]) => ({ name, desc, on: () => this.setView(k), style: "padding:10px 13px;border-bottom:1.5px solid var(--rule-soft);cursor:pointer;background:" + (S.view === k ? "var(--ink)" : "var(--paper)") + ";color:" + (S.view === k ? "var(--paper)" : "var(--ink)") }));
+    // scans
+    const scanList = V2.SCANS.map(s => {
+      const on = S.scanId === s.id;
+      return { name: s.name, src: s.src, badgeStyle: badgeStyle(s.src), n: s.gate ? "🔒".replace("🔒", "LOCK") : (s.total === 0 ? "0" : String(s.total)), nColor: s.gate ? "var(--ink-3)" : (s.total === 0 ? "var(--ink-3)" : "var(--emerald-text)"),
+        rowStyle: "display:flex;align-items:center;gap:8px;padding:8px 13px;border-bottom:1.5px solid var(--rule-soft);cursor:pointer;background:" + (on ? "var(--ink)" : "var(--paper)") + ";color:" + (on ? "var(--paper)" : "var(--ink)"),
+        on: () => this.flash({ scanId: on ? null : s.id, scanLocked: true, ai: false, sel: {} }) };
+    });
+    // rows
+    const base = usReal ? V2.ROWS_US : V2.ROWS_IN;
+    let list = base;
+    if (S.mode === "stocks" && scan && !scan.gate) list = base.filter(r => scan.syms.includes(r.sym));
+    if (S.mode === "stocks" && S.ai) list = base.filter(r => V2.AI_DEMO.syms.includes(r.sym));
+    const fmt = (r) => usReal ? (S.usInr ? "₹" + Math.round(r.px * 84.0).toLocaleString("en-IN") : "$" + r.px.toFixed(2)) : "₹" + r.px.toLocaleString("en-IN");
+    void 0;
+    const rows = list.map(r => {
+      const ck = !!S.sel[r.sym];
+      return { sym: r.sym, name: r.name, sector: r.sector, mcap: r.mcap, pe: String(r.pe), roe: r.roe + "%", pxDisp: fmt(r),
+        chgDisp: (r.chg > 0 ? "+" : "") + r.chg + "%", chgColor: r.chg >= 0 ? "var(--gain-text)" : "var(--loss-text, #b91c1c)",
+        ck: ck ? "✓" : "", ckStyle: "width:17px;height:17px;border:2px solid var(--ink);border-radius:5px;display:grid;place-items:center;font-size:11px;font-weight:800;cursor:pointer;background:" + (ck ? "var(--emerald)" : "var(--paper)") + ";color:#1d1d1b",
+        onSel: (e) => { e.stopPropagation(); const sel = { ...this.state.sel }; ck ? delete sel[r.sym] : sel[r.sym] = 1; this.setState({ sel }); },
+        bar: !usReal, barW: r.score + "%", score: String(r.score), lastCell: usReal ? r.filed : "" };
+    });
+    // chips
+    const allChips = usReal ? V2.CHIPS_US : V2.CHIPS_IN;
+    const capN = isBeg ? 5 : (S.moreChips ? allChips.length : 5);
+    const chipList = allChips.slice(0, capN).map(c => ({ label: c, on: () => { const chipsOn = { ...S.chipsOn }; chipsOn[c] ? delete chipsOn[c] : chipsOn[c] = 1; this.setState({ chipsOn }); }, style: mono + "font-size:9.5px;font-weight:800;border:2px solid var(--ink);border-radius:99px;padding:4px 10px;cursor:pointer;background:" + (S.chipsOn[c] ? "var(--ink)" : "var(--paper)") + ";color:" + (S.chipsOn[c] ? "var(--paper)" : "var(--ink)") }));
+    // search
+    const q = S.q, qt = q.trim().toLowerCase();
+    const qMatches = qt ? base.filter(r => r.sym.toLowerCase().startsWith(qt) || r.name.toLowerCase().includes(qt)).slice(0, 3).map(r => ({ sym: r.sym, name: r.name, px: fmt(r) })) : [];
+    const aiRow = qt.length > 2 && (qt.includes(" ") || qMatches.length === 0);
+    const selCount = Object.keys(S.sel).length;
+    const showStocks = S.mode === "stocks" && !usGate && !gateScan;
+    const ctxName = S.ai ? "AI filters: “" + (V2.AI_DEMO.phrase || "") + "”" : (scan ? scan.name : "");
+    const railBase = S.mode === "stocks" && !usGate && !isBeg;
+    const railShow = railBase && (S.isDesk ? S.railOpen : S.mRail);
+    return {
+      isDesk: S.isDesk, isMob: !S.isDesk, nav,
+      viewLabel: S.view.toUpperCase(), viewOpen: S.viewOpen, viewOpts,
+      toggleViewMenu: () => this.setState({ viewOpen: !S.viewOpen, ofOpen: false }),
+      toggleDark: () => { const dark = !S.dark; document.documentElement.classList.toggle("dark", dark); try { localStorage.setItem("um-v2-dark", dark ? "1" : "0"); } catch (e) {} this.setState({ dark }); },
+      darkIcon: S.dark ? "M12 3v2M12 19v2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M3 12h2M19 12h2M5.2 18.8l1.4-1.4M17.4 6.6l1.4-1.4M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10z" : "M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z",
+      mktLine: usReal ? "US ◷ EOD · JUL 18 CLOSE" : "NSE OPEN · 09:42 IST",
+      modeTabs, onIn: () => this.flash({ market: "in", scanId: "momo", ai: false, sel: {} }), onUs: () => this.flash({ market: "us", scanId: null, ai: false, sel: {} }),
+      inPillStyle: pill(!isUS), usPillStyle: pill(isUS), usReal, usGate, flagUs: () => this.flash({ usFlagged: true }),
+      usInrLabel: S.usInr ? "SHOWING ₹ · SPOT 84.00 · 1H" : "$ → ₹", toggleUsInr: () => this.setState({ usInr: !S.usInr }),
+      q, onQ: (e) => this.setState({ q: e.target.value }), qOpen: qt.length > 0 && (qMatches.length > 0 || aiRow), qMatches, aiRow,
+      searchPh: isBeg ? "Describe what you're looking for…" : "Search NSE, or describe a filter…",
+      applyAi: () => this.flash({ ai: true, scanId: null, q: "" }),
+      toggleOf: () => this.setState({ ofOpen: !S.ofOpen, viewOpen: false }), ofOpen: S.ofOpen, saveScan: () => this.setState({ ofOpen: false }),
+      begHero: isBeg && S.mode === "stocks" && !usGate,
+      begScans: V2.SCANS.filter(s => !s.gate && s.total > 0).slice(0, 4).map(s => ({ name: s.name, plain: s.plain, src: s.src, badgeStyle: badgeStyle(s.src), matchLine: s.total + " MATCHES TODAY →", on: () => this.flash({ scanId: s.id, scanLocked: true }) })),
+      showRail: (e) => { e.preventDefault(); this.setState({ view: "advanced", railOpen: true }); },
+      railShow, railStyle: S.isDesk ? "width:230px;flex-shrink:0;display:flex;flex-direction:column;gap:14px" : "width:100%;display:flex;flex-direction:column;gap:14px",
+      mRailBtn: !S.isDesk && railBase, toggleMRail: () => this.setState({ mRail: !S.mRail }), mRailGlyph: S.mRail ? "▾" : "▸",
+      railTitle: scan && !scan.gate ? "SCAN RULES — READ-ONLY" : "FILTERS",
+      scanSel: !!scan && !scan.gate, noScanSel: !scan || !!scan.gate,
+      ruleChips: scan && !scan.gate ? scan.rules : [],
+      ruleChipStyle: mono + "font-size:9.5px;font-weight:700;border:1.5px " + (S.scanLocked ? "dashed" : "solid") + " var(--ink);border-radius:6px;padding:3px 7px;background:var(--paper-2)",
+      scanLockedV: S.scanLocked, scanUnlockedV: !S.scanLocked, unlockScan: () => this.setState({ scanLocked: false }),
+      fundLabel: usReal ? "SEC FUNDAMENTALS · FILING-DATED" : "FUNDAMENTAL",
+      fundChips: usReal ? ["Mcap > $10B", "PE < 25", "ROE > 15%", "FCF positive (10-K)"] : ["Mcap > ₹10,000 Cr", "PE < 25", "ROE > 15%", "D/E < 0.6"],
+      techChips: ["RSI(14) < 30", "Above 200-DMA", "Near 52w high"],
+      advChips: usReal ? ["Insider net buys", "13F ownership Δ", "Accruals ratio"] : ["Promoter holding Δ", "Pledged shares", "Delivery %"],
+      toggleAdv: () => this.setState({ advOpen: !S.advOpen }), advOpenV: S.advOpen, advGlyph: S.advOpen ? "▾" : "▸",
+      gateScan, ctxShow: showStocks && (S.ai || (scan && !scan.gate)), ctxSrc: S.ai ? "AI" : (scan ? scan.src : ""),
+      ctxBadgeStyle: (badgeStyle(S.ai ? "ENGINE" : (scan ? scan.src : "ENGINE"))).replace("margin-top:3px;", ""),
+      ctxName, ctxMeta: S.ai ? V2.AI_DEMO.chips.join(" · ") : (scan ? scan.total + " matches · ran Fri 16:05 IST" : ""),
+      clearScan: () => this.flash({ scanId: null, ai: false }),
+      degraded: showStocks && !!(scan && scan.degraded),
+      chipList, moreChipBtn: !isBeg && allChips.length > 5, moreChipLabel: S.moreChips ? "− LESS" : "+" + (allChips.length - 5) + " MORE", toggleMoreChips: () => this.setState({ moreChips: !S.moreChips }),
+      selBar: showStocks && selCount > 0, selCount: String(selCount), clearSel: () => this.setState({ sel: {} }),
+      showMain: showStocks && !(isBeg && !scan && !S.ai),
+      loading: S.loading || !S.ready, tableShow: S.ready && !S.loading && rows.length > 0, rows,
+      emptyShow: S.ready && !S.loading && rows.length === 0,
+      pxHead: usReal ? (S.usInr ? "PRICE ₹" : "PRICE $") : "PRICE ₹", lastHead: usReal ? "LATEST FILING" : "MATCH",
+      footShow: S.ready && !S.loading,
+      provLine: usReal ? "SOURCE: SEC EDGAR + THIRD-PARTY EOD TAPE · PREVIOUS CLOSE · ₹ AT SPOT" : "SOURCE: NSE BHAVCOPY + EXCHANGE FUNDAMENTALS · EOD",
+      countLine: rows.length + " OF " + (scan ? scan.total : base.length) + " · " + (usReal ? "US LISTED" : "NIFTY 500"),
+      mfShow: S.mode === "mf" && !isUS, etfShow: S.mode === "etf" && !isUS, mf: V2.MF, etf: V2.ETF,
+      usSoon: usReal && S.mode !== "stocks",
+    };
+  }
+}
+</script>
+</body>
+</html>

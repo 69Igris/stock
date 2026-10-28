@@ -1,0 +1,176 @@
+{
+  "_ticket": "MONEY-1361",
+  "_why": [
+    "The one board to open when somebody asks 'is it up'. Everything on it is a",
+    "series this repo PROVES it emits (packages/datadog/__tests__/dashboards-agreement.test.ts",
+    "asserts the whole set against the emitting source) or a vendor series named",
+    "in that test's explicit exemption list. A widget over a metric nobody emits",
+    "renders as an empty graph, which is indistinguishable from a healthy quiet",
+    "system \u2014 MONEY-1238, shipped at four layers of this stack already."
+  ],
+  "title": "UseMoney \u2014 production health",
+  "description": "managed-by:apply-dashboards \u2014 edit the file, not the UI",
+  "layout_type": "ordered",
+  "template_variables": [
+    {
+      "name": "env",
+      "prefix": "env",
+      "default": "production"
+    }
+  ],
+  "widgets": [
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Rows written, 24h",
+        "requests": [
+          {
+            "q": "sum:stockbook.job.written{$env}.as_count()",
+            "aggregator": "sum"
+          }
+        ],
+        "precision": 0,
+        "time": {
+          "live_span": "1d"
+        }
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Realtime holder healthy (1 = yes)",
+        "_why": "A gauge, emitted on every flush tick, so SILENCE is itself the signal \u2014 this is the one process in the estate whose death is the whole feature.",
+        "requests": [
+          {
+            "q": "min:stockbook.rt.health_ok{$env}",
+            "aggregator": "min"
+          }
+        ],
+        "precision": 0,
+        "time": {
+          "live_span": "4h"
+        }
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Workers: hits vs errors",
+        "_why": "`hono.request` is the workers' SERVER span, declared once in DD_SERVER_SPAN (packages/datadog/src/constants.ts) and held to it by dashboards-agreement.test.ts. It was `web.request` until MONEY-1380 started the workers with `--import dd-trace/register.js` (~2026-09-11) and dd-trace's Hono plugin renamed the span; this widget then charted nothing (MONEY-1534). Measured 2026-09-23: 15,787 hono.request hits in 24h, no web.request series since 2026-09-11. Never `http.request`, the same library's HTTP CLIENT span \u2014 this widget read it for a release and charted our outbound calls to NSE, BSE, Screener, Tiingo and Gemini under a title claiming our own request handling.",
+        "requests": [
+          {
+            "q": "sum:trace.hono.request.hits{service:stockbook-workers,$env}.as_count(), sum:trace.hono.request.errors{service:stockbook-workers,$env}.as_count()",
+            "display_type": "bars"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "us-fundamentals: hits vs errors",
+        "_why": "ddtrace-py names the FastAPI SERVER span `fastapi.request` (ddtrace/contrib/internal/fastapi/patch.py). The span is a per-service fact declared in DD_SERVER_SPAN (packages/datadog/src/constants.ts), and a convention rather than a guarantee \u2014 a DD_TRACE_SPAN_ATTRIBUTE_SCHEMA change or a new integration renames it and this widget goes quiet with no error anywhere, which is what happened to the workers' widget above (MONEY-1534).",
+        "requests": [
+          {
+            "q": "sum:trace.fastapi.request.hits{service:us-fundamentals,$env}.as_count(), sum:trace.fastapi.request.errors{service:us-fundamentals,$env}.as_count()",
+            "display_type": "bars"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Error logs by service",
+        "requests": [
+          {
+            "log_query": {
+              "index": "*",
+              "compute": {
+                "aggregation": "count"
+              },
+              "search": {
+                "query": "status:error $env"
+              },
+              "group_by": [
+                {
+                  "facet": "service",
+                  "limit": 10,
+                  "sort": {
+                    "aggregation": "count",
+                    "order": "desc"
+                  }
+                }
+              ]
+            },
+            "display_type": "bars"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Browser errors (RUM)",
+        "requests": [
+          {
+            "rum_query": {
+              "index": "*",
+              "compute": {
+                "aggregation": "count"
+              },
+              "search": {
+                "query": "@type:error service:stockbook-web $env"
+              }
+            },
+            "display_type": "bars"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "slo",
+        "slo_id": "{{slo:[production] Scheduled jobs write what they select}}",
+        "view_type": "detail",
+        "time_windows": ["30d"],
+        "view_mode": "overall",
+        "title": "Jobs write what they select",
+        "show_error_budget": false
+      }
+    },
+    {
+      "definition": {
+        "type": "slo",
+        "slo_id": "{{slo:[production] Scheduled jobs run}}",
+        "view_type": "detail",
+        "time_windows": ["30d"],
+        "view_mode": "overall",
+        "title": "Jobs run at all",
+        "show_error_budget": false
+      }
+    },
+    {
+      "definition": {
+        "type": "slo",
+        "slo_id": "{{slo:[production] Workers request success}}",
+        "view_type": "detail",
+        "time_windows": ["30d"],
+        "view_mode": "overall",
+        "title": "Workers request success",
+        "show_error_budget": false
+      }
+    },
+    {
+      "definition": {
+        "type": "slo",
+        "slo_id": "{{slo:[production] EDGAR detection under 5 minutes}}",
+        "view_type": "detail",
+        "time_windows": ["30d"],
+        "view_mode": "overall",
+        "title": "EDGAR detection under 5 minutes",
+        "show_error_budget": false
+      }
+    }
+  ]
+}

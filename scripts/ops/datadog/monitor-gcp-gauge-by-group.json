@@ -1,0 +1,86 @@
+{
+  "_readme": [
+    "MONEY-1379 \u2014 a GCP-integration GAUGE (or count), grouped, compared to a ceiling.",
+    "Used by: pubsub-oldest-unacked, pubsub-dead-letter, workers-saturation,",
+    "usfund-saturation, workers-queueing, scheduler-errors.",
+    "`max` over the window for gauges: a gauge that TOUCHED the ceiling once in",
+    "the window is the question, not its average. `sum` + `.as_count()` for the",
+    "scheduler-errors count (agg/suffix placeholders). Scope is always a NAMED",
+    "subscription, service or job pattern \u2014 never {*} \u2014 because the same project",
+    "carries local pull subscriptions that are never drained and two algo-*",
+    "services we do not own.",
+    "",
+    "TIME and SPACE aggregation are SEPARATE placeholders, and collapsing them",
+    "into one was a real defect (MONEY-1379 review). Datadog's monitor grammar is `time_aggr(window):space_aggr:metric{...}` \u2014 the LEADING aggregator",
+    "aggregates over the WINDOW and the inner one ACROSS SERIES. They are",
+    "rarely the same answer: `gcp.run.container.instance_count` carries a `state`",
+    "tag (active / idle), so `max:` over it reads max(active, idle) rather than",
+    "the instance count \u2014 a service sitting at its cap of 20 as 12 active + 8",
+    "idle evaluates to 12 and never crosses a `> 18` critical. It can only ever",
+    "UNDER-report, so the failure mode is a silent miss. Counts and totals space-",
+    "aggregate with `sum`; an AGE (oldest_unacked) genuinely wants `max`, because",
+    "the oldest message is the question."
+  ],
+  "_query_brace_rationale": [
+    "`{{{scope}}}` and `{{{group}}}` are THREE braces on purpose, and they are not",
+    "a typo for a Datadog template variable.",
+    "",
+    "Datadog's query language writes a scope and a group-by inside LITERAL braces:",
+    "`\u2026oldest_unacked_message_age{subscription_id:*-prod-push} by {subscription_id}`.",
+    "dd_render's fill() matches `/\\{\\{(\\w+)\\}\\}/g`, so of the three braces it",
+    "consumes the inner two as the placeholder `{{scope}}` and leaves the outer",
+    "one as query syntax. Rendered, `scope=\"subscription_id:*-prod-push\"` gives",
+    "`{subscription_id:*-prod-push}`.",
+    "",
+    "This means the VARIABLE VALUE must NOT carry its own braces. Passing",
+    "`\"{subscription_id:*-prod-push}\"` renders `{{subscription_id:\u2026}}` \u2014 which",
+    "is both invalid query syntax and, worse, looks like a Datadog template",
+    "variable to a reader."
+  ],
+  "name": "[{{env}}] {{label}}",
+  "type": "query alert",
+  "query": "{{time_agg}}(last_{{window}}):{{space_agg}}:{{metric}}{{{scope}}} by {{{group}}}{{suffix}} > {{critical}}",
+  "message": "{{message}}\n\n@{{notify}}",
+  "tags": [
+    "managed-by:apply-perf-monitors",
+    "money:1379",
+    "family:{{family}}",
+    "env:{{env}}"
+  ],
+  "options": {
+    "thresholds": {
+      "critical": "{{critical}}",
+      "warning": "{{warning}}"
+    },
+    "notify_no_data": "{{notify_no_data}}",
+    "no_data_timeframe": "{{no_data_timeframe}}",
+    "renotify_interval": 60,
+    "require_full_window": false,
+    "include_tags": true
+  },
+  "_placeholders": [
+    "env",
+    "label",
+    "space_agg",
+    "time_agg",
+    "metric",
+    "scope",
+    "group",
+    "suffix",
+    "window",
+    "critical",
+    "warning",
+    "family",
+    "message",
+    "notify",
+    "notify_no_data",
+    "no_data_timeframe"
+  ],
+  "_managed_tag_rationale": [
+    "`managed-by:apply-perf-monitors` is its OWN namespace. apply-monitors.sh and",
+    "apply-service-monitors.sh SHARE `managed-by:apply-monitors`; reusing theirs",
+    "would put these rows in both scripts' listings, and each script prunes what",
+    "it does not recognise \u2014 so whichever ran last would delete the other's",
+    "monitors, on a schedule, silently."
+  ]
+}

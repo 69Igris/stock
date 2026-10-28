@@ -1,0 +1,58 @@
+{
+    "success": true,
+    "data": {
+        "results": [
+            {
+                "sid": "RELI",
+                "stock": {
+                    "advancedRatios": {
+                        "mrktCapf": 1791572.80140558,
+                        "roe": 7.709406669173635,
+                        "apef": 22.179793270264067
+                    },
+                    "info": {
+                        "name": "Reliance Industries Ltd",
+                        "ticker": "RELIANCE",
+                        "sector": "Energy"
+                    },
+                    "slug": "/stocks/reliance-industries-RELI"
+                }
+            },
+            {
+                "sid": "HDBK",
+                "stock": {
+                    "advancedRatios": {
+                        "mrktCapf": 1123335.881415,
+                        "roe": 13.261197178569569,
+                        "apef": 14.775686274242855
+                    },
+                    "info": {
+                        "name": "HDFC Bank Limited",
+                        "ticker": "HDFCBANK",
+                        "sector": "Financials"
+                    },
+                    "slug": "/stocks/hdfc-bank-HDBK"
+                }
+            },
+            {
+                "sid": "TCS",
+                "stock": {
+                    "advancedRatios": {
+                        "mrktCapf": 884875.66427726,
+                        "roe": 48.18628242977934,
+                        "apef": 17.981622927804512
+                    },
+                    "info": {
+                        "name": "Tata Consultancy Services Ltd",
+                        "ticker": "TCS",
+                        "sector": "Information Technology"
+                    },
+                    "slug": "/stocks/tata-consultancy-services-TCS"
+                }
+            }
+        ],
+        "stats": {
+            "count": 3
+        }
+    }
+}

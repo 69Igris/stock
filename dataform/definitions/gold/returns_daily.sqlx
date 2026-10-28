@@ -1,0 +1,80 @@
+config {
+  type: "view",
+  schema: datasets.gold(),
+  name: "returns_daily",
+  description: "Simple and log daily returns, on the ADJUSTED close. A return computed on the raw close reports -50% on every split day.",
+  columns: {
+    simple_return: "adj_close / prev_adj_close - 1. NULL on a listing's first session — there is no return, which is not the same as 0",
+    log_return: "LN(adj_close / prev_adj_close). Additive across time, which is what a multi-day aggregate needs",
+    prev_adj_close: "the previous SESSION's adjusted close, carried so a reader can check the arithmetic"
+  },
+  assertions: {
+    uniqueKey: ["market", "listing_id", "session_date"],
+    nonNull: ["market", "listing_id", "session_date"]
+  },
+  tags: ["gold", "bars"]
+}
+
+/*
+ * THE RETURN IS COMPUTED ON `adj_close`, NEVER ON `close`.
+ *
+ * A 2:1 split halves the printed price overnight. On the raw series that reads
+ * as a -50% day; on the adjusted series it reads as whatever actually happened.
+ * The same applies to a dividend, one order of magnitude smaller and therefore
+ * far harder to notice: a 0.5% quarterly distribution shows up as a 0.5%
+ * one-day loss that nothing flags.
+ *
+ * NULL ON THE FIRST SESSION, NOT ZERO. A listing's first bar has no previous
+ * close, and "no return" is a different statement from "a return of zero" —
+ * the second one drags a mean toward zero and makes a realised-vol window
+ * report calm where it has no data at all.
+ *
+ * `prev_adj_close > 0` guards LN. An adjusted close of zero is only reachable
+ * through a degenerate corporate action (see the divergence note in
+ * includes/adjustment.js); it is refused here rather than allowed to make LN
+ * error and take the whole workflow down.
+ */
+
+WITH lagged AS (
+  SELECT
+    market,
+    listing_id,
+    symbol,
+    exchange,
+    session_date,
+    adj_high,
+    adj_low,
+    adj_close,
+    adj_volume,
+    source,
+    adjustment_policy_version,
+    LAG(adj_close) OVER (
+      PARTITION BY market, listing_id ORDER BY session_date
+    ) AS prev_adj_close
+  FROM ${ref("adjusted_bar_d1")}
+)
+SELECT
+  market,
+  listing_id,
+  symbol,
+  exchange,
+  session_date,
+  -- CARRIED, not dropped: `rolling_stats` reads this view and a 52-week HIGH
+  -- means the highest intraday high, not the highest close. Computing it from
+  -- `adj_close` gives a number that is always lower, always plausible, and
+  -- never what anyone asked for.
+  adj_high,
+  adj_low,
+  adj_close,
+  adj_volume,
+  prev_adj_close,
+  source,
+  adjustment_policy_version,
+  CASE
+    WHEN prev_adj_close > 0 THEN adj_close / prev_adj_close - 1
+  END AS simple_return,
+  CASE
+    WHEN prev_adj_close > 0 AND adj_close > 0
+      THEN LN(CAST(adj_close AS FLOAT64) / CAST(prev_adj_close AS FLOAT64))
+  END AS log_return
+FROM lagged

@@ -1,0 +1,62 @@
+{
+  "title": "W5 Building in public Month 1 (Silent)",
+  "aspect": "9:16",
+  "fps": 30,
+  "brandTheme": "cream",
+  "scenes": [
+    {
+      "id": "hook",
+      "type": "hook",
+      "durationSec": 4,
+      "kicker": "Building in public",
+      "headline": "Month 1, ==by the numbers==",
+      "motion": "rise"
+    },
+    {
+      "id": "stat",
+      "type": "stat",
+      "durationSec": 4.5,
+      "stat": {
+        "kicker": "Sign-ups",
+        "value": "[fill]",
+        "label": "people joined in month 1."
+      },
+      "motion": "kenburns-in"
+    },
+    {
+      "id": "cards",
+      "type": "cards",
+      "durationSec": 5.5,
+      "headline": "What I learned",
+      "bullets": [
+        "[fill]% added a 2nd broker",
+        "[fill] subscribed",
+        "$0 spent on tools"
+      ],
+      "motion": "rise"
+    },
+    {
+      "id": "broll",
+      "type": "veo",
+      "durationSec": 6,
+      "veoPrompt": "abstract warm cream and emerald-green gradient light gently brightening like a soft slow sunrise, drifting glow, premium minimal fintech motion graphics, hopeful, elegant, no text, no logos, no people",
+      "motion": "static"
+    },
+    {
+      "id": "p1",
+      "type": "point",
+      "durationSec": 4.5,
+      "headline": "Transparency is the *product*",
+      "subtext": "Build in public, learn in public.",
+      "motion": "rise"
+    },
+    {
+      "id": "cta",
+      "type": "cta",
+      "durationSec": 3.5,
+      "headline": "Follow the ==build==.",
+      "subtext": "UseMoney AI (my product) · building in public",
+      "motion": "pop"
+    }
+  ]
+}

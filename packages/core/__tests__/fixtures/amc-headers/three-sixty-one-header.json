@@ -1,0 +1,380 @@
+{
+ "amc": "THREE_SIXTY_ONE",
+ "provenance": "real",
+ "sourceUrl": "https://s3.ap-south-1.amazonaws.com/x-web-s3.360.one/IN_MF_MONTHLY_PORTFOLIO_Aug2026_Final_b5e5446649.xls",
+ "fetchedAt": "2026-09-14T12:22:06.235Z",
+ "httpStatus": 200,
+ "userAgent": "absent",
+ "fileBytes": 283616,
+ "dataMonth": "2026-08",
+ "sheetName": "Dynamic Term",
+ "sheetCountInFile": 12,
+ "headerRow": 3,
+ "rowsCaptured": "0..13 of 137",
+ "colsCaptured": 9,
+ "merges": [],
+ "cells": [
+  [
+   null,
+   {
+    "v": "360 ONE Dynamic Term Fund -  An Open Ended Dynamic Term Scheme investing across duration. A relatively high interest rate risk and relatively high credit risk",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   {
+    "v": "Monthly Portfolio Statement as on August 31,2026",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   {
+    "v": "Name of the Instrument",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "ISIN",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Industry / Rating",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Quantity",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Market/Fair Value(Rs. in Lacs)",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Rounded % to Net Assets",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "YTM",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "~YTC (AT1/Tier 2 bonds)",
+    "t": "s",
+    "z": "General"
+   }
+  ],
+  [
+   null,
+   {
+    "v": "REIT/InvIT Instruments ",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   {
+    "v": "(a) Listed / awaiting listing on Stock Exchanges",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   {
+    "v": "EOPR01",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Embassy Office Parks REIT",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "INE041025011",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Realty",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": 594983,
+    "t": "n",
+    "z": "#,##0"
+   },
+   {
+    "v": 2608.8814584,
+    "t": "n",
+    "z": "General"
+   },
+   {
+    "v": 0.04664148498781451,
+    "t": "n",
+    "z": "#0.00%"
+   },
+   null,
+   null
+  ],
+  [
+   {
+    "v": "CLIT01",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Capital Infra Trust",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "INE0Z8Z23013",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Construction",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": 2535250,
+    "t": "n",
+    "z": "#,##0"
+   },
+   {
+    "v": 1950.874875,
+    "t": "n",
+    "z": "General"
+   },
+   {
+    "v": 0.03487766793789905,
+    "t": "n",
+    "z": "#0.00%"
+   },
+   null,
+   null
+  ],
+  [
+   {
+    "v": "BRFI01",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Brookfield India Real Estate Trust",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "INE0FDU25010",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Realty",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": 170318,
+    "t": "n",
+    "z": "#,##0"
+   },
+   {
+    "v": 581.9936378,
+    "t": "n",
+    "z": "General"
+   },
+   {
+    "v": 0.010404860455829232,
+    "t": "n",
+    "z": "#0.00%"
+   },
+   null,
+   null
+  ],
+  [
+   {
+    "v": "MEBP01",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Mindspace Business Parks REIT",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "INE0CCU25019",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Realty",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": 26801,
+    "t": "n",
+    "z": "#,##0"
+   },
+   {
+    "v": 132.8927585,
+    "t": "n",
+    "z": "General"
+   },
+   {
+    "v": 0.0023758517584652433,
+    "t": "n",
+    "z": "#0.00%"
+   },
+   null,
+   null
+  ],
+  [
+   null,
+   {
+    "v": "Sub Total",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   {
+    "v": 5274.6427297,
+    "t": "n",
+    "z": "General"
+   },
+   {
+    "v": 0.09429986514000804,
+    "t": "n",
+    "z": "#0.00%"
+   },
+   null,
+   null
+  ],
+  [
+   null,
+   {
+    "v": "(b) Unlisted",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   {
+    "v": "NIL",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "NIL",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null
+  ],
+  [
+   null,
+   {
+    "v": "Sub Total",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   {
+    "v": "NIL",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "NIL",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null
+  ],
+  [
+   null,
+   {
+    "v": "Total",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   {
+    "v": 5274.6427297,
+    "t": "n",
+    "z": "General"
+   },
+   {
+    "v": 0.09429986514000804,
+    "t": "n",
+    "z": "#0.00%"
+   },
+   null,
+   null
+  ]
+ ]
+}

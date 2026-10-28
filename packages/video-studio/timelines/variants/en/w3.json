@@ -1,0 +1,94 @@
+{
+  "title": "W3 The F and O trap (EN)",
+  "aspect": "9:16",
+  "fps": 30,
+  "brandTheme": "cream",
+  "music": {
+    "track": "corporate-lofi",
+    "gainDb": -22,
+    "duckUnderVoiceover": true
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "type": "hook",
+      "durationSec": 4,
+      "kicker": "SEBI study",
+      "headline": "9 in 10 ==lose==.",
+      "subtext": "F&O, by the numbers.",
+      "motion": "rise",
+      "voiceover": {
+        "text": "Nine out of ten F and O traders end up losing money.",
+        "lang": "en-IN"
+      }
+    },
+    {
+      "id": "stat1",
+      "type": "stat",
+      "durationSec": 4.5,
+      "stat": {
+        "kicker": "SEBI · FY22–24",
+        "value": "93%",
+        "label": "of F&O traders made a net loss."
+      },
+      "motion": "kenburns-in",
+      "disclaimer": true,
+      "voiceover": {
+        "text": "In a SEBI study, ninety-three percent of traders made a net loss.",
+        "lang": "en-IN"
+      }
+    },
+    {
+      "id": "stat2",
+      "type": "stat",
+      "durationSec": 4.5,
+      "stat": {
+        "kicker": "3 years · ~1.1 cr traders",
+        "value": "₹1.8 L cr",
+        "label": "in net losses (SEBI)."
+      },
+      "motion": "rise",
+      "disclaimer": true,
+      "voiceover": {
+        "text": "That's about one point eight lakh crore rupees in net losses over three years.",
+        "lang": "en-IN"
+      }
+    },
+    {
+      "id": "broll",
+      "type": "veo",
+      "durationSec": 6,
+      "veoPrompt": "abstract deep teal and charcoal light slowly swirling then settling into calm still gradients, moody premium minimal fintech motion graphics, soft glow, elegant, no text, no logos, no people",
+      "motion": "static",
+      "voiceover": {
+        "text": "Behind the speed and the thrill, there's often a very big risk.",
+        "lang": "en-IN"
+      }
+    },
+    {
+      "id": "p1",
+      "type": "point",
+      "durationSec": 4.5,
+      "headline": "Education ==over== adrenaline",
+      "subtext": "Understand the odds before you act.",
+      "motion": "rise",
+      "disclaimer": true,
+      "voiceover": {
+        "text": "Before the adrenaline, understand the odds and the risk.",
+        "lang": "en-IN"
+      }
+    },
+    {
+      "id": "cta",
+      "type": "cta",
+      "durationSec": 3.5,
+      "headline": "Know the *odds*.",
+      "subtext": "Not advice · Education only · UseMoney AI (my product)",
+      "motion": "pop",
+      "voiceover": {
+        "text": "Know the odds. This is not advice — only education.",
+        "lang": "en-IN"
+      }
+    }
+  ]
+}

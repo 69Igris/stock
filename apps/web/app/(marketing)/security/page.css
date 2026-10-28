@@ -1,0 +1,329 @@
+.pillars {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+.pillar {
+  padding: 28px;
+  border-radius: 14px;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s;
+}
+.pillar:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-hard);
+}
+.pillar .ic {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--pop-2);
+  border: 2px solid var(--ink);
+  display: grid;
+  place-items: center;
+  color: #1d1d1b;
+  transform: rotate(-3deg);
+}
+/* var(--paper) flips with the theme so the glyph stays legible on the
+   pop fills, which get LIGHTER in dark mode (fixed cream washed out). */
+.pillar:nth-child(2) .ic {
+  background: var(--pop-4);
+  color: var(--paper);
+}
+.pillar:nth-child(3) .ic {
+  background: var(--pop-3);
+  color: var(--paper);
+}
+.pillar h4 {
+  margin-top: 16px;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+  color: var(--ink);
+}
+.pillar h4 .ser {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+}
+.pillar p {
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+.pillar .meta {
+  margin-top: 16px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--emerald);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+/* Locked to always-dark (like .big-cta). Without this the surface
+   inverts in dark mode (cream bg) and the hardcoded cream-alpha node
+   labels become invisible. */
+.diagram {
+  background: #1d1d1b;
+  color: #f7f3e6;
+  padding: 40px;
+  border-radius: 16px;
+  border: 2px solid #1d1d1b;
+  box-shadow: 6px 6px 0 var(--emerald);
+  overflow: hidden;
+}
+.diagram .lbl {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: rgba(247, 243, 230, 0.5);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 26px;
+}
+.flow {
+  display: grid;
+  grid-template-columns: 1fr 60px 1fr 60px 1fr;
+  gap: 0;
+  align-items: center;
+}
+.flow .node {
+  padding: 22px;
+  border-radius: 12px;
+  background: rgba(247, 243, 230, 0.05);
+  border: 1.5px solid rgba(247, 243, 230, 0.15);
+  text-align: center;
+}
+.flow .node.um {
+  background: rgba(52, 211, 153, 0.12);
+  border-color: var(--emerald);
+}
+.flow .node .t {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  color: rgba(247, 243, 230, 0.5);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.flow .node .b {
+  font-size: 18px;
+  font-weight: 800;
+  margin-top: 8px;
+  color: #f7f3e6;
+}
+.flow .node.um .b {
+  color: var(--emerald);
+}
+.flow .node .s {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: rgba(247, 243, 230, 0.6);
+  margin-top: 4px;
+}
+.flow .arr {
+  text-align: center;
+}
+.flow .arr .a {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 14px;
+  color: var(--emerald);
+}
+.flow .arr .l {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: rgba(247, 243, 230, 0.4);
+  margin-top: 4px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.promise-list {
+  margin-top: 36px;
+  padding: 32px 36px;
+  background: var(--paper-3);
+  color: var(--ink);
+  border-radius: 14px;
+  border: 2px solid var(--ink);
+}
+.promise-list .lbl {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--emerald);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  font-weight: 700;
+}
+.promise-list ul {
+  list-style: none;
+  padding: 0;
+}
+/* Absolute-positioned bullet — display:grid was creating implicit grid
+   items for each inline child (<strong> + text node), which forced the
+   text into the 28px column and wrapped every word. */
+.promise-list ul li {
+  padding: 12px 0 12px 28px;
+  border-bottom: 1px dashed var(--ink);
+  font-size: 15px;
+  color: var(--ink-2);
+  position: relative;
+  line-height: 1.55;
+}
+.promise-list ul li:last-child {
+  border-bottom: 0;
+}
+.promise-list ul li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 14px;
+  color: var(--emerald);
+  font-weight: 800;
+  font-family: "JetBrains Mono", monospace;
+}
+.promise-list ul li strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.detail {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 40px;
+  align-items: start;
+}
+.detail + .detail {
+  margin-top: 50px;
+  padding-top: 50px;
+  border-top: 1.5px dashed var(--ink);
+}
+.detail .label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--emerald);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding-top: 4px;
+  font-weight: 700;
+}
+.detail .body h3 {
+  font-size: 26px;
+  line-height: 1.1;
+  letter-spacing: -0.7px;
+  font-weight: 800;
+  color: var(--ink);
+}
+.detail .body h3 .ser {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+}
+.detail .body p {
+  margin-top: 14px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+.detail .body p strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+.detail .body p code {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13.5px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--rule-softer);
+  color: var(--emerald);
+}
+.detail .body ul {
+  list-style: none;
+  margin-top: 14px;
+  padding: 0;
+}
+.detail .body ul li {
+  padding: 5px 0 5px 18px;
+  font-size: 14.5px;
+  color: var(--ink-2);
+  position: relative;
+}
+.detail .body ul li::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--emerald);
+  position: absolute;
+  left: 0;
+  top: 14px;
+}
+.detail .body ul li strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.disclose {
+  margin-top: 40px;
+  padding: 28px 30px;
+  border-radius: 14px;
+  background: var(--paper-3);
+  border: 2px dashed var(--ink);
+}
+.disclose h4 {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+  color: var(--ink);
+}
+.disclose h4 .ser {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+}
+.disclose p {
+  margin-top: 10px;
+  font-size: 14.5px;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+.disclose p code {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13.5px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--rule-softer);
+  color: var(--emerald);
+}
+.disclose .row {
+  margin-top: 16px;
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.disclose .row b {
+  color: var(--emerald);
+}
+
+@media (max-width: 1000px) {
+  .pillars {
+    grid-template-columns: 1fr;
+  }
+  .flow {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .flow .arr {
+    transform: rotate(90deg);
+  }
+  .detail {
+    grid-template-columns: 1fr;
+  }
+}

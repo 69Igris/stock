@@ -1,0 +1,461 @@
+{
+ "amc": "TATA",
+ "provenance": "real",
+ "sourceUrl": "https://betacms.tatamutualfund.com/system/files/2026-09/Monthly%20Portfolio%20as%20on%2031st%20August%202026.xlsx",
+ "fetchedAt": "2026-09-14T12:21:42.308Z",
+ "httpStatus": 200,
+ "userAgent": "absent",
+ "fileBytes": 1762746,
+ "dataMonth": "2026-08",
+ "sheetName": "TSLVFOF",
+ "sheetCountInFile": 71,
+ "headerRow": 11,
+ "rowsCaptured": "0..21 of 164",
+ "colsCaptured": 8,
+ "merges": [
+  {
+   "s": {
+    "c": 1,
+    "r": 0
+   },
+   "e": {
+    "c": 4,
+    "r": 0
+   }
+  },
+  {
+   "s": {
+    "c": 2,
+    "r": 2
+   },
+   "e": {
+    "c": 2,
+    "r": 6
+   }
+  },
+  {
+   "s": {
+    "c": 3,
+    "r": 2
+   },
+   "e": {
+    "c": 3,
+    "r": 6
+   }
+  }
+ ],
+ "cells": [
+  [
+   {
+    "v": "Index",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "TATA SILVER ETF FUND OF FUND",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   {
+    "v": "TATA SILVER ETF FUND OF FUND",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   {
+    "v": "(An Open-Ended Fund of Fund Scheme investing in Tata Silver Exchange Traded Fund)",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   {
+    "v": "This product is suitable for investors who are seeking*:",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   {
+    "v": "•Long Term Capital Appreciation.",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   {
+    "v": "•Returns that are in line with returns provided by Tata Silver Exchange Traded Fund",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   {
+    "v": "*Investors should consult their financial advisors if in doubt about whether the product is suitable for them",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Scheme Risk-O-Meter",
+    "t": "s",
+    "z": "0.00"
+   },
+   {
+    "v": "Benchmark Risk-O-Meter",
+    "t": "s",
+    "z": "0.00"
+   },
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   {
+    "v": "Portfolio as on 31-08-26",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   {
+    "v": "NAME OF THE INSTRUMENT",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "YIELD ( IN % )",
+    "t": "s",
+    "z": "0.00"
+   },
+   {
+    "v": "INDUSTRY",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "ISIN CODE",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "QUANTITY",
+    "t": "s",
+    "z": "0.00"
+   },
+   {
+    "v": "MKT VAL(Rs. Lacs)",
+    "t": "s",
+    "z": "0.00"
+   },
+   {
+    "v": "% to NAV",
+    "t": "s",
+    "z": "0.00"
+   }
+  ],
+  [
+   null,
+   {
+    "v": "EQUITY & EQUITY RELATED",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   {
+    "v": "A) LISTED/AWAITING LISTING ON STOCK EXCHANGES",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   {
+    "v": "TATA SILVER EXCHANGE TRADED FUND",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "NA",
+    "t": "s",
+    "z": "0.00"
+   },
+   {
+    "v": "CAPITAL MARKETS",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "INF277KA1984",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": 483367133,
+    "t": "n",
+    "z": "0.00"
+   },
+   {
+    "v": 109337.65,
+    "t": "n",
+    "z": "0.00"
+   },
+   {
+    "v": 99.92,
+    "t": "n",
+    "z": "0.00"
+   }
+  ],
+  [
+   null,
+   {
+    "v": "B) UNLISTED",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   {
+    "v": "Nil",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Nil",
+    "t": "s",
+    "z": "0.00"
+   },
+   {
+    "v": "Nil",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Nil",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "Nil",
+    "t": "s",
+    "z": "0.00"
+   },
+   {
+    "v": "Nil",
+    "t": "s",
+    "z": "0.00"
+   },
+   {
+    "v": "Nil",
+    "t": "s",
+    "z": "0.00"
+   }
+  ],
+  [
+   null,
+   {
+    "v": "EQUITY & EQUITY RELATED TOTAL",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   {
+    "v": 109337.65,
+    "t": "n",
+    "z": "0.00"
+   },
+   {
+    "v": 99.92,
+    "t": "n",
+    "z": "0.00"
+   }
+  ],
+  [
+   null,
+   {
+    "v": "NAME OF THE INSTRUMENT",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "YIELD ( IN % )",
+    "t": "s",
+    "z": "0.00"
+   },
+   {
+    "v": "RATINGS",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "ISIN CODE",
+    "t": "s",
+    "z": "General"
+   },
+   {
+    "v": "QUANTITY",
+    "t": "s",
+    "z": "0.00"
+   },
+   {
+    "v": "MKT VAL(Rs. Lacs)",
+    "t": "s",
+    "z": "0.00"
+   },
+   {
+    "v": "% to NAV",
+    "t": "s",
+    "z": "0.00"
+   }
+  ],
+  [
+   null,
+   {
+    "v": "DEBT INSTRUMENTS",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   {
+    "v": "A) LISTED/AWAITING LISTING ON STOCK EXCHANGES",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   {
+    "v": "(I) GOVERNMENT SECURITIES",
+    "t": "s",
+    "z": "General"
+   },
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ]
+ ]
+}

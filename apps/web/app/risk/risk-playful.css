@@ -1,0 +1,46 @@
+/* ─────────────────────────────────────────────────────────────────
+   Risk Report — playful design overrides + mobile helpers.
+   Extends playful-app.css. Co-located per instructions.
+   ───────────────────────────────────────────────────────────────── */
+
+/* ── Tab strip container — provides margin-bottom ───────────────── */
+.pf-risk-tabs {
+  margin-bottom: 20px;
+}
+
+/* ── Driver bar grid ─────────────────────────────────────────────── */
+.pf-risk-driver-bar {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr 52px;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ── Dark stat mini-tile ─────────────────────────────────────────── */
+.pf-risk-dark-stat {
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1.5px solid rgba(255, 255, 255, 0.08);
+}
+html:not(.dark) .pf-risk-dark-stat {
+  background: rgba(29, 29, 27, 0.04);
+  border-color: rgba(29, 29, 27, 0.1);
+}
+
+/* ── Stat mini-grid inside dark card ────────────────────────────── */
+.pf-risk-snap-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  align-items: center;
+}
+
+/* ── Diagnose lens strip wraps ───────────────────────────────────── */
+.pf-risk-lens-strip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}

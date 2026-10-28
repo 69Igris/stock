@@ -1,0 +1,107 @@
+config {
+  type: "view",
+  schema: datasets.gold(),
+  name: "chart_tile_manifest",
+  description: "One row per tileable listing: what the chart tile builder must know before it decides to rebuild. Read by scripts/jobs/tile-build-d1.ts (--market=US).",
+  columns: {
+    years_available: "distinct CALENDAR years the listing has sessions in",
+    first_session: "oldest session in the lake",
+    last_session: "newest session. The builder's `source_max_date` — a tile built from an older one is stale",
+    adjustment_policy_version: "ADJUSTMENT_POLICY_VERSION from includes/adjustment.js. A tile stamped with an older policy decodes perfectly and its prices are on the old basis",
+    actions_fingerprint: "stable digest of every adjustment-bearing row. CHANGES when a split or dividend lands, which is what makes a YEAR tile rebuild",
+    latest_action_ex_date: "newest session carrying a split or a dividend, for an operator reading this by hand"
+  },
+  assertions: {
+    uniqueKey: ["market", "listing_id"],
+    nonNull: ["market", "listing_id", "last_session", "actions_fingerprint"]
+  },
+  tags: ["gold", "tiles"]
+}
+
+/*
+ * ## THE BRIEF ASKS FOR `needs_rebuild BOOL`, AND THIS EMITS A FINGERPRINT
+ *
+ * B4 defines it as "any corporate_action with ex_date > last tile build". The
+ * lake does not know when a tile was built — that lives in the tile manifest in
+ * GCS, written by the builder — so a boolean computed here could only ever be a
+ * proxy for the question, sitting in a column whose name claims to answer it.
+ *
+ * `actions_fingerprint` answers it exactly, in the half of the system that CAN.
+ * `tile-build-d1.ts` already carries `actions_fingerprint` in its manifest
+ * entry and already rebuilds a listing — INCLUDING its closed-year tiles — when
+ * the fingerprint moves (`rebuildReason` → "actions-changed"). Handing it this
+ * string makes the existing, tested machinery do the work; a second boolean
+ * would be a second spelling of one rule, which is this repo's most expensive
+ * defect family.
+ *
+ * IT MATTERS FOR US SPECIFICALLY. India's builder fingerprints
+ * `corporate_action` rows from Mongo. The US path has no such table and passed
+ * `[]`, so its fingerprint was the constant "none" — meaning a new US split
+ * changed every adjusted bar in gold, rebuilt the 5-year tile (because
+ * `source_max_date` advances every night anyway) and left the YEAR tiles on the
+ * old basis. That is the step-discontinuity-at-the-five-year-boundary failure
+ * the fingerprint was invented for, one market over.
+ *
+ * ## THE FINGERPRINT IS OVER THE BARS, NOT OVER `silver.corporate_action`
+ *
+ * Which is not an oversight — it is where the adjustment's inputs actually
+ * live FOR THE ONE MARKET THAT READS THIS. Tiingo rides `divCash` and
+ * `splitFactor` on the EOD row itself, so for a US bar `adjusted_bar_d1`'s
+ * `COALESCE(bar_column, action_row)` always takes the bar column and this
+ * fingerprint cannot disagree with the adjustment. `corporate_action` is an
+ * append-only ANNOUNCEMENT log with its own observed_at clock; an announcement
+ * that never reaches a bar changes no price, and a bar whose split_factor moved
+ * changes every earlier price whether or not an announcement was filed.
+ *
+ * MONEY-1516 (b) MADE THAT A US-ONLY STATEMENT, and the next reader needs the
+ * difference. `adjusted_bar_d1` now also joins `corporate_action`, and for
+ * INDIA it is the only witness — every India bar carries NULL in both columns,
+ * so this fingerprint is the constant `'none'` for every India listing no
+ * matter how many splits are on file.
+ *
+ * That is harmless TODAY and only because nothing consumes it:
+ * `tile-build-d1.ts` reads `actionsFingerprint` from this manifest for US
+ * listings alone (`isUs ? listing.actionsFingerprint : fingerprintActions(...)`)
+ * and builds India tiles from Mongo `DailyPrice` with a fingerprint over Mongo
+ * `corporate_actions` — `builtFrom: "dailyprice"`, never `"gold"`. THE DAY
+ * INDIA TILES MOVE TO GOLD this fingerprint has to read `corporate_action`
+ * too, or a newly-filed India split will restate every adjusted bar in gold
+ * while every CLOSED YEAR tile keeps the old basis — which is the
+ * step-discontinuity failure described above, arriving from the other input.
+ *
+ * `'none'` for a listing with no actions — the SAME literal `fingerprintActions`
+ * returns for an empty list, so the two halves compare without a translation
+ * step.
+ */
+
+SELECT
+  market,
+  listing_id,
+  ANY_VALUE(symbol) AS symbol,
+  ANY_VALUE(exchange) AS exchange,
+  COUNT(DISTINCT EXTRACT(YEAR FROM session_date)) AS years_available,
+  MIN(session_date) AS first_session,
+  MAX(session_date) AS last_session,
+  '${adjustment.ADJUSTMENT_POLICY_VERSION}' AS adjustment_policy_version,
+  COALESCE(
+    TO_HEX(MD5(STRING_AGG(
+      CASE
+        WHEN COALESCE(div_cash, 0) > 0 OR COALESCE(split_factor, 1) != 1
+          THEN CONCAT(
+            CAST(session_date AS STRING), ':',
+            CAST(COALESCE(div_cash, 0) AS STRING), ':',
+            CAST(COALESCE(split_factor, 1) AS STRING)
+          )
+      END,
+      '|' ORDER BY session_date
+    ))),
+    'none'
+  ) AS actions_fingerprint,
+  MAX(
+    CASE
+      WHEN COALESCE(div_cash, 0) > 0 OR COALESCE(split_factor, 1) != 1
+        THEN session_date
+    END
+  ) AS latest_action_ex_date
+FROM ${ref("price_bar_d1")}
+GROUP BY market, listing_id

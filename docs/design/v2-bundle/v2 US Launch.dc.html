@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/usemoney-play-design-system-67522a6c-d1c3-4617-97de-fcd968490366/colors_and_type.css">
+  <link rel="stylesheet" href="_ds/usemoney-play-design-system-67522a6c-d1c3-4617-97de-fcd968490366/styles/playful-app.css">
+  <script src="_ds/usemoney-play-design-system-67522a6c-d1c3-4617-97de-fcd968490366/_ds_bundle.js"></script>
+  <style>
+    html,body{margin:0;padding:0}
+    :root{--gain-text:#0f7a34;--loss-text:#b91c1c}
+    html.dark{--gain-text:#34d399;--loss-text:#ff6b35}
+    body{background:var(--paper);font-family:var(--font-sans);color:var(--ink)}
+    a{color:var(--emerald-text);text-decoration:none}a:hover{color:var(--ink)}
+    input{font-family:inherit}
+    .pf-tbl th{font-family:var(--font-mono);font-size:9.5px;letter-spacing:1px;color:var(--ink-3);text-align:left;padding:9px 12px;border-bottom:2px solid var(--ink)}
+    .pf-tbl td{padding:10px 12px;border-bottom:1.5px solid var(--rule-soft);font-size:13px;vertical-align:middle}
+    .pf-tbl tr:last-child td{border-bottom:0}
+    .num{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+    .pos{color:var(--gain-text)} .neg{color:var(--loss-text)}
+  </style>
+</helmet>
+<div style="display:flex;min-height:100vh;background:var(--paper);background-image:radial-gradient(var(--dot-fg) 1px,transparent 1.5px),radial-gradient(var(--dot-fg-2) 1px,transparent 1.5px);background-size:7px 7px,11px 11px;color:var(--ink);font-family:var(--font-sans)">
+  <sc-if value="{{ isDesk }}" hint-placeholder-val="{{ true }}">
+    <div style="width:236px;flex-shrink:0;border-right:2px solid var(--ink);background:var(--paper-3);display:flex;flex-direction:column;height:100vh;position:sticky;top:0">
+      <a href="UseMoney v2 Hub.dc.html" style="padding:15px 18px 13px;border-bottom:1.5px solid var(--rule-soft);display:flex;align-items:center;gap:10px;color:var(--ink)">
+        <span style="width:28px;height:28px;border-radius:7px;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-family:var(--font-mono);font-weight:800;font-size:14px;transform:rotate(-3deg)">U</span>
+        <span style="font-weight:800;font-size:15px;letter-spacing:-0.3px">UseMoney<span style="color:var(--emerald-text)"> AI</span></span>
+      </a>
+      <div style="flex:1;overflow-y:auto;padding:4px 14px 10px">
+        <sc-for list="{{ nav }}" as="sec" hint-placeholder-count="4">
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;padding:12px 3px 5px"><span style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:1.6px;color:var(--ink-3)">{{ sec.label }}</span><span style="flex:1;height:1.5px;background:var(--ink);opacity:0.18"></span></div>
+            <sc-for list="{{ sec.items }}" as="it" hint-placeholder-count="4">
+              <a href="{{ it.href }}" onClick="{{ it.on }}" style="{{ it.rowStyle }}">
+                <span style="{{ it.icStyle }}"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="{{ it.icStroke }}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ it.d }}"></path></svg></span>
+                <span style="font-size:12.5px">{{ it.label }}</span>
+                <sc-if value="{{ it.badge }}" hint-placeholder-val="{{ false }}"><span style="margin-left:auto;font-family:var(--font-mono);font-size:8px;font-weight:800;letter-spacing:0.6px;background:{{ it.badgeBg }};color:#0b0b09;border:1.5px solid var(--ink);border-radius:5px;padding:1px 5px">{{ it.badge }}</span></sc-if>
+              </a>
+            </sc-for>
+          </div>
+        </sc-for>
+        <div style="margin-top:14px;border:2px solid var(--ink);border-radius:11px;background:var(--paper);padding:10px 12px">
+          <div style="font-family:var(--font-mono);font-size:8.5px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">US LAUNCH · SCREENS</div>
+          <sc-for list="{{ screens }}" as="s" hint-placeholder-count="8">
+            <div onClick="{{ s.on }}" style="{{ s.style }}"><span style="font-family:var(--font-mono);font-size:9px;opacity:0.6;width:16px">{{ s.n }}</span>{{ s.label }}</div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="flex-shrink:0;border-top:1.5px solid var(--rule-soft);padding:10px 14px;display:flex;align-items:center;gap:9px">
+        <span style="width:28px;height:28px;border-radius:9px;background:var(--pop-2);border:2px solid var(--ink);display:grid;place-items:center;font-family:var(--font-mono);font-weight:800;font-size:11px;transform:rotate(-3deg);color:#1d1d1b">RV</span>
+        <div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:800">Rahul Verma</div><div style="font-family:var(--font-mono);font-size:8.5px;color:var(--ink-3)">FREE · ⚡ 2 CREDITS</div></div>
+      </div>
+    </div>
+  </sc-if>
+
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+    <div style="border-bottom:2px solid var(--ink);background:var(--paper);padding:12px 22px 11px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;position:sticky;top:0;z-index:40">
+      <div style="min-width:0">
+        <div style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:1.4px;color:var(--emerald-text)">● {{ crumb }}</div>
+        <div style="font-weight:800;font-size:21px;letter-spacing:-0.7px;margin-top:2px">{{ title }} <span style="font-family:var(--font-serif);font-style:italic;font-weight:400;color:var(--ink-2)">{{ titleSer }}</span></div>
+      </div>
+      <div style="display:inline-flex;border:2px solid var(--ink);border-radius:99px;overflow:hidden;background:var(--paper)">
+        <button onClick="{{ setNri }}" style="{{ nriStyle }}">NRI · $</button>
+        <button onClick="{{ setLrs }}" style="{{ lrsStyle }}">LRS · ₹</button>
+      </div>
+      <button onClick="{{ toggleFlag }}" title="PostHog flag us-stocks-listing" style="{{ flagStyle }}">FLAG us-stocks-listing · {{ flagLabel }}</button>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:9px;flex-shrink:0">
+        <span style="font-family:var(--font-mono);font-size:10px;color:var(--ink-3)">NSE OPEN · US ◷ EOD JUL 18</span>
+        <button onClick="{{ toggleDark }}" title="Toggle dark mode" style="width:34px;height:34px;border-radius:10px;border:2px solid var(--ink);background:var(--paper-3);display:grid;place-items:center;cursor:pointer;box-shadow:2px 2px 0 var(--ink);color:var(--ink)"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="{{ darkIcon }}"></path></svg></button>
+        <span style="display:inline-flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:10px;font-weight:800;border:2px solid var(--ink);border-radius:99px;background:var(--pop-2);color:#1d1d1b;padding:5px 11px;box-shadow:2px 2px 0 var(--ink)">⚡ 2</span>
+      </div>
+    </div>
+
+    <sc-if value="{{ isMob }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;gap:6px;overflow-x:auto;padding:10px 14px;border-bottom:1.5px solid var(--rule-soft);background:var(--paper-3)">
+        <sc-for list="{{ screens }}" as="s" hint-placeholder-count="8"><button onClick="{{ s.on }}" style="{{ s.chipStyle }}">{{ s.label }}</button></sc-for>
+      </div>
+    </sc-if>
+
+    <div style="flex:1;padding:20px 22px 90px;max-width:1240px;width:100%;box-sizing:border-box">
+
+      <sc-if value="{{ flagOff }}" hint-placeholder-val="{{ false }}">
+        <div style="border:2px solid var(--ink);border-radius:14px;background:var(--paper-3);box-shadow:4px 4px 0 var(--ink);padding:22px 24px;max-width:680px">
+          <div style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1.4px;color:var(--ink-3)">FLAG OFF · WHAT THE USER SEES</div>
+          <div style="font-weight:800;font-size:24px;letter-spacing:-0.8px;margin-top:8px">Nothing. <span style="font-family:var(--font-serif);font-style:italic;font-weight:400">The US layer isn't there.</span></div>
+          <div style="font-size:13.5px;line-height:1.6;color:var(--ink-2);margin-top:8px">No pre-GA, no waitlist. With <span style="font-family:var(--font-mono);font-size:11.5px">us-stocks-listing</span> off, the US pill, US brokers, US rows and Market preferences are absent — the India app is exactly today's app. Tier-based gating replaces the flag at launch (designed later).</div>
+          <button onClick="{{ toggleFlag }}" style="margin-top:14px;border:2px solid var(--ink);border-radius:9px;background:var(--ink);color:var(--paper);font-weight:800;font-size:12.5px;padding:9px 14px;cursor:pointer;box-shadow:3px 3px 0 var(--emerald)">Turn the flag on →</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ onConnect }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px">
+          <div>
+            <div style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:1.4px;color:var(--emerald-text)">● 4 INDIA BROKERS · US ◷ EOD · JUL 18 CLOSE</div>
+            <h1 style="font-weight:800;font-size:34px;letter-spacing:-1.4px;line-height:1.05;margin:8px 0 0">Bring your US accounts in. <span style="font-family:var(--font-serif);font-style:italic;font-weight:400">Read-only,</span> as always.</h1>
+            <div style="margin-top:8px;font-family:var(--font-serif);font-style:italic;font-size:15px;color:var(--ink-3)">Link a brokerage through SnapTrade, or drop a statement — whichever your account allows.</div>
+          </div>
+          <button onClick="{{ goSet }}" style="border:2px solid var(--ink);border-radius:9px;background:var(--paper);font-weight:800;font-size:12.5px;padding:9px 14px;cursor:pointer;box-shadow:2px 2px 0 var(--ink);color:var(--ink)">US data disclosure</button>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:18px;margin-top:20px;align-items:stretch">
+          <div style="{{ cardLink }}">
+            <div style="padding:16px 20px;border-bottom:1.5px dashed var(--rule-soft);display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+              <div style="width:40px;height:40px;border-radius:10px;background:var(--pop-3);color:#f7f3e6;display:grid;place-items:center;border:1.5px solid var(--ink);transform:rotate(-3deg)"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></div>
+              <div style="flex:1;min-width:150px"><div style="font-size:18px;font-weight:800;letter-spacing:-0.4px">Link a brokerage</div><div style="font-family:var(--font-mono);font-size:10px;color:var(--ink-3);letter-spacing:0.8px;margin-top:2px">SNAPTRADE · READ-ONLY · 2 MINUTES</div></div>
+              <span style="font-family:var(--font-mono);font-size:9px;font-weight:800;letter-spacing:0.6px;border:1.5px solid var(--ink);border-radius:99px;padding:3px 9px;background:var(--paper)">{{ linkBadge }}</span>
+            </div>
+            <div style="padding:16px 20px">
+              <div style="font-size:13.5px;color:var(--ink-2);line-height:1.5">Sign in at your broker, not here. SnapTrade hands us a read-only token; we pull positions and lots and never see your password.</div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:10px;margin-top:14px">
+                <sc-for list="{{ usBrokers }}" as="b" hint-placeholder-count="5">
+                  <div onClick="{{ b.on }}" style="display:flex;align-items:center;gap:9px;padding:9px 11px;border:1.5px solid var(--ink);border-radius:9px;background:var(--paper);cursor:pointer">
+                    <span style="width:30px;height:30px;border-radius:7px;display:grid;place-items:center;font-family:var(--font-mono);font-weight:800;font-size:11px;background:{{ b.bg }};color:{{ b.fg }};border:1.5px solid var(--ink)">{{ b.ab }}</span>
+                    <div style="min-width:0"><div style="font-size:13px;font-weight:700">{{ b.name }}</div><div style="font-family:var(--font-mono);font-size:9px;color:var(--ink-3);margin-top:1px">{{ b.sub }}</div></div>
+                  </div>
+                </sc-for>
+                <div style="display:flex;align-items:center;gap:9px;padding:9px 11px;border:1.5px dashed var(--rule-soft);border-radius:9px;color:var(--ink-3)"><span style="width:30px;height:30px;border-radius:7px;border:1.5px dashed var(--ink-3);display:grid;place-items:center;font-family:var(--font-mono)">+</span><div style="font-size:12.5px;line-height:1.25">More brokers<br><span style="font-family:var(--font-mono);font-size:9px">20+ VIA SNAPTRADE</span></div></div>
+              </div>
+              <div style="margin-top:14px;padding:11px 13px;border-radius:9px;background:var(--emerald-bg);border:1.5px solid var(--emerald);font-size:12.5px;color:var(--ink-2);line-height:1.4">✦ Read-only. We can't place orders — not here, not anywhere. Revoke in one tap. IBKR direct connect is not offered; IBKR statements import fine.</div>
+            </div>
+          </div>
+
+          <div style="{{ cardImport }}">
+            <div style="padding:16px 20px;border-bottom:1.5px dashed var(--rule-soft);display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+              <div style="width:40px;height:40px;border-radius:10px;background:var(--pop-5);color:#f7f3e6;display:grid;place-items:center;border:1.5px solid var(--ink);transform:rotate(3deg)"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></div>
+              <div style="flex:1;min-width:150px"><div style="font-size:18px;font-weight:800;letter-spacing:-0.4px">Import a statement</div><div style="font-family:var(--font-mono);font-size:10px;color:var(--ink-3);letter-spacing:0.8px;margin-top:2px">CSV / PDF · 3 STEPS · ANY BROKER</div></div>
+              <span style="font-family:var(--font-mono);font-size:9px;font-weight:800;letter-spacing:0.6px;border:1.5px solid var(--ink);border-radius:99px;padding:3px 9px;background:var(--paper)">{{ importBadge }}</span>
+            </div>
+            <div style="padding:16px 20px">
+              <div style="font-size:13.5px;color:var(--ink-2);line-height:1.5">No API for your account? Your monthly statement carries everything we need — lots, dates, fees, and the rate you remitted at.</div>
+              <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:12px">
+                <sc-for list="{{ fmts }}" as="f" hint-placeholder-count="5"><span style="font-family:var(--font-mono);font-size:9px;font-weight:800;letter-spacing:0.6px;border:1.5px solid var(--ink);border-radius:99px;padding:3px 9px;background:var(--paper)">{{ f }}</span></sc-for>
+              </div>
+              <div onClick="{{ goImport }}" style="margin-top:14px;padding:22px 16px;border:2px dashed var(--ink);border-radius:12px;background:var(--paper-3);text-align:center;cursor:pointer">
+                <div style="font-family:var(--font-mono);font-size:10.5px;letter-spacing:1.2px;color:var(--ink-3);font-weight:700">DROP IT HERE</div>
+                <div style="margin-top:6px;font-family:var(--font-serif);font-style:italic;font-size:15px;color:var(--ink-2)">or browse — up to 20 MB, one statement at a time</div>
+              </div>
+              <div style="margin-top:12px;font-size:12px;color:var(--ink-3)">Imported before? We de-duplicate against your existing lots. Same reconciler as the India tradebook import.</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;margin:24px 0 12px"><span style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1.4px;color:var(--ink-3)">STATES</span><span style="font-weight:800;font-size:16px;letter-spacing:-0.4px">What happens <span style="font-family:var(--font-serif);font-style:italic;font-weight:400">after the tap.</span></span><span style="flex:1;height:1.5px;background:var(--ink);opacity:0.18"></span></div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px">
+          <sc-for list="{{ steps }}" as="st" hint-placeholder-count="4"><button onClick="{{ st.on }}" style="{{ st.style }}">{{ st.label }}</button></sc-for>
+        </div>
+
+        <sc-if value="{{ atConsent }}" hint-placeholder-val="{{ true }}">
+          <div style="border:2px solid var(--ink);border-radius:14px;background:var(--paper);box-shadow:4px 4px 0 var(--ink);max-width:620px;overflow:hidden">
+            <div style="padding:14px 20px;border-bottom:2px solid var(--ink);background:var(--paper-2);display:flex;align-items:center;gap:12px">
+              <span style="width:36px;height:36px;border-radius:8px;display:grid;place-items:center;font-family:var(--font-mono);font-weight:800;font-size:12px;background:#00c805;color:#0b2b0b;border:1.5px solid var(--ink)">RH</span>
+              <div style="flex:1"><div style="font-size:16px;font-weight:800;letter-spacing:-0.3px">Connect Robinhood</div><div style="font-family:var(--font-mono);font-size:10px;color:var(--ink-3);letter-spacing:0.5px">VIA SNAPTRADE · READ-ONLY · ENCRYPTED AT REST</div></div>
+            </div>
+            <div style="padding:18px 20px">
+              <div style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">WHAT HAPPENS NEXT</div>
+              <div style="margin-top:10px;display:flex;flex-direction:column;gap:7px">
+                <sc-for list="{{ consentSteps }}" as="c" hint-placeholder-count="4">
+                  <div style="display:flex;gap:12px;padding:9px 12px;border-radius:9px;background:var(--rule-softer)"><span style="width:24px;height:24px;border-radius:99px;border:1.5px solid var(--ink);display:grid;place-items:center;font-family:var(--font-mono);font-size:10.5px;font-weight:800;flex-shrink:0">{{ c.n }}</span><div style="font-size:13px;color:var(--ink-2);line-height:1.4;padding-top:3px">{{ c.t }}</div></div>
+                </sc-for>
+              </div>
+              <div style="margin-top:16px;padding:13px;border:1.5px dashed var(--ink);border-radius:10px;font-family:var(--font-mono);font-size:11.5px;display:flex;flex-direction:column;gap:5px">
+                <div style="display:flex;justify-content:space-between;gap:12px"><span style="color:var(--emerald-text)">✓ positions · balances</span><span style="color:var(--ink-3)">What you own</span></div>
+                <div style="display:flex;justify-content:space-between;gap:12px"><span style="color:var(--emerald-text)">✓ activities</span><span style="color:var(--ink-3)">Buys, sells, dividends → lots</span></div>
+                <div style="display:flex;justify-content:space-between;gap:12px"><span style="color:var(--loss-text)">✕ trading</span><span style="color:var(--loss-text)">Scope never requested</span></div>
+              </div>
+            </div>
+            <div style="padding:13px 20px;border-top:1.5px dashed var(--rule-soft);background:var(--paper-2);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+              <span style="font-family:var(--font-mono);font-size:10px;color:var(--ink-3)">REVOKE ANY TIME · SETTINGS › MARKET PREFERENCES</span>
+              <button onClick="{{ goSync }}" style="border:2px solid var(--ink);border-radius:9px;background:var(--ink);color:var(--paper);font-weight:800;font-size:12.5px;padding:8px 14px;cursor:pointer;box-shadow:2px 2px 0 var(--emerald)">Continue to Robinhood →</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ atSync }}" hint-placeholder-val="{{ false }}">
+          <div style="border:2px solid var(--ink);border-radius:14px;background:var(--paper);box-shadow:4px 4px 0 var(--ink);max-width:620px;overflow:hidden">
+            <div style="padding:14px 20px;border-bottom:2px solid var(--ink);background:var(--paper-2);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+              <div><div style="font-size:16px;font-weight:800;letter-spacing:-0.3px">Syncing your US accounts</div><div style="font-family:var(--font-mono);font-size:10px;color:var(--ink-3);letter-spacing:0.5px">3 OF 4 DONE · 38s ELAPSED</div></div>
+              <span style="font-family:var(--font-mono);font-size:9px;font-weight:800;letter-spacing:0.6px;border:1.5px solid var(--ink);border-radius:99px;padding:3px 9px;background:var(--emerald);color:#0b0b09">● SYNCING</span>
+            </div>
+            <div style="padding:16px 20px;display:flex;flex-direction:column;gap:10px">
+              <sc-for list="{{ syncRows }}" as="r" hint-placeholder-count="4">
+                <div style="display:flex;align-items:center;gap:12px"><span style="width:30px;height:30px;border-radius:7px;display:grid;place-items:center;font-family:var(--font-mono);font-weight:800;font-size:11px;background:{{ r.bg }};color:{{ r.fg }};border:1.5px solid var(--ink)">{{ r.ab }}</span><div style="flex:1;font-size:13.5px;font-weight:700">{{ r.name }}<sc-if value="{{ r.bar }}" hint-placeholder-val="{{ false }}"><div style="margin-top:5px;height:8px;background:var(--rule-softer);border:1.5px solid var(--ink);border-radius:999px;overflow:hidden"><div style="height:100%;width:62%;background:var(--emerald)"></div></div></sc-if></div><span style="font-family:var(--font-mono);font-size:11.5px;color:{{ r.c }}">{{ r.st }}</span></div>
+              </sc-for>
+              <div style="margin-top:4px;border:2px solid var(--ink);border-radius:9px;background:var(--ink);color:var(--paper);padding:11px 13px;font-family:var(--font-mono);font-size:11px;line-height:1.7"><div><span style="opacity:0.55">sync ›</span> positions 14 · lots 61 · transactions 388</div><div><span style="opacity:0.55">px   ›</span> <span style="color:var(--pop-2)">◷ EOD · Jul 18 close</span> · third-party consolidated tape</div><div><span style="opacity:0.55">fx   ›</span> <span style="color:var(--pop-2)">spot ₹84.00/$</span> for values · <span style="color:var(--pop-2)">RBI ref</span> per lot for cost basis</div></div>
+            </div>
+            <div style="padding:13px 20px;border-top:1.5px dashed var(--rule-soft);background:var(--paper-2);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><span style="font-size:12.5px;color:var(--ink-3)">You can leave — we finish in the background.</span><button onClick="{{ goDone }}" style="border:2px solid var(--ink);border-radius:9px;background:var(--paper);font-weight:800;font-size:12px;padding:7px 12px;cursor:pointer;color:var(--ink)">Skip ahead →</button></div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ atDone }}" hint-placeholder-val="{{ false }}">
+          <div style="border:2px solid var(--ink);border-radius:14px;background:var(--paper);box-shadow:4px 4px 0 var(--ink);max-width:620px;overflow:hidden;transform:rotate(-0.5deg)">
+            <div style="padding:18px 20px;background:var(--ink);color:var(--paper);display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+              <span style="width:44px;height:44px;border-radius:10px;background:var(--emerald);color:#06240f;display:grid;place-items:center;border:2px solid var(--ink);transform:rotate(-3deg)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+              <div style="flex:1;min-width:160px"><div style="font-family:var(--font-mono);font-size:10px;letter-spacing:1.4px;color:var(--pop-2);font-weight:700">4 ACCOUNTS CONNECTED</div><div style="margin-top:4px;font-size:22px;font-weight:800;letter-spacing:-0.6px">14 positions, in.</div></div>
+              <div style="text-align:right"><div style="font-family:var(--font-mono);font-size:26px;font-weight:800;letter-spacing:-0.7px">{{ usTotalP }}</div><div style="font-family:var(--font-mono);font-size:12px;opacity:0.65;margin-top:2px">{{ usTotalS }}</div></div>
+            </div>
+            <div style="padding:16px 20px">
+              <div style="display:flex;flex-wrap:wrap;gap:7px"><span style="{{ pillOutline }}">◷ EOD · JUL 18 CLOSE</span><span style="{{ pillOutline }}">SPOT ₹84.00/$ · 1H</span><span style="{{ pillOutline }}">READ-ONLY</span></div>
+              <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap"><button onClick="{{ goHold }}" style="border:2px solid var(--ink);border-radius:9px;background:var(--ink);color:var(--paper);font-weight:800;font-size:12.5px;padding:9px 14px;cursor:pointer;box-shadow:2px 2px 0 var(--emerald)">See mixed holdings →</button><button onClick="{{ goStock }}" style="border:2px solid var(--ink);border-radius:9px;background:var(--paper);font-weight:800;font-size:12.5px;padding:9px 14px;cursor:pointer;color:var(--ink)">Open AAPL</button></div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ atFail }}" hint-placeholder-val="{{ false }}">
+          <div style="border:2px solid var(--pop-1);border-radius:14px;background:var(--paper);padding:16px 18px;max-width:620px;display:flex;gap:14px;align-items:flex-start">
+            <span style="width:36px;height:36px;border-radius:9px;background:var(--pop-1);color:#f7f3e6;display:grid;place-items:center;border:1.5px solid var(--ink);transform:rotate(-3deg);font-family:var(--font-mono);font-weight:800;flex-shrink:0">!</span>
+            <div style="flex:1"><div style="font-size:15px;font-weight:800;letter-spacing:-0.2px">Fidelity needs re-authorising</div><div style="margin-top:4px;font-size:12.5px;color:var(--ink-2);line-height:1.45">SnapTrade reports the broker session expired on Jul 14 — normal for this broker. Your other three accounts synced fine.</div><div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap"><button onClick="{{ goSync }}" style="border:2px solid var(--ink);border-radius:9px;background:var(--ink);color:var(--paper);font-weight:800;font-size:12px;padding:7px 12px;cursor:pointer">Re-authorise Fidelity →</button><button style="border:2px solid var(--ink);border-radius:9px;background:var(--paper);font-weight:800;font-size:12px;padding:7px 12px;cursor:pointer;color:var(--ink)">Remind me tomorrow</button></div></div>
+          </div>
+        </sc-if>
+      </sc-if>
+
+      <sc-if value="{{ onImport }}" hint-placeholder-val="{{ false }}">
+        <div style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:1.4px;color:var(--emerald-text)">● STEP {{ impN }} OF 3 · CSV / PDF · DE-DUPLICATED</div>
+        <h1 style="font-weight:800;font-size:34px;letter-spacing:-1.4px;line-height:1.05;margin:8px 0 0">No API? <span style="font-family:var(--font-serif);font-style:italic;font-weight:400">Your statement</span> <mark style="background:var(--pop-2);color:#1d1d1b;padding:0 6px">will do.</mark></h1>
+        <div style="display:flex;border:2px solid var(--ink);border-radius:12px;overflow:hidden;background:var(--paper);margin-top:18px;flex-wrap:wrap">
+          <sc-for list="{{ wiz }}" as="w" hint-placeholder-count="3"><button onClick="{{ w.on }}" style="{{ w.style }}"><span style="font-family:var(--font-mono);font-size:9.5px;letter-spacing:1.2px;opacity:0.75">STEP {{ w.n }}</span><span style="font-size:14.5px;font-weight:800;letter-spacing:-0.3px;margin-top:2px">{{ w.t }}</span><span style="font-family:var(--font-mono);font-size:9.5px;margin-top:3px;opacity:0.75">{{ w.sub }}</span></button></sc-for>
+        </div>
+
+        <sc-if value="{{ imp1 }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-wrap:wrap;gap:18px;margin-top:18px">
+            <div style="flex:1 1 420px;border:2px solid var(--ink);border-radius:14px;background:var(--paper);box-shadow:4px 4px 0 var(--ink);padding:20px">
+              <div onClick="{{ goImp2 }}" style="padding:34px 20px;border:2px dashed var(--ink);border-radius:12px;background:var(--paper-3);text-align:center;cursor:pointer"><div style="font-size:17px;font-weight:800;letter-spacing:-0.4px">Drop a CSV or PDF here</div><div style="margin-top:5px;font-family:var(--font-serif);font-style:italic;font-size:15px;color:var(--ink-3)">or browse — up to 20 MB, one statement at a time</div></div>
+              <div style="margin-top:14px;padding:12px 14px;border:1.5px solid var(--ink);border-radius:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap"><div style="flex:1;min-width:140px"><div style="font-family:var(--font-mono);font-size:12.5px;font-weight:700">vested_apr26.csv</div><div style="font-family:var(--font-mono);font-size:10px;color:var(--ink-3);margin-top:2px">184 KB · 42 ROWS · READ OK</div></div><span style="{{ pillEmerald }}">PARSED</span><button onClick="{{ goImp2 }}" style="border:2px solid var(--ink);border-radius:9px;background:var(--ink);color:var(--paper);font-weight:800;font-size:12px;padding:7px 12px;cursor:pointer">Next: map columns →</button></div>
+            </div>
+            <div style="flex:0 1 340px;border:2px solid var(--ink);border-radius:14px;background:var(--paper-2);padding:18px">
+              <div style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">FORMAT HINTS</div>
+              <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px">
+                <sc-for list="{{ hints }}" as="h" hint-placeholder-count="5"><div style="display:flex;justify-content:space-between;gap:10px;padding:9px 11px;border-radius:8px;background:var(--paper);border:1.5px solid var(--ink)"><span style="font-size:12.5px;font-weight:700">{{ h.n }}</span><span style="font-family:var(--font-mono);font-size:10px;color:{{ h.c }}">{{ h.s }}</span></div></sc-for>
+              </div>
+              <div style="margin-top:12px;font-size:12px;color:var(--ink-3);line-height:1.5">Expects <span style="font-family:var(--font-mono);font-size:11px">trade_date, symbol, trade_type, quantity, trade_price, currency, fx_rate</span>. Extra columns are kept, not dropped.</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ imp2 }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-wrap:wrap;gap:18px;margin-top:18px">
+            <div style="flex:1 1 520px;border:2px solid var(--ink);border-radius:14px;background:var(--paper);box-shadow:4px 4px 0 var(--ink);overflow-x:auto">
+              <div style="padding:14px 20px;border-bottom:1.5px dashed var(--rule-soft);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><div><div style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">COLUMN MAPPING</div><div style="margin-top:3px;font-size:13px;color:var(--ink-2)">We recognised the Vested format. Change anything that looks wrong.</div></div><span style="{{ pillEmerald }}">7 / 7 DETECTED</span></div>
+              <table class="pf-tbl" style="width:100%;min-width:560px;border-collapse:collapse"><thead><tr><th>IN YOUR FILE</th><th>SAMPLE</th><th>WE'LL READ IT AS</th><th style="text-align:right">CONF.</th></tr></thead><tbody>
+                <sc-for list="{{ mapRows }}" as="m" hint-placeholder-count="7"><tr><td class="num" style="font-weight:700">{{ m.a }}</td><td class="num" style="color:var(--ink-3)">{{ m.b }}</td><td><span style="{{ m.pill }}">{{ m.c }}</span></td><td class="num" style="text-align:right;color:{{ m.cc }}">{{ m.d }}</td></tr></sc-for>
+              </tbody></table>
+              <div style="padding:13px 20px;border-top:1.5px dashed var(--rule-soft);background:var(--paper-2);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center"><span style="font-size:12.5px;color:var(--ink-2)"><b>fx_rate_on_trade</b> fixes your ₹ cost basis for good. Missing? We fill the RBI reference rate for that day.</span><button onClick="{{ goImp3 }}" style="border:2px solid var(--ink);border-radius:9px;background:var(--ink);color:var(--paper);font-weight:800;font-size:12px;padding:7px 12px;cursor:pointer">Next: review →</button></div>
+            </div>
+            <div style="flex:1 1 300px;border:2px solid var(--pop-1);border-radius:14px;background:var(--paper);overflow:hidden">
+              <div style="padding:14px 20px;border-bottom:1.5px dashed var(--rule-soft);display:flex;justify-content:space-between;align-items:center"><span style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1.2px;color:var(--loss-text)">2 ROWS NEED YOU</span><span style="{{ pillCoral }}">40 OF 42 OK</span></div>
+              <div style="padding:14px 20px;display:flex;flex-direction:column;gap:12px">
+                <div style="padding:12px 13px;border:1.5px solid var(--pop-1);border-radius:9px"><div style="font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--loss-text);letter-spacing:0.8px">ROW 17 · MISSING FX RATE</div><div class="num" style="margin-top:5px;font-size:12px;color:var(--ink-2)">2026-03-02 · NVDA · BUY · 3 @ $121.40</div><div style="margin-top:8px;display:flex;gap:7px;flex-wrap:wrap"><button style="{{ btnSm }}">Use RBI rate · ₹83.28</button><button style="{{ btnSmGhost }}">Enter it</button></div></div>
+                <div style="padding:12px 13px;border:1.5px solid var(--pop-1);border-radius:9px"><div style="font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--loss-text);letter-spacing:0.8px">ROW 31 · UNKNOWN SYMBOL "BRK.B "</div><div class="num" style="margin-top:5px;font-size:12px;color:var(--ink-2)">trailing space · did you mean BRK-B on NYSE?</div><div style="margin-top:8px;display:flex;gap:7px;flex-wrap:wrap"><button style="{{ btnSm }}">Yes, BRK-B</button><button style="{{ btnSmGhost }}">Skip this row</button></div></div>
+                <div style="font-size:12px;color:var(--ink-3);line-height:1.5">Flagged rows never block the import. Fix them later from the tradebook.</div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ imp3 }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-wrap:wrap;gap:18px;margin-top:18px">
+            <div style="flex:1 1 540px;border:2px solid var(--ink);border-radius:14px;background:var(--paper);box-shadow:4px 4px 0 var(--ink);overflow-x:auto">
+              <div style="padding:14px 20px;border-bottom:1.5px dashed var(--rule-soft);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><span style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">WHAT WE'LL ADD</span><div style="display:flex;gap:7px"><span style="{{ pillEmerald }}">38 NEW LOTS</span><span style="{{ pillOutline }}">4 DUPLICATES SKIPPED</span></div></div>
+              <table class="pf-tbl" style="width:100%;min-width:600px;border-collapse:collapse"><thead><tr><th>DATE</th><th>SYMBOL</th><th style="text-align:right">QTY</th><th style="text-align:right">PRICE</th><th style="text-align:right">RBI REF ON TRADE</th><th style="text-align:right">COST</th></tr></thead><tbody>
+                <sc-for list="{{ lots }}" as="l" hint-placeholder-count="5"><tr style="{{ l.rs }}"><td class="num">{{ l.d }}</td><td><span class="num" style="font-weight:800">{{ l.s }}</span> <span style="{{ l.tagStyle }}">{{ l.tag }}</span></td><td class="num" style="text-align:right">{{ l.q }}</td><td class="num" style="text-align:right">{{ l.p }}</td><td class="num" style="text-align:right;color:var(--ink-3)">{{ l.fx }}</td><td class="num" style="text-align:right">{{ l.cost }}</td></tr></sc-for>
+              </tbody></table>
+              <div style="padding:13px 20px;border-top:1.5px dashed var(--rule-soft);background:var(--paper-2);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center"><span style="font-family:var(--font-mono);font-size:10.5px;color:var(--ink-3)">SHOWING 5 OF 42 · COST BASIS FROZEN AT RBI REFERENCE RATE OF TRADE DATE</span><button onClick="{{ goHold }}" style="border:2px solid var(--ink);border-radius:9px;background:var(--ink);color:var(--paper);font-weight:800;font-size:12px;padding:7px 12px;cursor:pointer;box-shadow:2px 2px 0 var(--emerald)">Commit 38 lots →</button></div>
+            </div>
+            <div style="flex:1 1 280px;display:flex;flex-direction:column;gap:14px">
+              <div style="border:2px solid var(--ink);border-radius:14px;background:var(--paper);padding:18px"><div style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">COST OF IMPORTED LOTS</div><div class="num" style="font-size:26px;font-weight:800;letter-spacing:-0.6px;margin-top:6px">{{ impTotalP }}</div><div class="num" style="font-size:12px;color:var(--ink-3);margin-top:2px">{{ impTotalS }}</div></div>
+              <sc-if value="{{ isLrs }}" hint-placeholder-val="{{ false }}">
+                <div style="border:2px solid var(--ink);border-radius:14px;background:var(--pop-2);padding:16px 18px;transform:rotate(0.6deg);box-shadow:3px 3px 0 var(--ink)"><div style="font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:1.5px;color:#3a3a35">ALSO UPDATED</div><div style="margin-top:4px;font-size:16px;font-weight:800;color:#1d1d1b;letter-spacing:-0.3px">Your LRS headroom.</div><div style="margin-top:5px;font-family:var(--font-serif);font-style:italic;font-size:14px;color:#3a3a35">This statement adds <b style="font-family:var(--font-sans);font-style:normal">$12,400</b> of FY26-27 remittances to the tracker.</div><button onClick="{{ goLrs }}" style="margin-top:10px;border:2px solid #1d1d1b;border-radius:9px;background:#1d1d1b;color:var(--pop-2);font-weight:800;font-size:12px;padding:7px 12px;cursor:pointer">Open LRS tracker →</button></div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+      </sc-if>
+
+      <sc-if value="{{ onStock }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end;justify-content:space-between;padding-bottom:18px;border-bottom:2px solid var(--ink)">
+          <div style="display:flex;align-items:center;gap:16px;flex:1 1 380px;min-width:0">
+            <span style="width:56px;height:56px;border-radius:12px;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-family:var(--font-mono);font-weight:800;font-size:17px;box-shadow:3px 3px 0 var(--ink);flex-shrink:0;border:2px solid var(--ink)">AA</span>
+            <div style="min-width:0">
+              <div style="display:flex;align-items:baseline;gap:9px;flex-wrap:wrap"><h1 style="font-size:36px;font-weight:800;letter-spacing:-1.3px;line-height:1;margin:0">Apple <span style="font-family:var(--font-serif);font-style:italic;font-weight:400">Inc.</span></h1><span style="{{ pillOutline }}">US · NASDAQ · AAPL</span><span style="{{ pillOutline }}">COMMON STOCK</span></div>
+              <div style="margin-top:7px;font-family:var(--font-serif);font-style:italic;font-size:15px;color:var(--ink-3)">{{ aaplHolding }}</div>
+            </div>
+          </div>
+          <div style="text-align:right">
+            <div style="display:flex;align-items:baseline;gap:9px;justify-content:flex-end;flex-wrap:wrap"><div class="num" style="font-size:38px;font-weight:800;letter-spacing:-1.2px;line-height:1">{{ aaplPriceP }}</div><span style="{{ pillOutline }}">◷ EOD · JUL 18 CLOSE</span><span style="{{ pillOutline }}">THIRD-PARTY DATA</span></div>
+            <div class="num" style="margin-top:5px;font-size:12.5px;color:var(--ink-3)">{{ aaplPriceS }} · SPOT ₹84.00/$ · 1H</div>
+            <div class="num pos" style="margin-top:4px;font-size:13.5px;font-weight:700">+$1.80 · +0.86% · previous session</div>
+            <div style="margin-top:10px;display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap"><button style="{{ btnSmGhost }}">Watch</button><button style="{{ btnSmGhost }}">Alert</button><button onClick="{{ toggleResearch }}" title="PostHog flag us-stock-research" style="{{ researchBtn }}">{{ researchLabel }}</button></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:18px;margin-top:18px">
+          <div style="flex:1 1 520px;border:2px solid var(--ink);border-radius:14px;background:var(--paper);box-shadow:4px 4px 0 var(--ink);padding:18px">
+            <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:12px"><sc-for list="{{ ranges }}" as="r" hint-placeholder-count="6"><span style="{{ r.style }}">{{ r.l }}</span></sc-for><span class="num" style="margin-left:auto;font-size:11px;color:var(--emerald-text)">+22.4% over 1Y · daily closes</span></div>
+            <svg viewBox="0 0 600 210" width="100%" preserveAspectRatio="none" style="height:210px;display:block"><path d="M0,168 L40,160 L80,172 L120,150 L160,158 L200,132 L240,140 L280,118 L320,124 L360,98 L400,104 L440,80 L480,88 L520,62 L560,54 L600,38 L600,210 L0,210 Z" fill="var(--emerald)" opacity="0.14"></path><path d="M0,168 L40,160 L80,172 L120,150 L160,158 L200,132 L240,140 L280,118 L320,124 L360,98 L400,104 L440,80 L480,88 L520,62 L560,54 L600,38" fill="none" stroke="var(--emerald)" stroke-width="2.2"></path></svg>
+            <div style="margin-top:8px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-family:var(--font-mono);font-size:10.5px;color:var(--ink-3)"><span>● DAILY CLOSES · NO INTRADAY · LIVE TICKS LATER BEHIND us-quotes-live</span><span>52W $164.08 — $214.60</span></div>
+          </div>
+          <div style="flex:1 1 300px;display:flex;flex-direction:column;gap:14px">
+            <div style="border:2px solid var(--ink);border-radius:14px;background:var(--paper);padding:18px">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><span style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">KEY RATIOS</span><span style="{{ pillOutline }}">STANDARDIZED</span></div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:9px;margin-top:12px">
+                <sc-for list="{{ ratios }}" as="k" hint-placeholder-count="6"><div style="padding:9px;background:var(--rule-softer);border-radius:7px"><div style="font-family:var(--font-mono);font-size:8.5px;letter-spacing:1px;color:var(--ink-3);font-weight:700">{{ k.l }}</div><div class="num" style="font-size:16px;font-weight:700;margin-top:2px">{{ k.v }}</div><div style="font-family:var(--font-mono);font-size:9px;color:var(--ink-3);margin-top:1px">{{ k.src }}</div></div></sc-for>
+              </div>
+              <div style="margin-top:10px;font-size:12px;color:var(--ink-3);line-height:1.45">Every value carries the filing it came from. Tap a chip to open it on EDGAR.</div>
+            </div>
+            <div style="border:2px solid var(--ink);border-radius:14px;background:var(--paper-2);padding:16px;transform:rotate(0.6deg)">
+              <div style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">SAGE TAKE · US SCOPE</div>
+              <div style="margin-top:8px;font-family:var(--font-serif);font-style:italic;font-size:15px;color:var(--ink-2);line-height:1.4">Services margin is doing the work — hardware units flat two quarters running. <b style="font-family:var(--font-sans);font-style:normal;color:var(--ink)">Coverage here is filings, fundamentals and EOD prices</b> — thinner than our India depth. We'd rather say so.</div>
+              <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap"><span style="{{ pillOutline }}">EDGAR</span><span style="{{ pillOutline }}">10-Q · 10-K · 8-K</span><span style="{{ pillGold }}">⚡ 2 CREDITS</span></div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:4px;margin:22px 0 14px;border-bottom:2px solid var(--ink);overflow-x:auto">
+          <sc-for list="{{ stockTabs }}" as="t" hint-placeholder-count="6"><span style="{{ t.style }}">{{ t.l }}</span></sc-for>
+        </div>
+        <div style="border:2px solid var(--ink);border-radius:14px;background:var(--paper);overflow-x:auto">
+          <table class="pf-tbl" style="width:100%;min-width:620px;border-collapse:collapse"><thead><tr><th>LINE</th><th style="text-align:right">Q2 FY26</th><th style="text-align:right">Q1 FY26</th><th style="text-align:right">Q2 FY25</th><th style="text-align:right">YoY</th><th>FROM</th></tr></thead><tbody>
+            <sc-for list="{{ fin }}" as="f" hint-placeholder-count="6"><tr><td style="font-weight:{{ f.w }}">{{ f.l }}</td><td class="num" style="text-align:right">{{ f.a }}</td><td class="num" style="text-align:right">{{ f.b }}</td><td class="num" style="text-align:right">{{ f.c }}</td><td class="num pos" style="text-align:right">{{ f.y }}</td><td><span style="{{ pillOutline }}">{{ f.src }}</span></td></tr></sc-for>
+          </tbody></table>
+          <div style="padding:12px 20px;border-top:1.5px dashed var(--rule-soft);background:var(--paper-2);font-family:var(--font-mono);font-size:10px;color:var(--ink-3);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><span>SOURCE · SEC EDGAR · STANDARDIZED VIEW</span><span>DERIVED = COMPUTED BY US, NOT FILED</span></div>
+        </div>
+        <div style="margin-top:22px;padding-top:14px;border-top:1.5px dashed var(--rule-soft);font-size:12px;color:var(--ink-3);line-height:1.5;max-width:720px">Analysis and education only — not investment advice. UseMoney is not a broker-dealer or a registered investment adviser in the US. No order entry on this page, ever. Listing US000000000038.</div>
+      </sc-if>
+
+      <sc-if value="{{ onDash }}" hint-placeholder-val="{{ false }}">
+        <div style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:1.4px;color:var(--emerald-text)">● 4 INDIA BROKERS · 4 US ACCOUNTS · US ◷ EOD JUL 18</div>
+        <h1 style="font-weight:800;font-size:34px;letter-spacing:-1.4px;line-height:1.05;margin:8px 0 0">Good morning, <span style="font-family:var(--font-serif);font-style:italic;font-weight:400">Rahul.</span></h1>
+        <div style="margin-top:8px;font-family:var(--font-serif);font-style:italic;font-size:15px;color:var(--ink-3)">India's trading. The US closed last night. Both are below.</div>
+        <div style="margin-top:16px;border:2px solid var(--ink);border-radius:12px;background:var(--paper-2);padding:12px 16px;font-size:12.5px;color:var(--ink-2);line-height:1.5"><b style="font-family:var(--font-mono);font-size:10px;letter-spacing:1.2px;color:var(--ink-3)">FOUR DROP-INS · SURVIVE ALL THREE PERSONAS OF v2 DASHBOARD</b><br>Nothing here moves an existing tile. Net worth goes dual-currency, day-change gets an honesty line, allocation gets a market ring, and one compact tile arrives. Applied in <a href="v2 Dashboard.dc.html">v2 Dashboard</a>.</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));gap:14px;margin-top:18px">
+          <div style="position:relative;border:2px solid var(--ink);border-radius:14px;background:var(--paper);box-shadow:3px 3px 0 var(--ink);padding:16px 18px;transform:rotate(-0.5deg)"><div style="font-family:var(--font-mono);font-size:9px;letter-spacing:1.2px;color:var(--ink-3);font-weight:700">NET WORTH · DUAL CURRENCY</div><div class="num" style="font-size:25px;font-weight:800;margin-top:6px;letter-spacing:-0.8px">{{ netWorthP }}</div><div class="num" style="font-size:12.5px;color:var(--ink-3);margin-top:3px">{{ netWorthS }}</div><div class="num pos" style="margin-top:6px;font-size:12px;font-weight:700">+0.84% today · India only</div><div style="margin-top:8px"><span style="{{ pillOutline }}">SPOT ₹84.00/$ · 1H</span></div><span style="{{ deltaTag }}">DELTA 1</span></div>
+          <div style="position:relative;border:2px solid var(--ink);border-radius:14px;background:var(--paper);box-shadow:3px 3px 0 var(--ink);padding:16px 18px"><div style="font-family:var(--font-mono);font-size:9px;letter-spacing:1.2px;color:var(--ink-3);font-weight:700">TODAY'S CHANGE</div><div class="num pos" style="font-size:25px;font-weight:800;margin-top:6px;letter-spacing:-0.8px">{{ dayP }}</div><div class="num" style="font-size:12.5px;color:var(--ink-3);margin-top:3px">{{ dayS }}</div><div style="font-family:var(--font-mono);margin-top:6px;font-size:11px;color:var(--ink-3);line-height:1.4">India exchange-delayed.<br>US as of yesterday's close — $0 today.</div><span style="{{ deltaTag }}">DELTA 2</span></div>
+          <div style="position:relative;border:2px solid var(--ink);border-radius:14px;background:var(--paper);box-shadow:3px 3px 0 var(--ink);padding:16px 18px"><div style="font-family:var(--font-mono);font-size:9px;letter-spacing:1.2px;color:var(--ink-3);font-weight:700">ALLOCATION · BY MARKET</div><div style="display:flex;align-items:center;gap:14px;margin-top:10px"><svg width="78" height="78" viewBox="0 0 86 86"><circle cx="43" cy="43" r="34" fill="none" stroke="var(--rule-softer)" stroke-width="13"></circle><circle cx="43" cy="43" r="34" fill="none" stroke="var(--pop-5)" stroke-width="13" stroke-dasharray="96.4 213.6" transform="rotate(-90 43 43)"></circle><circle cx="43" cy="43" r="34" fill="none" stroke="var(--pop-3)" stroke-width="13" stroke-dasharray="117.2 213.6" transform="rotate(72.5 43 43)"></circle></svg><div style="flex:1;display:flex;flex-direction:column;gap:6px;font-size:12.5px"><div style="display:flex;justify-content:space-between"><span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--pop-5);border:1.5px solid var(--ink);margin-right:6px"></span>India</span><b class="num">45%</b></div><div style="display:flex;justify-content:space-between"><span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--pop-3);border:1.5px solid var(--ink);margin-right:6px"></span>US</span><b class="num">55%</b></div></div></div><span style="{{ deltaTag }}">DELTA 3</span></div>
+          <div style="position:relative;border:2px solid var(--ink);border-radius:14px;background:var(--paper);box-shadow:3px 3px 0 var(--ink);padding:16px 18px"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span style="font-family:var(--font-mono);font-size:9px;letter-spacing:1.2px;color:var(--ink-3);font-weight:700">US MARKETS</span><span style="{{ pillOutline }}">◷ EOD</span></div><div style="margin-top:10px;display:flex;flex-direction:column;gap:7px;font-family:var(--font-mono);font-size:12px"><div style="display:flex;justify-content:space-between"><span style="color:var(--ink-3)">S&amp;P 500</span><span><b>7,428.78</b> <span class="pos">+0.21%</span></span></div><div style="display:flex;justify-content:space-between"><span style="color:var(--ink-3)">NASDAQ</span><span><b>24,876.91</b> <span class="neg">-0.22%</span></span></div><div style="display:flex;justify-content:space-between;padding-top:7px;border-top:1.5px dashed var(--rule-soft)"><span style="color:var(--ink-3)">YOUR US BOOK</span><b>{{ usBookP }}</b></div><span style="font-size:10px;color:var(--ink-3)">OPENS 19:00 IST · 09:30 ET</span></div><span style="{{ deltaTag }}">DELTA 4 · NEW</span></div>
+        </div>
+        <sc-if value="{{ isLrs }}" hint-placeholder-val="{{ false }}">
+          <div onClick="{{ goLrs }}" style="margin-top:14px;max-width:360px;border:2px solid var(--ink);border-radius:14px;background:var(--pop-2);padding:14px 16px;box-shadow:3px 3px 0 var(--ink);cursor:pointer;transform:rotate(0.5deg)"><div style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:1.4px;color:#3a3a35">LRS HEADROOM · FY 26-27 · LRS PERSONA ONLY</div><div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:6px;color:#1d1d1b"><b style="font-size:15px">$201,800 left</b><b class="num" style="font-size:12px">19.3% USED</b></div><div style="margin-top:8px;height:10px;background:rgba(0,0,0,.1);border:1.5px solid #1d1d1b;border-radius:999px;overflow:hidden"><div style="height:100%;width:19.3%;background:#1d1d1b"></div></div></div>
+        </sc-if>
+      </sc-if>
+
+      <sc-if value="{{ onHold }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px">
+          <div><div style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:1.4px;color:var(--emerald-text)">● 61 INSTRUMENTS · 8 SOURCES · 2 MARKETS</div><h1 style="font-weight:800;font-size:34px;letter-spacing:-1.4px;line-height:1.05;margin:8px 0 0">Holdings, <span style="font-family:var(--font-serif);font-style:italic;font-weight:400">both markets,</span> <mark style="background:var(--pop-2);color:#1d1d1b;padding:0 6px">one ledger.</mark></h1></div>
+          <div style="display:inline-flex;border:2px solid var(--ink);border-radius:99px;overflow:hidden;background:var(--paper)"><span style="{{ segOff }}">BY BROKER</span><span style="{{ segOn }}">BY MARKET</span><span style="{{ segOff }}">FLAT</span></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:18px">
+          <sc-for list="{{ holdStats }}" as="h" hint-placeholder-count="5"><div style="{{ h.style }}"><div style="font-family:var(--font-mono);font-size:9px;letter-spacing:1.2px;color:var(--ink-3);font-weight:700">{{ h.l }}</div><div class="num" style="font-size:20px;font-weight:800;margin-top:5px;color:{{ h.c }}">{{ h.v }}</div><div style="font-family:var(--font-mono);font-size:10.5px;color:var(--ink-3);margin-top:2px">{{ h.s }}</div></div></sc-for>
+        </div>
+        <div style="border:2px solid var(--ink);border-radius:14px;background:var(--paper);box-shadow:4px 4px 0 var(--ink);overflow-x:auto;margin-top:16px">
+          <div style="padding:11px 18px;background:var(--paper-2);border-bottom:2px solid var(--ink);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center"><div style="display:flex;align-items:center;gap:10px"><span style="width:10px;height:10px;border-radius:3px;background:var(--pop-3);border:1.5px solid var(--ink)"></span><b style="font-size:14px;letter-spacing:-0.2px">United States</b><span style="{{ pillOutline }}">◷ EOD · JUL 18 CLOSE</span></div><span class="num" style="font-size:11px;color:var(--ink-3)">4 SYMBOLS · 14 POSITIONS · {{ usBookP }}</span></div>
+          <table class="pf-tbl" style="width:100%;min-width:640px;border-collapse:collapse"><thead><tr><th>SYMBOL</th><th>SOURCE</th><th style="text-align:right">QTY</th><th style="text-align:right">AVG</th><th style="text-align:right">LAST</th><th style="text-align:right">VALUE</th><th style="text-align:right">P&amp;L</th></tr></thead><tbody>
+            <sc-for list="{{ usRows }}" as="r" hint-placeholder-count="4"><tr><td><span class="num" style="font-weight:800">{{ r.sym }}</span><div style="font-size:11px;color:var(--ink-3)">{{ r.name }}</div></td><td><span style="{{ r.srcStyle }}">{{ r.src }}</span></td><td class="num" style="text-align:right">{{ r.qty }}</td><td class="num" style="text-align:right;color:var(--ink-3)">{{ r.avg }}</td><td class="num" style="text-align:right">{{ r.last }}</td><td class="num" style="text-align:right">{{ r.valP }}<div style="font-size:10px;color:var(--ink-3)">{{ r.valS }}</div></td><td class="num pos" style="text-align:right">{{ r.pnl }}<div style="font-size:11px">{{ r.pnlPct }}</div></td></tr></sc-for>
+          </tbody></table>
+          <div style="padding:11px 18px;background:var(--paper-2);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center"><div style="display:flex;align-items:center;gap:10px"><span style="width:10px;height:10px;border-radius:3px;background:var(--pop-5);border:1.5px solid var(--ink)"></span><b style="font-size:14px;letter-spacing:-0.2px">India</b><span style="{{ pillOutline }}">◷ EXCHANGE-DELAYED</span></div><span class="num" style="font-size:11px;color:var(--ink-3)">47 SYMBOLS · ₹40,52,180</span></div>
+          <table class="pf-tbl" style="width:100%;min-width:640px;border-collapse:collapse"><tbody>
+            <sc-for list="{{ inRows }}" as="r" hint-placeholder-count="3"><tr><td style="width:220px"><span class="num" style="font-weight:800">{{ r.sym }}</span><div style="font-size:11px;color:var(--ink-3)">{{ r.name }}</div></td><td><span style="{{ r.srcStyle }}">{{ r.src }}</span></td><td class="num" style="text-align:right">{{ r.qty }}</td><td class="num" style="text-align:right;color:var(--ink-3)">{{ r.avg }}</td><td class="num" style="text-align:right">{{ r.last }}</td><td class="num" style="text-align:right">{{ r.valP }}</td><td class="num" style="text-align:right;color:{{ r.pc }}">{{ r.pnl }}<div style="font-size:11px">{{ r.pnlPct }}</div></td></tr></sc-for>
+          </tbody></table>
+          <div style="padding:14px 18px;background:var(--ink);color:var(--paper);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center"><div><div style="font-family:var(--font-mono);font-size:9.5px;letter-spacing:1.4px;color:var(--pop-2);font-weight:700">TOTAL · BOTH MARKETS</div><div style="font-family:var(--font-mono);font-size:10.5px;opacity:0.65;margin-top:3px">VALUES AT SPOT ₹84.00/$ · COST BASIS AT RBI REF OF TRADE DATE</div></div><div style="text-align:right"><div class="num" style="font-size:22px;font-weight:800;letter-spacing:-0.6px">{{ totalP }}</div><div class="num" style="font-size:12px;opacity:0.65;margin-top:2px">{{ totalS }}</div></div></div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ onLrs }}" hint-placeholder-val="{{ false }}">
+        <div style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:1.4px;color:var(--emerald-text)">● FY 2026-27 · LRS HEADROOM · TCS PAID · SEEDED FROM IMPORTS</div>
+        <h1 style="font-weight:800;font-size:34px;letter-spacing:-1.4px;line-height:1.05;margin:8px 0 0">Your $250,000, <span style="font-family:var(--font-serif);font-style:italic;font-weight:400">accounted for.</span></h1>
+        <sc-if value="{{ isNri }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:16px;border:2px solid var(--ink);border-radius:14px;background:var(--paper-2);padding:14px 18px;display:flex;gap:14px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:240px"><b style="font-size:14px">This surface is LRS-only — you're viewing it as the NRI persona.</b><div style="margin-top:3px;font-size:12.5px;color:var(--ink-2);line-height:1.45">LRS applies to India residents remitting abroad. For an NRI it never appears: no dashboard card, no Tax row, no Settings entry.</div></div><button onClick="{{ setLrs }}" style="{{ btnSm }}">View as LRS →</button></div>
+        </sc-if>
+        <div style="margin-top:18px;border:2px solid var(--ink);border-radius:14px;background:var(--ink);color:var(--paper);padding:22px 24px;box-shadow:4px 4px 0 var(--emerald);transform:rotate(-0.4deg)">
+          <div style="display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:flex-end">
+            <div><div style="font-family:var(--font-mono);font-size:10px;letter-spacing:1.4px;color:var(--pop-2);font-weight:700">REMITTED THIS FY · HEADROOM REMAINING</div><div style="margin-top:8px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><span class="num" style="font-size:38px;font-weight:800;letter-spacing:-1.2px;line-height:1">$48,200</span><span class="num" style="font-size:15px;opacity:0.65">of $250,000</span></div><div class="num" style="margin-top:5px;font-size:12.5px;opacity:0.65">₹40,23,708 at RBI reference rates on each trade date</div></div>
+            <div style="text-align:right"><div style="font-family:var(--font-mono);font-size:10px;letter-spacing:1.4px;opacity:0.65;font-weight:700">HEADROOM</div><div class="num" style="margin-top:5px;font-size:28px;font-weight:800;color:var(--emerald);letter-spacing:-0.8px">$201,800</div><div class="num" style="margin-top:3px;font-size:12px;opacity:0.65">80.7% unused · resets 01 Apr</div></div>
+          </div>
+          <div style="margin-top:18px;height:16px;background:rgba(255,255,255,.09);border:1.5px solid #f4ede0;border-radius:999px;overflow:hidden;display:flex"><div style="width:4.8%;background:var(--emerald)"></div><div style="width:14.5%;background:var(--pop-2)"></div></div>
+          <div style="display:flex;justify-content:space-between;margin-top:8px;flex-wrap:wrap;gap:10px;font-family:var(--font-mono);font-size:10.5px;opacity:0.75"><span><span style="color:var(--emerald)">■</span> below ₹10L · no TCS &nbsp; <span style="color:var(--pop-2)">■</span> above ₹10L · TCS applies</span><span>● NOT TAX ADVICE · ASSUMPTIONS EDITABLE</span></div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:18px;margin-top:18px">
+          <div style="flex:1 1 520px;border:2px solid var(--ink);border-radius:14px;background:var(--paper);box-shadow:4px 4px 0 var(--ink);overflow-x:auto">
+            <div style="padding:14px 18px;border-bottom:1.5px dashed var(--rule-soft);display:flex;justify-content:space-between;align-items:center"><span style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">REMITTANCE LEDGER · FY 2026-27</span><span style="{{ pillOutline }}">4 ENTRIES</span></div>
+            <table class="pf-tbl" style="width:100%;min-width:620px;border-collapse:collapse"><thead><tr><th>DATE</th><th style="text-align:right">AMOUNT</th><th style="text-align:right">RBI REF</th><th style="text-align:right">₹ VALUE</th><th style="text-align:right">TCS</th><th>SOURCE</th></tr></thead><tbody>
+              <sc-for list="{{ ledger }}" as="l" hint-placeholder-count="4"><tr><td class="num">{{ l.d }}</td><td class="num" style="text-align:right">{{ l.a }}</td><td class="num" style="text-align:right;color:var(--ink-3)">{{ l.fx }}</td><td class="num" style="text-align:right">{{ l.inr }}</td><td class="num" style="text-align:right">{{ l.tcs }}</td><td><span style="{{ l.ps }}">{{ l.src }}</span></td></tr></sc-for>
+            </tbody></table>
+            <div style="padding:12px 18px;border-top:2px solid var(--ink);background:var(--paper-2);display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:11.5px;font-weight:700"><span>TOTAL</span><span>$48,200 · ₹40,23,708 · TCS ₹6,04,742</span></div>
+          </div>
+          <div style="flex:1 1 300px;display:flex;flex-direction:column;gap:14px">
+            <div style="border:2px solid var(--ink);border-radius:14px;background:var(--paper);padding:18px"><div style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">TCS PAID · CLAIMABLE</div><div class="num" style="margin-top:8px;font-size:28px;font-weight:800;letter-spacing:-0.8px">₹6,04,742</div><div style="margin-top:6px;font-size:12.5px;color:var(--ink-2);line-height:1.5">TCS isn't a cost — it's tax collected in advance. Claim it against your income-tax liability, or as a refund when you file. Shows up in Form 26AS.</div><button style="{{ btnSmGhost }};margin-top:12px">Export for my CA</button></div>
+            <div style="border:2px solid var(--ink);border-radius:14px;background:var(--paper);padding:18px"><div style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">ASSUMPTIONS · YOURS TO SET</div><div style="margin-top:10px;display:flex;flex-direction:column;gap:8px;font-size:12.5px"><div style="display:flex;justify-content:space-between"><span style="color:var(--ink-2)">FY limit</span><b class="num">$250,000</b></div><div style="display:flex;justify-content:space-between"><span style="color:var(--ink-2)">TCS threshold</span><b class="num">₹10,00,000</b></div><div style="display:flex;justify-content:space-between"><span style="color:var(--ink-2)">Rate above threshold · investment</span><b class="num">20%</b></div><div style="display:flex;justify-content:space-between"><span style="color:var(--ink-2)">FX for ₹ value</span><b class="num">RBI REF · TRADE DATE</b></div></div><div style="margin-top:10px;font-size:11.5px;color:var(--ink-3);line-height:1.45">Pre-filled bands we believe apply to investment remittances; edit to match your CA's reading and every figure recalculates.</div></div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ onFork }}" hint-placeholder-val="{{ false }}">
+        <div style="max-width:760px;margin:0 auto">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--ink-3)">STEP 04 OF 05</span><span style="flex:1;min-width:80px;height:6px;background:var(--rule-softer);border:1.5px solid var(--ink);border-radius:999px;overflow:hidden"><span style="display:block;height:100%;width:80%;background:var(--emerald)"></span></span><button style="{{ btnSmGhost }}">Skip for now</button></div>
+          <div style="text-align:center;margin:22px 0"><h1 style="font-size:36px;font-weight:800;letter-spacing:-1.4px;line-height:1.05;margin:0">Where do you <span style="font-family:var(--font-serif);font-style:italic;font-weight:400">invest?</span></h1><div style="margin-top:10px;font-family:var(--font-serif);font-style:italic;font-size:16px;color:var(--ink-3)">Question one of two. Sets your currency and which connection we offer first. Editable in Settings.</div></div>
+          <div style="display:flex;flex-wrap:wrap;gap:14px">
+            <sc-for list="{{ forkOpts }}" as="o" hint-placeholder-count="3"><button onClick="{{ o.on }}" style="{{ o.style }}"><span style="font-family:var(--font-mono);font-size:10.5px;font-weight:700;letter-spacing:1.4px;opacity:0.7">{{ o.k }}</span><span style="font-size:19px;font-weight:800;letter-spacing:-0.4px;margin-top:6px">{{ o.t }}</span><span style="font-size:12.5px;margin-top:4px;line-height:1.4;opacity:0.85">{{ o.d }}</span></button></sc-for>
+          </div>
+          <sc-if value="{{ forkHasUs }}" hint-placeholder-val="{{ true }}">
+            <div style="margin-top:18px;border:2px solid var(--ink);border-radius:14px;background:var(--paper);box-shadow:4px 4px 0 var(--ink);overflow:hidden">
+              <div style="padding:13px 20px;border-bottom:1.5px dashed var(--rule-soft);background:var(--paper-2)"><div style="font-family:var(--font-mono);font-size:9.5px;font-weight:800;letter-spacing:1.2px;color:var(--ink-3)">QUESTION TWO · BECAUSE YOU PICKED US</div><div style="margin-top:3px;font-size:15px;font-weight:800;letter-spacing:-0.3px">Where do you live right now?</div></div>
+              <div style="padding:16px 20px;display:flex;flex-wrap:wrap;gap:14px">
+                <button onClick="{{ setNri }}" style="{{ resUs }}"><span style="font-size:15px;font-weight:800;letter-spacing:-0.3px">{{ resUsMark }} In the US</span><span style="font-size:12.5px;margin-top:6px;line-height:1.45;opacity:0.85">H-1B, green card, citizen. You hold US brokerage accounts and think in dollars.</span><span style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap"><span style="{{ pillOutline }}">$ PRIMARY</span><span style="{{ pillOutline }}">LINK A BROKERAGE FIRST</span></span></button>
+                <button onClick="{{ setLrs }}" style="{{ resIn }}"><span style="font-size:15px;font-weight:800;letter-spacing:-0.3px">{{ resInMark }} In India, investing via LRS</span><span style="font-size:12.5px;margin-top:6px;line-height:1.45;opacity:0.85">You remit under LRS through Vested, INDmoney or a direct broker. You think in rupees.</span><span style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap"><span style="{{ pillOutline }}">₹ PRIMARY</span><span style="{{ pillOutline }}">IMPORT A STATEMENT FIRST</span><span style="{{ pillOutline }}">LRS TRACKER ON</span></span></button>
+              </div>
+            </div>
+            <div style="margin-top:14px;border:2px solid var(--ink);border-radius:12px;background:var(--paper-2);padding:12px 16px;font-size:12.5px;color:var(--ink-2);line-height:1.5">US quotes are <b>end-of-day</b> at launch — every price says so. Fundamentals come from SEC filings with filing dates shown. Live quotes arrive later behind a flag. We'd rather tell you now.</div>
+          </sc-if>
+          <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;margin-top:18px"><button style="{{ btnSmGhost }}">← Back</button><button onClick="{{ goConnect }}" style="{{ btnSm }}">{{ forkCta }}</button></div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ onSet }}" hint-placeholder-val="{{ false }}">
+        <div style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:1.4px;color:var(--emerald-text)">● SETTINGS · PREFERENCES · MARKET</div>
+        <h1 style="font-weight:800;font-size:34px;letter-spacing:-1.4px;line-height:1.05;margin:8px 0 0">Market <span style="font-family:var(--font-serif);font-style:italic;font-weight:400">preferences.</span></h1>
+        <div style="margin-top:8px;font-family:var(--font-serif);font-style:italic;font-size:15px;color:var(--ink-3)">One new section. Nothing else in Settings moves — Developer stays where <a href="v2 Settings Developer.dc.html">v2 put it</a>.</div>
+        <div style="display:flex;flex-wrap:wrap;gap:22px;margin-top:18px">
+          <div style="flex:0 1 210px;border:2px solid var(--ink);border-radius:14px;background:var(--paper);box-shadow:3px 3px 0 var(--ink);padding:12px;display:flex;flex-direction:column;gap:2px;align-self:flex-start">
+            <div style="font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:1.8px;color:var(--ink-3);padding:6px 8px 8px">SETTINGS</div>
+            <sc-for list="{{ setNav }}" as="s" hint-placeholder-count="7"><span style="{{ s.style }}">{{ s.l }}</span></sc-for>
+          </div>
+          <div style="flex:1 1 520px;min-width:0;display:flex;flex-direction:column;gap:18px">
+            <div style="border:2px solid var(--ink);border-radius:14px;background:var(--paper);box-shadow:4px 4px 0 var(--ink);overflow:hidden">
+              <div style="padding:13px 20px;border-bottom:1.5px dashed var(--rule-soft);background:var(--paper-2);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><div><b style="font-size:16px;letter-spacing:-0.3px">Markets &amp; currency</b><div style="font-size:12.5px;color:var(--ink-3);margin-top:2px">Your two onboarding answers, editable.</div></div><span style="{{ pillOutline }}">{{ personaLabel }}</span></div>
+              <sc-for list="{{ prefRows }}" as="p" hint-placeholder-count="4"><div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 20px;border-bottom:1px dashed var(--rule-soft);flex-wrap:wrap"><div style="flex:1;min-width:180px"><div style="font-size:14px;font-weight:600">{{ p.t }}</div><div style="font-size:12px;color:var(--ink-3);margin-top:2px">{{ p.d }}</div></div><span class="num" style="font-size:12.5px;color:var(--ink-2)">{{ p.v }}</span><button style="{{ btnSmGhost }}">Edit →</button></div></sc-for>
+            </div>
+            <div style="border:2px solid var(--ink);border-radius:14px;background:var(--paper);overflow-x:auto">
+              <div style="padding:13px 20px;border-bottom:1.5px dashed var(--rule-soft);background:var(--paper-2);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><div><b style="font-size:16px;letter-spacing:-0.3px">Connected US accounts</b><div style="font-size:12.5px;color:var(--ink-3);margin-top:2px">Via SnapTrade. Read-only. Revoke stops the sync and keeps your history.</div></div><button onClick="{{ goConnect }}" style="{{ btnSmGhost }}">Add account</button></div>
+              <table class="pf-tbl" style="width:100%;min-width:560px;border-collapse:collapse"><tbody>
+                <sc-for list="{{ accts }}" as="a" hint-placeholder-count="3"><tr><td><div style="display:flex;align-items:center;gap:10px"><span style="width:30px;height:30px;border-radius:7px;display:grid;place-items:center;font-family:var(--font-mono);font-weight:800;font-size:11px;background:{{ a.bg }};color:{{ a.fg }};border:1.5px solid var(--ink)">{{ a.ab }}</span><div><b style="font-size:13.5px">{{ a.name }}</b><div style="font-size:11px;color:var(--ink-3)">{{ a.sub }}</div></div></div></td><td class="num" style="text-align:right;color:{{ a.c }}">{{ a.st }}</td><td style="text-align:right"><button style="{{ a.btn }}">{{ a.act }}</button></td></tr></sc-for>
+              </tbody></table>
+              <div style="padding:12px 20px;border-top:1.5px dashed var(--rule-soft);background:var(--paper-2);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center"><span style="font-family:var(--font-mono);font-size:10px;color:var(--ink-3)">TOKENS ENCRYPTED AT REST · NO TRADING SCOPE, EVER</span><button style="{{ btnSmGhost }};color:var(--loss-text);border-color:var(--pop-1)">Revoke all US access</button></div>
+            </div>
+            <div style="border:2px solid var(--ink);border-radius:14px;background:var(--paper);overflow:hidden">
+              <div style="padding:13px 20px;border-bottom:1.5px dashed var(--rule-soft);background:var(--paper-2)"><b style="font-size:16px;letter-spacing:-0.3px">US data disclosure</b><div style="font-size:12.5px;color:var(--ink-3);margin-top:2px">What you're getting, and what you're not.</div></div>
+              <div style="padding:16px 20px;display:flex;flex-direction:column;gap:12px">
+                <div style="display:flex;flex-wrap:wrap;gap:7px"><span style="{{ pillOutline }}">◷ END-OF-DAY PRICES</span><span style="{{ pillOutline }}">SEC EDGAR · FILINGS + FUNDAMENTALS</span><span style="{{ pillOutline }}">SPOT FX HOURLY · RBI REF FOR COST</span><span style="{{ pillCoral }}">NO LIVE TICKS · NO EXECUTION</span></div>
+                <div style="border:2px solid var(--ink);border-radius:9px;background:var(--ink);color:var(--paper);padding:11px 13px;font-family:var(--font-mono);font-size:11px;line-height:1.7"><div><span style="opacity:0.55">prices  ›</span> third-party consolidated tape · <span style="color:var(--pop-2)">previous close</span> · provenance on every quote</div><div><span style="opacity:0.55">filings ›</span> SEC EDGAR · 10-K, 10-Q, 8-K, Forms 3/4/5, 13F</div><div><span style="opacity:0.55">fx      ›</span> <span style="color:var(--pop-2)">spot</span> for today's values · <span style="color:var(--pop-2)">RBI reference</span> for cost basis &amp; LRS</div><div><span style="opacity:0.55">orders  ›</span> <span style="color:var(--pop-1)">never</span> — no trading scope on any market</div></div>
+                <div style="font-size:12.5px;color:var(--ink-2);line-height:1.5">Analysis and education only — not investment advice. UseMoney is not a broker-dealer or a registered investment adviser in the US. India surfaces keep their existing SEBI framing.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;flagOn&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;US launch&quot;},&quot;persona&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;nri&quot;,&quot;lrs&quot;],&quot;default&quot;:&quot;nri&quot;,&quot;tsType&quot;:&quot;\&quot;nri\&quot; | \&quot;lrs\&quot;&quot;,&quot;section&quot;:&quot;US launch&quot;}}">
+const FX = 84.0;
+const usd = (n) => "$" + Math.round(n).toLocaleString("en-US");
+const inr = (n) => "₹" + Math.round(n).toLocaleString("en-IN");
+const SCREENS = [["connect", "Link a brokerage", "ACCOUNT / BROKERS", "Brokers", "US in."], ["import", "Import a statement", "ACCOUNT / BROKERS / IMPORT", "Import", "statement in."], ["stock", "US stock detail", "DISCOVER / STOCK / AAPL", "AAPL", "as filed."], ["dash", "Dashboard deltas", "HOME / OVERVIEW", "Dashboard", "both markets."], ["hold", "Holdings · mixed", "TRADE / HOLDINGS", "Holdings", "one ledger."], ["lrs", "LRS / TCS tracker", "TOOLS / TAX / LRS", "LRS & TCS", "accounted for."], ["fork", "Onboarding fork", "ONBOARDING / STEP 4", "Where do you invest?", ""], ["set", "Market preferences", "ACCOUNT / SETTINGS", "Settings", "market preferences."]];
+const US_BR = [["RH", "Robinhood", "#00c805", "#0b2b0b"], ["FD", "Fidelity", "#00945f", "#fff"], ["SW", "Schwab", "#0033a0", "#fff"], ["WB", "Webull", "#1a4ae0", "#fff"], ["ET", "E*TRADE", "#6633cc", "#fff"]];
+
+class Component extends DCLogic {
+  state = { screen: "connect", persona: null, flag: null, research: false, isDesk: true, dark: false, step: "consent", imp: 1, fork: "us" };
+  componentDidMount() {
+    try { const d = localStorage.getItem("um-v2-dark") === "1"; document.documentElement.classList.toggle("dark", d); this.setState({ dark: d }); } catch (e) {}
+    const h = (location.hash || "").replace("#", ""); if (SCREENS.some(s => s[0] === h)) this.setState({ screen: h });
+    this.mq = window.matchMedia("(min-width: 1024px)"); const sync = () => this.setState({ isDesk: this.mq.matches }); this.mq.addEventListener("change", sync); sync();
+    window.addEventListener("storage", this.onStore = (e) => { if (e.key === "um-v2-dark") { const d = e.newValue === "1"; document.documentElement.classList.toggle("dark", d); this.setState({ dark: d }); } });
+  }
+  componentWillUnmount() { window.removeEventListener("storage", this.onStore); }
+  go(screen) { this.setState({ screen }); try { history.replaceState(null, "", "#" + screen); } catch (e) {} window.scrollTo(0, 0); }
+  pair(u) { const nri = (this.state.persona ?? this.props.persona ?? "nri") === "nri"; return nri ? { p: usd(u), s: inr(u * FX) } : { p: inr(u * FX), s: usd(u) }; }
+  renderVals() {
+    const S0 = this.state, S = { ...S0, persona: S0.persona ?? this.props.persona ?? "nri", flag: S0.flag ?? this.props.flagOn ?? true };
+    const nri = S.persona === "nri", isLrs = !nri, mono = "font-family:var(--font-mono);";
+    const pill = (bg, fg) => mono + "display:inline-block;font-size:9px;font-weight:800;letter-spacing:0.6px;border:1.5px solid var(--ink);border-radius:99px;padding:3px 9px;background:" + bg + ";color:" + fg + ";white-space:nowrap";
+    const pillOutline = pill("var(--paper)", "var(--ink)"), pillEmerald = pill("var(--emerald)", "#0b0b09"), pillGold = pill("var(--pop-2)", "#1d1d1b"), pillCoral = pill("var(--pop-1)", "#fff");
+    const btnSm = "border:2px solid var(--ink);border-radius:9px;background:var(--ink);color:var(--paper);font-weight:800;font-size:12px;padding:7px 12px;cursor:pointer;font-family:var(--font-sans)";
+    const btnSmGhost = "border:2px solid var(--ink);border-radius:9px;background:var(--paper);color:var(--ink);font-weight:800;font-size:12px;padding:7px 12px;cursor:pointer;font-family:var(--font-sans)";
+    const seg = (on) => mono + "padding:6px 12px;font-size:10px;font-weight:800;letter-spacing:0.8px;cursor:pointer;border:0;background:" + (on ? "var(--ink)" : "transparent") + ";color:" + (on ? "var(--paper)" : "var(--ink-2)");
+    const cur = SCREENS.find(s => s[0] === S.screen) || SCREENS[0];
+    const flagOff = !S.flag;
+    const on = (k) => S.flag && S.screen === k;
+    // nav (same as other v2 surfaces)
+    const IC = { grid: "M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z", spark: "M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2z", pie: "M21 12A9 9 0 1 1 12 3v9z", eye: "M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z", book: "M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5zM4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5", flame: "M12 22c4 0 7-2.7 7-7 0-3-2-5.5-3.5-7C14 6 13 4 13 2c-3 2-4 5-4 7-1-1-1.5-2-1.5-3.5C5.5 7.5 5 9.8 5 12c0 6 3.4 10 7 10z", act: "M22 12h-4l-3 9L9 3l-3 9H2", search: "M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM21 21l-4.3-4.3", zap: "M13 2 3 14h7l-1 8 11-12h-8l1-8z", target: "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12z", receipt: "M4 2v20l2-1.5L8 22l2-1.5L12 22l2-1.5L16 22l2-1.5L20 22V2l-2 1.5L16 2l-2 1.5L12 2l-2 1.5L8 2 6 3.5zM8 8h8M8 12h8M8 16h5", link: "M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7", cog: "M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19 12a7 7 0 0 1-.1 1.2l2 1.6-2 3.4-2.4-1a7 7 0 0 1-2 1.2L14 21h-4l-.4-2.6a7 7 0 0 1-2-1.2l-2.4 1-2-3.4 2-1.6A7 7 0 0 1 5 12a7 7 0 0 1 .1-1.2l-2-1.6 2-3.4 2.4 1a7 7 0 0 1 2-1.2L10 3h4l.4 2.6a7 7 0 0 1 2 1.2l2.4-1 2 3.4-2 1.6c.1.4.2.8.2 1.2z", globe: "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20" };
+    const NC = { emerald: "var(--emerald)", blue: "var(--pop-3)", gold: "var(--pop-2)", coral: "var(--pop-1)", pink: "var(--pop-4)" };
+    const mk = (id, label, ic, tint, badge, href, screen) => { const act = !!screen && S.screen === screen; return { label, badge: badge || false, badgeBg: badge === "AI" ? "var(--emerald)" : "var(--pop-2)", d: IC[ic], href: href || "#", on: screen ? (e) => { e.preventDefault(); this.go(screen); } : undefined,
+      rowStyle: "display:flex;align-items:center;gap:10px;padding:6.5px 9px;border-radius:9px;cursor:pointer;margin-bottom:1px;text-decoration:none;font-weight:" + (act ? 800 : 650) + ";background:" + (act ? "var(--ink)" : "transparent") + ";color:" + (act ? "var(--paper)" : "var(--ink-2)"),
+      icStyle: "width:22px;height:22px;border-radius:6px;border:1.5px solid " + (act ? "var(--paper)" : "var(--ink)") + ";background:" + (tint ? NC[tint] : (act ? "var(--ink)" : "var(--paper)")) + ";display:grid;place-items:center;flex-shrink:0", icStroke: tint ? "#1d1d1b" : (act ? "var(--paper)" : "var(--ink-2)") }; };
+    const nav = [
+      { label: "WORKSPACE", items: [mk("dashboard", "Dashboard", "grid", null, null, "v2 Dashboard.dc.html"), mk("stocksage", "StockSage", "spark", "emerald", "AI"), mk("holdings", "Holdings", "pie", null, "US", null, "hold"), mk("watchlists", "Watchlists", "eye"), mk("tradebook", "Tradebook", "book")] },
+      { label: "DISCOVER", items: [mk("markets", "Markets", "act", "blue"), mk("screener", "Screener", "search", null, null, "v2 Screener.dc.html"), mk("strategies", "Strategies", "zap", "gold", "LAB", "v2 Strategies.dc.html"), mk("us", "US stock · AAPL", "globe", "blue", "US", null, "stock")] },
+      { label: "TOOLS", items: [mk("fire", "FIRE Calculator", "target", "coral"), mk("tax", "Tax Report", "receipt"), mk("lrs", "LRS / TCS", "receipt", "gold", isLrs ? "LRS" : null, null, "lrs")] },
+      { label: "ACCOUNT", items: [mk("brokers", "Brokers", "link", null, "US", null, "connect"), mk("settings", "Settings", "cog", null, null, "v2 Settings Developer.dc.html"), mk("prefs", "Market preferences", "globe", null, "NEW", null, "set")] },
+    ];
+    const screens = SCREENS.map(([k, label], i) => ({ n: String(i + 1).padStart(2, "0"), label, on: () => this.go(k),
+      style: "display:flex;align-items:center;gap:6px;padding:5px 6px;border-radius:6px;font-size:11.5px;font-weight:" + (S.screen === k ? 800 : 600) + ";cursor:pointer;background:" + (S.screen === k ? "var(--ink)" : "transparent") + ";color:" + (S.screen === k ? "var(--paper)" : "var(--ink-2)"),
+      chipStyle: mono + "white-space:nowrap;font-size:9.5px;font-weight:800;letter-spacing:0.5px;border:1.5px solid var(--ink);border-radius:99px;padding:5px 10px;cursor:pointer;background:" + (S.screen === k ? "var(--ink)" : "var(--paper)") + ";color:" + (S.screen === k ? "var(--paper)" : "var(--ink)") }));
+    const usBrokers = US_BR.map(([ab, name, bg, fg]) => ({ ab, name, bg, fg, sub: "VIA SNAPTRADE", on: () => this.setState({ step: "consent" }) }));
+    const stepDefs = [["consent", "CONSENT"], ["sync", "SYNCING"], ["done", "CONNECTED"], ["fail", "SYNC FAILED · RE-AUTH"]];
+    const steps = stepDefs.map(([k, label]) => ({ label, on: () => this.setState({ step: k }), style: pill(S.step === k ? "var(--ink)" : "var(--paper)", S.step === k ? "var(--paper)" : "var(--ink)") + ";cursor:pointer" }));
+    const syncRows = [["RH", "Robinhood", "#00c805", "#0b2b0b", "✓ 8 positions", "var(--gain-text)", false], ["FD", "Fidelity", "#00945f", "#fff", "✓ 6 positions", "var(--gain-text)", false], ["SW", "Schwab", "#0033a0", "#fff", "62% · lots", "var(--ink-3)", true], ["WB", "Webull", "#1a4ae0", "#fff", "queued", "var(--ink-3)", false]].map(([ab, name, bg, fg, st, c, bar]) => ({ ab, name, bg, fg, st, c, bar }));
+    const wizStyle = (i) => "flex:1 1 180px;min-width:0;display:flex;flex-direction:column;align-items:flex-start;text-align:left;padding:12px 16px;border:0;cursor:pointer;font-family:var(--font-sans);border-right:1.5px dashed var(--rule-soft);background:" + (S.imp === i ? "var(--ink)" : S.imp > i ? "var(--emerald-bg)" : "var(--paper)") + ";color:" + (S.imp === i ? "var(--paper)" : S.imp > i ? "var(--ink)" : "var(--ink-3)");
+    const wiz = [["01", "Upload", "vested_apr26.csv · 42 rows"], ["02", "Map columns", "7 of 7 detected · 2 flagged"], ["03", "Review & commit", "38 new · 4 duplicates"]].map(([n, t, sub], i) => ({ n, t, sub, on: () => this.setState({ imp: i + 1 }), style: wizStyle(i + 1) }));
+    const hints = [["Vested", "CSV · auto-mapped", "var(--gain-text)"], ["INDmoney", "CSV · auto-mapped", "var(--gain-text)"], ["Schwab", "PDF · OCR, then map", "var(--ink-3)"], ["IBKR", "Activity CSV", "var(--ink-3)"], ["Anything else", "map it yourself", "var(--ink-3)"]].map(([n, s, c]) => ({ n, s, c }));
+    const mapRows = [["Trade Date", "2026-04-18", "trade_date", "100%"], ["Ticker", "AAPL", "symbol", "100%"], ["Side", "BUY", "trade_type", "98%"], ["Units", "4.2814", "quantity", "97%"], ["Price (USD)", "204.11", "trade_price", "99%"], ["INR Rate", "83.10", "fx_rate_on_trade", "71%"], ["Fees", "0.42", "charges", "94%"]].map(([a, b, c, d]) => ({ a, b, c, d, pill: c === "fx_rate_on_trade" ? pillGold : pillOutline, cc: c === "fx_rate_on_trade" ? "#a16207" : "var(--gain-text)" }));
+    const lotCost = (q, p, fx) => nri ? usd(q * p) : inr(q * p * fx);
+    const lots = [["18 Apr 26", "AAPL", "4.2814", "$204.11", "₹83.10", lotCost(4.2814, 204.11, 83.10), "US", false], ["18 Apr 26", "MSFT", "2.1000", "$438.60", "₹83.10", lotCost(2.1, 438.6, 83.10), "US", false], ["02 Apr 26", "NVDA", "6.0000", "$168.42", "₹83.42", lotCost(6, 168.42, 83.42), "US", false], ["02 Apr 26", "GOOGL", "3.4000", "$182.90", "₹83.42", lotCost(3.4, 182.9, 83.42), "US", false], ["14 Mar 26", "AAPL", "1.8000", "$196.20", "₹83.66", "skipped", "DUPLICATE", true]].map(([d, s, q, p, fx, cost, tag, dup]) => ({ d, s, q, p, fx, cost, tag, rs: dup ? "background:var(--rule-softer);color:var(--ink-3)" : "", tagStyle: pillOutline + ";font-size:8px" }));
+    const ratios = [["P/E TTM", "32.8×", "10-Q · MAY 02"], ["GROSS MARGIN", "46.6%", "10-Q · MAY 02"], ["ROE", "147.2%", "10-K · FY25"], ["NET DEBT", "$48.5B", "10-Q · MAY 02"], ["MARKET CAP", "$3.15T", "EOD · JUL 18"], ["DIV YIELD", "0.47%", "8-K · MAY 01"]].map(([l, v, src]) => ({ l, v, src }));
+    const ranges = ["1M", "3M", "6M", "1Y", "5Y", "ALL"].map(l => ({ l, style: pill(l === "1Y" ? "var(--ink)" : "var(--paper)", l === "1Y" ? "var(--paper)" : "var(--ink)") }));
+    const stockTabs = ["Overview", "Filings", "Financials", "Insiders", "Holders", "Earnings", "News (14)"].map((l, i) => ({ l, style: mono + "padding:9px 14px;font-size:12px;font-weight:700;letter-spacing:0.5px;white-space:nowrap;" + (i === 0 ? "margin-bottom:-2px;border-radius:9px 9px 0 0;background:var(--ink);color:var(--paper);border:2px solid var(--ink)" : "color:var(--ink-3)") }));
+    const fin = [["Revenue", "$95.36B", "$124.30B", "$90.75B", "+5.1%", "10-Q · MAY 02", 800], ["Gross profit", "$44.45B", "$58.28B", "$42.27B", "+5.2%", "10-Q · MAY 02", 500], ["Operating income", "$29.59B", "$42.83B", "$27.90B", "+6.1%", "10-Q · MAY 02", 500], ["Net income", "$24.78B", "$36.33B", "$23.64B", "+4.8%", "10-Q · MAY 02", 500], ["Diluted EPS", "$1.65", "$2.40", "$1.53", "+7.8%", "10-Q · MAY 02", 500], ["Free cash flow", "$24.06B", "$29.94B", "$22.81B", "+5.5%", "DERIVED", 500]].map(([l, a, b, c, y, src, w]) => ({ l, a, b, c, y, src, w }));
+    const total = 106880, usBook = 58640;
+    const srcChip = (bg, dashed) => mono + "display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;border:1.5px " + (dashed ? "dashed" : "solid") + " var(--ink);border-radius:99px;padding:3px 8px;background:var(--paper);white-space:nowrap";
+    const usRows = [["AAPL", "Apple Inc.", "Robinhood", 62, "$164.20", "$211.04", 13084, 2904, "+28.5%", false], ["MSFT", "Microsoft Corp.", "Fidelity", 31, "$362.40", "$441.20", 13677, 2443, "+21.7%", false], ["NVDA", "NVIDIA Corp.", "Imported · Apr 26", 140, "$121.40", "$168.42", 23579, 6583, "+38.7%", true], ["GOOGL", "Alphabet Inc. · A", "Imported · Apr 26", 44, "$158.10", "$188.62", 8299, 1343, "+19.3%", true]].map(([sym, name, src, qty, avg, last, val, pnl, pnlPct, imp]) => ({ sym, name, src, qty, avg, last, valP: this.pair(val).p, valS: this.pair(val).s, pnl: "+" + this.pair(pnl).p, pnlPct, srcStyle: srcChip("", imp) }));
+    const inRows = [["RELIANCE", "Reliance Industries", "Zerodha", 120, "₹2,240", "₹2,487", "₹2,98,440", "+₹29,640", "+11.0%", "var(--gain-text)"], ["INFY", "Infosys", "Groww", 150, "₹1,380", "₹1,654", "₹2,48,100", "+₹41,100", "+19.9%", "var(--gain-text)"], ["TCS", "Tata Consultancy", "Upstox", 35, "₹3,920", "₹3,821", "₹1,33,735", "-₹3,465", "-2.5%", "var(--loss-text)"]].map(([sym, name, src, qty, avg, last, valP, pnl, pnlPct, pc]) => ({ sym, name, src, qty, avg, last, valP, pnl, pnlPct, pc, srcStyle: srcChip("", false) }));
+    const statBox = (bg, bc) => "border:2px solid " + (bc || "var(--ink)") + ";border-radius:12px;padding:12px 14px;background:" + bg;
+    const holdStats = [{ l: "TOTAL VALUE", v: this.pair(total).p, s: this.pair(total).s, c: "var(--ink)", style: statBox("var(--paper)") }, { l: "INDIA", v: "₹40.52 L", s: "45% · exchange-delayed", c: "var(--ink)", style: statBox("rgba(167,139,250,.12)", "var(--pop-5)") }, { l: "US", v: this.pair(usBook).p, s: "55% · ◷ EOD JUL 18", c: "var(--ink)", style: statBox("rgba(59,130,246,.1)", "var(--pop-3)") }, { l: "UNREALISED", v: "+" + this.pair(22120).p, s: "+26.1% on cost", c: "var(--gain-text)", style: statBox("var(--emerald-bg)", "var(--emerald)") }, { l: "XIRR · BLENDED", v: "19.4%", s: "FX-adjusted", c: "var(--ink)", style: statBox("var(--paper)") }];
+    const ledger = [["14 Jul 26", "$9,800", "83.66", "₹8,19,868", "₹1,63,974", "INDMONEY · IMPORT", pillOutline], ["28 Jun 26", "$8,000", "83.98", "₹6,71,840", "₹1,34,368", "MANUAL", pillGold], ["18 Apr 26", "$12,400", "83.10", "₹10,30,440", "₹2,06,088", "VESTED · IMPORT", pillOutline], ["02 Apr 26", "$18,000", "83.42", "₹15,01,560", "₹1,00,312", "VESTED · IMPORT", pillOutline]].map(([d, a, fx, inrV, tcs, src, ps]) => ({ d, a, fx, inr: inrV, tcs, src, ps }));
+    const forkCard = (on) => "flex:1 1 200px;min-width:0;display:flex;flex-direction:column;align-items:flex-start;text-align:left;padding:18px;border:2px solid var(--ink);border-radius:14px;cursor:pointer;font-family:var(--font-sans);" + (on ? "background:var(--ink);color:var(--paper);box-shadow:4px 4px 0 var(--emerald)" : "background:var(--paper);color:var(--ink);box-shadow:3px 3px 0 var(--ink)");
+    const forkOpts = [["IN", "India", "NSE and BSE, via your brokers", "in"], ["US", "United States", "NASDAQ and NYSE · end-of-day prices", "us"], ["IN + US", "Both", "One workspace, two markets", "both"]].map(([k, t, d, v]) => ({ k, t, d, on: () => this.setState({ fork: v }), style: forkCard(S.fork === v) }));
+    const resCard = (on) => "flex:1 1 240px;min-width:0;display:flex;flex-direction:column;align-items:flex-start;text-align:left;padding:16px;border:2px solid var(--ink);border-radius:12px;cursor:pointer;font-family:var(--font-sans);" + (on ? "background:var(--pop-2);color:#1d1d1b;box-shadow:3px 3px 0 var(--ink)" : "background:var(--paper);color:var(--ink)");
+    const setNav = ["Profile", "Plans & billing", "Usage", "Notifications", "Preferences", "Developer", "Security"].map(l => ({ l, style: "padding:8px 10px;border-radius:8px;font-size:13.5px;font-weight:" + (l === "Preferences" ? 700 : 600) + ";background:" + (l === "Preferences" ? "var(--ink)" : "transparent") + ";color:" + (l === "Preferences" ? "var(--paper)" : "var(--ink-2)") }));
+    const prefRows = [["Where do you invest?", "Onboarding question one.", "India + US"], ["Residency", "Onboarding question two. Drives the LRS tracker and which connect path we offer first.", nri ? "United States · NRI" : "India · investing via LRS"], ["Primary currency", "Overrides the default for your residency. The other stays visible.", nri ? "$ USD" : "₹ INR"], ["Show US market hours in", "The other one appears on hover.", nri ? "ET · Eastern" : "IST"]].map(([t, d, v]) => ({ t, d, v }));
+    const accts = [["RH", "Robinhood", "#00c805", "#0b2b0b", "8 positions · linked Mar 2026", "● synced 2h ago", "var(--gain-text)", "Manage", btnSmGhost], ["FD", "Fidelity", "#00945f", "#fff", "6 positions · session expired Jul 14", "↻ re-auth needed", "var(--loss-text)", "Re-authorise", btnSm], ["IM", "Vested · imported", "var(--pop-5)", "#fff", "3 statements · last Apr 26", "◷ import-only", "var(--ink-3)", "Import new", btnSmGhost]].map(([ab, name, bg, fg, sub, st, c, act, btn]) => ({ ab, name, bg, fg, sub, st, c, act, btn }));
+    return {
+      isDesk: S.isDesk, isMob: !S.isDesk, nav, screens, flagOff,
+      crumb: cur[2], title: cur[3], titleSer: cur[4],
+      nriStyle: seg(nri), lrsStyle: seg(!nri), setNri: () => this.setState({ persona: "nri" }), setLrs: () => this.setState({ persona: "lrs" }),
+      flagStyle: mono + "font-size:9.5px;font-weight:800;letter-spacing:0.6px;border:2px solid var(--ink);border-radius:8px;padding:6px 10px;cursor:pointer;box-shadow:2px 2px 0 var(--ink);background:" + (S.flag ? "var(--emerald)" : "var(--paper)") + ";color:" + (S.flag ? "#0b0b09" : "var(--ink)"),
+      flagLabel: S.flag ? "ON" : "OFF", toggleFlag: () => this.setState({ flag: !S.flag }),
+      toggleDark: () => { const dark = !S.dark; document.documentElement.classList.toggle("dark", dark); try { localStorage.setItem("um-v2-dark", dark ? "1" : "0"); } catch (e) {} this.setState({ dark }); },
+      darkIcon: S.dark ? "M12 3v2M12 19v2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M3 12h2M19 12h2M5.2 18.8l1.4-1.4M17.4 6.6l1.4-1.4M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10z" : "M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z",
+      onConnect: on("connect"), onImport: on("import"), onStock: on("stock"), onDash: on("dash"), onHold: on("hold"), onLrs: on("lrs"), onFork: on("fork"), onSet: on("set"),
+      goConnect: () => this.go("connect"), goImport: () => this.go("import"), goStock: () => this.go("stock"), goHold: () => this.go("hold"), goLrs: () => this.go("lrs"), goSet: () => this.go("set"),
+      isNri: nri, isLrs, personaLabel: nri ? "NRI · $ PRIMARY" : "LRS · ₹ PRIMARY",
+      pillOutline, pillEmerald, pillGold, pillCoral, btnSm, btnSmGhost, segOn: seg(true), segOff: seg(false),
+      deltaTag: pillGold + ";position:absolute;top:-9px;right:12px",
+      cardLink: "flex:1 1 420px;min-width:0;border:2px solid var(--ink);border-radius:14px;background:var(--paper);box-shadow:4px 4px 0 var(--ink);overflow:hidden;order:" + (nri ? 1 : 2),
+      cardImport: "flex:1 1 420px;min-width:0;border:2px solid var(--ink);border-radius:14px;background:var(--paper);box-shadow:4px 4px 0 var(--ink);overflow:hidden;order:" + (nri ? 2 : 1),
+      linkBadge: nri ? "FASTEST FOR YOU" : "IF YOUR BROKER ALLOWS IT", importBadge: nri ? "WORKS WITH ANY BROKER" : "YOUR PATH",
+      usBrokers, fmts: ["VESTED · CSV", "INDMONEY · CSV", "SCHWAB · PDF", "IBKR · CSV", "GENERIC · CSV"],
+      steps, atConsent: S.step === "consent", atSync: S.step === "sync", atDone: S.step === "done", atFail: S.step === "fail",
+      goSync: () => this.setState({ step: "sync" }), goDone: () => this.setState({ step: "done" }),
+      consentSteps: [["1", "You sign in at Robinhood's own screen, inside SnapTrade's connection portal. We never see the password."], ["2", "SnapTrade hands us a read-only token. We encrypt it at rest."], ["3", "We pull positions, balances and activity — about 40 seconds."], ["4", "You land on Holdings with US and India side by side."]].map(([n, t]) => ({ n, t })),
+      syncRows, usTotalP: this.pair(usBook).p, usTotalS: this.pair(usBook).s,
+      impN: String(S.imp).padStart(2, "0"), wiz, imp1: S.imp === 1, imp2: S.imp === 2, imp3: S.imp === 3, goImp2: () => this.setState({ imp: 2 }), goImp3: () => this.setState({ imp: 3 }),
+      hints, mapRows, lots, impTotalP: nri ? usd(48200) : inr(4023708), impTotalS: nri ? inr(4023708) : usd(48200),
+      aaplPriceP: nri ? "$211.04" : "₹17,727", aaplPriceS: nri ? "₹17,727" : "$211.04",
+      aaplHolding: nri ? "You hold 62 shares · " + usd(13084) + " (" + inr(13084 * FX) + ") · avg $164.20 · +28.5%" : "You hold 62 shares · " + inr(13084 * FX) + " (" + usd(13084) + ") · avg ₹13,644 at RBI reference rates",
+      ranges, ratios, stockTabs, fin,
+      researchBtn: S.research ? btnSm : btnSmGhost + ";color:var(--ink-3)", researchLabel: S.research ? "Research with Sage · ⚡ 2" : "Research · India only today · flag us-stock-research OFF", toggleResearch: () => this.setState({ research: !S.research }),
+      netWorthP: nri ? usd(total) : inr(total * FX), netWorthS: nri ? inr(total * FX) : usd(total), dayP: nri ? "+$502" : "+₹42,180", dayS: nri ? "+₹42,180 India · +$0 US" : "+$0 US · closed · +₹42,180 India", usBookP: this.pair(usBook).p,
+      holdStats, usRows, inRows, totalP: nri ? usd(total) : inr(total * FX), totalS: nri ? inr(total * FX) : usd(total),
+      ledger,
+      forkOpts, forkHasUs: S.fork !== "in", resUs: resCard(nri), resIn: resCard(!nri), resUsMark: nri ? "✓" : "○", resInMark: nri ? "○" : "✓", forkCta: nri ? "Next: link a brokerage →" : "Next: import a statement →",
+      setNav, prefRows, accts,
+    };
+  }
+}
+</script>
+</body>
+</html>

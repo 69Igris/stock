@@ -1,0 +1,13 @@
+(self.webpackChunktradingview = self.webpackChunktradingview || []).push([
+  [3107],
+  {
+    25488: (e) => {
+      e.exports = {
+        en: ["Next time you can use {shortcut} for quick paste"],
+        id_ID: [
+          "Ke depannya anda dapat menggunakan {shortcut} untuk menempel dengan cepat",
+        ],
+      };
+    },
+  },
+]);

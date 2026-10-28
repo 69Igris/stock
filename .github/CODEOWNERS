@@ -1,0 +1,55 @@
+# CODEOWNERS — required reviewers for sensitive paths
+#
+# How it works:
+#   * When "Require review from Code Owners" is enabled on the `main` branch
+#     protection rule, any PR that touches a path below needs approval from the
+#     listed owner BEFORE it can be merged.
+#   * The LAST matching pattern wins.
+#   * Owners must have write access and be members of the UseMoney-AI org.
+#   * Syntax docs: https://docs.github.com/articles/about-code-owners
+#
+# ── Onboarding note (interns, 2026-06) ───────────────────────────────────────
+#   The catch-all `*` line means the OWNER must review EVERY PR while the interns
+#   are new. This is the safe Phase-1 posture for a fintech codebase.
+#
+#   PHASE 2 (interns trusted, or a second senior reviewer joins):
+#     delete the catch-all `*` line below and keep ONLY the granular rules, so
+#     peers can review routine PRs while CI / secrets / payments / db / infra
+#     stay locked to the owner.
+#
+#   Tip: replace @deepshaswat with a team handle (e.g. @UseMoney-AI/maintainers)
+#   once a maintainers team exists, so reviews aren't bottlenecked on one person.
+
+# ── Catch-all: owner reviews everything (REMOVE this line to relax in Phase 2) ─
+*                                    @deepshaswat
+
+# ── CI / automation (secret-exfiltration surface — keep locked permanently) ───
+/.github/                            @deepshaswat
+/.husky/                             @deepshaswat
+
+# ── Secrets, auth, crypto, request gating ─────────────────────────────────────
+/packages/security/                  @deepshaswat
+/packages/auth/                      @deepshaswat
+**/middleware.ts                     @deepshaswat
+
+# ── Database schema & client ──────────────────────────────────────────────────
+/packages/database/                  @deepshaswat
+
+# ── Payments & subscription / billing logic ───────────────────────────────────
+/packages/core/src/payments/         @deepshaswat
+/packages/core/src/subscription/     @deepshaswat
+
+# ── Deployment / infra / ops ──────────────────────────────────────────────────
+/cloudbuild.integration.yaml         @deepshaswat
+/workers/Dockerfile                  @deepshaswat
+/workers/cloudbuild*.yaml            @deepshaswat
+/scripts/ops/                        @deepshaswat
+/workers/scripts/                    @deepshaswat
+**/vercel.json                       @deepshaswat
+
+# ── Dependency supply chain (new deps = supply-chain risk) ────────────────────
+/yarn.lock                           @deepshaswat
+/package.json                        @deepshaswat
+
+# ── This file must own itself (stop interns removing their own guardrails) ─────
+/.github/CODEOWNERS                  @deepshaswat

@@ -1,0 +1,43 @@
+# Keep Cloud Build source uploads small + fast. The worker Dockerfile runs
+# `yarn install` + builds from source, so none of these are needed in the
+# upload (and several are huge). MONEY-672 worker deploy.
+.git/
+node_modules/
+**/node_modules/
+.next/
+**/.next/
+dist/
+**/dist/
+.turbo/
+**/.turbo/
+coverage/
+**/coverage/
+.design-ref/
+vendor/
+# Claude Code agent worktrees. `.claude/worktrees/<agent>` is a FULL CHECKOUT
+# per background agent, and `node_modules/` above only trims the deps — the
+# SOURCE still uploads. Measured 2026-09-22 with four agents live: 8,988
+# tracked files in the main checkout against 111,672 worktree source files,
+# and 21 GB on disk. So a routine `setup-sync-job.sh` (whose image COPYs
+# exactly ONE shell script) was uploading four branches of in-progress work to
+# the build bucket. Nothing breaks; it is slow and it publishes unmerged code.
+.claude/
+# Python virtualenvs (MONEY-979). `services/us-fundamentals/.venv` measures
+# 578 MiB and is gitignored — but a `.gcloudignore` REPLACES `.gitignore` for
+# the source upload rather than adding to it, so anything not listed here is
+# uploaded no matter what git thinks. `.next/`, `.turbo/`, `coverage/` and
+# `dist/` were already covered; this one arrived with the Python service and was
+# not. Note this is a different mechanism from `.dockerignore`, which governs
+# the daemon's build context, not what gcloud uploads.
+.venv/
+**/.venv/
+**/__pycache__/
+**/.pytest_cache/
+**/.ruff_cache/
+**/*.egg-info/
+
+# Committed TradingView library (~385 MiB) — only the web app serves it; the
+# worker never touches it. Excluding it cuts the worker deploy upload massively.
+apps/web/public/charting_library/
+**/*.log
+.DS_Store

@@ -1,0 +1,183 @@
+{
+  "_ticket": "MONEY-1361",
+  "_why": [
+    "The board the performance week starts from. Every widget here is a RUM",
+    "query rather than a metric: the browser SDK emits these facets, this repo",
+    "emits none of them, so dashboards-agreement.test.ts checks the FACET",
+    "vocabulary and the $env/service scoping instead of a metric inventory.",
+    "Percentiles, not averages — an average LCP is dominated by the fast",
+    "sessions that were never the problem."
+  ],
+  "title": "UseMoney — web vitals",
+  "description": "managed-by:apply-dashboards — edit the file, not the UI",
+  "layout_type": "ordered",
+  "template_variables": [
+    { "name": "env", "prefix": "env", "default": "production" }
+  ],
+  "widgets": [
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "LCP p75 by route (ns)",
+        "_units": "RUM view timings are NANOSECONDS. 2.5s renders as 2500000000, and a threshold written in ms is wrong by 1e6 in a direction that never fires — see monitor-rum-lcp.json's _units_rationale.",
+        "requests": [
+          {
+            "rum_query": {
+              "index": "*",
+              "compute": {
+                "aggregation": "pc75",
+                "facet": "@view.largest_contentful_paint"
+              },
+              "search": { "query": "@type:view service:stockbook-web $env" },
+              "group_by": [
+                {
+                  "facet": "@view.url_path",
+                  "limit": 10,
+                  "sort": {
+                    "aggregation": "pc75",
+                    "facet": "@view.largest_contentful_paint",
+                    "order": "desc"
+                  }
+                }
+              ]
+            },
+            "display_type": "line"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "INP p75 by route (ns)",
+        "requests": [
+          {
+            "rum_query": {
+              "index": "*",
+              "compute": {
+                "aggregation": "pc75",
+                "facet": "@view.interaction_to_next_paint"
+              },
+              "search": { "query": "@type:view service:stockbook-web $env" },
+              "group_by": [
+                {
+                  "facet": "@view.url_path",
+                  "limit": 10,
+                  "sort": {
+                    "aggregation": "pc75",
+                    "facet": "@view.interaction_to_next_paint",
+                    "order": "desc"
+                  }
+                }
+              ]
+            },
+            "display_type": "line"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "CLS p75 by route",
+        "_units": "CLS is a UNITLESS ratio, unlike the two above. Do not copy a nanosecond threshold onto it.",
+        "requests": [
+          {
+            "rum_query": {
+              "index": "*",
+              "compute": {
+                "aggregation": "pc75",
+                "facet": "@view.cumulative_layout_shift"
+              },
+              "search": { "query": "@type:view service:stockbook-web $env" },
+              "group_by": [
+                {
+                  "facet": "@view.url_path",
+                  "limit": 10,
+                  "sort": {
+                    "aggregation": "pc75",
+                    "facet": "@view.cumulative_layout_shift",
+                    "order": "desc"
+                  }
+                }
+              ]
+            },
+            "display_type": "line"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "toplist",
+        "title": "Browser errors by message",
+        "requests": [
+          {
+            "rum_query": {
+              "index": "*",
+              "compute": { "aggregation": "count" },
+              "search": { "query": "@type:error service:stockbook-web $env" },
+              "group_by": [
+                {
+                  "facet": "@error.message",
+                  "limit": 15,
+                  "sort": { "aggregation": "count", "order": "desc" }
+                }
+              ]
+            }
+          }
+        ],
+        "time": { "live_span": "1d" }
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Sessions",
+        "_why": "The denominator. An error count that halves because traffic halved is not an improvement, and nothing else on this board can tell the two apart.",
+        "requests": [
+          {
+            "rum_query": {
+              "index": "*",
+              "compute": { "aggregation": "count" },
+              "search": { "query": "@type:session service:stockbook-web $env" }
+            },
+            "display_type": "bars"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Resource p75 by host (ns)",
+        "requests": [
+          {
+            "rum_query": {
+              "index": "*",
+              "compute": {
+                "aggregation": "pc75",
+                "facet": "@resource.duration"
+              },
+              "search": {
+                "query": "@type:resource service:stockbook-web $env"
+              },
+              "group_by": [
+                {
+                  "facet": "@resource.url_host",
+                  "limit": 10,
+                  "sort": {
+                    "aggregation": "pc75",
+                    "facet": "@resource.duration",
+                    "order": "desc"
+                  }
+                }
+              ]
+            },
+            "display_type": "line"
+          }
+        ]
+      }
+    }
+  ]
+}

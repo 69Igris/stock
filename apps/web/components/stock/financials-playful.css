@@ -1,0 +1,341 @@
+/* ─────────────────────────────────────────────────────────────────────
+   Playful financials styles — StockFinancialsTab
+   Co-located; do NOT import into playful-app.css.
+   Theme-aware: all colours via CSS vars from playful-app.css.
+   NEVER hardcode light/dark hex — use var(--ink), var(--paper), etc.
+   ───────────────────────────────────────────────────────────────────── */
+
+/* ── Header row ────────────────────────────────────────────────────── */
+.fin-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.fin-title-block {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 160px;
+  min-width: 0;
+}
+
+.fin-title {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* ── Period tab strip (reuse det-tab-strip from detail-playful.css but
+      scoped locally just in case that file isn't loaded) ────────────── */
+.fin-tab-strip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 8px;
+  border: 1.5px solid var(--ink);
+  background: var(--paper);
+  padding: 2px;
+  flex-shrink: 0;
+}
+
+.fin-tab-btn {
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border: 0;
+  background: transparent;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition:
+    background 0.12s,
+    color 0.12s;
+  white-space: nowrap;
+}
+.fin-tab-btn:hover {
+  color: var(--ink);
+  background: var(--rule-softer);
+}
+.fin-tab-btn.is-active {
+  background: var(--emerald-bg);
+  color: var(--emerald);
+}
+
+/* ── Coming-soon card ──────────────────────────────────────────────── */
+.fin-coming-card {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft);
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.fin-coming-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: var(--emerald-bg);
+  border: 1.5px solid var(--emerald);
+  color: var(--emerald);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.fin-coming-title {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.fin-coming-desc {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  line-height: 1.55;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+/* ── Error card ────────────────────────────────────────────────────── */
+.fin-error-card {
+  background: var(--paper);
+  border: 2px solid var(--pop-1);
+  border-radius: 14px;
+  padding: 24px;
+  text-align: center;
+  color: var(--pop-1);
+  font-size: 13.5px;
+}
+
+/* ── Empty state card ──────────────────────────────────────────────── */
+/* MONEY-1255 — `.fin-empty-card` is deleted. It was `SectionShell`'s dashed
+   box re-expressed as CSS, so the two drifted independently; the panel now
+   renders `<SectionEmpty>` like every other section. The switch rule below
+   stays: that button is the one part of this empty state that is NOT generic,
+   and it has no equivalent in the shared box.
+   (Its class name is deliberately not spelled out here — `financials-
+   empty-state.test.ts` slices this file from the first occurrence of it.) */
+
+/* Inline switch offered when THIS period is empty but the other has rows.
+   Tokens only — no literal colours — so it tracks the theme like its card. */
+.fin-empty-switch {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-style: normal;
+  font-weight: 600;
+  color: var(--emerald-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.fin-empty-switch:hover,
+.fin-empty-switch:focus-visible {
+  opacity: 0.75;
+}
+
+/* ── Section card (table wrapper) ─────────────────────────────────── */
+.fin-section-card {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.fin-section-head {
+  padding: 12px 16px;
+  border-bottom: 1.5px solid var(--rule-soft);
+  background: var(--paper-2);
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* MONEY-1300 — whose accounts the statement is (consolidated vs standalone).
+   For a holding company the two differ by a MULTIPLE, so this is not a footnote:
+   it is what makes the number beside it readable. Theme tokens only. */
+.fin-section-basis {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border: 1px solid var(--rule-soft);
+  border-radius: 999px;
+  padding: 1px 7px;
+  white-space: nowrap;
+}
+
+.fin-section-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* ── The ONE horizontally-scrollable surface ───────────────────────── */
+.fin-table-scroll {
+  overflow-x: auto;
+  width: 100%;
+}
+
+/* ── Financials table ──────────────────────────────────────────────── */
+.fin-tbl {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
+  min-width: 480px; /* triggers scroll before columns crunch */
+}
+
+.fin-tbl thead th {
+  padding: 10px 12px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--ink-3);
+  border-bottom: 1.5px solid var(--rule-soft);
+  white-space: nowrap;
+  background: var(--paper);
+}
+
+.fin-tbl thead th.num-col {
+  text-align: right;
+}
+
+.fin-tbl tbody tr {
+  border-top: 1px dashed var(--rule-soft);
+}
+
+.fin-tbl tbody tr:hover td {
+  background: var(--rule-softer);
+}
+
+.fin-tbl tbody td {
+  padding: 11px 12px;
+  background: var(--paper);
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+  vertical-align: middle;
+}
+
+.fin-tbl tbody td.fin-metric-label {
+  color: var(--ink-2);
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+
+.fin-tbl tbody td.fin-num {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 600;
+  font-size: 12.5px;
+  text-align: right;
+  color: var(--ink);
+}
+
+/* ── Period-over-period delta (MONEY-796) ──────────────────────────────
+   Small ↑/↓ chip on the latest column only. Theme-aware up/down colours,
+   SEBI-neutral: it states the % change in the line item, not a verdict. */
+.fin-num-latest {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.fin-delta {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  line-height: 1;
+}
+.fin-delta.up {
+  color: var(--emerald);
+}
+.fin-delta.down {
+  color: var(--pop-1);
+}
+.fin-delta.flat {
+  color: var(--ink-3);
+}
+
+/* ── Skeleton ──────────────────────────────────────────────────────── */
+.fin-skeleton-card {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.fin-skeleton-head {
+  height: 40px;
+  background: var(--paper-2);
+  border-bottom: 1.5px solid var(--rule-soft);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+}
+
+.fin-skeleton-head-bar {
+  height: 10px;
+  width: 120px;
+  background: var(--rule-soft);
+  border-radius: 4px;
+  animation: fin-pulse 1.6s infinite;
+}
+
+@keyframes fin-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.fin-skeleton-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 12px;
+  padding: 12px 16px;
+  border-top: 1px dashed var(--rule-soft);
+  animation: fin-pulse 1.6s infinite;
+}
+
+.fin-skeleton-cell {
+  height: 12px;
+  background: var(--rule-soft);
+  border-radius: 4px;
+}
+.fin-skeleton-cell.last {
+  background: var(--emerald-bg);
+}

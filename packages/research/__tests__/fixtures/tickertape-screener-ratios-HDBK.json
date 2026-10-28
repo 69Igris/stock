@@ -1,0 +1,39 @@
+{
+    "success": true,
+    "data": {
+        "results": [
+            {
+                "sid": "HDBK",
+                "stock": {
+                    "advancedRatios": {
+                        "beta": 0.980598046121242,
+                        "mrktCapf": 1123335.881415,
+                        "5YrevChg": 26.020497798089792,
+                        "aint": null,
+                        "dbtEqt": 0,
+                        "pftMrg": 15.34443523621885,
+                        "qcur": null,
+                        "roe": 13.261197178569569,
+                        "rtnAsts": 1.6322321934491217,
+                        "rvng": 5.21258221186105,
+                        "apef": 14.775686274242855,
+                        "divDps": 2.124005945429724,
+                        "evebitd": 7.841107875293814,
+                        "pbr": 1.8462423617141182,
+                        "ev": 833794.7914149999,
+                        "roce": 5.624655522961891
+                    },
+                    "info": {
+                        "name": "HDFC Bank Limited",
+                        "ticker": "HDFCBANK",
+                        "sector": "Financials"
+                    },
+                    "slug": "/stocks/hdfc-bank-HDBK"
+                }
+            }
+        ],
+        "stats": {
+            "count": 1
+        }
+    }
+}

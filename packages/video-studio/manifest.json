@@ -1,0 +1,134 @@
+{
+  "$schema": "https://raw.githubusercontent.com/modelcontextprotocol/mcpb/main/dist/mcpb-manifest.schema.json",
+  "manifest_version": "0.2",
+  "name": "usemoney-video-studio",
+  "display_name": "UseMoney Video Studio",
+  "version": "0.1.0",
+  "description": "Prompt-driven video studio: brief → timeline → motion graphics + Veo + Google TTS/music → ffmpeg compose. SEBI-safe.",
+  "author": { "name": "Shaswat Deep", "url": "https://usemoney.ai" },
+  "license": "UNLICENSED",
+  "keywords": ["video", "veo", "tts", "ffmpeg", "reels", "usemoney"],
+  "server": {
+    "type": "node",
+    "entry_point": "dist/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/dist/index.js"],
+      "env": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "${user_config.gcp_credentials}",
+        "GCP_PROJECT_ID": "${user_config.gcp_project_id}",
+        "GCP_LOCATION": "${user_config.gcp_location}",
+        "VEO_MODEL": "${user_config.veo_model}",
+        "VIDEO_STUDIO_OUT": "${user_config.output_dir}",
+        "MUSIC_DIR": "${user_config.music_dir}",
+        "FFMPEG_PATH": "${user_config.ffmpeg_path}",
+        "FFPROBE_PATH": "${user_config.ffprobe_path}",
+        "TTS_VOICE_HI": "${user_config.tts_voice_hi}",
+        "TTS_VOICE_EN": "${user_config.tts_voice_en}",
+        "PLAYWRIGHT_BROWSERS_PATH": "${user_config.playwright_browsers_path}"
+      }
+    }
+  },
+  "user_config": {
+    "gcp_credentials": {
+      "type": "file",
+      "title": "GCP service-account key (JSON)",
+      "description": "Vertex SA with roles/aiplatform.user — used for Veo, the Gemini director, and Google TTS.",
+      "sensitive": true,
+      "required": true
+    },
+    "gcp_project_id": {
+      "type": "string",
+      "title": "GCP project ID",
+      "description": "Your Google Cloud project id for Vertex AI (Veo + Gemini) and TTS.",
+      "default": "stock-book-483718",
+      "required": true
+    },
+    "gcp_location": {
+      "type": "string",
+      "title": "Vertex location",
+      "description": "Vertex AI region, e.g. us-central1.",
+      "default": "us-central1",
+      "required": true
+    },
+    "veo_model": {
+      "type": "string",
+      "title": "Veo model id",
+      "description": "Verify the current GA id for your region.",
+      "default": "veo-3.0-generate-001"
+    },
+    "output_dir": {
+      "type": "directory",
+      "title": "Video output folder",
+      "description": "Where finished MP4s land. Keep it OUTSIDE the git repo.",
+      "default": "${HOME}/Documents/Claude/Projects/Content Strategy/Videos",
+      "required": true
+    },
+    "music_dir": {
+      "type": "directory",
+      "title": "Music folder",
+      "description": "Folder of royalty-free/licensed audio tracks (resolved by music.track).",
+      "default": "${__dirname}/assets/music"
+    },
+    "ffmpeg_path": {
+      "type": "string",
+      "title": "ffmpeg path",
+      "description": "Run `which ffmpeg`.",
+      "default": "ffmpeg"
+    },
+    "ffprobe_path": {
+      "type": "string",
+      "title": "ffprobe path",
+      "description": "Run `which ffprobe`.",
+      "default": "ffprobe"
+    },
+    "playwright_browsers_path": {
+      "type": "directory",
+      "title": "Playwright browsers cache",
+      "description": "Chromium cache from `npx playwright install chromium` (one-time). Default macOS location.",
+      "default": "${HOME}/Library/Caches/ms-playwright"
+    },
+    "tts_voice_hi": {
+      "type": "string",
+      "title": "Hindi TTS voice",
+      "description": "Google Cloud TTS voice id for hi-IN (verify via voices.list).",
+      "default": "hi-IN-Neural2-A"
+    },
+    "tts_voice_en": {
+      "type": "string",
+      "title": "English TTS voice",
+      "description": "Google Cloud TTS voice id for en-IN (verify via voices.list).",
+      "default": "en-IN-Neural2-A"
+    }
+  },
+  "tools": [
+    {
+      "name": "plan_video",
+      "description": "Brief → editable Timeline (SEBI-safe)."
+    },
+    {
+      "name": "edit_timeline",
+      "description": "Prompt-edit a Timeline (offline-first; Gemini fallback)."
+    },
+    {
+      "name": "apply_edits",
+      "description": "Structured deterministic edits — no creds, offline."
+    },
+    { "name": "render_video", "description": "Render a Timeline → MP4." },
+    {
+      "name": "render_scene_frame",
+      "description": "Still PNG preview of one scene."
+    },
+    { "name": "generate_veo_clip", "description": "Veo AI B-roll (Vertex)." },
+    {
+      "name": "synthesize_voiceover",
+      "description": "Google TTS voiceover (Hindi/English)."
+    },
+    { "name": "list_music", "description": "List tracks in the music folder." }
+  ],
+  "compatibility": {
+    "claude_desktop": ">=0.10.0",
+    "platforms": ["darwin"],
+    "runtimes": { "node": ">=20.0.0" }
+  }
+}

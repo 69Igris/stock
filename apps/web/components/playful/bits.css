@@ -1,0 +1,640 @@
+/* ─────────────────────────────────────────────────────────────────────
+   Playful Bits — co-located styles for the 5 reusable bit components
+   PfRefreshChip · PfFilterPills · PfLiveMtmBanner · PfPositionTable ·
+   PfSymbolPicker.
+
+   Theme-aware: all colours use CSS vars from playful-app.css.
+   NEVER hardcode light/dark hex here — use var(--ink), var(--paper),
+   var(--emerald), var(--pop-*), var(--rule-soft) etc.
+   ───────────────────────────────────────────────────────────────────── */
+
+/* ── Spin animation ─────────────────────────────────────────────────── */
+@keyframes bits-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── RefreshChip ────────────────────────────────────────────────────── */
+.bits-refresh {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px 5px 6px;
+  background: var(--paper);
+  color: var(--ink-2);
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  box-shadow: 2px 2px 0 var(--ink);
+  cursor: pointer;
+  font-family: "Inter", sans-serif;
+  white-space: nowrap;
+  /* prevent the chip itself from causing horizontal scroll */
+  max-width: 100%;
+  flex-shrink: 0;
+}
+.bits-refresh:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.bits-refresh-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1.5px solid var(--ink);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.bits-refresh-icon.is-idle {
+  background: var(--emerald-bg);
+  color: var(--emerald);
+}
+.bits-refresh-icon.is-refreshing {
+  background: var(--pop-2);
+  color: #1d1d1b;
+  animation: bits-spin 0.9s linear infinite;
+}
+.bits-refresh-icon.is-done {
+  background: var(--emerald-bg);
+  color: var(--emerald);
+}
+
+.bits-refresh-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.bits-refresh-label strong {
+  color: var(--ink);
+}
+
+/* ── FilterPills ────────────────────────────────────────────────────── */
+.bits-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  /* no overflow: auto — MUST wrap, not scroll */
+}
+
+.bits-filter-group-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.bits-filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.bits-filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s;
+  background: var(--paper);
+  color: var(--ink-2);
+}
+.bits-filter-pill:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+.bits-filter-pill.is-active {
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.bits-filter-pill-count {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 0 5px;
+  border-radius: 999px;
+}
+
+.bits-filter-sep {
+  width: 1px;
+  height: 18px;
+  background: var(--rule-soft);
+  flex-shrink: 0;
+}
+
+.bits-filter-clear {
+  margin-left: auto;
+  padding: 5px 11px;
+  background: transparent;
+  border: 1.5px dashed var(--ink);
+  border-radius: 999px;
+  font-family: "Inter", sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink-3);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.bits-filter-clear:hover {
+  color: var(--ink);
+  border-style: solid;
+}
+
+/* ── BrokerLogo within pills ───────────────────────────────────────── */
+.bits-broker-logo {
+  border-radius: 4px;
+  border: 1px solid var(--rule-soft);
+  background: var(--paper);
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* ── LiveMtmBanner ─────────────────────────────────────────────────── */
+.bits-mtm-card {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft);
+  padding: 14px 18px;
+}
+/* green-tint variant matching the design's emerald-bg panel */
+.bits-mtm-inner {
+  background: var(--emerald-bg);
+  border-radius: 10px;
+  padding: 14px;
+}
+
+.bits-mtm-row1 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1.5px dashed var(--rule-soft);
+  margin-bottom: 12px;
+}
+
+.bits-live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 10px;
+  background: var(--ink);
+  color: var(--paper);
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.bits-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--pop-1);
+  animation: ph-pulse 1.4s infinite;
+}
+
+.bits-mtm-amount-block {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: nowrap; /* the big figure + delta stay on ONE line */
+}
+
+.bits-mtm-amount {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -1.2px;
+  white-space: nowrap; /* never split + and amount */
+  color: var(--ink);
+}
+
+.bits-mtm-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  border: 1.5px solid var(--ink);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.bits-mtm-delta.pos {
+  background: var(--emerald-bg);
+  color: var(--emerald);
+}
+.bits-mtm-delta.neg {
+  background: rgba(185, 28, 28, 0.08);
+  color: #b91c1c;
+}
+html.dark .bits-mtm-delta.neg {
+  color: var(--pop-1);
+}
+
+.bits-mtm-timestamp {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.bits-mtm-refresh {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.bits-mtm-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+}
+
+.bits-stat-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  color: var(--ink-3);
+  text-transform: uppercase;
+}
+.bits-stat-value {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 15px;
+  font-weight: 800;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--ink);
+}
+.bits-stat-value.pos {
+  color: var(--emerald);
+}
+.bits-stat-value.neg {
+  color: #b91c1c;
+}
+html.dark .bits-stat-value.neg {
+  color: var(--pop-1);
+}
+
+/* ── PositionTable ──────────────────────────────────────────────────── */
+.bits-table-wrap {
+  /* The ONLY surface that may scroll horizontally */
+  overflow-x: auto;
+  width: 100%;
+}
+
+.bits-tbl-header-row {
+  display: flex;
+  align-items: center;
+  padding: 12px 18px 10px;
+  border-bottom: 1.5px solid var(--rule-soft);
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.bits-tbl-title {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-3);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  flex: 1;
+}
+
+.bits-tbl {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
+  min-width: 560px; /* forces scroll before columns crunch */
+}
+.bits-tbl thead th {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--ink-3);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1.5px solid var(--rule-soft);
+  white-space: nowrap;
+  background: var(--paper);
+}
+.bits-tbl thead th.sticky {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+}
+.bits-tbl tbody td {
+  padding: 12px;
+  border-bottom: 1px dashed var(--rule-soft);
+  font-variant-numeric: tabular-nums;
+  vertical-align: middle;
+  background: var(--paper);
+  color: var(--ink);
+}
+.bits-tbl tbody td.sticky {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+.bits-tbl tbody tr:hover td {
+  background: var(--rule-softer);
+}
+.bits-tbl tbody tr:last-child td {
+  border-bottom: 0;
+}
+.bits-tbl td.num {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 600;
+  text-align: right;
+}
+.bits-tbl td.pos {
+  color: var(--emerald);
+}
+.bits-tbl td.neg {
+  color: #b91c1c;
+}
+html.dark .bits-tbl td.neg {
+  color: var(--pop-1);
+}
+
+.bits-sym-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: var(--paper-3);
+  border: 1.5px solid var(--ink);
+  transform: rotate(-3deg);
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 11.5px;
+  font-family: "JetBrains Mono", monospace;
+  color: var(--ink);
+  flex-shrink: 0;
+}
+.bits-sym-ticker {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 700;
+  color: var(--ink);
+}
+.bits-sym-name {
+  color: var(--ink-3);
+  font-size: 12px;
+}
+
+.bits-alloc-bar-track {
+  height: 7px;
+  background: var(--rule-softer);
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.bits-alloc-bar-fill {
+  height: 100%;
+  background: var(--emerald);
+  border-radius: 999px;
+}
+.bits-alloc-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  color: var(--ink-3);
+  margin-top: 3px;
+}
+
+.bits-broker-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px 3px 5px;
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.bits-broker-chip-name {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--ink);
+}
+
+/* ── SymbolPicker ───────────────────────────────────────────────────── */
+.bits-sym-picker {
+  position: relative;
+  font-family: "Inter", sans-serif;
+}
+
+.bits-sym-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.bits-sym-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px 4px 11px;
+  background: var(--emerald);
+  color: var(--paper);
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  font-weight: 800;
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.bits-sym-chip-remove {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--paper);
+  border: 0;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+}
+.bits-sym-chip-remove:hover {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.bits-sym-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 14px;
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  border-radius: 9px;
+  transition:
+    box-shadow 0.12s,
+    transform 0.12s;
+}
+.bits-sym-input-wrap.is-open {
+  box-shadow: 3px 3px 0 var(--ink);
+  transform: translate(-1px, -1px);
+}
+
+.bits-sym-input {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  color: var(--ink);
+}
+.bits-sym-input::placeholder {
+  color: var(--ink-3);
+}
+.bits-sym-input.is-single-selected {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.bits-sym-clear {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  color: var(--ink-3);
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
+.bits-sym-clear:hover {
+  color: var(--ink);
+}
+
+.bits-sym-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 60;
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  border-radius: 10px;
+  box-shadow: 4px 4px 0 var(--ink);
+  overflow: hidden;
+}
+
+.bits-sym-result {
+  width: 100%;
+  padding: 9px 12px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px dashed var(--rule-soft);
+  cursor: pointer;
+  text-align: left;
+  display: grid;
+  grid-template-columns: auto auto auto 1fr;
+  gap: 10px;
+  align-items: center;
+  font-family: "Inter", sans-serif;
+}
+.bits-sym-result:last-of-type {
+  border-bottom: 0;
+}
+.bits-sym-result:hover,
+.bits-sym-result.is-highlighted {
+  background: var(--rule-softer);
+}
+
+.bits-sym-result-ticker {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--ink);
+}
+
+.bits-sym-exch {
+  padding: 1px 6px;
+  border: 1.5px solid var(--ink);
+  border-radius: 4px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9.5px;
+  font-weight: 800;
+}
+.bits-sym-exch.nse {
+  background: var(--pop-2);
+  color: #1d1d1b;
+}
+.bits-sym-exch.bse {
+  background: var(--pop-3);
+  color: var(--paper);
+}
+.bits-sym-exch.other {
+  background: var(--rule-softer);
+  color: var(--ink-3);
+}
+
+.bits-sym-kind {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ink-3);
+  letter-spacing: 1px;
+}
+
+.bits-sym-name-col {
+  font-size: 11.5px;
+  color: var(--ink-3);
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bits-sym-footer {
+  padding: 8px 12px;
+  background: var(--paper-2);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--ink-3);
+  letter-spacing: 0.5px;
+  display: flex;
+  gap: 12px;
+}
+.bits-sym-footer-count {
+  margin-left: auto;
+  color: var(--emerald);
+}

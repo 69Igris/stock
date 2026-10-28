@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "video-studio": {
+      "command": "node",
+      "args": ["--import", "tsx", "packages/video-studio/src/index.ts"],
+      "env": {
+        "GCP_PROJECT_ID": "${GCP_PROJECT_ID:-stock-book-483718}",
+        "GCP_LOCATION": "${GCP_LOCATION:-us-central1}",
+        "GOOGLE_APPLICATION_CREDENTIALS": "${GOOGLE_APPLICATION_CREDENTIALS:-/Users/deepshaswat/Developer/dis-digital/gemini-stock-book.json}",
+        "VEO_MODEL": "${VEO_MODEL:-veo-3.0-fast-generate-001}",
+        "GEMINI_MODEL": "${GEMINI_MODEL:-gemini-2.5-flash}",
+        "TTS_VOICE_HI": "${TTS_VOICE_HI:-hi-IN-Neural2-A}",
+        "TTS_VOICE_EN": "${TTS_VOICE_EN:-en-IN-Neural2-A}",
+        "TTS_SPEAKING_RATE": "${TTS_SPEAKING_RATE:-1.0}",
+        "MUSIC_DIR": "${MUSIC_DIR:-packages/video-studio/assets/music}",
+        "VIDEO_STUDIO_OUT": "${VIDEO_STUDIO_OUT:-packages/video-studio/.video-out}"
+      }
+    }
+  }
+}

@@ -1,0 +1,1691 @@
+/* ─────────────────────────────────────────────────────────────────────
+   UseMoney · Playful authenticated-app design system (MONEY-485).
+   Source of truth ported 1:1 from the Claude Design bundle
+   (shared/playful.css + screen-primitives.jsx + sidebar.jsx + topbar.jsx).
+   Adapted for next-themes (html.dark instead of [data-theme="dark"]) and
+   imported app-wide in layout.tsx. EVERY authenticated page builds on this.
+   ───────────────────────────────────────────────────────────────────── */
+
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap");
+
+/* ── Tokens · cream-paper light ──────────────────────────────────────── */
+:root {
+  --paper: #f7f3e6;
+  --paper-2: #efe7d0;
+  --paper-3: #fbf8eb;
+  --ink: #1d1d1b;
+  --ink-2: #3a3a35;
+  --ink-3: #6b6b62;
+  /* --ink-4 (MONEY-498 contrast pass): was #9a9a92 (~2.5:1 on paper — failed
+     AA). On a near-white cream bg an AA-compliant gray can't be visibly
+     lighter than --ink-3, so --ink-4 is now a near-AA dim tier (~4.3:1) for
+     decorative meta only; important small text uses --ink-3 / --*-text. */
+  --ink-4: #74746b;
+  --rule: #1d1d1b;
+  --rule-soft: rgba(29, 29, 27, 0.14);
+  --rule-softer: rgba(29, 29, 27, 0.08);
+  --dot-fg: rgba(29, 29, 27, 0.045);
+  --dot-fg-2: rgba(29, 29, 27, 0.03);
+  --emerald: #16a34a;
+  --emerald-bg: rgba(22, 163, 74, 0.08);
+  --pop-1: #ff6b35; /* coral */
+  --pop-2: #fbbf24; /* gold */
+  --pop-3: #3b82f6; /* blue */
+  --pop-4: #ff77b9; /* pink */
+  --pop-5: #a78bfa; /* violet */
+  /* Text-safe accent variants (MONEY-498 contrast pass). The bright pop +
+     emerald tokens above stay for FILLS / BORDERS / ICONS (contrast rules don't
+     apply to large graphics). For accent-coloured TEXT on paper, use these
+     darkened variants — each clears WCAG AA (>=4.5:1) on --paper-3 #fbf8eb.
+     In dark mode (below) they map back to the bright tokens, which already
+     pass on the deep-ink paper. */
+  --emerald-text: #0f7a34; /* ~5.1:1 */
+  --pop-1-text: #b23c0a; /* burnt coral, ~6:1 */
+  --pop-2-text: #8a5e00; /* dark amber (gold #fbbf24 was ~1.5:1), ~6:1 */
+  /* Ink to sit ON a pop/accent FILL (e.g. active chat row on --pop-2 gold).
+     Defined only here, never overridden in .dark, so it stays constant-dark in
+     both themes — the gold fill itself is constant, so the foreground must be
+     too (in dark, --ink flips to cream and disappeared on the gold). */
+  --on-pop: #1d1d1b;
+  --pop-3-text: #1d4ed8; /* blue-700, ~6:1 */
+  --pop-4-text: #be185d; /* pink-700, ~5.6:1 */
+  --pop-5-text: #6d28d9; /* violet-700, ~6.6:1 */
+  --shadow-hard: 4px 4px 0 var(--ink);
+  --shadow-soft: 3px 3px 0 var(--ink);
+  /* Terminal-band tokens (MONEY-490 dark-mode pass). Surfaces that are
+     deliberately ink-dark in the light theme (stat strips, tickers, code
+     blocks) must NOT flip to cream in dark mode — pin them with these
+     instead of `background: var(--ink)` + `color: var(--paper)`, so their
+     cream / bright-accent foregrounds keep contrast in both themes. */
+  --code-bg: var(--ink);
+  --code-fg: var(--paper);
+  --code-dim: rgba(244, 237, 224, 0.55);
+  /* Theme-aware negative-accent text (mirrors the `html.dark … .neg`
+     overrides below) for inline styles / SVG strokes that can't rely on a
+     CSS selector override. */
+  --neg-text: #b91c1c;
+  /* Gold "sticker" surfaces (billing hero, settings banners — MONEY-764).
+     Light: the design's gold sticker with constant-ink text. Dark: the gold
+     slab glares and its dark secondary text goes muddy, so the same surface
+     renders as a pinned terminal band with gold accents instead. */
+  --sticker-bg: var(--pop-2);
+  --sticker-fg: #1d1d1b;
+  --sticker-dim: #3a3a35;
+  --sticker-tile-bg: rgba(29, 29, 27, 0.06);
+  --sticker-tile-border: rgba(29, 29, 27, 0.2);
+}
+
+/* ── Tokens · deep-ink dark ──────────────────────────────────────────── */
+html.dark {
+  --paper: #16140e;
+  --paper-2: #1f1c14;
+  --paper-3: #1a1810;
+  --ink: #f4ede0;
+  --ink-2: #d8d1c4;
+  --ink-3: #a09a8d;
+  /* --ink-4 (MONEY-498 contrast pass): was #6a655a (~3.2:1 on deep-ink) —
+     bumped to clear AA (~5:1) for small meta text. */
+  --ink-4: #8a8478;
+  --rule: #f4ede0;
+  --rule-soft: rgba(244, 237, 224, 0.16);
+  --rule-softer: rgba(244, 237, 224, 0.08);
+  --dot-fg: rgba(244, 237, 224, 0.05);
+  --dot-fg-2: rgba(244, 237, 224, 0.035);
+  --emerald: #34d399;
+  --emerald-bg: rgba(52, 211, 153, 0.1);
+  --pop-1: #ff8a5b;
+  --pop-2: #fcd34d;
+  --pop-3: #60a5fa;
+  --pop-4: #f9a8d4;
+  --pop-5: #c4b5fd;
+  /* Dark mode: accent text == bright tokens (already >=4.5:1 on deep-ink). */
+  --emerald-text: #34d399;
+  --pop-1-text: #ff8a5b;
+  --pop-2-text: #fcd34d;
+  --pop-3-text: #60a5fa;
+  --pop-4-text: #f9a8d4;
+  --pop-5-text: #c4b5fd;
+  /* Offset shadows stay black in dark — var(--ink) would flip to cream. */
+  --shadow-hard: 4px 4px 0 #000;
+  --shadow-soft: 3px 3px 0 #000;
+  --code-bg: #2a2620;
+  /* Terminal bands stay dark in dark mode, so the foreground must stay
+     cream — var(--paper) here resolved to near-black (invisible text). */
+  --code-fg: #f4ede0;
+  /* Same reasoning, and re-declared for the same reason `--code-fg` is: the
+     `:root` value is ALREADY the correct dark-band cream, so this pin changes
+     no pixel. It exists so the band's dim tier is defined in both themes like
+     every other token — an omission here reads as "light-only" to anyone (and
+     to any test) checking that a surface is theme-complete. */
+  --code-dim: rgba(244, 237, 224, 0.55);
+  --neg-text: var(--pop-1);
+  /* Sticker surfaces stay the SAME gold band in dark (user call, MONEY-764
+     round 2 — the terminal-band version was rejected). Literal pin of the
+     light values: only text contrast was ever the problem, and the
+     constant-ink foreground solves it. Deliberately does NOT flip. */
+  --sticker-bg: #fbbf24;
+  --sticker-fg: #1d1d1b;
+  --sticker-dim: #3a3a35;
+  --sticker-tile-bg: rgba(29, 29, 27, 0.06);
+  --sticker-tile-border: rgba(29, 29, 27, 0.2);
+}
+
+/* ── Display utilities (usable outside .pf-* primitives) ─────────────── */
+.ser {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+}
+.serif {
+  font-family: "Instrument Serif", "Times New Roman", serif;
+  font-weight: 400;
+}
+.mono {
+  font-family: "JetBrains Mono", monospace;
+  font-variant-numeric: tabular-nums;
+}
+.hl-gold {
+  background: var(--pop-2);
+  color: #1d1d1b;
+  padding: 0 6px;
+  border-radius: 4px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+@keyframes ph-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(1.3);
+  }
+}
+
+/* ── App surface ─────────────────────────────────────────────────────── */
+.pf-app {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Inter", var(--font-dm-sans), sans-serif;
+  background-image:
+    radial-gradient(var(--dot-fg) 1px, transparent 1.5px),
+    radial-gradient(var(--dot-fg-2) 1px, transparent 1.5px);
+  background-size:
+    7px 7px,
+    11px 11px;
+  background-position:
+    0 0,
+    3px 3px;
+}
+.pf-page {
+  padding: 28px 32px 60px;
+}
+.pf-page.mobile,
+.pf-page.is-mobile {
+  padding: 18px 16px 40px;
+}
+
+/* ── Page heading ────────────────────────────────────────────────────── */
+.pf-ph {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 22px;
+  margin-bottom: 22px;
+  padding-bottom: 18px;
+  border-bottom: 2px solid var(--ink);
+  flex-wrap: wrap;
+}
+.pf-ph .l {
+  flex: 1 1 280px;
+  min-width: 0;
+}
+.pf-ph .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--emerald);
+  letter-spacing: 1px;
+}
+.pf-ph .eyebrow .d {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--emerald);
+  animation: ph-pulse 1.6s infinite;
+}
+.pf-ph h1 {
+  font-size: 38px;
+  line-height: 1.02;
+  letter-spacing: -1.5px;
+  font-weight: 800;
+  color: var(--ink);
+  margin-top: 6px;
+}
+.pf-ph h1 .ser {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -1.4px;
+}
+.pf-ph h1 .hl {
+  background: var(--pop-2);
+  color: #1d1d1b;
+  padding: 0 6px;
+  border-radius: 4px;
+}
+.pf-ph .sub {
+  margin-top: 8px;
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-size: 17px;
+  color: var(--ink-3);
+  line-height: 1.3;
+}
+.pf-ph .r {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.pf-ph.is-mobile {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+.pf-ph.is-mobile h1 {
+  font-size: 28px;
+  letter-spacing: -1px;
+}
+.pf-ph.is-mobile .sub {
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────── */
+.pf-bf,
+.pf-bs {
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 13px;
+  border: 1.5px solid var(--ink);
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s;
+}
+
+/* `display` lives in its own ZERO-specificity rule, deliberately.
+ *
+ * It used to sit in the block above at (0,1,0) — the same specificity as every
+ * Tailwind display utility. layout.tsx imports this file AFTER globals.css,
+ * and globals.css is where `@tailwind utilities` emits `.hidden`, `.grid` and
+ * the responsive variants, so `.pf-bf` won on source order and SILENTLY beat
+ * all of them. `hidden lg:flex` on a button did nothing at any width, and
+ * `grid place-items-center` never became a grid. Nothing errored; the class
+ * was simply inert, which is why it kept getting written.
+ *
+ * `:where()` contributes no specificity, so this still supplies the default
+ * for a plain `.pf-bf` while ANY display utility now overrides it. The two
+ * call sites that had been silently broken (a paper-trading toolbar button and
+ * the prompt-options trigger) work as written without touching them.
+ *
+ * Do NOT fold this back into the block above, and do not "fix" the cascade by
+ * reordering the imports in layout.tsx — that flips precedence for every other
+ * rule in this file at once. */
+:where(.pf-bf, .pf-bs) {
+  display: inline-flex;
+}
+.pf-bf {
+  background: var(--paper);
+  color: var(--ink);
+}
+.pf-bs {
+  background: var(--ink);
+  color: var(--paper);
+}
+.pf-bf:hover,
+.pf-bs:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+.pf-bs:hover {
+  box-shadow: 3px 3px 0 var(--emerald);
+}
+.pf-bf.sm,
+.pf-bs.sm {
+  padding: 6px 11px;
+  font-size: 12px;
+}
+.pf-bf.lg,
+.pf-bs.lg {
+  padding: 11px 18px;
+  font-size: 14px;
+}
+.pf-bf.danger {
+  color: #b91c1c;
+  border-color: #b91c1c;
+}
+.pf-bf.danger:hover {
+  background: rgba(185, 28, 28, 0.08);
+  box-shadow: 3px 3px 0 #b91c1c;
+}
+html.dark .pf-bf.danger {
+  color: var(--pop-1);
+  border-color: var(--pop-1);
+}
+
+/* ── Section header ──────────────────────────────────────────────────── */
+.pf-sec-h {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 22px 0 14px;
+}
+.pf-sec-h .n {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 1.5px;
+  padding: 3px 8px;
+  border: 1.5px solid var(--ink);
+  border-radius: 5px;
+  background: var(--paper);
+  transform: rotate(-1.2deg);
+}
+.pf-sec-h h3 {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+}
+.pf-sec-h h3 .ser {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+}
+.pf-sec-h .rule {
+  flex: 1;
+  height: 1.5px;
+  background: var(--ink);
+  opacity: 0.15;
+}
+.pf-sec-h .meta {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--ink-3);
+  letter-spacing: 0.5px;
+}
+
+/* ── Cards ───────────────────────────────────────────────────────────── */
+.pf-card {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft);
+  padding: 18px;
+}
+.pf-card.flat {
+  box-shadow: none;
+}
+.pf-card.tilt-l {
+  transform: rotate(-0.6deg);
+}
+.pf-card.tilt-r {
+  transform: rotate(0.6deg);
+}
+.pf-card .ttl {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-3);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+/* ── Stat tile ───────────────────────────────────────────────────────── */
+.pf-stat {
+  padding: 16px 18px;
+}
+.pf-stat .l {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--ink-3);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.pf-stat .v {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+  margin-top: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.pf-stat .v .ser {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 22px;
+  color: var(--ink-3);
+}
+.pf-stat .d {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  margin-top: 4px;
+  font-variant-numeric: tabular-nums;
+}
+.pf-stat .d.pos {
+  color: var(--emerald);
+}
+.pf-stat .d.neg {
+  color: #b91c1c;
+}
+html.dark .pf-stat .d.neg {
+  color: var(--pop-1);
+}
+
+/* ── Pills ───────────────────────────────────────────────────────────── */
+.pf-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  border: 1.5px solid var(--ink);
+  color: var(--ink);
+  background: var(--paper);
+  letter-spacing: 0.5px;
+}
+.pf-pill.gold {
+  background: var(--pop-2);
+  color: #1d1d1b;
+}
+.pf-pill.coral {
+  background: var(--pop-1);
+  color: #f7f3e6;
+}
+.pf-pill.blue {
+  background: var(--pop-3);
+  color: #f7f3e6;
+}
+.pf-pill.pink {
+  background: var(--pop-4);
+  color: #f7f3e6;
+}
+.pf-pill.violet {
+  background: var(--pop-5);
+  color: #f7f3e6;
+}
+.pf-pill.emerald {
+  background: var(--emerald);
+  color: var(--paper);
+}
+.pf-pill.outline {
+  background: transparent;
+}
+
+/* ── Tab strip (Help center) ─────────────────────────────────────────────
+   The .pf-tabs / .pf-tab classes were referenced by markup (app/help) but never
+   had CSS, so the tab strip rendered as unstyled inline buttons — the labels ran
+   together ("PromptsCommandsGuides…") with the icons stacked. These give it the
+   playful pill idiom (ink-bordered, active = solid ink, theme-aware via tokens),
+   matching .pf-bf / .pf-bs. (MONEY-1074) */
+.pf-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.pf-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  border: 1.5px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink-2);
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background 0.12s,
+    color 0.12s;
+}
+.pf-tab:hover {
+  background: var(--rule-softer);
+  color: var(--ink);
+}
+.pf-tab.is-active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ── Tables ──────────────────────────────────────────────────────────── */
+.pf-tbl {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
+}
+.pf-tbl thead th {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--ink-3);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1.5px solid var(--rule-soft);
+}
+.pf-tbl tbody td {
+  padding: 12px;
+  border-bottom: 1px dashed var(--rule-soft);
+  font-variant-numeric: tabular-nums;
+}
+.pf-tbl tbody td .tk {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 700;
+  color: var(--ink);
+}
+.pf-tbl tbody td .nm {
+  color: var(--ink-3);
+  font-size: 12px;
+}
+.pf-tbl tbody td.num {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 600;
+}
+.pf-tbl tbody td.pos {
+  color: var(--emerald);
+}
+.pf-tbl tbody td.neg {
+  color: #b91c1c;
+}
+html.dark .pf-tbl tbody td.neg {
+  color: var(--pop-1);
+}
+.pf-tbl tbody tr:hover td {
+  background: var(--rule-softer);
+}
+.pf-tbl tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* ── Square avatar / broker tile ─────────────────────────────────────── */
+.pf-av-sq {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 11px;
+  font-family: "JetBrains Mono", monospace;
+  border: 1.5px solid var(--ink);
+  transform: rotate(-3deg);
+}
+.pf-spark {
+  width: 70px;
+  height: 22px;
+  display: block;
+}
+
+/* ── Code / terminal echo ────────────────────────────────────────────── */
+.pf-codeblock {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #1d1d1b;
+  color: #f4ede0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  line-height: 1.55;
+}
+.pf-codeblock .em {
+  color: #34d399;
+}
+.pf-codeblock .gold {
+  color: #ffd86b;
+}
+.pf-codeblock .dim {
+  color: #a09a8d;
+}
+html.dark .pf-codeblock {
+  background: #0a0a08;
+  color: #f4ede0;
+}
+
+/* ── Inputs ──────────────────────────────────────────────────────────── */
+.pf-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1.5px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 14px;
+  font-family: inherit;
+}
+.pf-input::placeholder,
+.tl-input::placeholder {
+  color: var(--ink-3);
+  opacity: 1; /* Firefox dims placeholders by default — keep it readable */
+}
+.pf-input:focus {
+  outline: none;
+  box-shadow: 3px 3px 0 var(--ink);
+  transform: translate(-1px, -1px);
+}
+
+/* ── Toggle ──────────────────────────────────────────────────────────── */
+.pf-toggle {
+  width: 38px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1.5px solid var(--ink);
+  background: var(--paper);
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.pf-toggle::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--ink);
+  transition: transform 0.15s;
+}
+.pf-toggle.on {
+  background: var(--emerald);
+}
+.pf-toggle.on::after {
+  transform: translateX(16px);
+  background: var(--paper);
+}
+
+/* ── Broker chip ─────────────────────────────────────────────────────── */
+.br-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1.5px solid var(--ink);
+  background: var(--paper);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.br-chip .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   APP SHELL · desktop sidebar (ported from sidebar.jsx)
+   ═══════════════════════════════════════════════════════════════════════ */
+.pf-sb {
+  background: var(--paper);
+  border-right: 2px solid var(--ink);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  font-family: "Inter", sans-serif;
+  color: var(--ink);
+  flex-shrink: 0;
+}
+.pf-sb-hd {
+  padding: 16px 14px;
+  border-bottom: 2px solid var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.pf-sb-hd .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+  font-size: 17px;
+}
+.pf-sb-hd .brand-mark,
+.pf-brand-mark {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  background: var(--ink);
+  color: var(--paper);
+  display: grid;
+  place-items: center;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 900;
+  font-size: 16px;
+  transform: rotate(-3deg);
+  flex-shrink: 0;
+}
+.pf-sb-hd .pf-coll-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  color: var(--ink-3);
+  cursor: pointer;
+  border: 1.5px solid transparent;
+}
+.pf-sb-hd .pf-coll-btn:hover {
+  background: var(--rule-softer);
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.pf-sb-search {
+  padding: 12px 12px 8px;
+}
+.pf-sb-search button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1.5px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink-3);
+  font-size: 13px;
+  font-weight: 500;
+  transition:
+    background 0.12s,
+    box-shadow 0.12s,
+    transform 0.12s;
+  cursor: pointer;
+}
+.pf-sb-search button:hover {
+  box-shadow: 3px 3px 0 var(--ink);
+  transform: translate(-1px, -1px);
+  color: var(--ink);
+}
+.pf-sb-search .pf-kbd {
+  margin-left: auto;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  padding: 1px 5px;
+  border: 1.5px solid var(--ink);
+  border-radius: 4px;
+  background: var(--rule-softer);
+  color: var(--ink-2);
+}
+.pf-sb-search.coll button {
+  justify-content: center;
+  padding: 9px;
+}
+.pf-sb-search.coll .pf-kbd,
+.pf-sb-search.coll span:not(.pf-kbd) {
+  display: none;
+}
+
+.pf-sb-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 12px 16px;
+}
+.pf-sb-grp {
+  margin-top: 14px;
+}
+.pf-sb-grp .grp-l {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  color: var(--ink-3);
+  padding: 6px 10px 7px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pf-sb-grp.coll .grp-l {
+  justify-content: center;
+}
+.pf-sb-grp.coll .grp-l span:last-child,
+.pf-sb-grp.coll .grp-l .grp-rule {
+  display: none;
+}
+.pf-sb-grp .grp-rule {
+  flex: 1;
+  height: 1.5px;
+  background: var(--ink);
+  opacity: 0.25;
+}
+
+.pf-navi {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 500;
+  transition:
+    background 0.12s,
+    color 0.12s;
+  position: relative;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  font-family: inherit;
+}
+.pf-navi:hover {
+  background: var(--rule-softer);
+  color: var(--ink);
+}
+.pf-navi.is-active {
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 600;
+}
+.pf-navi.is-active .pf-navi-ic {
+  color: var(--paper);
+}
+.pf-navi.is-coll {
+  justify-content: center;
+  padding: 9px;
+}
+.pf-navi-ic {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  color: var(--ink-2);
+  flex-shrink: 0;
+}
+.pf-navi-ic.p-coral {
+  color: var(--pop-1);
+}
+.pf-navi-ic.p-pink {
+  color: var(--pop-4);
+}
+.pf-navi-ic.p-blue {
+  color: var(--pop-3);
+}
+.pf-navi-ic.p-emerald {
+  color: var(--emerald);
+}
+.pf-navi.is-active .pf-navi-ic.p-coral,
+.pf-navi.is-active .pf-navi-ic.p-pink,
+.pf-navi.is-active .pf-navi-ic.p-blue,
+.pf-navi.is-active .pf-navi-ic.p-emerald {
+  color: var(--paper);
+}
+.pf-navi-l {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pf-navi-b {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--emerald);
+  color: var(--paper);
+  letter-spacing: 0.5px;
+}
+.pf-navi.is-active .pf-navi-b {
+  background: var(--pop-2);
+  color: #1d1d1b;
+}
+.pf-navi-chev {
+  color: var(--ink-3);
+  display: grid;
+  place-items: center;
+  transition: transform 0.15s;
+}
+
+.pf-sub {
+  margin-left: 30px;
+  padding-left: 8px;
+  border-left: 1.5px dashed var(--rule-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-top: 2px;
+  margin-bottom: 4px;
+}
+.pf-sub a {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 5px 9px;
+  border-radius: 6px;
+  color: var(--ink-3);
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.pf-sub a:hover {
+  background: var(--rule-softer);
+  color: var(--ink);
+}
+.pf-sub a.is-active {
+  background: var(--rule-softer);
+  color: var(--ink);
+  font-weight: 700;
+}
+.pf-sub a .sic {
+  width: 18px;
+  display: grid;
+  place-items: center;
+  opacity: 0.7;
+}
+
+.pf-sticker {
+  margin: 18px 6px 6px;
+  padding: 12px 14px;
+  background: var(--pop-2);
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: 3px 3px 0 var(--ink);
+  transform: rotate(-1.5deg);
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-size: 13.5px;
+  line-height: 1.3;
+  color: #1d1d1b;
+}
+.pf-sticker strong {
+  font-family: "Inter", sans-serif;
+  font-style: normal;
+  font-weight: 800;
+}
+.pf-sticker .pf-stcta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 4px 10px;
+  background: #1d1d1b;
+  color: #f7f3e6;
+  border-radius: 6px;
+  font-family: "Inter", sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 11.5px;
+  cursor: pointer;
+}
+
+.pf-sb-foot {
+  border-top: 2px solid var(--ink);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pf-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: 9px;
+  border: 1.5px solid var(--ink);
+  background: var(--paper);
+  cursor: pointer;
+  transition:
+    box-shadow 0.12s,
+    transform 0.12s;
+}
+.pf-user:hover {
+  box-shadow: 3px 3px 0 var(--ink);
+  transform: translate(-1px, -1px);
+}
+.pf-user .pf-av {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: var(--pop-3);
+  color: #f7f3e6;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 12px;
+  border: 1.5px solid var(--ink);
+  transform: rotate(-3deg);
+  flex-shrink: 0;
+  font-family: "JetBrains Mono", monospace;
+}
+.pf-user .pf-uinfo {
+  flex: 1;
+  min-width: 0;
+}
+.pf-user .pf-uinfo .pf-un {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.pf-user .pf-uinfo .pf-ue {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  color: var(--ink-3);
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pf-user.coll {
+  justify-content: center;
+  padding: 5px;
+}
+.pf-user.coll .pf-uinfo,
+.pf-user.coll .pf-uchev {
+  display: none;
+}
+.pf-uchev {
+  color: var(--ink-3);
+}
+.pf-sb-foot-row {
+  display: flex;
+  gap: 6px;
+}
+.pf-sb-foot-row.coll {
+  flex-direction: column;
+}
+.pf-sb-foot .pf-ttl,
+.pf-sb-foot .pf-sett,
+.pf-sb-foot .pf-help {
+  flex: 1;
+  padding: 7px 10px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1.5px solid var(--rule-soft);
+  background: transparent;
+  cursor: pointer;
+}
+.pf-sb-foot .pf-ttl:hover,
+.pf-sb-foot .pf-sett:hover,
+.pf-sb-foot .pf-help:hover {
+  border-color: var(--ink);
+  background: var(--rule-softer);
+  color: var(--ink);
+}
+.pf-tag-pro {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--pop-2);
+  color: #1d1d1b;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border: 1.5px solid var(--ink);
+  margin-left: auto;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   APP SHELL · topbar + ticker (ported from topbar.jsx)
+   ═══════════════════════════════════════════════════════════════════════ */
+.pf-tb {
+  background: var(--paper);
+  border-bottom: 2px solid var(--ink);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+.pf-tb-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 22px;
+  min-height: 56px;
+}
+.pf-tb-crumb {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--ink-3);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.pf-tb-title {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+}
+.pf-tb-title .ser {
+  font-family: "Instrument Serif", serif;
+  font-weight: 400;
+  font-style: italic;
+}
+.pf-tb-spacer {
+  flex: 1;
+}
+.pf-tb-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: var(--emerald-bg);
+  color: var(--emerald);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border: 1.5px solid var(--emerald);
+}
+.pf-tb-pill .d {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--emerald);
+  animation: ph-pulse 1.6s infinite;
+}
+.pf-tb-icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1.5px solid var(--ink);
+  display: grid;
+  place-items: center;
+  color: var(--ink);
+  background: var(--paper);
+  transition:
+    box-shadow 0.12s,
+    transform 0.12s;
+  cursor: pointer;
+  position: relative;
+}
+.pf-tb-icon-btn:hover {
+  box-shadow: 3px 3px 0 var(--ink);
+  transform: translate(-1px, -1px);
+}
+.pf-tb-icon-btn .dot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--pop-1);
+  border: 1.5px solid var(--paper);
+}
+.pf-tb-search {
+  flex: 1;
+  max-width: 380px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border-radius: 9px;
+  border: 1.5px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink-3);
+  font-size: 13.5px;
+  cursor: pointer;
+  transition:
+    box-shadow 0.12s,
+    transform 0.12s;
+}
+.pf-tb-search:hover {
+  box-shadow: 3px 3px 0 var(--ink);
+  transform: translate(-1px, -1px);
+  color: var(--ink);
+}
+.pf-tb-search .pf-kbd {
+  margin-left: auto;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  padding: 1px 5px;
+  border: 1.5px solid var(--ink);
+  border-radius: 4px;
+  background: var(--rule-softer);
+  color: var(--ink-2);
+}
+.pf-tb-ticker {
+  height: 28px;
+  background: var(--code-bg);
+  color: var(--code-fg);
+  overflow: hidden;
+  border-bottom: 1.5px solid var(--ink);
+  display: flex;
+  align-items: center;
+}
+.pf-tb-ticker .tk-tr {
+  display: flex;
+  gap: 32px;
+  white-space: nowrap;
+  animation: pf-tk 70s linear infinite;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  padding-left: 22px;
+}
+.pf-tb-ticker .tk-lab {
+  color: var(--pop-2);
+  font-weight: 700;
+  margin-right: 6px;
+}
+.pf-tb-ticker .tk-v {
+  color: var(--code-fg);
+  margin-right: 6px;
+}
+.pf-tb-ticker .tk-c.pos {
+  color: #4ade80;
+}
+.pf-tb-ticker .tk-c.neg {
+  color: #ff8a8a;
+}
+@keyframes pf-tk {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.pf-tb-menu {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1.5px solid var(--ink);
+  display: grid;
+  place-items: center;
+  color: var(--ink);
+  cursor: pointer;
+  background: var(--paper);
+}
+.pf-tb-mtitle {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  color: var(--ink);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pf-tb-brandmark {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  background: var(--ink);
+  color: var(--paper);
+  display: grid;
+  place-items: center;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 900;
+  font-size: 16px;
+  transform: rotate(-3deg);
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   APP SHELL · mobile full-screen takeover (Option A, mobile-nav.jsx)
+   ═══════════════════════════════════════════════════════════════════════ */
+.pf-msheet {
+  width: 100%;
+  height: 100%;
+  background: var(--paper);
+  background-image:
+    radial-gradient(var(--dot-fg) 1px, transparent 1.5px),
+    radial-gradient(var(--dot-fg-2) 1px, transparent 1.5px);
+  background-size:
+    7px 7px,
+    11px 11px;
+  background-position:
+    0 0,
+    3px 3px;
+  display: flex;
+  flex-direction: column;
+  font-family: "Inter", sans-serif;
+  color: var(--ink);
+  overflow: hidden;
+}
+.pf-msheet-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  border-bottom: 2px solid var(--ink);
+  flex-shrink: 0;
+}
+.pf-msheet-top .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--ink);
+}
+.pf-msheet-x {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  border: 1.5px solid var(--ink);
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+}
+.pf-msheet-pcard {
+  margin: 16px 18px 8px;
+  padding: 14px 16px;
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  background: var(--pop-2);
+  box-shadow: 4px 4px 0 var(--ink);
+  transform: rotate(-1deg);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.pf-msheet-pcard .av {
+  width: 42px;
+  height: 42px;
+  border-radius: 9px;
+  background: var(--pop-3);
+  color: #f7f3e6;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 16px;
+  border: 1.5px solid #1d1d1b;
+  transform: rotate(3deg);
+  flex-shrink: 0;
+  font-family: "JetBrains Mono", monospace;
+  overflow: hidden;
+}
+.pf-msheet-pcard .pi {
+  flex: 1;
+  min-width: 0;
+}
+.pf-msheet-pcard .pn {
+  font-size: 15px;
+  font-weight: 800;
+  color: #1d1d1b;
+  line-height: 1.1;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.pf-msheet-pcard .pn .ser {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+  font-weight: 400;
+}
+.pf-msheet-pcard .pe {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  color: #3a3a35;
+  margin-top: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pf-msheet-pcard .pro {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: #1d1d1b;
+  color: #f7f3e6;
+  letter-spacing: 0.5px;
+  border: 0;
+  flex-shrink: 0;
+}
+.pf-msheet-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 18px 24px;
+  min-height: 0;
+}
+.pf-msheet-grp {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  color: var(--ink-3);
+  padding: 16px 4px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pf-msheet-grp .r {
+  flex: 1;
+  height: 1.5px;
+  background: var(--ink);
+  opacity: 0.2;
+}
+.pf-mitem {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 14px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 6px;
+  transition: background 0.12s;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  font-family: inherit;
+  cursor: pointer;
+}
+.pf-mitem:hover {
+  background: var(--rule-softer);
+}
+.pf-mitem .ic {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  flex-shrink: 0;
+  color: var(--ink);
+}
+.pf-mitem .ic.emerald {
+  background: var(--emerald);
+  color: #f7f3e6;
+  border-color: #1d1d1b;
+}
+.pf-mitem .ic.gold {
+  background: var(--pop-2);
+  color: #1d1d1b;
+  border-color: #1d1d1b;
+  transform: rotate(-3deg);
+}
+.pf-mitem .ic.blue {
+  background: var(--pop-3);
+  color: #f7f3e6;
+  border-color: #1d1d1b;
+  transform: rotate(2deg);
+}
+.pf-mitem .ic.coral {
+  background: var(--pop-1);
+  color: #f7f3e6;
+  border-color: #1d1d1b;
+  transform: rotate(-2deg);
+}
+.pf-mitem .ic.pink {
+  background: var(--pop-4);
+  color: #f7f3e6;
+  border-color: #1d1d1b;
+  transform: rotate(3deg);
+}
+.pf-mitem .ic.violet {
+  background: var(--pop-5);
+  color: #f7f3e6;
+  border-color: #1d1d1b;
+  transform: rotate(-2deg);
+}
+.pf-mitem .lbl {
+  flex: 1;
+  min-width: 0;
+}
+.pf-mitem .badge {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: var(--emerald);
+  color: #f7f3e6;
+  letter-spacing: 0.5px;
+}
+.pf-mitem.active {
+  background: var(--ink);
+  color: var(--paper);
+}
+.pf-mitem.active .ic {
+  border-color: var(--paper);
+}
+.pf-mitem.sub {
+  font-size: 14.5px;
+  padding: 10px 14px 10px 22px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.pf-mitem.sub .ic {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+}
+.pf-msheet-foot {
+  flex-shrink: 0;
+  padding: 12px 18px calc(18px + env(safe-area-inset-bottom, 0px));
+  background: var(--paper);
+  border-top: 2px solid var(--ink);
+  display: flex;
+  gap: 8px;
+}
+.pf-msheet-foot .b {
+  flex: 1;
+  padding: 11px;
+  border-radius: 10px;
+  border: 1.5px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+}
+.pf-msheet-foot .b.solid {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ── Mobile bottom tab bar (persistent primary nav on phones) ─────────── */
+.pf-btab {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  /* Mobile-only. Default hidden so it never leaks onto desktop even though
+     this file loads after Tailwind's `lg:hidden` utility (cascade order). */
+  display: none;
+  background: var(--paper);
+  border-top: 2px solid var(--ink);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (max-width: 1023px) {
+  .pf-btab {
+    display: flex;
+  }
+}
+.pf-btab a {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 9px 0 7px;
+  color: var(--ink-3);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+.pf-btab a.active {
+  color: var(--ink);
+}
+.pf-btab a.active .ic {
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 8px;
+}
+.pf-btab a .ic {
+  width: 30px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+}
+
+/* =====================================================================
+   MONEY-485 · Playful skeleton primitives.
+   Migrated from `components/skeletons/index.tsx` inline <style> (2x)
+   that caused a hydration mismatch (Next 14 SSR + React 18 reconcile
+   the multi-line template content differently between server/client
+   when the same <style> renders at two nesting levels).
+   Theme-aware via `var(--rule-softer)` / `var(--paper-2)` so dark + light
+   render correctly. `prefers-reduced-motion` drops the sweep.
+   ===================================================================== */
+.pf-skel {
+  --pf-skel-base: var(--rule-softer);
+  --pf-skel-glow: var(--paper-2);
+  position: relative;
+  overflow: hidden;
+  background: var(--pf-skel-base);
+  border-radius: 7px;
+}
+.pf-skel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--pf-skel-glow) 50%,
+    transparent 100%
+  );
+  opacity: 0.55;
+  animation: pf-skel-sweep 1.5s ease-in-out infinite;
+}
+.pf-skel-card {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft);
+}
+.pf-skel-card.flat {
+  box-shadow: none;
+}
+@keyframes pf-skel-sweep {
+  100% {
+    transform: translateX(100%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pf-skel::after {
+    animation: none;
+    transform: none;
+    opacity: 0.35;
+  }
+}

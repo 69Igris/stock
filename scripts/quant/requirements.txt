@@ -1,0 +1,22 @@
+# scripts/quant — the lake RELEASE reader (lake.py) and the candle reader
+# (read_candles.py). MONEY-1518.
+#
+#     python3.12 -m venv .venv && .venv/bin/pip install -r scripts/quant/requirements.txt
+#
+# That is the whole closure `lake.py` and `read_candles.py --release` need.
+# read_candles.py's COLD-SHARD path also reads GCS through
+# services/us-fundamentals' codec (app/sec/archive.py), which needs that
+# service's venv — as it always has.
+#
+# PINNED to the versions services/us-fundamentals/constraints.txt ships, and
+# test_lake.py fails when the two disagree: the suite that proves these readers
+# runs in that venv, so a version here that differs is a version nothing tested.
+#
+# duckdb is deliberately ABSENT. Only `open_release()` uses it, imported lazily
+# there, and the error names the install: `pip install duckdb` is a consumer's
+# choice, not this reader's dependency.
+numpy==2.5.2
+pandas==3.0.5
+pyarrow==25.0.1
+python-dateutil==2.9.0.post0
+six==1.17.0

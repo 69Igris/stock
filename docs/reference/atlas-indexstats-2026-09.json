@@ -1,0 +1,3822 @@
+{
+  "generatedAt": "2026-09-14T18:34:27.522Z",
+  "commit": "b4531dc3",
+  "month": "2026-09",
+  "note": "Index-usage counters are PER NODE and reset on mongod restart. A later capture whose `since` has moved forward for a host makes the comparison void for every index on that host. Captured from the PRIMARY; see scripts/ops/atlas-heatmap.ts.",
+  "clusters": [
+    {
+      "label": "stockbook — PROD",
+      "host": "mongodb+srv://<credentials>@stockbook.lizbtx.mongodb.net/tradebook",
+      "database": "tradebook",
+      "serverVersion": "8.0.32",
+      "credential": "Secret Manager `MONGODB_URI_RO_PROD` (read-only)",
+      "indexStats": [
+        {
+          "collection": "document_embeddings",
+          "index": "document_embeddings_userId_docType_docId_chunkId_key",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 2725007,
+          "since": "2026-09-11T15:05:14.093Z"
+        },
+        {
+          "collection": "document_embeddings",
+          "index": "_id_",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 5639555,
+          "since": "2026-09-11T15:05:14.093Z"
+        },
+        {
+          "collection": "document_embeddings",
+          "index": "document_embeddings_docType_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.093Z"
+        },
+        {
+          "collection": "document_embeddings",
+          "index": "document_embeddings_userId_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.093Z"
+        },
+        {
+          "collection": "document_embeddings",
+          "index": "document_embeddings_userId_docType_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.093Z"
+        },
+        {
+          "collection": "derivative_eod",
+          "index": "derivative_eod_date_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 19,
+          "since": "2026-09-11T15:05:14.385Z"
+        },
+        {
+          "collection": "derivative_eod",
+          "index": "_id_",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.385Z"
+        },
+        {
+          "collection": "derivative_eod",
+          "index": "derivative_eod_symbol_date_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.385Z"
+        },
+        {
+          "collection": "derivative_eod",
+          "index": "derivative_eod_symbol_exchange_instrument_expiry_strike_optionType_date_key",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.385Z"
+        },
+        {
+          "collection": "candles",
+          "index": "_id_",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 4,
+          "since": "2026-09-11T15:05:14.308Z"
+        },
+        {
+          "collection": "candles",
+          "index": "candles_listingId_timeframe_ts_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.308Z"
+        },
+        {
+          "collection": "candles",
+          "index": "candles_ts_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 1503,
+          "since": "2026-09-11T15:05:14.308Z"
+        },
+        {
+          "collection": "candles",
+          "index": "candles_symbol_exchange_timeframe_ts_key",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 25128,
+          "since": "2026-09-11T15:05:14.308Z"
+        },
+        {
+          "collection": "candles",
+          "index": "candles_symbol_exchange_timeframe_ts_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 70958,
+          "since": "2026-09-11T15:05:14.308Z"
+        },
+        {
+          "collection": "candles",
+          "index": "candles_tier_hotLoadedAt_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 3,
+          "since": "2026-09-11T15:05:14.308Z"
+        },
+        {
+          "collection": "candles",
+          "index": "candles_tier_timeframe_ts_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 3,
+          "since": "2026-09-11T15:05:14.308Z"
+        },
+        {
+          "collection": "us_filings",
+          "index": "us_filings_accession_key",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 2568930,
+          "since": "2026-09-11T15:05:14.457Z"
+        },
+        {
+          "collection": "us_filings",
+          "index": "_id_",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 1,
+          "since": "2026-09-11T15:05:14.457Z"
+        },
+        {
+          "collection": "us_filings",
+          "index": "us_filings_form_filedAt_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.457Z"
+        },
+        {
+          "collection": "us_filings",
+          "index": "us_filings_cik10_filedAt_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.457Z"
+        },
+        {
+          "collection": "us_filings",
+          "index": "us_filings_status_parseClass_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 9,
+          "since": "2026-09-11T15:05:14.457Z"
+        },
+        {
+          "collection": "us_filings",
+          "index": "us_filings_acceptedAt_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 2,
+          "since": "2026-09-11T15:05:14.457Z"
+        },
+        {
+          "collection": "us_filings",
+          "index": "us_filings_parseClass_status_filedAt_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.457Z"
+        },
+        {
+          "collection": "stock_documents",
+          "index": "stock_documents_processingStatus_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 1840,
+          "since": "2026-09-11T15:05:14.191Z"
+        },
+        {
+          "collection": "stock_documents",
+          "index": "stock_documents_fetchedAt_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 1839,
+          "since": "2026-09-11T15:05:14.191Z"
+        },
+        {
+          "collection": "stock_documents",
+          "index": "stock_documents_symbol_exchange_docType_period_key",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 25966,
+          "since": "2026-09-11T15:05:14.191Z"
+        },
+        {
+          "collection": "stock_documents",
+          "index": "stock_documents_symbol_exchange_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 136838,
+          "since": "2026-09-11T15:05:14.191Z"
+        },
+        {
+          "collection": "stock_documents",
+          "index": "_id_",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 813026,
+          "since": "2026-09-11T15:05:14.191Z"
+        },
+        {
+          "collection": "stock_documents",
+          "index": "stock_documents_convertStatus_fetchedAt_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.191Z"
+        },
+        {
+          "collection": "stock_documents",
+          "index": "stock_documents_parseStatus_fetchedAt_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.191Z"
+        },
+        {
+          "collection": "stock_documents",
+          "index": "stock_documents_instrumentId_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.191Z"
+        },
+        {
+          "collection": "daily_prices",
+          "index": "_id_",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 16662,
+          "since": "2026-09-11T15:05:14.279Z"
+        },
+        {
+          "collection": "daily_prices",
+          "index": "daily_prices_date_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 10,
+          "since": "2026-09-11T15:05:14.279Z"
+        },
+        {
+          "collection": "daily_prices",
+          "index": "daily_prices_instrumentId_date_key",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 25163,
+          "since": "2026-09-11T15:05:14.279Z"
+        },
+        {
+          "collection": "stock_flags",
+          "index": "stock_flags_symbol_kind_date_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 1,
+          "since": "2026-09-11T15:05:14.159Z"
+        },
+        {
+          "collection": "stock_flags",
+          "index": "_id_",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 1,
+          "since": "2026-09-11T15:05:14.159Z"
+        },
+        {
+          "collection": "stock_flags",
+          "index": "stock_flags_date_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 2,
+          "since": "2026-09-11T15:05:14.159Z"
+        },
+        {
+          "collection": "stock_flags",
+          "index": "stock_flags_kind_date_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.159Z"
+        },
+        {
+          "collection": "us_fundamentals",
+          "index": "us_fundamentals_symbol_statementType_periodType_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 2,
+          "since": "2026-09-11T15:05:14.318Z"
+        },
+        {
+          "collection": "us_fundamentals",
+          "index": "_id_",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 8245,
+          "since": "2026-09-11T15:05:14.318Z"
+        },
+        {
+          "collection": "us_fundamentals",
+          "index": "us_fundamentals_cik10_statementType_periodType_periodEnd_accession_key",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 36088,
+          "since": "2026-09-11T15:05:14.318Z"
+        },
+        {
+          "collection": "us_fundamentals",
+          "index": "us_fundamentals_cik10_filedAt_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 3,
+          "since": "2026-09-11T15:05:14.318Z"
+        },
+        {
+          "collection": "us_fundamentals",
+          "index": "us_fundamentals_cik10_statementType_periodType_periodEnd_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 16488,
+          "since": "2026-09-11T15:05:14.318Z"
+        },
+        {
+          "collection": "us_fundamentals",
+          "index": "us_fundamentals_cik10_isLatest_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.318Z"
+        },
+        {
+          "collection": "us_company_facts",
+          "index": "us_company_facts_concept_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.193Z"
+        },
+        {
+          "collection": "us_company_facts",
+          "index": "_id_",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 1,
+          "since": "2026-09-11T15:05:14.193Z"
+        },
+        {
+          "collection": "us_company_facts",
+          "index": "us_company_facts_cik10_lastFiledAt_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.193Z"
+        },
+        {
+          "collection": "us_company_facts",
+          "index": "us_company_facts_cik10_taxonomy_concept_unit_key",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 2966,
+          "since": "2026-09-11T15:05:14.193Z"
+        },
+        {
+          "collection": "mf_nav_history",
+          "index": "mf_nav_history_schemeCode_date_key",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 1201,
+          "since": "2026-09-11T15:05:14.284Z"
+        },
+        {
+          "collection": "mf_nav_history",
+          "index": "mf_nav_history_schemeCode_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 9,
+          "since": "2026-09-11T15:05:14.284Z"
+        },
+        {
+          "collection": "mf_nav_history",
+          "index": "_id_",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.284Z"
+        },
+        {
+          "collection": "us_fund_nav",
+          "index": "us_fund_nav_date_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 2,
+          "since": "2026-09-11T15:05:14.329Z"
+        },
+        {
+          "collection": "us_fund_nav",
+          "index": "_id_",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 7773,
+          "since": "2026-09-11T15:05:14.329Z"
+        },
+        {
+          "collection": "us_fund_nav",
+          "index": "us_fund_nav_permaTicker_date_key",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 7774,
+          "since": "2026-09-11T15:05:14.329Z"
+        },
+        {
+          "collection": "us_fund_nav",
+          "index": "us_fund_nav_symbol_date_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.329Z"
+        },
+        {
+          "collection": "us_corporate_actions",
+          "index": "us_corporate_actions_permaTicker_type_exDate_key",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 2380,
+          "since": "2026-09-11T15:05:14.248Z"
+        },
+        {
+          "collection": "us_corporate_actions",
+          "index": "_id_",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 4688,
+          "since": "2026-09-11T15:05:14.248Z"
+        },
+        {
+          "collection": "us_corporate_actions",
+          "index": "us_corporate_actions_symbol_exDate_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.248Z"
+        },
+        {
+          "collection": "us_corporate_actions",
+          "index": "us_corporate_actions_listingId_exDate_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.248Z"
+        },
+        {
+          "collection": "us_corporate_actions",
+          "index": "us_corporate_actions_exDate_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.248Z"
+        },
+        {
+          "collection": "shareholding_patterns",
+          "index": "shareholding_patterns_symbol_exchange_quarter_key",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 37080,
+          "since": "2026-09-11T15:05:14.508Z"
+        },
+        {
+          "collection": "shareholding_patterns",
+          "index": "_id_",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 29653,
+          "since": "2026-09-11T15:05:14.508Z"
+        },
+        {
+          "collection": "shareholding_patterns",
+          "index": "shareholding_patterns_quarter_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.508Z"
+        },
+        {
+          "collection": "derivative_summary",
+          "index": "_id_",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.132Z"
+        },
+        {
+          "collection": "derivative_summary",
+          "index": "derivative_summary_symbol_exchange_date_key",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.132Z"
+        },
+        {
+          "collection": "derivative_summary",
+          "index": "derivative_summary_symbol_date_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.132Z"
+        },
+        {
+          "collection": "derivative_summary",
+          "index": "derivative_summary_date_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 109,
+          "since": "2026-09-11T15:05:14.132Z"
+        },
+        {
+          "collection": "us_insider_transactions",
+          "index": "us_insider_transactions_ownerCik10_transactionDate_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.200Z"
+        },
+        {
+          "collection": "us_insider_transactions",
+          "index": "_id_",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 1,
+          "since": "2026-09-11T15:05:14.200Z"
+        },
+        {
+          "collection": "us_insider_transactions",
+          "index": "us_insider_transactions_accession_rowIndex_key",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 1544,
+          "since": "2026-09-11T15:05:14.200Z"
+        },
+        {
+          "collection": "us_insider_transactions",
+          "index": "us_insider_transactions_symbol_transactionDate_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 1,
+          "since": "2026-09-11T15:05:14.200Z"
+        },
+        {
+          "collection": "us_insider_transactions",
+          "index": "us_insider_transactions_issuerCik10_transactionDate_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-11T15:05:14.200Z"
+        },
+        {
+          "collection": "us_insider_transactions",
+          "index": "us_insider_transactions_filedAt_idx",
+          "host": "atlas-iep7b2-shard-00-02.lizbtx.mongodb.net:27017",
+          "ops": 4,
+          "since": "2026-09-11T15:05:14.200Z"
+        }
+      ],
+      "collectionFootprint": [
+        {
+          "name": "document_embeddings",
+          "count": 5555213,
+          "storageSize": 54197194752,
+          "totalIndexSize": 309956608,
+          "indexSizes": {
+            "_id_": 107450368,
+            "document_embeddings_userId_docType_idx": 38363136,
+            "document_embeddings_docType_idx": 38035456,
+            "document_embeddings_userId_docType_docId_chunkId_key": 91242496,
+            "document_embeddings_userId_idx": 34865152
+          }
+        },
+        {
+          "name": "derivative_eod",
+          "count": 2258204,
+          "storageSize": 8481181696,
+          "totalIndexSize": 17298624512,
+          "indexSizes": {
+            "_id_": 4386021376,
+            "derivative_eod_symbol_date_idx": 4381958144,
+            "derivative_eod_date_idx": 3397480448,
+            "derivative_eod_symbol_exchange_instrument_expiry_strike_optionType_date_key": 5133164544
+          }
+        },
+        {
+          "name": "candles",
+          "count": 28121485,
+          "storageSize": 1569542144,
+          "totalIndexSize": 3232915456,
+          "indexSizes": {
+            "_id_": 506224640,
+            "candles_listingId_timeframe_ts_idx": 522047488,
+            "candles_symbol_exchange_timeframe_ts_idx": 503087104,
+            "candles_ts_idx": 276459520,
+            "candles_tier_hotLoadedAt_idx": 331313152,
+            "candles_symbol_exchange_timeframe_ts_key": 824700928,
+            "candles_tier_timeframe_ts_idx": 269082624
+          }
+        },
+        {
+          "name": "us_filings",
+          "count": 18749758,
+          "storageSize": 1509769216,
+          "totalIndexSize": 2634805248,
+          "indexSizes": {
+            "_id_": 380399616,
+            "us_filings_cik10_filedAt_idx": 476790784,
+            "us_filings_form_filedAt_idx": 392314880,
+            "us_filings_status_parseClass_idx": 181981184,
+            "us_filings_acceptedAt_idx": 457338880,
+            "us_filings_parseClass_status_filedAt_idx": 366792704,
+            "us_filings_accession_key": 379187200
+          }
+        },
+        {
+          "name": "stock_documents",
+          "count": 116723,
+          "storageSize": 2402500608,
+          "totalIndexSize": 17223680,
+          "indexSizes": {
+            "_id_": 2064384,
+            "stock_documents_instrumentId_idx": 1847296,
+            "stock_documents_symbol_exchange_idx": 1925120,
+            "stock_documents_processingStatus_idx": 1208320,
+            "stock_documents_fetchedAt_idx": 1380352,
+            "stock_documents_symbol_exchange_docType_period_key": 4472832,
+            "stock_documents_parseStatus_fetchedAt_idx": 2097152,
+            "stock_documents_convertStatus_fetchedAt_idx": 2228224
+          }
+        },
+        {
+          "name": "daily_prices",
+          "count": 10762829,
+          "storageSize": 847314944,
+          "totalIndexSize": 797569024,
+          "indexSizes": {
+            "_id_": 281427968,
+            "daily_prices_date_idx": 199557120,
+            "daily_prices_instrumentId_date_key": 316583936
+          }
+        },
+        {
+          "name": "stock_flags",
+          "count": 7681075,
+          "storageSize": 388419584,
+          "totalIndexSize": 682872832,
+          "indexSizes": {
+            "_id_": 172912640,
+            "stock_flags_symbol_kind_date_idx": 244899840,
+            "stock_flags_kind_date_idx": 136839168,
+            "stock_flags_date_idx": 128221184
+          }
+        },
+        {
+          "name": "us_fundamentals",
+          "count": 1153068,
+          "storageSize": 822009856,
+          "totalIndexSize": 143159296,
+          "indexSizes": {
+            "_id_": 24453120,
+            "us_fundamentals_cik10_statementType_periodType_periodEnd_idx": 25935872,
+            "us_fundamentals_cik10_filedAt_idx": 23011328,
+            "us_fundamentals_cik10_isLatest_idx": 16904192,
+            "us_fundamentals_symbol_statementType_periodType_idx": 10186752,
+            "us_fundamentals_cik10_statementType_periodType_periodEnd_accession_key": 42668032
+          }
+        },
+        {
+          "name": "us_company_facts",
+          "count": 504483,
+          "storageSize": 834924544,
+          "totalIndexSize": 63197184,
+          "indexSizes": {
+            "_id_": 15290368,
+            "us_company_facts_cik10_lastFiledAt_idx": 13012992,
+            "us_company_facts_concept_idx": 4808704,
+            "us_company_facts_cik10_taxonomy_concept_unit_key": 30085120
+          }
+        },
+        {
+          "name": "mf_nav_history",
+          "count": 12757117,
+          "storageSize": 338599936,
+          "totalIndexSize": 508436480,
+          "indexSizes": {
+            "_id_": 192868352,
+            "mf_nav_history_schemeCode_idx": 95571968,
+            "mf_nav_history_schemeCode_date_key": 219996160
+          }
+        },
+        {
+          "name": "us_fund_nav",
+          "count": 5123105,
+          "storageSize": 177999872,
+          "totalIndexSize": 549330944,
+          "indexSizes": {
+            "_id_": 129400832,
+            "us_fund_nav_symbol_date_idx": 136630272,
+            "us_fund_nav_date_idx": 82415616,
+            "us_fund_nav_permaTicker_date_key": 200884224
+          }
+        },
+        {
+          "name": "us_corporate_actions",
+          "count": 2949094,
+          "storageSize": 212602880,
+          "totalIndexSize": 481955840,
+          "indexSizes": {
+            "_id_": 79011840,
+            "us_corporate_actions_symbol_exDate_idx": 141025280,
+            "us_corporate_actions_listingId_exDate_idx": 114495488,
+            "us_corporate_actions_exDate_idx": 55484416,
+            "us_corporate_actions_permaTicker_type_exDate_key": 91938816
+          }
+        },
+        {
+          "name": "shareholding_patterns",
+          "count": 126890,
+          "storageSize": 571502592,
+          "totalIndexSize": 6455296,
+          "indexSizes": {
+            "_id_": 2347008,
+            "shareholding_patterns_quarter_idx": 1138688,
+            "shareholding_patterns_symbol_exchange_quarter_key": 2969600
+          }
+        },
+        {
+          "name": "derivative_summary",
+          "count": 438018,
+          "storageSize": 252018688,
+          "totalIndexSize": 143720448,
+          "indexSizes": {
+            "_id_": 40968192,
+            "derivative_summary_symbol_date_idx": 33333248,
+            "derivative_summary_date_idx": 36007936,
+            "derivative_summary_symbol_exchange_date_key": 33411072
+          }
+        },
+        {
+          "name": "us_insider_transactions",
+          "count": 751833,
+          "storageSize": 297172992,
+          "totalIndexSize": 71098368,
+          "indexSizes": {
+            "_id_": 14471168,
+            "us_insider_transactions_issuerCik10_transactionDate_idx": 12320768,
+            "us_insider_transactions_symbol_transactionDate_idx": 11280384,
+            "us_insider_transactions_ownerCik10_transactionDate_idx": 13041664,
+            "us_insider_transactions_filedAt_idx": 6848512,
+            "us_insider_transactions_accession_rowIndex_key": 13135872
+          }
+        },
+        {
+          "name": "xbrl_filings",
+          "count": 108074,
+          "storageSize": 185466880,
+          "totalIndexSize": 20934656,
+          "indexSizes": {
+            "_id_": 2195456,
+            "xbrl_filings_symbol_exchange_periodEnd_idx": 2985984,
+            "xbrl_filings_isin_idx": 1474560,
+            "xbrl_filings_instrumentId_idx": 7262208,
+            "xbrl_filings_periodEnd_coverage_idx": 1040384,
+            "xbrl_filings_symbol_exchange_periodEnd_periodType_basis_cumulative_key": 5541888,
+            "xbrl_filings_projectedAt_idx": 434176
+          }
+        },
+        {
+          "name": "backfill_checkpoints",
+          "count": 1107988,
+          "storageSize": 139329536,
+          "totalIndexSize": 60473344,
+          "indexSizes": {
+            "_id_": 25141248,
+            "backfill_checkpoints_jobKey_status_idx": 13770752,
+            "backfill_checkpoints_jobKey_itemKey_scope_key": 21561344
+          }
+        },
+        {
+          "name": "us_filers",
+          "count": 984656,
+          "storageSize": 89939968,
+          "totalIndexSize": 92540928,
+          "indexSizes": {
+            "_id_": 25862144,
+            "us_filers_inUniverse_eligibleForCoverage_idx": 15003648,
+            "us_filers_sic_idx": 15147008,
+            "us_filers_latestFiledAt_idx": 17530880,
+            "us_filers_cik10_key": 18997248
+          }
+        },
+        {
+          "name": "document_financial_extracts",
+          "count": 163689,
+          "storageSize": 87678976,
+          "totalIndexSize": 27537408,
+          "indexSizes": {
+            "_id_": 3231744,
+            "document_financial_extracts_symbol_exchange_periodEnd_periodType_basis_idx": 5607424,
+            "document_financial_extracts_instrumentId_idx": 2834432,
+            "document_financial_extracts_status_idx": 1253376,
+            "document_financial_extracts_reconcileVerdict_idx": 1040384,
+            "document_financial_extracts_projectedAt_symbol_periodEnd_idx": 3846144,
+            "document_financial_extracts_documentId_periodEnd_periodType_basis_key": 8290304,
+            "document_financial_extracts_status_validationReasons_idx": 1433600
+          }
+        },
+        {
+          "name": "slb_positions",
+          "count": 755007,
+          "storageSize": 40972288,
+          "totalIndexSize": 73785344,
+          "indexSizes": {
+            "_id_": 21200896,
+            "slb_positions_date_idx": 13770752,
+            "slb_positions_symbol_date_idx": 17522688,
+            "slb_positions_symbol_date_series_key": 21291008
+          }
+        },
+        {
+          "name": "index_closes",
+          "count": 291577,
+          "storageSize": 45367296,
+          "totalIndexSize": 28090368,
+          "indexSizes": {
+            "_id_": 7278592,
+            "index_closes_date_idx": 5705728,
+            "index_closes_indexSlug_date_idx": 7622656,
+            "index_closes_indexSlug_date_key": 7483392
+          }
+        },
+        {
+          "name": "us_news_articles",
+          "count": 118273,
+          "storageSize": 52137984,
+          "totalIndexSize": 15241216,
+          "indexSizes": {
+            "_id_": 2138112,
+            "us_news_articles_tiingoId_key": 1581056,
+            "us_news_articles_publishedAt_idx": 1503232,
+            "us_news_articles_tickers_publishedAt_idx": 3297280,
+            "us_news_articles_clusterKey_idx": 5160960,
+            "us_news_articles_crawlDate_idx": 1560576
+          }
+        },
+        {
+          "name": "shareholding_breakdown",
+          "count": 124540,
+          "storageSize": 51134464,
+          "totalIndexSize": 8323072,
+          "indexSizes": {
+            "_id_": 2322432,
+            "shareholding_breakdown_quarter_idx": 1056768,
+            "shareholding_breakdown_symbol_exchange_idx": 1957888,
+            "shareholding_breakdown_symbol_exchange_quarter_key": 2985984
+          }
+        },
+        {
+          "name": "intraday_bars",
+          "count": 485224,
+          "storageSize": 21049344,
+          "totalIndexSize": 31531008,
+          "indexSizes": {
+            "_id_": 7950336,
+            "intraday_bars_instrumentId_interval_time_idx": 9433088,
+            "intraday_bars_time_idx": 5984256,
+            "intraday_bars_instrumentId_interval_time_key": 8163328
+          }
+        },
+        {
+          "name": "insider_events",
+          "count": 85028,
+          "storageSize": 28250112,
+          "totalIndexSize": 20434944,
+          "indexSizes": {
+            "_id_": 1495040,
+            "insider_events_symbol_category_date_idx": 2215936,
+            "insider_events_category_date_idx": 1331200,
+            "insider_events_date_idx": 1847296,
+            "insider_events_dedupeKey_key": 13545472
+          }
+        },
+        {
+          "name": "us_instruments",
+          "count": 74228,
+          "storageSize": 11182080,
+          "totalIndexSize": 25546752,
+          "indexSizes": {
+            "_id_": 2883584,
+            "us_instruments_symbol_exchange_idx": 3579904,
+            "us_instruments_listingStatus_usEodSyncedAt_idx": 2166784,
+            "us_instruments_nameSyncedAt_idx": 2093056,
+            "us_instruments_listingStatus_searchSyncedAt_idx": 2203648,
+            "us_instruments_permaTicker_idx": 2547712,
+            "us_instruments_cik_idx": 3043328,
+            "us_instruments_assetType_listingStatus_idx": 2195456,
+            "us_instruments_listingId_key": 4833280
+          }
+        },
+        {
+          "name": "mf_portfolio_holdings",
+          "count": 79254,
+          "storageSize": 11067392,
+          "totalIndexSize": 18497536,
+          "indexSizes": {
+            "_id_": 2306048,
+            "mf_portfolio_holdings_schemeKey_period_idx": 1290240,
+            "mf_portfolio_holdings_isin_period_idx": 1982464,
+            "mf_portfolio_holdings_instrumentId_period_idx": 1617920,
+            "mf_portfolio_holdings_period_amc_idx": 1073152,
+            "mf_portfolio_holdings_period_amc_schemeKey_instrumentName_key": 4055040,
+            "mf_portfolio_holdings_amfiSchemeCode_period_idx": 1519616,
+            "mf_portfolio_holdings_amfiSchemeCodes_period_idx": 4653056
+          }
+        },
+        {
+          "name": "mwpl_daily",
+          "count": 144340,
+          "storageSize": 9814016,
+          "totalIndexSize": 12992512,
+          "indexSizes": {
+            "_id_": 3166208,
+            "mwpl_daily_date_idx": 1888256,
+            "mwpl_daily_symbol_date_idx": 3997696,
+            "mwpl_daily_symbol_date_key": 3940352
+          }
+        },
+        {
+          "name": "pubsub_message_dedupe",
+          "count": 181403,
+          "storageSize": 10182656,
+          "totalIndexSize": 10555392,
+          "indexSizes": {
+            "_id_": 3256320,
+            "pubsubMessageId_unique": 4997120,
+            "pubsubMessageId_ttl": 2301952
+          }
+        },
+        {
+          "name": "paired_trade_views",
+          "count": 32714,
+          "storageSize": 6950912,
+          "totalIndexSize": 12824576,
+          "indexSizes": {
+            "_id_": 1220608,
+            "paired_trade_views_userId_status_idx": 970752,
+            "paired_trade_views_userId_symbol_idx": 1363968,
+            "paired_trade_views_userId_isin_idx": 1204224,
+            "paired_trade_views_userId_entryDate_idx": 1617920,
+            "paired_trade_views_userId_broker_brokerUserId_idx": 950272,
+            "paired_trade_views_pairingBatchId_idx": 999424,
+            "paired_trade_views_sourceTradeIds_idx": 1949696,
+            "paired_trade_views_entryTradeId_idx": 1253376,
+            "paired_trade_views_exitTradeId_idx": 1294336
+          }
+        },
+        {
+          "name": "stock_news",
+          "count": 15419,
+          "storageSize": 10166272,
+          "totalIndexSize": 9404416,
+          "indexSizes": {
+            "_id_": 323584,
+            "stock_news_symbol_pubDate_idx": 389120,
+            "stock_news_fetchedAt_idx": 409600,
+            "stock_news_symbol_link_key": 8282112
+          }
+        },
+        {
+          "name": "market_positioning",
+          "count": 93916,
+          "storageSize": 8048640,
+          "totalIndexSize": 10715136,
+          "indexSizes": {
+            "_id_": 3346432,
+            "market_positioning_participant_bucket_metric_date_idx": 2727936,
+            "market_positioning_date_metric_idx": 1302528,
+            "market_positioning_date_participant_bucket_metric_key": 3338240
+          }
+        },
+        {
+          "name": "Trade",
+          "count": 36936,
+          "storageSize": 5488640,
+          "totalIndexSize": 11337728,
+          "indexSizes": {
+            "_id_": 1146880,
+            "Trade_userId_idx": 700416,
+            "Trade_userId_broker_idx": 679936,
+            "Trade_userId_broker_brokerUserId_idx": 684032,
+            "Trade_userId_broker_symbol_idx": 946176,
+            "Trade_userId_status_idx": 753664,
+            "Trade_userId_tradeDate_idx": 1024000,
+            "Trade_userId_sourceType_idx": 417792,
+            "Trade_userId_duplicateHash_idx": 749568,
+            "Trade_importBatchId_idx": 716800,
+            "Trade_symbol_idx": 1265664,
+            "Trade_isin_idx": 753664,
+            "Trade_userId_broker_brokerUserId_brokerTradeId_key": 1150976,
+            "Trade_userId_needsRepairing_idx": 348160
+          }
+        },
+        {
+          "name": "stock_financials_vendor_snapshot",
+          "count": 32359,
+          "storageSize": 14733312,
+          "totalIndexSize": 1916928,
+          "indexSizes": {
+            "_id_": 1916928
+          }
+        },
+        {
+          "name": "databento_batch_jobs",
+          "count": 44,
+          "storageSize": 14712832,
+          "totalIndexSize": 233472,
+          "indexSizes": {
+            "_id_": 36864,
+            "databento_batch_jobs_jobId_idx": 53248,
+            "databento_batch_jobs_purpose_entryId_state_end_idx": 36864,
+            "databento_batch_jobs_submittedAt_idx": 53248,
+            "databento_batch_jobs_purpose_entryId_schema_symbolsHash_start_end_key": 53248
+          }
+        },
+        {
+          "name": "stock_financials",
+          "count": 32359,
+          "storageSize": 10833920,
+          "totalIndexSize": 4063232,
+          "indexSizes": {
+            "_id_": 933888,
+            "stock_financials_instrumentId_idx": 540672,
+            "stock_financials_symbol_exchange_idx": 311296,
+            "stock_financials_fetchedAt_idx": 565248,
+            "stock_financials_symbol_exchange_statementType_periodType_period_key": 831488,
+            "stock_financials_symbol_exchange_statementType_periodType_periodEnd_idx": 880640
+          }
+        },
+        {
+          "name": "feed_backfill_progress",
+          "count": 169072,
+          "storageSize": 6230016,
+          "totalIndexSize": 7634944,
+          "indexSizes": {
+            "_id_": 3407872,
+            "feed_backfill_progress_family_status_idx": 1277952,
+            "feed_backfill_progress_family_date_key": 2949120
+          }
+        },
+        {
+          "name": "instrument_mappings",
+          "count": 27348,
+          "storageSize": 5496832,
+          "totalIndexSize": 7913472,
+          "indexSizes": {
+            "_id_": 1114112,
+            "instrument_mappings_zerodhaToken_idx": 487424,
+            "instrument_mappings_upstoxKey_idx": 143360,
+            "instrument_mappings_isin_idx": 401408,
+            "instrument_mappings_instrumentType_idx": 192512,
+            "instrument_mappings_tradingSymbol_idx": 700416,
+            "instrument_mappings_isActive_instrumentType_exchange_idx": 294912,
+            "instrument_mappings_isActive_instrumentType_sector_idx": 323584,
+            "instrument_mappings_symbol_exchange_key": 995328,
+            "instrument_mappings_yahooSymbol_key": 872448,
+            "instrument_mappings_isActive_idx": 217088,
+            "instrument_mappings_tickertapeSid_idx": 249856,
+            "instrument_mappings_analysisCount_idx": 151552,
+            "instrument_mappings_name_idx": 1355776,
+            "instrument_mappings_previousSymbols_idx": 270336,
+            "instrument_mappings_amfiSchemeCode_idx": 143360
+          }
+        },
+        {
+          "name": "news_articles",
+          "count": 23628,
+          "storageSize": 7544832,
+          "totalIndexSize": 4706304,
+          "indexSizes": {
+            "_id_": 294912,
+            "news_articles_url_key": 2854912,
+            "news_articles_publishedAt_idx": 372736,
+            "news_articles_source_publishedAt_idx": 376832,
+            "news_articles_symbols_publishedAt_idx": 421888,
+            "news_articles_sectors_publishedAt_idx": 385024
+          }
+        },
+        {
+          "name": "stock_peers",
+          "count": 10749,
+          "storageSize": 10047488,
+          "totalIndexSize": 1605632,
+          "indexSizes": {
+            "_id_": 487424,
+            "stock_peers_instrumentId_key": 548864,
+            "stock_peers_symbol_exchange_key": 569344
+          }
+        },
+        {
+          "name": "corporate_actions",
+          "count": 57658,
+          "storageSize": 3874816,
+          "totalIndexSize": 6893568,
+          "indexSizes": {
+            "_id_": 1310720,
+            "corporate_actions_isin_idx": 618496,
+            "corporate_actions_symbol_exchange_idx": 1490944,
+            "corporate_actions_exDate_idx": 1212416,
+            "corporate_actions_symbol_exchange_type_exDate_key": 2260992
+          }
+        },
+        {
+          "name": "us_13f_holdings",
+          "count": 47392,
+          "storageSize": 4464640,
+          "totalIndexSize": 5468160,
+          "indexSizes": {
+            "_id_": 839680,
+            "us_13f_holdings_cusip_periodOfReport_idx": 1200128,
+            "us_13f_holdings_symbol_periodOfReport_idx": 1126400,
+            "us_13f_holdings_managerCik10_periodOfReport_idx": 577536,
+            "us_13f_holdings_filedAt_idx": 548864,
+            "us_13f_holdings_accession_rowIndex_key": 1175552
+          }
+        },
+        {
+          "name": "mutual_fund_masters",
+          "count": 14319,
+          "storageSize": 3059712,
+          "totalIndexSize": 4435968,
+          "indexSizes": {
+            "_id_": 684032,
+            "mutual_fund_masters_schemeCode_key": 200704,
+            "mutual_fund_masters_amcName_idx": 188416,
+            "mutual_fund_masters_category_idx": 274432,
+            "mutual_fund_masters_isActive_idx": 86016,
+            "mutual_fund_masters_isinGrowth_idx": 356352,
+            "mutual_fund_masters_isinDividend_idx": 233472,
+            "mutual_fund_masters_aum_idx": 204800,
+            "mutual_fund_masters_navDate_idx": 897024,
+            "mutual_fund_masters_nav_idx": 1310720
+          }
+        },
+        {
+          "name": "us_stock_news",
+          "count": 8638,
+          "storageSize": 2793472,
+          "totalIndexSize": 3788800,
+          "indexSizes": {
+            "_id_": 253952,
+            "us_stock_news_symbol_pubDate_idx": 569344,
+            "us_stock_news_permaTicker_pubDate_idx": 204800,
+            "us_stock_news_fetchedAt_idx": 278528,
+            "us_stock_news_symbol_link_key": 2482176
+          }
+        },
+        {
+          "name": "latest_quotes",
+          "count": 9635,
+          "storageSize": 2060288,
+          "totalIndexSize": 4038656,
+          "indexSizes": {
+            "_id_": 425984,
+            "latest_quotes_instrumentId_key": 249856,
+            "latest_quotes_changePercent_idx": 1150976,
+            "latest_quotes_instrumentId_changePercent_idx": 1228800,
+            "latest_quotes_marketCap_idx": 983040
+          }
+        },
+        {
+          "name": "us_cusip_map",
+          "count": 23524,
+          "storageSize": 2170880,
+          "totalIndexSize": 3731456,
+          "indexSizes": {
+            "_id_": 389120,
+            "us_cusip_map_symbol_idx": 1077248,
+            "us_cusip_map_cik10_idx": 872448,
+            "us_cusip_map_source_idx": 716800,
+            "us_cusip_map_cusip_key": 675840
+          }
+        },
+        {
+          "name": "bond_master",
+          "count": 11030,
+          "storageSize": 2633728,
+          "totalIndexSize": 2539520,
+          "indexSizes": {
+            "_id_": 724992,
+            "bond_master_isin_key": 724992,
+            "bond_master_symbol_idx": 225280,
+            "bond_master_maturityDate_idx": 245760,
+            "bond_master_secType_maturityDate_idx": 618496
+          }
+        },
+        {
+          "name": "notifications",
+          "count": 24164,
+          "storageSize": 3252224,
+          "totalIndexSize": 913408,
+          "indexSizes": {
+            "_id_": 446464,
+            "notifications_userId_isRead_idx": 167936,
+            "notifications_userId_createdAt_idx": 299008
+          }
+        },
+        {
+          "name": "market_data_sync_logs",
+          "count": 28683,
+          "storageSize": 2539520,
+          "totalIndexSize": 917504,
+          "indexSizes": {
+            "_id_": 577536,
+            "market_data_sync_logs_syncType_startedAt_idx": 339968
+          }
+        },
+        {
+          "name": "institutional_deals",
+          "count": 6291,
+          "storageSize": 1028096,
+          "totalIndexSize": 1921024,
+          "indexSizes": {
+            "_id_": 139264,
+            "institutional_deals_symbol_date_idx": 204800,
+            "institutional_deals_date_idx": 135168,
+            "institutional_deals_clientName_date_idx": 339968,
+            "institutional_deals_dedupeKey_key": 1101824
+          }
+        },
+        {
+          "name": "bond_eod",
+          "count": 12249,
+          "storageSize": 983040,
+          "totalIndexSize": 1695744,
+          "indexSizes": {
+            "_id_": 274432,
+            "bond_eod_date_idx": 176128,
+            "bond_eod_isin_date_idx": 548864,
+            "bond_eod_isin_date_segment_key": 696320
+          }
+        },
+        {
+          "name": "us_filing_documents",
+          "count": 8523,
+          "storageSize": 1421312,
+          "totalIndexSize": 798720,
+          "indexSizes": {
+            "_id_": 167936,
+            "us_filing_documents_cik10_filedAt_idx": 184320,
+            "us_filing_documents_form_filedAt_idx": 135168,
+            "us_filing_documents_extractionStatus_idx": 98304,
+            "us_filing_documents_accession_sequence_key": 212992
+          }
+        },
+        {
+          "name": "market_movers",
+          "count": 5198,
+          "storageSize": 1015808,
+          "totalIndexSize": 765952,
+          "indexSizes": {
+            "_id_": 126976,
+            "market_movers_date_exchange_direction_bucket_rank_idx": 122880,
+            "market_movers_snapshotAt_idx": 110592,
+            "market_movers_symbol_date_idx": 176128,
+            "market_movers_exchange_direction_bucket_symbol_date_key": 229376
+          }
+        },
+        {
+          "name": "stock_ratios",
+          "count": 2135,
+          "storageSize": 757760,
+          "totalIndexSize": 962560,
+          "indexSizes": {
+            "_id_": 106496,
+            "stock_ratios_instrumentId_key": 77824,
+            "stock_ratios_pe_idx": 122880,
+            "stock_ratios_roe_idx": 110592,
+            "stock_ratios_marketCap_idx": 122880,
+            "stock_ratios_fetchedAt_idx": 77824,
+            "stock_ratios_symbol_exchange_key": 118784,
+            "stock_ratios_dividendYield_idx": 81920,
+            "stock_ratios_debtToEquity_idx": 57344,
+            "stock_ratios_revenueGrowth_idx": 57344,
+            "stock_ratios_ratiosDerivedAt_idx": 28672
+          }
+        },
+        {
+          "name": "index_constituents",
+          "count": 3275,
+          "storageSize": 372736,
+          "totalIndexSize": 1273856,
+          "indexSizes": {
+            "_id_": 307200,
+            "index_constituents_indexId_idx": 266240,
+            "index_constituents_indexId_rank_idx": 335872,
+            "index_constituents_indexId_symbol_key": 364544
+          }
+        },
+        {
+          "name": "stock_ratios_vendor_snapshot",
+          "count": 2135,
+          "storageSize": 1069056,
+          "totalIndexSize": 192512,
+          "indexSizes": {
+            "_id_": 192512
+          }
+        },
+        {
+          "name": "research_sessions",
+          "count": 39,
+          "storageSize": 737280,
+          "totalIndexSize": 147456,
+          "indexSizes": {
+            "_id_": 36864,
+            "research_sessions_sessionId_key": 36864,
+            "research_sessions_userId_status_idx": 36864,
+            "research_sessions_userId_idx": 36864
+          }
+        },
+        {
+          "name": "upcoming_ipos",
+          "count": 1466,
+          "storageSize": 532480,
+          "totalIndexSize": 323584,
+          "indexSizes": {
+            "_id_": 90112,
+            "upcoming_ipos_status_issueStart_idx": 69632,
+            "upcoming_ipos_issueStart_idx": 77824,
+            "upcoming_ipos_symbol_issueStart_key": 86016
+          }
+        },
+        {
+          "name": "index_live_snapshots",
+          "count": 2919,
+          "storageSize": 499712,
+          "totalIndexSize": 352256,
+          "indexSizes": {
+            "_id_": 94208,
+            "index_live_snapshots_date_category_idx": 57344,
+            "index_live_snapshots_snapshotAt_idx": 81920,
+            "index_live_snapshots_indexSymbol_date_key": 118784
+          }
+        },
+        {
+          "name": "us_beneficial_ownership",
+          "count": 1278,
+          "storageSize": 475136,
+          "totalIndexSize": 344064,
+          "indexSizes": {
+            "_id_": 61440,
+            "us_beneficial_ownership_subjectCik10_filedAt_idx": 53248,
+            "us_beneficial_ownership_symbol_filedAt_idx": 53248,
+            "us_beneficial_ownership_filerCik10_filedAt_idx": 61440,
+            "us_beneficial_ownership_cusip_idx": 53248,
+            "us_beneficial_ownership_accession_rowIndex_key": 61440
+          }
+        },
+        {
+          "name": "us_cost_model_rows",
+          "count": 2353,
+          "storageSize": 356352,
+          "totalIndexSize": 389120,
+          "indexSizes": {
+            "_id_": 114688,
+            "us_cost_model_rows_modelVersion_liquidityTier_idx": 106496,
+            "us_cost_model_rows_modelVersion_listingId_todBucket_key": 167936
+          }
+        },
+        {
+          "name": "fund_holdings",
+          "count": 1800,
+          "storageSize": 184320,
+          "totalIndexSize": 323584,
+          "indexSizes": {
+            "_id_": 69632,
+            "fund_holdings_fundType_fundId_idx": 61440,
+            "fund_holdings_holdingSymbol_idx": 61440,
+            "fund_holdings_fundType_fundId_holdingName_key": 131072
+          }
+        },
+        {
+          "name": "nse_circulars",
+          "count": 989,
+          "storageSize": 208896,
+          "totalIndexSize": 282624,
+          "indexSizes": {
+            "_id_": 53248,
+            "nse_circulars_circularDate_idx": 53248,
+            "nse_circulars_topic_circularDate_idx": 53248,
+            "nse_circulars_department_circularDate_idx": 53248,
+            "nse_circulars_circularNumber_department_key": 69632
+          }
+        },
+        {
+          "name": "ChatHistory",
+          "count": 105,
+          "storageSize": 290816,
+          "totalIndexSize": 184320,
+          "indexSizes": {
+            "_id_": 36864,
+            "ChatHistory_userId_isArchived_idx": 36864,
+            "ChatHistory_userId_pagePath_idx": 36864,
+            "ChatHistory_lastMessageAt_idx": 36864,
+            "ChatHistory_userId_idx": 36864
+          }
+        },
+        {
+          "name": "User",
+          "count": 664,
+          "storageSize": 237568,
+          "totalIndexSize": 192512,
+          "indexSizes": {
+            "_id_": 53248,
+            "User_clerkId_key": 73728,
+            "User_email_key": 65536
+          }
+        },
+        {
+          "name": "upcoming_events",
+          "count": 2178,
+          "storageSize": 172032,
+          "totalIndexSize": 245760,
+          "indexSizes": {
+            "_id_": 73728,
+            "upcoming_events_date_category_idx": 57344,
+            "upcoming_events_symbol_date_idx": 114688
+          }
+        },
+        {
+          "name": "content_posts",
+          "count": 134,
+          "storageSize": 94208,
+          "totalIndexSize": 294912,
+          "indexSizes": {
+            "_id_": 36864,
+            "content_posts_postUrl_key": 36864,
+            "content_posts_publishDate_idx": 36864,
+            "content_posts_status_idx": 36864,
+            "content_posts_contentType_idx": 36864,
+            "content_posts_isFeatured_idx": 36864,
+            "content_posts_authorId_idx": 36864,
+            "content_posts_contentPlatform_contentType_idx": 36864
+          }
+        },
+        {
+          "name": "index_memberships",
+          "count": 925,
+          "storageSize": 106496,
+          "totalIndexSize": 278528,
+          "indexSizes": {
+            "_id_": 61440,
+            "index_memberships_indexId_firstSeen_idx": 36864,
+            "index_memberships_indexId_removedOn_idx": 57344,
+            "index_memberships_symbol_idx": 53248,
+            "index_memberships_indexId_symbol_firstSeen_key": 69632
+          }
+        },
+        {
+          "name": "Holding",
+          "count": 100,
+          "storageSize": 61440,
+          "totalIndexSize": 294912,
+          "indexSizes": {
+            "_id_": 36864,
+            "Holding_userId_broker_brokerUserId_idx": 36864,
+            "Holding_userId_sector_idx": 36864,
+            "Holding_userId_exchange_idx": 36864,
+            "Holding_symbol_idx": 36864,
+            "Holding_userId_broker_brokerUserId_symbol_exchange_key": 36864,
+            "Holding_userId_idx": 36864,
+            "Holding_userId_broker_idx": 36864
+          }
+        },
+        {
+          "name": "BrokerConnection",
+          "count": 9,
+          "storageSize": 45056,
+          "totalIndexSize": 294912,
+          "indexSizes": {
+            "_id_": 36864,
+            "BrokerConnection_userId_broker_idx": 36864,
+            "BrokerConnection_status_idx": 36864,
+            "BrokerConnection_tokenExpiry_idx": 36864,
+            "BrokerConnection_userId_broker_brokerUserId_key": 36864,
+            "BrokerConnection_userId_idx": 36864,
+            "BrokerConnection_userId_status_idx": 36864,
+            "BrokerConnection_syncBucket_status_idx": 36864
+          }
+        },
+        {
+          "name": "MutualFund",
+          "count": 37,
+          "storageSize": 45056,
+          "totalIndexSize": 294912,
+          "indexSizes": {
+            "_id_": 36864,
+            "MutualFund_userId_broker_brokerUserId_idx": 36864,
+            "MutualFund_isin_idx": 36864,
+            "MutualFund_folio_idx": 36864,
+            "MutualFund_schemeName_idx": 36864,
+            "MutualFund_userId_broker_brokerUserId_folioNumber_tradingSymbol_key": 36864,
+            "MutualFund_userId_idx": 36864,
+            "MutualFund_userId_broker_idx": 36864
+          }
+        },
+        {
+          "name": "Subscription",
+          "count": 663,
+          "storageSize": 94208,
+          "totalIndexSize": 204800,
+          "indexSizes": {
+            "_id_": 53248,
+            "Subscription_userId_key": 53248,
+            "Subscription_status_idx": 36864,
+            "Subscription_userId_status_idx": 61440
+          }
+        },
+        {
+          "name": "macro_series",
+          "count": 355,
+          "storageSize": 69632,
+          "totalIndexSize": 217088,
+          "indexSizes": {
+            "_id_": 45056,
+            "macro_series_seriesId_period_idx": 45056,
+            "macro_series_period_idx": 40960,
+            "macro_series_source_period_idx": 40960,
+            "macro_series_seriesId_period_key": 45056
+          }
+        },
+        {
+          "name": "Position",
+          "count": 15,
+          "storageSize": 36864,
+          "totalIndexSize": 221184,
+          "indexSizes": {
+            "_id_": 36864,
+            "Position_userId_broker_brokerUserId_idx": 36864,
+            "Position_tradeDate_idx": 36864,
+            "Position_userId_broker_brokerUserId_symbol_exchange_positionType_key": 36864,
+            "Position_userId_idx": 36864,
+            "Position_userId_broker_idx": 36864
+          }
+        },
+        {
+          "name": "deleted_user_audits",
+          "count": 17,
+          "storageSize": 36864,
+          "totalIndexSize": 221184,
+          "indexSizes": {
+            "_id_": 36864,
+            "deleted_user_audits_deletedAt_idx": 36864,
+            "deleted_user_audits_email_idx": 36864,
+            "deleted_user_audits_clerkId_idx": 36864,
+            "deleted_user_audits_status_idx": 36864,
+            "deleted_user_audits_status_clerkDeleteScheduledFor_idx": 36864
+          }
+        },
+        {
+          "name": "background_jobs",
+          "count": 24,
+          "storageSize": 36864,
+          "totalIndexSize": 221184,
+          "indexSizes": {
+            "_id_": 36864,
+            "background_jobs_jobId_key": 36864,
+            "background_jobs_userId_idx": 36864,
+            "background_jobs_jobType_status_idx": 36864,
+            "background_jobs_status_idx": 36864,
+            "background_jobs_queuedAt_idx": 36864
+          }
+        },
+        {
+          "name": "portfolio_roasts",
+          "count": 7,
+          "storageSize": 94208,
+          "totalIndexSize": 147456,
+          "indexSizes": {
+            "_id_": 36864,
+            "portfolio_roasts_sessionId_key": 36864,
+            "portfolio_roasts_userId_createdAt_idx": 36864,
+            "portfolio_roasts_userId_status_idx": 36864
+          }
+        },
+        {
+          "name": "us_13f_filings",
+          "count": 81,
+          "storageSize": 45056,
+          "totalIndexSize": 184320,
+          "indexSizes": {
+            "_id_": 36864,
+            "us_13f_filings_managerCik10_periodOfReport_idx": 36864,
+            "us_13f_filings_periodOfReport_tier_idx": 36864,
+            "us_13f_filings_filedAt_idx": 36864,
+            "us_13f_filings_accession_key": 36864
+          }
+        },
+        {
+          "name": "dodo_products",
+          "count": 13,
+          "storageSize": 36864,
+          "totalIndexSize": 184320,
+          "indexSizes": {
+            "_id_": 36864,
+            "dodo_products_productId_key": 36864,
+            "dodo_products_planType_billingPeriod_idx": 36864,
+            "dodo_products_archived_idx": 36864,
+            "dodo_products_planType_idx": 36864
+          }
+        },
+        {
+          "name": "Coupon",
+          "count": 2,
+          "storageSize": 36864,
+          "totalIndexSize": 184320,
+          "indexSizes": {
+            "_id_": 36864,
+            "Coupon_code_key": 36864,
+            "Coupon_dodoDiscountId_key": 36864,
+            "Coupon_isActive_idx": 36864,
+            "Coupon_targetUserEmail_idx": 36864
+          }
+        },
+        {
+          "name": "content_authors",
+          "count": 1,
+          "storageSize": 36864,
+          "totalIndexSize": 184320,
+          "indexSizes": {
+            "_id_": 36864,
+            "content_authors_clerkId_key": 36864,
+            "content_authors_username_key": 36864,
+            "content_authors_email_key": 36864,
+            "content_authors_name_idx": 36864
+          }
+        },
+        {
+          "name": "feedback",
+          "count": 2,
+          "storageSize": 36864,
+          "totalIndexSize": 184320,
+          "indexSizes": {
+            "_id_": 36864,
+            "feedback_userId_idx": 36864,
+            "feedback_status_idx": 36864,
+            "feedback_type_idx": 36864,
+            "feedback_createdAt_idx": 36864
+          }
+        },
+        {
+          "name": "TokenUsage",
+          "count": 49,
+          "storageSize": 36864,
+          "totalIndexSize": 184320,
+          "indexSizes": {
+            "_id_": 36864,
+            "TokenUsage_userId_createdAt_idx": 36864,
+            "TokenUsage_modelName_idx": 36864,
+            "TokenUsage_createdAt_idx": 36864,
+            "TokenUsage_userId_idx": 36864
+          }
+        },
+        {
+          "name": "classification_logs",
+          "count": 134,
+          "storageSize": 61440,
+          "totalIndexSize": 147456,
+          "indexSizes": {
+            "_id_": 36864,
+            "classification_logs_createdAt_idx": 36864,
+            "classification_logs_source_createdAt_idx": 36864,
+            "classification_logs_flashFailed_createdAt_idx": 36864
+          }
+        },
+        {
+          "name": "Payment",
+          "count": 52,
+          "storageSize": 53248,
+          "totalIndexSize": 147456,
+          "indexSizes": {
+            "_id_": 36864,
+            "Payment_dodoPaymentId_key": 36864,
+            "Payment_userId_idx": 36864,
+            "Payment_status_idx": 36864
+          }
+        },
+        {
+          "name": "content_tag_on_post",
+          "count": 174,
+          "storageSize": 40960,
+          "totalIndexSize": 159744,
+          "indexSizes": {
+            "_id_": 40960,
+            "content_tag_on_post_postId_idx": 40960,
+            "content_tag_on_post_tagId_idx": 36864,
+            "content_tag_on_post_postId_tagId_key": 40960
+          }
+        },
+        {
+          "name": "credit_usage",
+          "count": 61,
+          "storageSize": 45056,
+          "totalIndexSize": 147456,
+          "indexSizes": {
+            "_id_": 36864,
+            "credit_usage_userId_createdAt_idx": 36864,
+            "credit_usage_userId_action_idx": 36864,
+            "credit_usage_createdAt_idx": 36864
+          }
+        },
+        {
+          "name": "fund_composition_meta",
+          "count": 111,
+          "storageSize": 77824,
+          "totalIndexSize": 110592,
+          "indexSizes": {
+            "_id_": 36864,
+            "fund_composition_meta_status_idx": 36864,
+            "fund_composition_meta_fundType_fundId_key": 36864
+          }
+        },
+        {
+          "name": "user_events",
+          "count": 8,
+          "storageSize": 36864,
+          "totalIndexSize": 147456,
+          "indexSizes": {
+            "_id_": 36864,
+            "user_events_userId_createdAt_idx": 36864,
+            "user_events_userId_kind_createdAt_idx": 36864,
+            "user_events_kind_createdAt_idx": 36864
+          }
+        },
+        {
+          "name": "broker_integration_failures",
+          "count": 1,
+          "storageSize": 36864,
+          "totalIndexSize": 147456,
+          "indexSizes": {
+            "_id_": 36864,
+            "broker_integration_failures_errorClass_createdAt_idx": 36864,
+            "broker_integration_failures_broker_createdAt_idx": 36864,
+            "broker_integration_failures_createdAt_idx": 36864
+          }
+        },
+        {
+          "name": "AdminAuditLog",
+          "count": 8,
+          "storageSize": 36864,
+          "totalIndexSize": 147456,
+          "indexSizes": {
+            "_id_": 36864,
+            "AdminAuditLog_targetType_targetId_idx": 36864,
+            "AdminAuditLog_actorEmail_idx": 36864,
+            "AdminAuditLog_createdAt_idx": 36864
+          }
+        },
+        {
+          "name": "institutional_flows",
+          "count": 44,
+          "storageSize": 36864,
+          "totalIndexSize": 147456,
+          "indexSizes": {
+            "_id_": 36864,
+            "institutional_flows_category_date_idx": 36864,
+            "institutional_flows_date_idx": 36864,
+            "institutional_flows_date_category_segment_key": 36864
+          }
+        },
+        {
+          "name": "watch_lists",
+          "count": 37,
+          "storageSize": 36864,
+          "totalIndexSize": 147456,
+          "indexSizes": {
+            "_id_": 36864,
+            "watch_lists_userId_idx": 36864,
+            "watch_lists_userId_isDefault_idx": 36864,
+            "watch_lists_userId_name_key": 36864
+          }
+        },
+        {
+          "name": "concept_mastery",
+          "count": 19,
+          "storageSize": 36864,
+          "totalIndexSize": 147456,
+          "indexSizes": {
+            "_id_": 36864,
+            "concept_mastery_userId_idx": 36864,
+            "concept_mastery_conceptId_updatedAt_idx": 36864,
+            "concept_mastery_userId_conceptId_key": 36864
+          }
+        },
+        {
+          "name": "CouponRedemption",
+          "count": 2,
+          "storageSize": 36864,
+          "totalIndexSize": 147456,
+          "indexSizes": {
+            "_id_": 36864,
+            "CouponRedemption_couponId_idx": 36864,
+            "CouponRedemption_userId_idx": 36864,
+            "CouponRedemption_couponId_userId_key": 36864
+          }
+        },
+        {
+          "name": "ai_generation_logs",
+          "count": 47,
+          "storageSize": 45056,
+          "totalIndexSize": 110592,
+          "indexSizes": {
+            "_id_": 36864,
+            "ai_generation_logs_decisionType_createdAt_idx": 36864,
+            "ai_generation_logs_userId_createdAt_idx": 36864
+          }
+        },
+        {
+          "name": "newsletter_subscribers",
+          "count": 1,
+          "storageSize": 36864,
+          "totalIndexSize": 110592,
+          "indexSizes": {
+            "_id_": 36864,
+            "newsletter_subscribers_email_key": 36864,
+            "newsletter_subscribers_verifyToken_key": 36864
+          }
+        },
+        {
+          "name": "SyncLog",
+          "count": 63,
+          "storageSize": 36864,
+          "totalIndexSize": 110592,
+          "indexSizes": {
+            "_id_": 36864,
+            "SyncLog_userId_broker_idx": 36864,
+            "SyncLog_createdAt_idx": 36864
+          }
+        },
+        {
+          "name": "stock_shareholding",
+          "count": 12,
+          "storageSize": 36864,
+          "totalIndexSize": 110592,
+          "indexSizes": {
+            "_id_": 36864,
+            "stock_shareholding_instrumentId_idx": 36864,
+            "stock_shareholding_symbol_exchange_quarter_key": 36864
+          }
+        },
+        {
+          "name": "fx_rates",
+          "count": 11,
+          "storageSize": 36864,
+          "totalIndexSize": 110592,
+          "indexSizes": {
+            "_id_": 36864,
+            "fx_rates_pair_date_idx": 36864,
+            "fx_rates_pair_date_key": 36864
+          }
+        },
+        {
+          "name": "consent_records",
+          "count": 18,
+          "storageSize": 36864,
+          "totalIndexSize": 110592,
+          "indexSizes": {
+            "_id_": 36864,
+            "consent_records_userId_kind_idx": 36864,
+            "consent_records_userId_createdAt_idx": 36864
+          }
+        },
+        {
+          "name": "FireScenario",
+          "count": 4,
+          "storageSize": 36864,
+          "totalIndexSize": 110592,
+          "indexSizes": {
+            "_id_": 36864,
+            "FireScenario_userId_idx": 36864,
+            "FireScenario_userId_isDefault_idx": 36864
+          }
+        },
+        {
+          "name": "portfolio_insights",
+          "count": 16,
+          "storageSize": 36864,
+          "totalIndexSize": 110592,
+          "indexSizes": {
+            "_id_": 36864,
+            "portfolio_insights_userId_type_idx": 36864,
+            "portfolio_insights_type_createdAt_idx": 36864
+          }
+        },
+        {
+          "name": "email_logs",
+          "count": 4,
+          "storageSize": 36864,
+          "totalIndexSize": 110592,
+          "indexSizes": {
+            "_id_": 36864,
+            "email_logs_to_idx": 36864,
+            "email_logs_template_idx": 36864
+          }
+        },
+        {
+          "name": "watchlist_items",
+          "count": 40,
+          "storageSize": 36864,
+          "totalIndexSize": 110592,
+          "indexSizes": {
+            "_id_": 36864,
+            "watchlist_items_watchlistId_idx": 36864,
+            "watchlist_items_watchlistId_symbol_exchange_key": 36864
+          }
+        },
+        {
+          "name": "investor_profiles",
+          "count": 10,
+          "storageSize": 36864,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "investor_profiles_userId_key": 36864
+          }
+        },
+        {
+          "name": "learned_patterns",
+          "count": 4,
+          "storageSize": 36864,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "learned_patterns_status_patternType_idx": 36864
+          }
+        },
+        {
+          "name": "PaperPortfolio",
+          "count": 28,
+          "storageSize": 36864,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "PaperPortfolio_userId_key": 36864
+          }
+        },
+        {
+          "name": "us_news_cursor",
+          "count": 1,
+          "storageSize": 36864,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "us_news_cursor_key_key": 36864
+          }
+        },
+        {
+          "name": "login_briefings",
+          "count": 3,
+          "storageSize": 36864,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "login_briefings_userId_briefingDate_idx": 36864
+          }
+        },
+        {
+          "name": "us_edgar_cursor",
+          "count": 6,
+          "storageSize": 36864,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "us_edgar_cursor_key_key": 36864
+          }
+        },
+        {
+          "name": "content_tags",
+          "count": 11,
+          "storageSize": 36864,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "content_tags_slug_key": 36864
+          }
+        },
+        {
+          "name": "screener_snapshots",
+          "count": 2,
+          "storageSize": 36864,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "screener_snapshots_strategyId_runAt_idx": 36864
+          }
+        },
+        {
+          "name": "us_cost_model_versions",
+          "count": 1,
+          "storageSize": 36864,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "us_cost_model_versions_modelVersion_key": 36864
+          }
+        },
+        {
+          "name": "portfolio_behavior_snapshots",
+          "count": 82,
+          "storageSize": 36864,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "portfolio_behavior_snapshots_userId_createdAt_idx": 36864
+          }
+        },
+        {
+          "name": "gst_invoices",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 36864,
+          "indexSizes": {
+            "_id_": 4096,
+            "gst_invoices_invoiceNumber_key": 4096,
+            "gst_invoices_financialYear_sequence_idx": 4096,
+            "gst_invoices_userId_idx": 4096,
+            "gst_invoices_dodoPaymentId_idx": 4096,
+            "gst_invoices_paymentId_idx": 4096,
+            "gst_invoices_invoiceDate_idx": 4096,
+            "gst_invoices_status_idx": 4096,
+            "gst_invoices_fircStatus_idx": 4096
+          }
+        },
+        {
+          "name": "gst_credit_notes",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 28672,
+          "indexSizes": {
+            "_id_": 4096,
+            "gst_credit_notes_creditNoteNumber_key": 4096,
+            "gst_credit_notes_financialYear_sequence_idx": 4096,
+            "gst_credit_notes_originalInvoiceId_idx": 4096,
+            "gst_credit_notes_dodoRefundId_idx": 4096,
+            "gst_credit_notes_creditNoteDate_idx": 4096,
+            "gst_credit_notes_status_idx": 4096
+          }
+        },
+        {
+          "name": "Order",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 28672,
+          "indexSizes": {
+            "_id_": 4096,
+            "Order_userId_idx": 4096,
+            "Order_userId_broker_idx": 4096,
+            "Order_userId_broker_brokerUserId_idx": 4096,
+            "Order_orderTime_idx": 4096,
+            "Order_status_idx": 4096,
+            "Order_userId_broker_brokerUserId_orderId_key": 4096
+          }
+        },
+        {
+          "name": "us_filing_insights",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 24576,
+          "indexSizes": {
+            "_id_": 4096,
+            "us_filing_insights_filedAt_idx": 4096,
+            "us_filing_insights_insightStatus_filedAt_idx": 4096,
+            "us_filing_insights_symbol_filedAt_idx": 4096,
+            "us_filing_insights_documentClass_filedAt_idx": 4096,
+            "us_filing_insights_accession_sequence_key": 4096
+          }
+        },
+        {
+          "name": "dodo_payout_staging",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 24576,
+          "indexSizes": {
+            "_id_": 4096,
+            "dodo_payout_staging_transactionId_key": 4096,
+            "dodo_payout_staging_csvHash_idx": 4096,
+            "dodo_payout_staging_billingPeriodStart_billingPeriodEnd_currency_idx": 4096,
+            "dodo_payout_staging_payoutId_idx": 4096,
+            "dodo_payout_staging_consumedByInvoiceId_idx": 4096
+          }
+        },
+        {
+          "name": "content_ideas",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 24576,
+          "indexSizes": {
+            "_id_": 4096,
+            "content_ideas_status_idx": 4096,
+            "content_ideas_currentStage_idx": 4096,
+            "content_ideas_authorId_idx": 4096,
+            "content_ideas_createdAt_idx": 4096,
+            "content_ideas_targetDate_idx": 4096
+          }
+        },
+        {
+          "name": "gst_audit_logs",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 20480,
+          "indexSizes": {
+            "_id_": 4096,
+            "gst_audit_logs_documentId_idx": 4096,
+            "gst_audit_logs_invoiceNumber_idx": 4096,
+            "gst_audit_logs_action_idx": 4096,
+            "gst_audit_logs_at_idx": 4096
+          }
+        },
+        {
+          "name": "PaperPosition",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 20480,
+          "indexSizes": {
+            "_id_": 4096,
+            "PaperPosition_userId_idx": 4096,
+            "PaperPosition_userId_status_idx": 4096,
+            "PaperPosition_userId_assetType_idx": 4096,
+            "PaperPosition_portfolioId_idx": 4096
+          }
+        },
+        {
+          "name": "import_logs",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 20480,
+          "indexSizes": {
+            "_id_": 4096,
+            "import_logs_importBatchId_key": 4096,
+            "import_logs_userId_idx": 4096,
+            "import_logs_createdAt_idx": 4096,
+            "import_logs_status_idx": 4096
+          }
+        },
+        {
+          "name": "user_documents",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 20480,
+          "indexSizes": {
+            "_id_": 4096,
+            "user_documents_userId_isDeleted_idx": 4096,
+            "user_documents_userId_category_idx": 4096,
+            "user_documents_processingStatus_idx": 4096,
+            "user_documents_userId_isDeleted_createdAt_idx": 4096
+          }
+        },
+        {
+          "name": "result_feedback",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 20480,
+          "indexSizes": {
+            "_id_": 4096,
+            "result_feedback_surface_rating_idx": 4096,
+            "result_feedback_userId_createdAt_idx": 4096,
+            "result_feedback_model_rating_idx": 4096,
+            "result_feedback_userId_surface_refId_key": 4096
+          }
+        },
+        {
+          "name": "courses",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 16384,
+          "indexSizes": {
+            "_id_": 4096,
+            "courses_slug_key": 4096,
+            "courses_published_idx": 4096,
+            "courses_level_idx": 4096
+          }
+        },
+        {
+          "name": "enrollments",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 16384,
+          "indexSizes": {
+            "_id_": 4096,
+            "enrollments_userId_idx": 4096,
+            "enrollments_courseId_idx": 4096,
+            "enrollments_userId_courseId_key": 4096
+          }
+        },
+        {
+          "name": "PaperOrder",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 16384,
+          "indexSizes": {
+            "_id_": 4096,
+            "PaperOrder_userId_idx": 4096,
+            "PaperOrder_portfolioId_idx": 4096,
+            "PaperOrder_userId_status_idx": 4096
+          }
+        },
+        {
+          "name": "comparison_sessions",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 16384,
+          "indexSizes": {
+            "_id_": 4096,
+            "comparison_sessions_sessionId_key": 4096,
+            "comparison_sessions_userId_createdAt_idx": 4096,
+            "comparison_sessions_userId_status_idx": 4096
+          }
+        },
+        {
+          "name": "course_lesson_progress",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 16384,
+          "indexSizes": {
+            "_id_": 4096,
+            "course_lesson_progress_userId_idx": 4096,
+            "course_lesson_progress_enrollmentId_idx": 4096,
+            "course_lesson_progress_enrollmentId_lessonId_key": 4096
+          }
+        },
+        {
+          "name": "credit_reservations",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 16384,
+          "indexSizes": {
+            "_id_": 4096,
+            "credit_reservations_reservationId_key": 4096,
+            "credit_reservations_userId_status_idx": 4096,
+            "credit_reservations_expiresAt_idx": 4096
+          }
+        },
+        {
+          "name": "custom_strategies",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 16384,
+          "indexSizes": {
+            "_id_": 4096,
+            "custom_strategies_userId_idx": 4096,
+            "custom_strategies_isBuiltIn_idx": 4096,
+            "custom_strategies_userId_name_key": 4096
+          }
+        },
+        {
+          "name": "alerts",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 16384,
+          "indexSizes": {
+            "_id_": 4096,
+            "alerts_userId_status_idx": 4096,
+            "alerts_userId_kind_idx": 4096,
+            "alerts_symbol_status_idx": 4096
+          }
+        },
+        {
+          "name": "analysis_sessions",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 12288,
+          "indexSizes": {
+            "_id_": 4096,
+            "analysis_sessions_sessionId_key": 4096,
+            "analysis_sessions_userId_status_idx": 4096
+          }
+        },
+        {
+          "name": "scan_results",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 12288,
+          "indexSizes": {
+            "_id_": 4096,
+            "scan_results_userId_executedAt_idx": 4096,
+            "scan_results_strategyId_idx": 4096
+          }
+        },
+        {
+          "name": "feedback_replies",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 12288,
+          "indexSizes": {
+            "_id_": 4096,
+            "feedback_replies_feedbackId_idx": 4096,
+            "feedback_replies_feedbackId_createdAt_idx": 4096
+          }
+        },
+        {
+          "name": "glossary_terms",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 12288,
+          "indexSizes": {
+            "_id_": 4096,
+            "glossary_terms_term_key": 4096,
+            "glossary_terms_category_idx": 4096
+          }
+        },
+        {
+          "name": "studio_generations",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 12288,
+          "indexSizes": {
+            "_id_": 4096,
+            "studio_generations_userId_createdAt_idx": 4096,
+            "studio_generations_postId_idx": 4096
+          }
+        },
+        {
+          "name": "saved_screens",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 12288,
+          "indexSizes": {
+            "_id_": 4096,
+            "saved_screens_userId_updatedAt_idx": 4096,
+            "saved_screens_userId_mode_name_key": 4096
+          }
+        },
+        {
+          "name": "custom_indicators",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 12288,
+          "indexSizes": {
+            "_id_": 4096,
+            "custom_indicators_userId_idx": 4096,
+            "custom_indicators_userId_name_key": 4096
+          }
+        },
+        {
+          "name": "stock_profiles",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 12288,
+          "indexSizes": {
+            "_id_": 4096,
+            "stock_profiles_instrumentId_key": 4096,
+            "stock_profiles_symbol_exchange_key": 4096
+          }
+        },
+        {
+          "name": "AnalysisReport",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 12288,
+          "indexSizes": {
+            "_id_": 4096,
+            "AnalysisReport_userId_idx": 4096,
+            "AnalysisReport_userId_symbol_idx": 4096
+          }
+        },
+        {
+          "name": "content_invites",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 12288,
+          "indexSizes": {
+            "_id_": 4096,
+            "content_invites_email_idx": 4096,
+            "content_invites_status_idx": 4096
+          }
+        },
+        {
+          "name": "invite_tokens",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 12288,
+          "indexSizes": {
+            "_id_": 4096,
+            "invite_tokens_token_key": 4096,
+            "invite_tokens_isActive_idx": 4096
+          }
+        },
+        {
+          "name": "course_lessons",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 8192,
+          "indexSizes": {
+            "_id_": 4096,
+            "course_lessons_chapterId_idx": 4096
+          }
+        },
+        {
+          "name": "platform_config",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 8192,
+          "indexSizes": {
+            "_id_": 4096,
+            "platform_config_key_key": 4096
+          }
+        },
+        {
+          "name": "chapters",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 8192,
+          "indexSizes": {
+            "_id_": 4096,
+            "chapters_courseId_idx": 4096
+          }
+        },
+        {
+          "name": "gst_invoice_counters",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 8192,
+          "indexSizes": {
+            "_id_": 4096,
+            "gst_invoice_counters_documentType_financialYear_key": 4096
+          }
+        },
+        {
+          "name": "quizzes",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 8192,
+          "indexSizes": {
+            "_id_": 4096,
+            "quizzes_lessonId_idx": 4096
+          }
+        }
+      ],
+      "candlesCube": [
+        {
+          "timeframe": "D1",
+          "source": "TIINGO",
+          "year": 2023,
+          "docs": 2166932
+        },
+        {
+          "timeframe": "D1",
+          "source": "TIINGO",
+          "year": 2019,
+          "docs": 1459827
+        },
+        {
+          "timeframe": "D1",
+          "source": "TIINGO",
+          "year": 2024,
+          "docs": 2402084
+        },
+        {
+          "timeframe": "D1",
+          "source": "TIINGO",
+          "year": 2026,
+          "docs": 2262412
+        },
+        {
+          "timeframe": "M1",
+          "source": "TIINGO_RT",
+          "year": 2026,
+          "docs": 5393
+        },
+        {
+          "timeframe": "D1",
+          "source": "TIINGO",
+          "year": 2020,
+          "docs": 1590622
+        },
+        {
+          "timeframe": "M1",
+          "source": "DATABENTO",
+          "year": 2026,
+          "docs": 6118096
+        },
+        {
+          "timeframe": "H1",
+          "source": "DATABENTO",
+          "year": 2026,
+          "docs": 1786430
+        },
+        {
+          "timeframe": "D1",
+          "source": "TIINGO",
+          "year": 2022,
+          "docs": 2032180
+        },
+        {
+          "timeframe": "D1",
+          "source": "TIINGO",
+          "year": 2016,
+          "docs": 1177742
+        },
+        {
+          "timeframe": "D1",
+          "source": "TIINGO",
+          "year": 2021,
+          "docs": 1810094
+        },
+        {
+          "timeframe": "D1",
+          "source": "TIINGO",
+          "year": 2025,
+          "docs": 2696049
+        },
+        {
+          "timeframe": "D1",
+          "source": "TIINGO",
+          "year": 2018,
+          "docs": 1358930
+        },
+        {
+          "timeframe": "D1",
+          "source": "TIINGO",
+          "year": 2017,
+          "docs": 1254698
+        }
+      ],
+      "candlesNote": null
+    },
+    {
+      "label": "claude-algo — PROD",
+      "host": "mongodb+srv://<credentials>@algo-trade-testing.0ezpzv.mongodb.net/algo",
+      "database": "algo",
+      "serverVersion": "8.0.32",
+      "credential": "Secret Manager `ALGO_MONGODB_URI_RO_PROD` (read-only)",
+      "indexStats": [
+        {
+          "collection": "research_curves",
+          "index": "date_-1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 484,
+          "since": "2026-09-10T16:07:01.093Z"
+        },
+        {
+          "collection": "research_curves",
+          "index": "strategy_1_date_-1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 1097,
+          "since": "2026-09-10T16:07:01.093Z"
+        },
+        {
+          "collection": "research_curves",
+          "index": "date_1_strategy_1_symbol_1_bucket_1_span_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 1795408,
+          "since": "2026-09-10T16:07:01.093Z"
+        },
+        {
+          "collection": "research_curves",
+          "index": "_id_",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.093Z"
+        },
+        {
+          "collection": "research_curves",
+          "index": "computedAt_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.093Z"
+        },
+        {
+          "collection": "research_curves",
+          "index": "strategy_1_expectancyR_-1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 7,
+          "since": "2026-09-10T16:07:01.093Z"
+        },
+        {
+          "collection": "news_FY2026",
+          "index": "market_1_date_-1_lane_1_sourceName_1_source_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.111Z"
+        },
+        {
+          "collection": "news_FY2026",
+          "index": "fetchedAt_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.111Z"
+        },
+        {
+          "collection": "news_FY2026",
+          "index": "market_1_date_-1_lane_1_publishedAt_-1_fetchedAt_-1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 8,
+          "since": "2026-09-10T16:07:01.111Z"
+        },
+        {
+          "collection": "news_FY2026",
+          "index": "_id_",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.111Z"
+        },
+        {
+          "collection": "news_FY2026",
+          "index": "linkHash_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.111Z"
+        },
+        {
+          "collection": "news_FY2026",
+          "index": "market_1_lane_1_fetchedAt_-1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 17,
+          "since": "2026-09-10T16:07:01.111Z"
+        },
+        {
+          "collection": "news_FY2027",
+          "index": "market_1_date_-1_lane_1_sourceName_1_source_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.134Z"
+        },
+        {
+          "collection": "news_FY2027",
+          "index": "fetchedAt_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.134Z"
+        },
+        {
+          "collection": "news_FY2027",
+          "index": "market_1_date_-1_lane_1_publishedAt_-1_fetchedAt_-1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 75,
+          "since": "2026-09-10T16:07:01.134Z"
+        },
+        {
+          "collection": "news_FY2027",
+          "index": "linkHash_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 819841,
+          "since": "2026-09-10T16:07:01.134Z"
+        },
+        {
+          "collection": "news_FY2027",
+          "index": "_id_",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.134Z"
+        },
+        {
+          "collection": "news_FY2027",
+          "index": "market_1_lane_1_fetchedAt_-1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 17,
+          "since": "2026-09-10T16:07:01.134Z"
+        },
+        {
+          "collection": "news_links",
+          "index": "linkHash_1_symbol_1_linkerVersion_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 636,
+          "since": "2026-09-10T16:07:01.077Z"
+        },
+        {
+          "collection": "news_links",
+          "index": "linkerVersion_1_date_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.077Z"
+        },
+        {
+          "collection": "news_links",
+          "index": "linkerVersion_1_lane_1_symbol_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.077Z"
+        },
+        {
+          "collection": "news_links",
+          "index": "_id_",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.077Z"
+        },
+        {
+          "collection": "screener_runs",
+          "index": "startedAt_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.072Z"
+        },
+        {
+          "collection": "screener_runs",
+          "index": "date_-1_kind_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 20,
+          "since": "2026-09-10T16:07:01.072Z"
+        },
+        {
+          "collection": "screener_runs",
+          "index": "_id_",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.072Z"
+        },
+        {
+          "collection": "screener_runs",
+          "index": "runId_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 60,
+          "since": "2026-09-10T16:07:01.072Z"
+        },
+        {
+          "collection": "overnight_carry",
+          "index": "kind_1_leg_1_month_1_symbol_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 11,
+          "since": "2026-09-10T16:07:01.106Z"
+        },
+        {
+          "collection": "overnight_carry",
+          "index": "kind_1_leg_1_day_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 53,
+          "since": "2026-09-10T16:07:01.106Z"
+        },
+        {
+          "collection": "overnight_carry",
+          "index": "_id_",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 5,
+          "since": "2026-09-10T16:07:01.106Z"
+        },
+        {
+          "collection": "overnight_carry",
+          "index": "kind_1_symbol_1_month_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 6,
+          "since": "2026-09-10T16:07:01.106Z"
+        },
+        {
+          "collection": "decisions",
+          "index": "signalKey_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 2400,
+          "since": "2026-09-10T16:07:01.144Z"
+        },
+        {
+          "collection": "decisions",
+          "index": "strategy_1_ts_-1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.144Z"
+        },
+        {
+          "collection": "decisions",
+          "index": "createdAt_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.144Z"
+        },
+        {
+          "collection": "decisions",
+          "index": "symbol_1_ts_-1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.144Z"
+        },
+        {
+          "collection": "decisions",
+          "index": "_id_",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.144Z"
+        },
+        {
+          "collection": "paired_trade_views",
+          "index": "symbol_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 2,
+          "since": "2026-09-10T16:07:01.086Z"
+        },
+        {
+          "collection": "paired_trade_views",
+          "index": "signalKey_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.086Z"
+        },
+        {
+          "collection": "paired_trade_views",
+          "index": "entryDate_-1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.086Z"
+        },
+        {
+          "collection": "paired_trade_views",
+          "index": "_id_",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.086Z"
+        },
+        {
+          "collection": "paired_trade_views",
+          "index": "status_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.086Z"
+        },
+        {
+          "collection": "paired_trade_views",
+          "index": "pairingBatchId_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.086Z"
+        },
+        {
+          "collection": "positions_swing",
+          "index": "symbol_1_strategy_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 2,
+          "since": "2026-09-10T16:07:01.088Z"
+        },
+        {
+          "collection": "positions_swing",
+          "index": "_id_",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 318,
+          "since": "2026-09-10T16:07:01.088Z"
+        },
+        {
+          "collection": "positions_swing",
+          "index": "updatedAt_-1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.088Z"
+        },
+        {
+          "collection": "universes",
+          "index": "date_1_list_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 42,
+          "since": "2026-09-10T16:07:01.070Z"
+        },
+        {
+          "collection": "universes",
+          "index": "date_-1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 2,
+          "since": "2026-09-10T16:07:01.070Z"
+        },
+        {
+          "collection": "universes",
+          "index": "_id_",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.070Z"
+        },
+        {
+          "collection": "strategy_catalog",
+          "index": "id_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 369,
+          "since": "2026-09-10T16:07:01.082Z"
+        },
+        {
+          "collection": "strategy_catalog",
+          "index": "_id_",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.082Z"
+        },
+        {
+          "collection": "strategy_catalog",
+          "index": "status_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.082Z"
+        },
+        {
+          "collection": "news",
+          "index": "market_1_lane_1_fetchedAt_-1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 17,
+          "since": "2026-09-10T16:07:01.123Z"
+        },
+        {
+          "collection": "news",
+          "index": "fetchedAt_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.123Z"
+        },
+        {
+          "collection": "news",
+          "index": "market_1_date_-1_lane_1_publishedAt_-1_fetchedAt_-1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 74,
+          "since": "2026-09-10T16:07:01.123Z"
+        },
+        {
+          "collection": "news",
+          "index": "_id_",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.123Z"
+        },
+        {
+          "collection": "news",
+          "index": "linkHash_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.123Z"
+        },
+        {
+          "collection": "news",
+          "index": "market_1_date_-1_lane_1_sourceName_1_source_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.123Z"
+        },
+        {
+          "collection": "predictions",
+          "index": "outcome_1_date_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 27,
+          "since": "2026-09-10T16:07:01.139Z"
+        },
+        {
+          "collection": "predictions",
+          "index": "strategy_1_symbol_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.139Z"
+        },
+        {
+          "collection": "predictions",
+          "index": "date_-1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 2,
+          "since": "2026-09-10T16:07:01.139Z"
+        },
+        {
+          "collection": "predictions",
+          "index": "createdAt_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.139Z"
+        },
+        {
+          "collection": "predictions",
+          "index": "_id_",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.139Z"
+        },
+        {
+          "collection": "predictions",
+          "index": "signalKey_1_bucket_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 125345,
+          "since": "2026-09-10T16:07:01.139Z"
+        },
+        {
+          "collection": "trades",
+          "index": "symbol_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.068Z"
+        },
+        {
+          "collection": "trades",
+          "index": "signalKey_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 2400,
+          "since": "2026-09-10T16:07:01.068Z"
+        },
+        {
+          "collection": "trades",
+          "index": "ts_-1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 2,
+          "since": "2026-09-10T16:07:01.068Z"
+        },
+        {
+          "collection": "trades",
+          "index": "_id_",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.068Z"
+        },
+        {
+          "collection": "trades",
+          "index": "strategy_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.068Z"
+        },
+        {
+          "collection": "forward_trades",
+          "index": "symbol_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 2,
+          "since": "2026-09-10T16:07:01.130Z"
+        },
+        {
+          "collection": "forward_trades",
+          "index": "signalKey_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 2400,
+          "since": "2026-09-10T16:07:01.130Z"
+        },
+        {
+          "collection": "forward_trades",
+          "index": "book_1_ts_-1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.130Z"
+        },
+        {
+          "collection": "forward_trades",
+          "index": "createdAt_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.130Z"
+        },
+        {
+          "collection": "forward_trades",
+          "index": "_id_",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.130Z"
+        },
+        {
+          "collection": "forward_trades",
+          "index": "strategy_1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.130Z"
+        },
+        {
+          "collection": "forward_trades",
+          "index": "leg_1_ts_-1",
+          "host": "atlas-3huxqw-shard-00-02.0ezpzv.mongodb.net:27017",
+          "ops": 0,
+          "since": "2026-09-10T16:07:01.130Z"
+        }
+      ],
+      "collectionFootprint": [
+        {
+          "name": "research_curves",
+          "count": 9896694,
+          "storageSize": 1118257152,
+          "totalIndexSize": 851034112,
+          "indexSizes": {
+            "_id_": 182398976,
+            "strategy_1_expectancyR_-1": 115281920,
+            "date_-1": 60559360,
+            "computedAt_1": 140812288,
+            "date_1_strategy_1_symbol_1_bucket_1_span_1": 275443712,
+            "strategy_1_date_-1": 76537856
+          }
+        },
+        {
+          "name": "news_FY2026",
+          "count": 1486239,
+          "storageSize": 221880320,
+          "totalIndexSize": 326991872,
+          "indexSizes": {
+            "_id_": 43012096,
+            "linkHash_1": 181432320,
+            "market_1_date_-1_lane_1_publishedAt_-1_fetchedAt_-1": 32804864,
+            "fetchedAt_1": 31526912,
+            "market_1_lane_1_fetchedAt_-1": 31215616,
+            "market_1_date_-1_lane_1_sourceName_1_source_1": 7000064
+          }
+        },
+        {
+          "name": "news_FY2027",
+          "count": 739765,
+          "storageSize": 127279104,
+          "totalIndexSize": 102440960,
+          "indexSizes": {
+            "_id_": 13320192,
+            "linkHash_1": 55857152,
+            "market_1_date_-1_lane_1_publishedAt_-1_fetchedAt_-1": 10821632,
+            "market_1_lane_1_fetchedAt_-1": 9412608,
+            "fetchedAt_1": 9129984,
+            "market_1_date_-1_lane_1_sourceName_1_source_1": 3899392
+          }
+        },
+        {
+          "name": "news_links",
+          "count": 704760,
+          "storageSize": 86339584,
+          "totalIndexSize": 74166272,
+          "indexSizes": {
+            "_id_": 13881344,
+            "linkHash_1_symbol_1_linkerVersion_1": 43892736,
+            "linkerVersion_1_lane_1_symbol_1": 8372224,
+            "linkerVersion_1_date_1": 8019968
+          }
+        },
+        {
+          "name": "screener_runs",
+          "count": 1844,
+          "storageSize": 137560064,
+          "totalIndexSize": 315392,
+          "indexSizes": {
+            "_id_": 77824,
+            "runId_1": 65536,
+            "date_-1_kind_1": 102400,
+            "startedAt_1": 69632
+          }
+        },
+        {
+          "name": "overnight_carry",
+          "count": 44017,
+          "storageSize": 77365248,
+          "totalIndexSize": 17203200,
+          "indexSizes": {
+            "_id_": 4341760,
+            "kind_1_leg_1_day_1": 2891776,
+            "kind_1_leg_1_month_1_symbol_1": 5042176,
+            "kind_1_symbol_1_month_1": 4927488
+          }
+        },
+        {
+          "name": "decisions",
+          "count": 405108,
+          "storageSize": 48545792,
+          "totalIndexSize": 31342592,
+          "indexSizes": {
+            "_id_": 7671808,
+            "createdAt_1": 5505024,
+            "symbol_1_ts_-1": 8826880,
+            "strategy_1_ts_-1": 5959680,
+            "signalKey_1": 3379200
+          }
+        },
+        {
+          "name": "paired_trade_views",
+          "count": 17105,
+          "storageSize": 15175680,
+          "totalIndexSize": 9601024,
+          "indexSizes": {
+            "_id_": 1474560,
+            "entryDate_-1": 1671168,
+            "symbol_1": 1609728,
+            "status_1": 1433600,
+            "pairingBatchId_1": 1515520,
+            "signalKey_1": 1896448
+          }
+        },
+        {
+          "name": "positions_swing",
+          "count": 402,
+          "storageSize": 3624960,
+          "totalIndexSize": 7766016,
+          "indexSizes": {
+            "_id_": 2064384,
+            "symbol_1_strategy_1": 4464640,
+            "updatedAt_-1": 1236992
+          }
+        },
+        {
+          "name": "universes",
+          "count": 186,
+          "storageSize": 10858496,
+          "totalIndexSize": 110592,
+          "indexSizes": {
+            "_id_": 36864,
+            "date_1_list_1": 36864,
+            "date_-1": 36864
+          }
+        },
+        {
+          "name": "strategy_catalog",
+          "count": 79,
+          "storageSize": 9785344,
+          "totalIndexSize": 110592,
+          "indexSizes": {
+            "_id_": 36864,
+            "id_1": 36864,
+            "status_1": 36864
+          }
+        },
+        {
+          "name": "news",
+          "count": 0,
+          "storageSize": 4452352,
+          "totalIndexSize": 5226496,
+          "indexSizes": {
+            "_id_": 1040384,
+            "linkHash_1": 4169728,
+            "market_1_date_-1_lane_1_publishedAt_-1_fetchedAt_-1": 4096,
+            "market_1_date_-1_lane_1_sourceName_1_source_1": 4096,
+            "market_1_lane_1_fetchedAt_-1": 4096,
+            "fetchedAt_1": 4096
+          }
+        },
+        {
+          "name": "predictions",
+          "count": 26523,
+          "storageSize": 5771264,
+          "totalIndexSize": 3227648,
+          "indexSizes": {
+            "_id_": 491520,
+            "signalKey_1_bucket_1": 880640,
+            "outcome_1_date_1": 471040,
+            "date_-1": 278528,
+            "strategy_1_symbol_1": 782336,
+            "createdAt_1": 323584
+          }
+        },
+        {
+          "name": "trades",
+          "count": 22218,
+          "storageSize": 6193152,
+          "totalIndexSize": 1916928,
+          "indexSizes": {
+            "_id_": 442368,
+            "ts_-1": 364544,
+            "symbol_1": 385024,
+            "strategy_1": 278528,
+            "signalKey_1": 446464
+          }
+        },
+        {
+          "name": "forward_trades",
+          "count": 20882,
+          "storageSize": 5267456,
+          "totalIndexSize": 2461696,
+          "indexSizes": {
+            "_id_": 425984,
+            "signalKey_1": 430080,
+            "symbol_1": 372736,
+            "strategy_1": 274432,
+            "book_1_ts_-1": 311296,
+            "createdAt_1": 290816,
+            "leg_1_ts_-1": 356352
+          }
+        },
+        {
+          "name": "signals",
+          "count": 24148,
+          "storageSize": 1900544,
+          "totalIndexSize": 2052096,
+          "indexSizes": {
+            "_id_": 462848,
+            "ts_-1": 372736,
+            "symbol_1": 372736,
+            "strategy_1": 266240,
+            "signalKey_1": 577536
+          }
+        },
+        {
+          "name": "volume_profile",
+          "count": 19397,
+          "storageSize": 2240512,
+          "totalIndexSize": 466944,
+          "indexSizes": {
+            "_id_": 466944
+          }
+        },
+        {
+          "name": "session_activity",
+          "count": 29,
+          "storageSize": 1847296,
+          "totalIndexSize": 110592,
+          "indexSizes": {
+            "_id_": 36864,
+            "date_1": 36864,
+            "createdAt_1": 36864
+          }
+        },
+        {
+          "name": "risk_events",
+          "count": 13460,
+          "storageSize": 749568,
+          "totalIndexSize": 1105920,
+          "indexSizes": {
+            "_id_": 262144,
+            "ts_-1": 266240,
+            "strategy_1_kind_1": 184320,
+            "signalKey_1": 393216
+          }
+        },
+        {
+          "name": "data_runs",
+          "count": 12843,
+          "storageSize": 1044480,
+          "totalIndexSize": 716800,
+          "indexSizes": {
+            "_id_": 290816,
+            "job_1_startedAt_-1": 241664,
+            "startedAt_1": 184320
+          }
+        },
+        {
+          "name": "reports",
+          "count": 66,
+          "storageSize": 1396736,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "date_1_kind_1": 36864
+          }
+        },
+        {
+          "name": "news_link_labels",
+          "count": 2711,
+          "storageSize": 749568,
+          "totalIndexSize": 569344,
+          "indexSizes": {
+            "_id_": 77824,
+            "linkHash_1_symbol_1_linkerVersion_1": 421888,
+            "linkerVersion_1_lane_1_label_1": 69632
+          }
+        },
+        {
+          "name": "claude_sessions",
+          "count": 471,
+          "storageSize": 839680,
+          "totalIndexSize": 98304,
+          "indexSizes": {
+            "_id_": 53248,
+            "at_-1": 45056
+          }
+        },
+        {
+          "name": "research_runs",
+          "count": 4234,
+          "storageSize": 299008,
+          "totalIndexSize": 528384,
+          "indexSizes": {
+            "_id_": 106496,
+            "date_1_strategy_1_span_1": 110592,
+            "date_-1_strategy_1_span_1": 135168,
+            "span_1_date_-1": 90112,
+            "computedAt_1": 86016
+          }
+        },
+        {
+          "name": "scorecards",
+          "count": 2865,
+          "storageSize": 413696,
+          "totalIndexSize": 360448,
+          "indexSizes": {
+            "_id_": 98304,
+            "symbol_1": 77824,
+            "strategy_1": 69632,
+            "symbol_1_strategy_1": 114688
+          }
+        },
+        {
+          "name": "news_link_reviews",
+          "count": 820,
+          "storageSize": 262144,
+          "totalIndexSize": 348160,
+          "indexSizes": {
+            "_id_": 65536,
+            "linkHash_1_symbol_1_linkerVersion_1_reviewer_1": 208896,
+            "linkerVersion_1_reviewer_1_lane_1_label_1": 73728
+          }
+        },
+        {
+          "name": "quote_snapshots",
+          "count": 0,
+          "storageSize": 409600,
+          "totalIndexSize": 188416,
+          "indexSizes": {
+            "_id_": 57344,
+            "symbol_1": 73728,
+            "ts_1": 57344
+          }
+        },
+        {
+          "name": "engine_status",
+          "count": 1,
+          "storageSize": 389120,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "createdAt_1": 36864
+          }
+        },
+        {
+          "name": "claude_trades",
+          "count": 70,
+          "storageSize": 225280,
+          "totalIndexSize": 147456,
+          "indexSizes": {
+            "_id_": 36864,
+            "book_1_ts_-1": 36864,
+            "intentId_1": 36864,
+            "symbol_1_ts_-1": 36864
+          }
+        },
+        {
+          "name": "claude_sonnet_sessions",
+          "count": 151,
+          "storageSize": 253952,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "at_-1": 36864
+          }
+        },
+        {
+          "name": "gemini_38_sessions",
+          "count": 151,
+          "storageSize": 221184,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "at_-1": 36864
+          }
+        },
+        {
+          "name": "positions_daily",
+          "count": 6,
+          "storageSize": 180224,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "date_1": 36864
+          }
+        },
+        {
+          "name": "gemini_flash_sessions",
+          "count": 151,
+          "storageSize": 180224,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "at_-1": 36864
+          }
+        },
+        {
+          "name": "claude_orders",
+          "count": 60,
+          "storageSize": 176128,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "book_1_status_1": 36864
+          }
+        },
+        {
+          "name": "basket_league",
+          "count": 5,
+          "storageSize": 176128,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "name_1": 36864
+          }
+        },
+        {
+          "name": "news_daily",
+          "count": 43,
+          "storageSize": 143360,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "date_1": 36864
+          }
+        },
+        {
+          "name": "watchlist_live",
+          "count": 20,
+          "storageSize": 86016,
+          "totalIndexSize": 110592,
+          "indexSizes": {
+            "_id_": 36864,
+            "date_1": 36864,
+            "ranAt_1": 36864
+          }
+        },
+        {
+          "name": "claude_sonnet_trades",
+          "count": 9,
+          "storageSize": 45056,
+          "totalIndexSize": 147456,
+          "indexSizes": {
+            "_id_": 36864,
+            "book_1_ts_-1": 36864,
+            "intentId_1": 36864,
+            "symbol_1_ts_-1": 36864
+          }
+        },
+        {
+          "name": "ai_review_backtest",
+          "count": 8,
+          "storageSize": 45056,
+          "totalIndexSize": 147456,
+          "indexSizes": {
+            "_id_": 36864,
+            "signalKey_1": 36864,
+            "strategy_1_bucket_1_ts_-1": 36864,
+            "createdAt_1": 36864
+          }
+        },
+        {
+          "name": "gemini_38_trades",
+          "count": 4,
+          "storageSize": 36864,
+          "totalIndexSize": 147456,
+          "indexSizes": {
+            "_id_": 36864,
+            "book_1_ts_-1": 36864,
+            "intentId_1": 36864,
+            "symbol_1_ts_-1": 36864
+          }
+        },
+        {
+          "name": "gemini_flash_trades",
+          "count": 4,
+          "storageSize": 36864,
+          "totalIndexSize": 147456,
+          "indexSizes": {
+            "_id_": 36864,
+            "book_1_ts_-1": 36864,
+            "intentId_1": 36864,
+            "symbol_1_ts_-1": 36864
+          }
+        },
+        {
+          "name": "claude_reviews",
+          "count": 31,
+          "storageSize": 102400,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "intentId_1": 36864
+          }
+        },
+        {
+          "name": "news_sources",
+          "count": 27,
+          "storageSize": 45056,
+          "totalIndexSize": 110592,
+          "indexSizes": {
+            "_id_": 36864,
+            "feedId_1": 36864,
+            "lane_1_masthead_1": 36864
+          }
+        },
+        {
+          "name": "claude_management",
+          "count": 25,
+          "storageSize": 45056,
+          "totalIndexSize": 110592,
+          "indexSizes": {
+            "_id_": 36864,
+            "status_1_sessionAt_1": 36864,
+            "intentId_1": 36864
+          }
+        },
+        {
+          "name": "positions_claude",
+          "count": 4,
+          "storageSize": 40960,
+          "totalIndexSize": 110592,
+          "indexSizes": {
+            "_id_": 36864,
+            "book_1_symbol_1": 36864,
+            "asOf_-1": 36864
+          }
+        },
+        {
+          "name": "positions_gemini_38",
+          "count": 1,
+          "storageSize": 36864,
+          "totalIndexSize": 110592,
+          "indexSizes": {
+            "_id_": 36864,
+            "book_1_symbol_1": 36864,
+            "asOf_-1": 36864
+          }
+        },
+        {
+          "name": "positions_claude_sonnet",
+          "count": 3,
+          "storageSize": 36864,
+          "totalIndexSize": 110592,
+          "indexSizes": {
+            "_id_": 36864,
+            "book_1_symbol_1": 36864,
+            "asOf_-1": 36864
+          }
+        },
+        {
+          "name": "baskets",
+          "count": 5,
+          "storageSize": 36864,
+          "totalIndexSize": 110592,
+          "indexSizes": {
+            "_id_": 36864,
+            "name_1": 36864,
+            "active_1": 36864
+          }
+        },
+        {
+          "name": "positions_gemini_flash",
+          "count": 1,
+          "storageSize": 36864,
+          "totalIndexSize": 110592,
+          "indexSizes": {
+            "_id_": 36864,
+            "book_1_symbol_1": 36864,
+            "asOf_-1": 36864
+          }
+        },
+        {
+          "name": "pattern_catalog",
+          "count": 26,
+          "storageSize": 53248,
+          "totalIndexSize": 77824,
+          "indexSizes": {
+            "_id_": 36864,
+            "id_1": 20480,
+            "kind_1": 20480
+          }
+        },
+        {
+          "name": "claude_sonnet_orders",
+          "count": 7,
+          "storageSize": 45056,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "book_1_status_1": 36864
+          }
+        },
+        {
+          "name": "daily_summary",
+          "count": 34,
+          "storageSize": 45056,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "date_1": 36864
+          }
+        },
+        {
+          "name": "ai_ab",
+          "count": 5,
+          "storageSize": 36864,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "date_-1_kind_1": 36864
+          }
+        },
+        {
+          "name": "gemini_flash_reviews",
+          "count": 2,
+          "storageSize": 36864,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "intentId_1": 36864
+          }
+        },
+        {
+          "name": "claude_sonnet_reviews",
+          "count": 3,
+          "storageSize": 36864,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "intentId_1": 36864
+          }
+        },
+        {
+          "name": "baselines",
+          "count": 5,
+          "storageSize": 36864,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "symbol_1": 36864
+          }
+        },
+        {
+          "name": "gemini_38_orders",
+          "count": 3,
+          "storageSize": 36864,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "book_1_status_1": 36864
+          }
+        },
+        {
+          "name": "gemini_38_reviews",
+          "count": 2,
+          "storageSize": 36864,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "intentId_1": 36864
+          }
+        },
+        {
+          "name": "gemini_flash_orders",
+          "count": 5,
+          "storageSize": 36864,
+          "totalIndexSize": 73728,
+          "indexSizes": {
+            "_id_": 36864,
+            "book_1_status_1": 36864
+          }
+        },
+        {
+          "name": "watchlist",
+          "count": 0,
+          "storageSize": 32768,
+          "totalIndexSize": 65536,
+          "indexSizes": {
+            "_id_": 32768,
+            "date_1": 32768
+          }
+        },
+        {
+          "name": "research_cadence",
+          "count": 211,
+          "storageSize": 45056,
+          "totalIndexSize": 36864,
+          "indexSizes": {
+            "_id_": 36864
+          }
+        },
+        {
+          "name": "claude_sonnet_state",
+          "count": 2,
+          "storageSize": 36864,
+          "totalIndexSize": 36864,
+          "indexSizes": {
+            "_id_": 36864
+          }
+        },
+        {
+          "name": "notification_prefs",
+          "count": 1,
+          "storageSize": 36864,
+          "totalIndexSize": 36864,
+          "indexSizes": {
+            "_id_": 36864
+          }
+        },
+        {
+          "name": "risk_state",
+          "count": 1,
+          "storageSize": 36864,
+          "totalIndexSize": 36864,
+          "indexSizes": {
+            "_id_": 36864
+          }
+        },
+        {
+          "name": "claude_state",
+          "count": 3,
+          "storageSize": 36864,
+          "totalIndexSize": 36864,
+          "indexSizes": {
+            "_id_": 36864
+          }
+        },
+        {
+          "name": "news_links_status",
+          "count": 8,
+          "storageSize": 36864,
+          "totalIndexSize": 36864,
+          "indexSizes": {
+            "_id_": 36864
+          }
+        },
+        {
+          "name": "ai_review_research",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 16384,
+          "indexSizes": {
+            "_id_": 4096,
+            "signalKey_1": 4096,
+            "strategy_1_bucket_1_ts_-1": 4096,
+            "createdAt_1": 4096
+          }
+        },
+        {
+          "name": "claude_sonnet_management",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 12288,
+          "indexSizes": {
+            "_id_": 4096,
+            "status_1_sessionAt_1": 4096,
+            "intentId_1": 4096
+          }
+        },
+        {
+          "name": "gemini_38_management",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 12288,
+          "indexSizes": {
+            "_id_": 4096,
+            "status_1_sessionAt_1": 4096,
+            "intentId_1": 4096
+          }
+        },
+        {
+          "name": "gemini_flash_management",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 12288,
+          "indexSizes": {
+            "_id_": 4096,
+            "status_1_sessionAt_1": 4096,
+            "intentId_1": 4096
+          }
+        },
+        {
+          "name": "mail_events",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 12288,
+          "indexSizes": {
+            "_id_": 4096,
+            "id_1_event_1": 4096,
+            "recordedAt_1": 4096
+          }
+        },
+        {
+          "name": "stock_baskets",
+          "count": 0,
+          "storageSize": 4096,
+          "totalIndexSize": 8192,
+          "indexSizes": {
+            "_id_": 4096,
+            "name_1": 4096
+          }
+        }
+      ],
+      "candlesCube": null,
+      "candlesNote": "no `candles` collection in this database"
+    }
+  ]
+}

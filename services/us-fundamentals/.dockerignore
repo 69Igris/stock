@@ -1,0 +1,34 @@
+# Build context hygiene for services/us-fundamentals (MONEY-979).
+#
+# The context is this directory, so the biggest win is excluding the local
+# .venv — a full edgartools install is ~400 MB and would be uploaded to Cloud
+# Build on every push AND shadow the container's own site-packages if it
+# survived into the image.
+
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+build/
+dist/
+
+# Tests and fixtures are NOT shipped. Fixtures in particular are gzipped SEC
+# bundles captured by T4 and can run to tens of MB; the image never reads them.
+tests/
+
+# Local secrets must never reach a layer.
+.env
+.env.*
+*.pem
+*.json.key
+
+# Editor / OS noise
+.DS_Store
+.idea/
+.vscode/

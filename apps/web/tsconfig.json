@@ -1,0 +1,48 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node"]
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    // `include` above has "**/*.ts(x)" rooted at apps/web, and `.next` is NOT
+    // node_modules, so a local build's output was being type-checked as source.
+    // `.next/standalone` is the worst of it: a full COPY of apps/web plus every
+    // workspace package, so the whole codebase got checked twice. That is what
+    // pushed a local run to 2.86 GB peak RSS. The `.next/types` and
+    // `.next/dev/types` entries in `include` are Next's GENERATED route types
+    // and are deliberately kept — only build artefacts are excluded here.
+    ".next/standalone",
+    ".next/cache",
+    ".next/server",
+    ".next/static"
+  ]
+}

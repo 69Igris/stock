@@ -1,0 +1,91 @@
+{
+  "title": "W5 Building in public Month 1",
+  "aspect": "9:16",
+  "fps": 30,
+  "brandTheme": "cream",
+  "music": {
+    "track": "corporate-lofi",
+    "gainDb": -22,
+    "duckUnderVoiceover": true
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "type": "hook",
+      "durationSec": 4,
+      "kicker": "Building in public",
+      "headline": "Month 1, ==by the numbers==",
+      "motion": "rise",
+      "voiceover": {
+        "text": "यूज़मनी एआई बनाने का पहला महीना — कुछ ईमानदार आँकड़े।",
+        "lang": "hi-IN"
+      }
+    },
+    {
+      "id": "stat",
+      "type": "stat",
+      "durationSec": 4.5,
+      "stat": {
+        "kicker": "Sign-ups",
+        "value": "[fill]",
+        "label": "people joined in month 1."
+      },
+      "motion": "kenburns-in",
+      "voiceover": {
+        "text": "पहले महीने में कितने लोग जुड़े — यहाँ असली नंबर आएगा।",
+        "lang": "hi-IN"
+      }
+    },
+    {
+      "id": "cards",
+      "type": "cards",
+      "durationSec": 5.5,
+      "headline": "What I learned",
+      "bullets": [
+        "[fill]% added a 2nd broker",
+        "[fill] subscribed",
+        "$0 spent on tools"
+      ],
+      "motion": "rise",
+      "voiceover": {
+        "text": "क्या सीखा — दूसरा ब्रोकर जोड़ने वाले, कुछ सब्सक्राइबर, और टूल्स पर शून्य खर्च।",
+        "lang": "hi-IN"
+      }
+    },
+    {
+      "id": "broll",
+      "type": "veo",
+      "durationSec": 6,
+      "veoPrompt": "abstract warm cream and emerald-green gradient light gently brightening like a soft slow sunrise, drifting glow, premium minimal fintech motion graphics, hopeful, elegant, no text, no logos, no people",
+      "motion": "static",
+      "voiceover": {
+        "text": "छोटी शुरुआत — लेकिन दिशा बिलकुल साफ़ है।",
+        "lang": "hi-IN"
+      }
+    },
+    {
+      "id": "p1",
+      "type": "point",
+      "durationSec": 4.5,
+      "headline": "Transparency is the *product*",
+      "subtext": "Build in public, learn in public.",
+      "motion": "rise",
+      "voiceover": {
+        "text": "पारदर्शिता ही असली प्रोडक्ट है — खुलकर बनाना, खुलकर सीखना।",
+        "lang": "hi-IN"
+      }
+    },
+    {
+      "id": "cta",
+      "type": "cta",
+      "durationSec": 3.5,
+      "headline": "Follow the ==build==.",
+      "subtext": "UseMoney AI (my product) · building in public",
+      "motion": "pop",
+      "voiceover": {
+        "text": "इस सफ़र को फ़ॉलो करें। यूज़मनी एआई।",
+        "lang": "hi-IN"
+      }
+    }
+  ]
+}
